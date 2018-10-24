@@ -2,16 +2,16 @@
   "name": "analytics-utils",
   "version": "0.0.1",
   "description": "",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.esm.js",
-  "browser": "dist/index.js",
+  "main": "dist/index.js",
+  "module": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
-    "build": "node ../../scripts/utils/build.js",
-    "watch":  "node ../../scripts/utils/watch.js"
+    "build:cjs": "babel lib --out-dir dist --ignore test.js",
+    "build": "shx rm -f lib/index.js && create-index --ignoreUnsafe lib && npm run build:cjs",
+    "watch": "babel lib --out-dir dist --ignore test.js --watch"
   },
   "keywords": [],
   "author": "David Wells",
@@ -22,5 +22,21 @@
     "package.json",
     "package-lock.json",
     "README.md"
-  ]
+  ],
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-es2015-modules-simple-commonjs": "^0.3.0",
+    "create-index": "^2.3.0",
+    "shx": "^0.3.2"
+  },
+  "babel": {
+    "plugins": [
+      [
+        "transform-es2015-modules-simple-commonjs",
+        {
+          "noInterop": true
+        }
+      ]
+    ]
+  }
 }
