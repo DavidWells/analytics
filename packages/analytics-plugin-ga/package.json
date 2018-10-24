@@ -1,0 +1,27 @@
+{
+  "name": "analytics-plugin-ga",
+  "version": "0.0.7",
+  "description": "Google analytics plugin for 'analytics'",
+  "author": "David Wells",
+  "license": "MIT",
+  "homepage": "https://github.com/DavidWells/analtyics#readme",
+  "main": "dist/analytics-plugin-ga.cjs.js",
+  "module": "dist/analytics-plugin-ga.esm.js",
+  "browser": "dist/analytics-plugin-ga.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node ../../scripts/build-plugin.js --nameSpace googleAnalytics",
+    "postbuild": "node ../../scripts/build-plugin-post.js",
+    "builddev": "node ../build.js --nameSpace googleAnalytics --env dev",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish"
+  },
+  "files": [
+    "lib",
+    "dist",
+    "package.json",
+    "package-lock.json",
+    "README.md"
+  ]
+}
