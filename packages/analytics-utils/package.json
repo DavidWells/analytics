@@ -2,19 +2,25 @@
   "name": "analytics-utils",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "browser": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
-    "release:major": "npm version major && npm publish"
+    "release:major": "npm version major && npm publish",
+    "build": "node ../../scripts/utils/build.js",
+    "watch":  "node ../../scripts/utils/watch.js"
   },
   "keywords": [],
   "author": "David Wells",
   "license": "MIT",
   "files": [
-    "*.js",
+    "lib",
+    "dist",
     "package.json",
+    "package-lock.json",
     "README.md"
   ]
 }
