@@ -10,7 +10,7 @@
   "browser": "dist/analytics-plugin-customerio.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node ../../scripts/build-plugin.js --nameSpace customerIO",
+    "build": "node ../../scripts/plugins/build.js --nameSpace customerIO",
     "watch":  "node ../../scripts/plugins/watch.js --nameSpace customerIO",
     "builddev": "node ../build.js --nameSpace customerIO --env dev",
     "release:patch": "npm version patch && npm publish",
