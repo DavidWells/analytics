@@ -6,7 +6,7 @@
     "clean": "rimraf packages/*/dist",
     "reset": "npm run clean && lerna clean --yes",
     "test": "ava",
-    "watch": "lerna run watch --stream",
+    "watch": "lerna run watch --parallel",
     "develop": "lerna run develop --parallel",
     "build": "npm run clean && lerna run build",
     "build:dev": "npm run clean && lerna run build:dev"

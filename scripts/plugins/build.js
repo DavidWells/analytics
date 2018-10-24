@@ -1,14 +1,13 @@
 const minimist = require('minimist')
 const argv = minimist(process.argv.slice(2))
-const buildPlugin = require('./do-rollup')
-const postBuildCheck = require('./post-build')
+const buildPlugin = require('./rollup')
+const checkSsr = require('./check-ssr')
 
 const pluginNameSpace = argv.nameSpace
-let stage = argv.env || 'production'
-process.env.NODE_ENV = stage
+process.env.NODE_ENV = argv.env || 'production'
 let isProduction = process.env.NODE_ENV === 'production'
 
-/*/* // uncomment to force non minified dev build or run `npm run build:dev`
+//*/* // uncomment to force non minified dev build or run `npm run build:dev`
 isProduction = false
 /**/
 
@@ -18,11 +17,11 @@ if (!pluginNameSpace) {
 }
 
 buildPlugin(pluginNameSpace, isProduction).then((data) => {
-	console.log('DONE')
+	console.log(`${pluginNameSpace} finished building`)
+	// Check SSR
 	setTimeout(function(){
-		// postBuildCheck()
+		checkSsr(true)
 	}, 0)
-	// run post check
 }).catch((e) => {
 	console.log('Rollup build error', e)
 	process.exit(1)

@@ -2,8 +2,7 @@
  * GA analytics integration
  * https://developers.google.com/analytics/devguides/collection/analyticsjs
  */
-import { inBrowser } from 'analytics-utils'
-import extend from 'analytics-utils/extend'
+import { inBrowser, extend } from 'analytics-utils'
 
 // Analytics Integration Namespace
 export const NAMESPACE = 'google'
@@ -127,10 +126,7 @@ export const loaded = function() {
 
 /* Export the integration */
 module.exports = function googleAnalytics(userConfig) {
-  const mergedConfig = {
-    ...config, // hardcoded defaults
-    ...userConfig
-  }
+  const mergedConfig = Object.assign({}, config, userConfig)
   return {
     NAMESPACE: NAMESPACE,
     config: mergedConfig,
