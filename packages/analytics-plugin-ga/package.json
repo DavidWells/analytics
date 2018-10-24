@@ -23,5 +23,8 @@
     "package.json",
     "package-lock.json",
     "README.md"
-  ]
+  ],
+  "dependencies": {
+    "analytics-utils": "^0.0.1"
+  }
 }
