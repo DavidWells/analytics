@@ -8,66 +8,8 @@ const uglify = require('rollup-plugin-uglify')
 const replace = require('rollup-plugin-replace')
 const stripBanner = require('rollup-plugin-strip-banner')
 const closure = require('rollup-plugin-closure-compiler-js')
-const argv = require('minimist')(process.argv.slice(2))
-const pluginGlobalNameSpace = argv.nameSpace
-const stage = argv.env || 'production'
-// process.env.NODE_ENV = 'development'
-process.env.NODE_ENV = stage
-let isProduction = process.env.NODE_ENV === 'production'
-// isProduction = false
 
-const closureOptions = {
-  compilationLevel: 'SIMPLE',
-  languageIn: 'ECMASCRIPT5_STRICT',
-  languageOut: 'ECMASCRIPT5_STRICT',
-  env: 'CUSTOM',
-  warningLevel: 'QUIET',
-  applyInputSourceMaps: false,
-  useTypesForOptimization: false,
-  processCommonJsModules: false,
-}
-
-const sharedPlugins = [
-  stripBanner({
-    exclude: 'node_modules/**/*',
-  }),
-  nodeResolve({
-    jsnext: true
-  }),
-  babel({
-    exclude: 'node_modules/**',
-    plugins: ['external-helpers']
-  }),
-  // Remove 'use strict' from individual source files.
-  {
-    transform(source) {
-      return source.replace(/['"]use strict['"']/g, '')
-    },
-  },
-  removeNodeBuiltIns(),
-  commonjs({
-    include: 'node_modules/**',
-  }),
-]
-
-const compilerPlugins = [
-  ...sharedPlugins,
-  ...[
-    isProduction && closure(closureOptions),
-    isProduction && uglify({
-      compress: {
-        // screw_ie8: true,
-        warnings: false
-      },
-      output: {
-        comments: false
-      },
-      sourceMap: false
-    })
-  ],
-]
-
-function getConfig(windowGlobalName) {
+function getRollupConfig(windowGlobalName, isProduction) {
   // console.log('__dirname', __dirname)
   // console.log('cwd', process.cwd())
   const dir = process.cwd()
@@ -77,6 +19,55 @@ function getConfig(windowGlobalName) {
   const esOutputPath = path.join(dir, pkg.module)
   const iifeOutputPath = path.join(dir, pkg.browser)
   const cjsOutputPath = path.join(dir, pkg.main)
+
+  const sharedPlugins = [
+    stripBanner({
+      exclude: 'node_modules/**/*',
+    }),
+    nodeResolve({
+      jsnext: true
+    }),
+    babel({
+      exclude: 'node_modules/**',
+      plugins: ['external-helpers']
+    }),
+    // Remove 'use strict' from individual source files.
+    {
+      transform(source) {
+        return source.replace(/['"]use strict['"']/g, '')
+      },
+    },
+    removeNodeBuiltIns(),
+    commonjs({
+      include: 'node_modules/**',
+    }),
+  ]
+
+  const compilerPlugins = [
+    ...sharedPlugins,
+    ...[
+      isProduction && closure({
+        compilationLevel: 'SIMPLE',
+        languageIn: 'ECMASCRIPT5_STRICT',
+        languageOut: 'ECMASCRIPT5_STRICT',
+        env: 'CUSTOM',
+        warningLevel: 'QUIET',
+        applyInputSourceMaps: false,
+        useTypesForOptimization: false,
+        processCommonJsModules: false,
+      }),
+      isProduction && uglify({
+        compress: {
+          // screw_ie8: true,
+          warnings: false
+        },
+        output: {
+          comments: false
+        },
+        sourceMap: false
+      })
+    ],
+  ]
 
   return [
     // Global window build
@@ -112,14 +103,14 @@ function getConfig(windowGlobalName) {
   ]
 }
 
-function buildEverything() {
-  if (!pluginGlobalNameSpace) {
-    console.log('Missing Plugin folder name. --plugin xyzFolder')
-    process.exit(1)
+module.exports = function buildPlugin(pluginNameSpace, isProduction) {
+  if (!pluginNameSpace) {
+    return reject('Missing plugin namespace. --nameSpace xyzFolder')
   }
-  const config = getConfig(pluginGlobalNameSpace)
-  config.forEach((conf) => {
-    rollup(conf).then((result) => {
+
+  const config = getRollupConfig(pluginNameSpace, isProduction)
+  const builds = config.map((conf) => {
+    return rollup(conf).then((result) => {
       result.write({
         file: conf.output.file,
         format: conf.output.format,
@@ -128,11 +119,8 @@ function buildEverything() {
         // sourcemap: false,
       })
       console.log(`End ${conf.output.format} build ${conf.output.file}`)
-    }).catch((e) => {
-      console.log('error', e)
     })
   })
-}
 
-console.log(`Start ${pluginGlobalNameSpace} build`)
-buildEverything()
+  return Promise.all(builds)
+}

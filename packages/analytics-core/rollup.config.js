@@ -27,7 +27,7 @@ const closureOptions = {
 }
 
 const externals = Object.keys(packageJSON.dependencies)
-console.log('externals', externals)
+// console.log('externals', externals)
 const sharedPlugins = [
   stripBanner({
     exclude: 'node_modules/**/*',

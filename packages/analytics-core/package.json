@@ -8,7 +8,7 @@
   "module": "dist/analytics.esm.js",
   "browser": "dist/analytics.js",
   "scripts": {
-    "dev": "rollup -c -w",
+    "watch": "rollup -c -w",
     "prebuild": "rimraf ./dist",
     "build": "rollup -c",
     "test": "ava",

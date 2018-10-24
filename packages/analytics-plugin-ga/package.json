@@ -10,8 +10,8 @@
   "browser": "dist/analytics-plugin-ga.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node ../../scripts/build-plugin.js --nameSpace googleAnalytics",
-    "postbuild": "node ../../scripts/build-plugin-post.js",
+    "build": "node ../../scripts/plugins/build.js --nameSpace googleAnalytics",
+    "watch":  "node ../../scripts/plugins/watch.js --nameSpace googleAnalytics",
     "builddev": "node ../build.js --nameSpace googleAnalytics --env dev",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
