@@ -7,7 +7,10 @@ const pluginNameSpace = argv.nameSpace
 let stage = argv.env || 'production'
 process.env.NODE_ENV = stage
 let isProduction = process.env.NODE_ENV === 'production'
+
+/*/* // uncomment to force non minified dev build or run `npm run build:dev`
 isProduction = false
+/**/
 
 if (!pluginNameSpace) {
   console.log('Missing plugin namespace. --nameSpace xyzFolder')

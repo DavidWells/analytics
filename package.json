@@ -2,8 +2,14 @@
   "name": "root",
   "private": true,
   "scripts": {
-  	"dev": "lerna run dev --stream",
-  	"build": "lerna run build"
+  	"bootstrap": "npm install && lerna bootstrap",
+  	"clean": "rimraf packages/*/dist",
+  	"reset": "npm run clean && lerna clean --yes",
+  	"test": "ava",
+    "watch": "lerna run watch --stream",
+    "develop": "lerna run develop --parallel",
+    "build": "npm run clean && lerna run build",
+    "build:dev": "npm run clean && lerna run build:dev"
   },
   "devDependencies": {
     "ava": "^0.20.0",
