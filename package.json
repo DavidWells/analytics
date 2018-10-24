@@ -1,6 +1,10 @@
 {
   "name": "root",
   "private": true,
+  "scripts": {
+  	"dev": "lerna run dev --stream",
+  	"build": "lerna run build"
+  },
   "devDependencies": {
     "ava": "^0.20.0",
     "babel-cli": "^6.24.1",
