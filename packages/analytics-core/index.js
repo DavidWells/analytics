@@ -249,26 +249,7 @@ function analytics(config = {}) {
   }
 }
 
-
-function retry(fn, retriesLeft = 5, interval = 1000) {
-  return new Promise((resolve, reject) => {
-    fn()
-      .then(resolve)
-      .catch((error) => {
-        setTimeout(() => {
-          if (retriesLeft === 1) {
-            // reject('maximum retries exceeded');
-            reject(error)
-            return
-          }
-
-          // Passing on "reject" is the important part
-          retry(fn, interval, retriesLeft - 1).then(resolve, reject)
-        }, interval)
-      })
-  })
-}
-
+// Check for script loaded on page then dispatch actions
 function checkForScriptReady(config, store, provider, retryCount) {
   retryCount = retryCount || 0
   const maxRetries = config.maxRetries
@@ -319,6 +300,7 @@ function checkForScriptReady(config, store, provider, retryCount) {
     })
   }
 }
+
 /*
 // Reduce once for both sets of data
 const customIntegrations = plugins.reduce((obj, p) => {
