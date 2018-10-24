@@ -2,17 +2,18 @@
  * GA analytics integration
  * https://developers.google.com/analytics/devguides/collection/analyticsjs
  */
+import { inBrowser } from 'analytics-utils'
+import extend from 'analytics-utils/extend'
 
-/* global ga */
-
+// Analytics Integration Namespace
 export const NAMESPACE = 'google'
-const inBrowser = typeof window !== 'undefined'
 
+// Analytics Integration Configuration
 export const config = {
   assumesPageview: true
 }
 
-/* initialize GA script */
+// Analytics Integration initialize function
 export const initialize = (config) => {
   if (!config.trackingId) {
     throw new Error('No google tracking id defined')
@@ -36,7 +37,7 @@ export const initialize = (config) => {
   }
 }
 
-/* Trigger GA page view */
+// Analytics Integration pageView function
 export const page = (pageData) => {
   if (typeof ga !== 'undefined') {
     if (inBrowser) {
@@ -47,7 +48,7 @@ export const page = (pageData) => {
   }
 }
 
-/* Google Analytics Track call */
+// Analytics Integration track function
 export const track = (event, payload = {}, analytics) => {
   const gaData = {
     // hitType https://bit.ly/2Jab9L1
@@ -100,8 +101,7 @@ export const track = (event, payload = {}, analytics) => {
   }
 }
 
-/* Identify GA user */
-/* Google Analytics Track call */
+// Analytics Integration identify function
 export const identify = (id, traits, opts, cb) => {
   if (inBrowser) {
     console.log('GA identify', id, traits, opts)
@@ -117,6 +117,7 @@ export const identify = (id, traits, opts, cb) => {
   */
 }
 
+// Analytics Integration isLibraryLoaded function
 export const loaded = function() {
   if (!inBrowser) {
     return true
@@ -124,7 +125,7 @@ export const loaded = function() {
   return !!window.gaplugins
 }
 
-/* export the integration */
+/* Export the integration */
 module.exports = function googleAnalytics(userConfig) {
   const mergedConfig = {
     ...config, // hardcoded defaults
@@ -139,12 +140,4 @@ module.exports = function googleAnalytics(userConfig) {
     identify: extend('identify', identify, mergedConfig),
     loaded: extend('loaded', loaded, mergedConfig)
   }
-}
-
-// Allows for userland overrides of base functions
-function extend(methodName, defaultFunction, config) {
-  if (config[methodName] && typeof config[methodName] === 'function') {
-    return config[methodName]
-  }
-  return defaultFunction
 }
