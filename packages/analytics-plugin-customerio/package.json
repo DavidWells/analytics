@@ -5,14 +5,13 @@
   "author": "David Wells",
   "license": "MIT",
   "homepage": "https://github.com/DavidWells/analtyics#readme",
-  "main": "dist/analytics-plugin-customerio.cjs.js",
+  "main": "dist/analytics-plugin-customerio.js",
   "module": "dist/analytics-plugin-customerio.esm.js",
-  "browser": "dist/analytics-plugin-customerio.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "node ../../scripts/plugins/build.js --nameSpace customerIO",
     "build:dev": "node ../../scripts/plugins/build.js --nameSpace customerIO --env dev",
-    "watch":  "node ../../scripts/plugins/watch.js --nameSpace customerIO",
+    "watch": "node ../../scripts/plugins/watch.js --nameSpace customerIO",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish"
@@ -23,5 +22,8 @@
     "package.json",
     "package-lock.json",
     "README.md"
-  ]
+  ],
+  "dependencies": {
+    "analytics-utils": "0.0.4"
+  }
 }

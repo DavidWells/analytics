@@ -2,6 +2,8 @@
  * GA analytics integration
  * https://developers.google.com/analytics/devguides/collection/analyticsjs
  */
+
+/* global ga */
 import { inBrowser, extend } from 'analytics-utils'
 
 // Analytics Integration Namespace
@@ -17,17 +19,15 @@ export const initialize = (config) => {
   if (!config.trackingId) {
     throw new Error('No google tracking id defined')
   }
-  if (inBrowser) {
-    console.log('initialize GA')
-  }
-  if (typeof window !== 'undefined' && typeof ga === 'undefined') {
+  if (inBrowser && typeof ga === 'undefined') {
+    /* eslint-disable */
     (function(i, s, o, g, r, a, m) {
       i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function() {
         (i[r].q = i[r].q || []).push(arguments)
       }, i[r].l = 1 * new Date(); a = s.createElement(o),
       m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
     })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga')
-
+    /* eslint-enable */
     ga('create', config.trackingId, 'auto')
     // TODO use assumesPageview option
     if (config.assumesPageview) {
@@ -38,10 +38,9 @@ export const initialize = (config) => {
 
 // Analytics Integration pageView function
 export const page = (pageData) => {
-  if (typeof ga !== 'undefined') {
-    if (inBrowser) {
-      console.info(`GA Pageview > ${window.location.href}`)
-    }
+  if (inBrowser && typeof ga !== 'undefined') {
+    console.info(`GA Pageview > ${window.location.href}`)
+
     ga('set', 'page', pageData.path) // eslint-disable-line
     ga('send', 'pageview') // eslint-disable-line
   }
@@ -69,7 +68,7 @@ export const track = (event, payload = {}, analytics) => {
     let debugGA = `GA Event > ${debugCat} [Action: ${event}]${debugLabel}${debugValue}${debugInteraction}`
     console.log(debugGA)
   }
-  // return Promise.resolve()
+
   if (typeof ga !== 'undefined') {
     if (payload.label) {
       // what form is this? If this is part of an A/B test, what variation?
@@ -93,7 +92,7 @@ export const track = (event, payload = {}, analytics) => {
      eventValue: formatValue(props.value || track.revenue()),
      // Allow users to override their nonInteraction integration setting for any single particluar event.
      nonInteraction: props.nonInteraction !== undefined ? !!props.nonInteraction : !!opts.nonInteraction
-    };
+    }
     */
     console.log(`GA Payload Event > [${JSON.stringify(gaData, null, 2)}]`)
     ga('send', 'event', gaData)
@@ -125,7 +124,7 @@ export const loaded = function() {
 }
 
 /* Export the integration */
-module.exports = function googleAnalytics(userConfig) {
+export default function googleAnalytics(userConfig) {
   const mergedConfig = Object.assign({}, config, userConfig)
   return {
     NAMESPACE: NAMESPACE,

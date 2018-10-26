@@ -16,7 +16,7 @@ export {
   identify,
 }
 
-module.exports = function customerIO(config) {
+export default function customerIO(config) {
   return {
     NAMESPACE: NAMESPACE,
     initialize: function() {
