@@ -1,9 +1,8 @@
 {
   "name": "analytics-utils",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "",
   "main": "dist/index.js",
-  "module": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "release:patch": "npm version patch && npm publish",
@@ -11,7 +10,8 @@
     "release:major": "npm version major && npm publish",
     "build:cjs": "babel lib --out-dir dist --ignore test.js",
     "build": "shx rm -f lib/index.js && create-index --ignoreUnsafe lib && npm run build:cjs",
-    "watch": "babel lib --out-dir dist --ignore test.js --watch"
+    "watch": "babel lib --out-dir dist --ignore test.js --watch",
+    "es": "babel-node ./testtwo.js"
   },
   "keywords": [],
   "author": "David Wells",
@@ -30,6 +30,14 @@
     "shx": "^0.3.2"
   },
   "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "modules": false
+        }
+      ]
+    ],
     "plugins": [
       [
         "transform-es2015-modules-simple-commonjs",
