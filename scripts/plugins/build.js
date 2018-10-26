@@ -20,7 +20,7 @@ buildPlugin(pluginNameSpace, isProduction).then((data) => {
 	console.log(`${pluginNameSpace} finished building`)
 	// Check SSR
 	setTimeout(function(){
-		checkSsr(true)
+		//checkSsr(true)
 	}, 0)
 }).catch((e) => {
 	console.log('Rollup build error', e)

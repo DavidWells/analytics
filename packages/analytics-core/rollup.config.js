@@ -14,7 +14,7 @@ import packageJSON from './package.json'
 // process.env.NODE_ENV = 'development'
 process.env.NODE_ENV = 'production'
 let isProduction = process.env.NODE_ENV === 'production'
-// isProduction = false
+isProduction = false
 const closureOptions = {
   compilationLevel: 'SIMPLE',
   languageIn: 'ECMASCRIPT5_STRICT',
@@ -63,33 +63,33 @@ const sharedPlugins = [
 
 export default [
   // browser-friendly iife build
-  {
-    input: 'index.js',
-    output: {
-      name: 'analytics',
-      file: packageJSON.browser,
-      format: 'iife',
-      // iife for global window
-      // umd for global window
-      // cjs for module format
-    },
-    plugins: [
-      ...sharedPlugins,
-      ...[
-        isProduction && closure(closureOptions),
-        isProduction && uglify({
-          compress: {
-            // screw_ie8: true,
-            warnings: false
-          },
-          output: {
-            comments: false
-          },
-          sourceMap: false
-        })
-      ],
-    ]
-  },
+  // {
+  //   input: 'index.js',
+  //   output: {
+  //     name: 'analytics',
+  //     file: packageJSON.browser,
+  //     format: 'iife',
+  //     // iife for global window
+  //     // umd for global window
+  //     // cjs for module format
+  //   },
+  //   plugins: [
+  //     ...sharedPlugins,
+  //     ...[
+  //       isProduction && closure(closureOptions),
+  //       isProduction && uglify({
+  //         compress: {
+  //           // screw_ie8: true,
+  //           warnings: false
+  //         },
+  //         output: {
+  //           comments: false
+  //         },
+  //         sourceMap: false
+  //       })
+  //     ],
+  //   ]
+  // },
 
   // CommonJS (for Node) build.
   {

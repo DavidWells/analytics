@@ -17,7 +17,8 @@ function getRollupConfig(windowGlobalName, isProduction) {
   const externals = (pkg.dependencies) ? Object.keys(pkg.dependencies) : []
   const filePath = path.join(`${dir}/lib`, 'index.js')
   const esOutputPath = path.join(dir, pkg.module)
-  const iifeOutputPath = path.join(dir, pkg.browser)
+  // disable iife builds b/c https://gist.github.com/DavidWells/f510176b725f2ed0f995e32807d9bdad
+  // const iifeOutputPath = path.join(dir, pkg.browser)
   const cjsOutputPath = path.join(dir, pkg.main)
 
   const sharedPlugins = [
@@ -71,15 +72,15 @@ function getRollupConfig(windowGlobalName, isProduction) {
 
   return [
     // Global window build
-    {
-      input: filePath,
-      output: {
-        name: windowGlobalName,
-        file: iifeOutputPath,
-        format: 'iife',
-      },
-      plugins: compilerPlugins
-    },
+    // {
+    //   input: filePath,
+    //   output: {
+    //     name: windowGlobalName,
+    //     file: iifeOutputPath,
+    //     format: 'iife',
+    //   },
+    //   plugins: compilerPlugins
+    // },
     // CommonJS (for Node) build.
     {
       input: filePath,
