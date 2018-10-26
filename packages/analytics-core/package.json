@@ -23,8 +23,11 @@
   },
   "files": [
     "dist",
-    "core",
-    "plugins",
+    "middleware",
+    "modules",
+    "utils",
+    "events.js",
+    "index.js",
     "package.json",
     "package-lock.json",
     "README.md"
