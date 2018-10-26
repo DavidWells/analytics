@@ -9,7 +9,6 @@ export default function integrations(state = initialState, action) {
     case EVENTS.REGISTER_INTEGRATION:
       // console.log('REGISTER_INTEGRATION', action.name)
       // console.log('action.integration', action.integration)
-
       newState[action.name] = {
         enabled: true,
         loaded: false, // script loaded = false
@@ -22,7 +21,7 @@ export default function integrations(state = initialState, action) {
       const loaded = {}
       loaded[action.name] = {
         ...state[action.name],
-        ...{loaded: true}
+        ...{ loaded: true }
       }
       // console.log('LOADED OBJECT', loaded)
       return { ...state, ...loaded }
@@ -31,14 +30,14 @@ export default function integrations(state = initialState, action) {
       // TODO clean up
       newState[action.name] = {
         ...state[action.name],
-        ...{loaded: false}
+        ...{ loaded: false }
       }
       return { ...state, ...newState }
     case EVENTS.DISABLE_INTEGRATION:
       // console.log('DISABLE_INTEGRATION', action.name)
       newState[action.name] = {
         ...state[action.name],
-        ...{enabled: false}
+        ...{ enabled: false }
       }
       return {...state, ...newState}
     default:

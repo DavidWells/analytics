@@ -6,7 +6,7 @@
   "license": "MIT",
   "main": "dist/analytics.cjs.js",
   "module": "dist/analytics.esm.js",
-  "browser": "dist/analytics.js",
+  "browser": "dist/analytics.cjs.js",
   "scripts": {
     "watch": "rollup -c -w",
     "prebuild": "rimraf ./dist",
@@ -30,6 +30,7 @@
     "README.md"
   ],
   "dependencies": {
+    "analytics-utils": "^0.0.5",
     "redux": "^3.6.0"
   },
   "devDependencies": {

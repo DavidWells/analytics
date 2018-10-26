@@ -1,8 +1,8 @@
+import { uuid, inBrowser } from 'analytics-utils'
 import EVENTS from '../events'
-import uuid from '../utils/uuid'
+
 // TODO come up with ls keys
 const ANALYTICS_ID = 'analytics_id'
-const inBrowser = typeof window !== 'undefined'
 
 const setId = () => {
   const id = uuid()
@@ -36,8 +36,7 @@ const initializeId = () => {
 // user state
 const initialState = {
   userId: null,
-  anonymousId: initializeId(), // uuidv4
-  // fingerprint: '', // exstension?
+  anonymousId: initializeId(),
   traits: {}
 }
 

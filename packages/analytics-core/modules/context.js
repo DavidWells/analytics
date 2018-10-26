@@ -1,4 +1,6 @@
 // Context Reducer
+/* global BUILD_WEB BUILD_NODE */
+import { inBrowser } from 'analytics-utils'
 import EVENTS from '../events'
 import getOSNameNode from '../utils/getOSName/node'
 import getOSNameBrowser from '../utils/getOSName/browser'
@@ -20,7 +22,7 @@ const initialState = {
   os: {
     name: osName,
   },
-  userAgent: (typeof navigator !== 'undefined') ? navigator.userAgent : 'node', // https://github.com/bestiejs/platform.js
+  userAgent: (inBrowser) ? navigator.userAgent : 'node', // https://github.com/bestiejs/platform.js
   library: {
     name: 'analytics',
     // TODO fix version number. npm run publish:patch has wrong version
@@ -37,14 +39,14 @@ export default function context(state = initialState, action) {
     case EVENTS.SET_CAMPAIGN:
       return {
         ...state,
-        ...{campaign: campaign}
+        ...{ campaign: campaign }
       }
     default:
       if (!initialized) {
         return {
           ...initialState,
           ...state,
-          ...{initialized: true}
+          ...{ initialized: true }
         }
       }
       return state

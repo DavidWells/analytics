@@ -1,12 +1,11 @@
 // Page View Module
+import { inBrowser } from 'analytics-utils'
 import EVENTS from '../events'
 import getIntegrationsWithMethod from '../utils/getIntegrationsWithMethod'
 import getCallbackFromArgs from '../utils/getCallback'
-import isInBrowser from '../utils/isInBrowser'
 
 export const getPageData = (pageData = {}) => {
-  // in node, return {}
-  if (!isInBrowser) {
+  if (!inBrowser) {
     return pageData
   }
   const { title, referrer } = document

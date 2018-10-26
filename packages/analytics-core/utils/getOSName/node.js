@@ -1,5 +1,5 @@
 import os from 'os'
 
-export default function getNodeOS(){
+export default function getNodeOS() {
   return os.platform()
 }

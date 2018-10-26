@@ -1,10 +1,10 @@
 import EVENTS from '../events'
-import urlParams from '../utils/getUrlParams'
+import { paramsParse } from 'analytics-utils'
 
 // Middleware runs during EVENTS.INITIALIZE
 const initialize = store => next => action => {
   if (action.type === EVENTS.INITIALIZE) {
-    const params = urlParams()
+    const params = paramsParse()
     if (params) {
       store.dispatch({
         type: EVENTS.HANDLE_PARAMS,

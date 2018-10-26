@@ -38,6 +38,7 @@
     "rollup-plugin-sizes": "^0.4.2",
     "rollup-plugin-strip-banner": "^0.2.0",
     "rollup-plugin-uglify": "^2.0.1",
+    "sane": "^4.0.1",
     "size-limit": "^0.13.2"
   },
   "babel": {

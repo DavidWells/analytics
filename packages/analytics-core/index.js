@@ -1,4 +1,5 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
+import { inBrowser } from 'analytics-utils'
 import dynamicMiddlewares, { addMiddleware, removeMiddleware } from './middleware/dynamicMiddleware'
 import initializeMiddleware from './middleware/initializeMiddleware'
 import trackMiddleware from './middleware/track'
@@ -13,13 +14,7 @@ import EVENTS from './events'
 
 const isDev = process.env.NODE_ENV === 'development'
 
-/* export initialize function. Wont work with commonjs
-export default (config) => {
-  return analytics(config)
-}
-*/
-
-// Only way commonJS will work ¯\_(ツ)_/¯
+// Only way commonJS will work
 module.exports = (config) => {
   return analytics(config)
 }
@@ -74,7 +69,7 @@ function analytics(config = {}) {
   }
 
   let composeEnhancers = compose
-  if (typeof window !== 'undefined') {
+  if (inBrowser) {
     const withDevTools = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
     composeEnhancers = (isDev) ? withDevTools : compose
   }
@@ -315,4 +310,4 @@ const customIntegrations = plugins.reduce((obj, p) => {
   middleware: [],
   integration: {}
 })
- */
+*/
