@@ -5,8 +5,9 @@ import getCallbackFromArgs from '../utils/getCallback'
 export default function identifyMiddleware(getIntegrations) {
   return store => next => action => {
     const { type, userId, traits, options, callback } = action
-    if (type === EVENTS.IDENTIFY_START) {
+    if (type === EVENTS.IDENTIFY_INIT) {
       const identifyCalls = getIntegrationsWithMethod(getIntegrations(), 'identify')
+      const cb = getCallbackFromArgs(traits, options, callback)
       // No identify middleware attached
       if (!identifyCalls.length) {
         store.dispatch({
@@ -20,9 +21,10 @@ export default function identifyMiddleware(getIntegrations) {
           ...{ type: EVENTS.IDENTIFY_COMPLETE }
         })
       }
+
       let count = 0
+      let completed = []
       let hasRan = false
-      // console.log('identifyCalls', identifyCalls)
 
       /* Filter out disabled integrations */
       identifyCalls.filter((provider) => {
@@ -40,8 +42,20 @@ export default function identifyMiddleware(getIntegrations) {
         let timer = 0
         const runWhenScriptLoaded = () => {
           const state = store.getState()
-          const integrationLoaded = state.integrations[NAMESPACE].loaded
-          if (!integrationLoaded) {
+          const { loaded, enabled } = state.integrations[NAMESPACE]
+
+          if (!enabled) {
+            console.log('ABORT Identity viw >>>>>', NAMESPACE, type)
+            count = count + 1
+            // all track calls complete
+            if (identifyCalls === identifyCalls.length) {
+              // Todo this logic is duplicated above in after abort
+              identifyCompleted(store, completed, cb)
+            }
+            return false
+          }
+
+          if (!loaded) {
             // TODO: set max try limit and add calls to local queue on fail
             if (timer > timeoutMax) {
               store.dispatch({
@@ -72,18 +86,16 @@ export default function identifyMiddleware(getIntegrations) {
           provider.identify(userId, traits, options)
 
           /* Run namespaced .identify calls */
-          store.dispatch({ type: `identify:${NAMESPACE}` })
+          store.dispatch({
+            type: EVENTS.IDENTIFY_NAMESPACE(NAMESPACE)
+          })
 
           // increment success counter
           count = count + 1
+          completed = completed.concat(NAMESPACE)
           // all identify calls complete
           if (count === identifyCalls.length) {
-            const cb = getCallbackFromArgs(traits, options, callback)
-            if (cb) cb(state)
-            // dispatch completion event for middlewares
-            store.dispatch({
-              type: EVENTS.IDENTIFY_COMPLETE,
-            })
+            identifyCompleted(store, completed, cb)
           }
         }
         runWhenScriptLoaded()
@@ -91,5 +103,16 @@ export default function identifyMiddleware(getIntegrations) {
     }
     // resume
     return next(action)
+  }
+}
+
+function identifyCompleted(store, completed, cb) {
+  // dispatch completion event for middlewares
+  store.dispatch({
+    type: EVENTS.IDENTIFY_COMPLETE,
+    ...{ integrations: completed }
+  })
+  if (cb) {
+    cb(store)
   }
 }

@@ -40,7 +40,7 @@ export default function page(state = initialState, action) {
 
 export const pageView = (data, options, callback) => {
   return {
-    type: EVENTS.PAGE_START,
+    type: EVENTS.PAGE_INIT,
     data: data,
     options: options,
     callback: callback

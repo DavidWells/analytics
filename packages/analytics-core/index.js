@@ -4,12 +4,14 @@ import dynamicMiddlewares, { addMiddleware, removeMiddleware } from './middlewar
 import initializeMiddleware from './middleware/initializeMiddleware'
 import trackMiddleware from './middleware/track'
 import pageMiddleware from './middleware/pageMiddleware'
+import integrationMiddleware from './middleware/integrationMiddleware'
 import identifyMiddleware from './middleware/identifyMiddleware'
 import context, { makeContext } from './modules/context'
-import integrations from './modules/integrations'
+import integrations, { enableIntegration, disableIntegration } from './modules/integrations'
 import page, { pageView } from './modules/page'
 import track, { trackEvent } from './modules/track'
 import user, { identify } from './modules/user'
+import dotProp from './utils/dotProp'
 import EVENTS from './events'
 
 const isDev = process.env.NODE_ENV === 'development'
@@ -56,6 +58,7 @@ function analytics(config = {}) {
     identifyMiddleware(getIntegrations),
     trackMiddleware(getIntegrations),
     pageMiddleware(getIntegrations),
+    integrationMiddleware,
     dynamicMiddlewares,
   ])
 
@@ -69,7 +72,7 @@ function analytics(config = {}) {
   }
 
   let composeEnhancers = compose
-  if (inBrowser) {
+  if (inBrowser && config.debug) {
     const withDevTools = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
     composeEnhancers = (isDev) ? withDevTools : compose
   }
@@ -99,7 +102,7 @@ function analytics(config = {}) {
     const provider = customIntegrations[int]
 
     store.dispatch({
-      type: EVENTS.REGISTER_INTEGRATION,
+      type: EVENTS.INTEGRATION_INIT,
       name: provider.NAMESPACE,
       integration: provider
     })
@@ -125,17 +128,12 @@ function analytics(config = {}) {
     }, 0)
   }
 
-  if (isDev) {
-    console.log('intialize state', store.getState())
-  }
-
-  return {
+  const api = {
     // Get all state or state by key
     getState: (key) => {
       const state = store.getState()
       if (key) {
-        // TODO add dot notation and grab deeper values
-        return state[key]
+        return dotProp(state, key)
       }
       return state
     },
@@ -167,9 +165,12 @@ function analytics(config = {}) {
       return Promise.resolve()
     },
     // get user data
-    user: () => {
-      // TODO add key to input and allow for pulling back specific values
-      return store.getState().user
+    user: (key) => {
+      const user = store.getState().user
+      if (key) {
+        return dotProp(user, key)
+      }
+      return user
     },
     // analtyics.ready all integrations ready
     ready: (cb) => {
@@ -190,11 +191,6 @@ function analytics(config = {}) {
       if (!callback) return false
       // Subscribe to EVERYTHING
       if (name === '*') {
-        /* // store subscribe works but won't give current action context
-          return store.subscribe(() => {
-            callback(action, store)
-          })
-        */
         const globalListener = store => next => action => {
           // do something on every action *
           callback(action, store)
@@ -221,9 +217,15 @@ function analytics(config = {}) {
         removeMiddleware(listener)
       }
     },
+    enableIntegration: (name, callback) => {
+      store.dispatch(enableIntegration(name, callback))
+    },
+    disableIntegration: (name, callback) => {
+      store.dispatch(disableIntegration(name, callback))
+    },
     // TODO decide if this is good or bad ⊂◉‿◉つ. Exposing publicly could be bad
     addIntegration: function(t) {
-      // TODO if it stays, state loaded needs to be set. Re REGISTER_INTEGRATION above
+      // TODO if it stays, state loaded needs to be set. Re INTEGRATION_INIT above
       // validate integration
       if (typeof t === 'object') {
         const newIntergration = {}
@@ -236,26 +238,28 @@ function analytics(config = {}) {
       }
       // then add it, and init state key
       store.dispatch({
-        type: EVENTS.REGISTER_INTEGRATION,
+        type: EVENTS.INTEGRATION_INIT,
         name: t.NAMESPACE,
         integration: t
       })
     }
   }
+
+  return api
 }
 
 // Check for script loaded on page then dispatch actions
 function checkForScriptReady(config, store, provider, retryCount) {
   retryCount = retryCount || 0
   const maxRetries = config.maxRetries
-
+  const { NAMESPACE } = provider
   if (retryCount > maxRetries) {
     store.dispatch({
       type: EVENTS.INTEGRATION_FAILED,
-      name: provider.NAMESPACE
+      name: NAMESPACE
     })
     store.dispatch({
-      type: `integration_failed:${provider.NAMESPACE}`
+      type: EVENTS.INTEGRATION_FAILED_NAME(NAMESPACE)
     })
     return false
   }
@@ -271,12 +275,12 @@ function checkForScriptReady(config, store, provider, retryCount) {
   // script isLoaded, dispatch generic event
   store.dispatch({
     type: EVENTS.INTEGRATION_LOADED,
-    name: provider.NAMESPACE
+    name: NAMESPACE
   })
 
   // dispatch namespaced event
   store.dispatch({
-    type: `integration_ready:${provider.NAMESPACE}`
+    type: EVENTS.INTEGRATION_LOADED_NAME(NAMESPACE)
   })
 
   // dispatch ready when all integrations load

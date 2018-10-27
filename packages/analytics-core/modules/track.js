@@ -35,7 +35,7 @@ export default function trackReducer(state = initialState, action) {
 // // Set tracking data for third party plugins
 export const trackEvent = (eventName, data, options, callback) => {
   return {
-    type: EVENTS.TRACK_START,
+    type: EVENTS.TRACK_INIT,
     eventName: eventName,
     data: data,
     options: options,

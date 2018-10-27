@@ -1,29 +1,41 @@
 // Core Analytic Events
 
 export default {
-  INITIALIZE: 'analyticsInit', // 'analyticsInit'
+  INITIALIZE: 'analyticsInit',
   HANDLE_PARAMS: 'params',
   SET_CAMPAIGN: 'campaign',
-  READY: 'ready', // 'analyticsReady'
+
   /* Integration actions */
-  REGISTER_INTEGRATION: 'integration_init', // 'integrationInit'
-  INTEGRATION_LOADED: 'integration_ready', // 'integrationLoaded'
-  INTEGRATION_FAILED: 'integration_failed', // 'integrationFailed'
-  ENABLE_INTEGRATION: 'enable_integration', // 'integrationEnabled'
-  DISABLE_INTEGRATION: 'disable_integration', // 'integrationDisabled'
+  INTEGRATION_INIT: 'integrationInit',
+  INTEGRATION_LOADED: 'integrationLoaded',
+  INTEGRATION_FAILED: 'integrationFailed',
+  INTEGRATION_LOADED_NAME: (name) => `integrationLoaded:${name}`,
+  INTEGRATION_FAILED_NAME: (name) => `integrationFailed:${name}`,
+  // Todo finish this event
+  INTEGRATION_ENABLED: 'integrationEnabled',
+  INTEGRATION_DISABLE: 'integrationDisabled',
+  ENABLE_INTEGRATION: 'enableIntegration',
+  DISABLE_INTEGRATION: 'disableIntegration',
+
+  READY: 'analyticsReady',
   /* Page actions */
-  PAGE_START: 'page_init', // 'pageInit'
-  PAGE: 'page', // 'page'
-  PAGE_COMPLETE: 'page_complete', // 'pageCompleted'
-  PAGE_ABORT: 'page_abort', // 'pageAborted' // TODO add this
+  PAGE_INIT: 'pageInit',
+  PAGE: 'page',
+  PAGE_NAMESPACE: (name) => `page:${name}`,
+  PAGE_COMPLETE: 'pageCompleted',
+  PAGE_ABORT: 'pageAborted',
+  PAGE_TIME_OUT: 'pageTimedOut',
   /* Track actions */
-  TRACK_START: 'track_init', // 'trackInit'
-  TRACK: 'track', // 'track'
-  TRACK_COMPLETE: 'track_complete', // 'trackCompleted'
-  TRACK_ABORT: 'track_abort', // 'trackAborted'
+  TRACK_INIT: 'trackInit',
+  TRACK: 'track',
+  TRACK_NAMESPACE: (name) => `track:${name}`,
+  TRACK_COMPLETE: 'trackCompleted',
+  TRACK_ABORT: 'trackAborted',
+  TRACK_TIME_OUT: 'trackTimedOut',
   /* Identify actions */
-  IDENTIFY_START: 'identify_init', // 'identifyInit'
-  IDENTIFY: 'identify', // 'identify'
-  IDENTIFY_COMPLETE: 'identify_complete', // 'identifyCompleted'
-  IDENTIFY_ABORTED: 'identify_abort' // 'identifyAborted' // TODO add this
+  IDENTIFY_INIT: 'identifyInit',
+  IDENTIFY: 'identify',
+  IDENTIFY_NAMESPACE: (name) => `identify:${name}`,
+  IDENTIFY_COMPLETE: 'identifyCompleted',
+  IDENTIFY_ABORTED: 'identifyAborted' // 'identifyAborted' // TODO add this
 }

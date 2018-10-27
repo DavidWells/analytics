@@ -6,8 +6,8 @@ const initialState = {}
 export default function integrations(state = initialState, action) {
   let newState = {}
   switch (action.type) {
-    case EVENTS.REGISTER_INTEGRATION:
-      // console.log('REGISTER_INTEGRATION', action.name)
+    case EVENTS.INTEGRATION_INIT:
+      // console.log('INTEGRATION_INIT', action.name)
       // console.log('action.integration', action.integration)
       newState[action.name] = {
         enabled: true,
@@ -34,10 +34,15 @@ export default function integrations(state = initialState, action) {
       }
       return { ...state, ...newState }
     case EVENTS.DISABLE_INTEGRATION:
-      // console.log('DISABLE_INTEGRATION', action.name)
       newState[action.name] = {
         ...state[action.name],
         ...{ enabled: false }
+      }
+      return {...state, ...newState}
+    case EVENTS.ENABLE_INTEGRATION:
+      newState[action.name] = {
+        ...state[action.name],
+        ...{ enabled: true }
       }
       return {...state, ...newState}
     default:
@@ -47,21 +52,23 @@ export default function integrations(state = initialState, action) {
 
 export const registerIntegration = (integration) => {
   return {
-    type: EVENTS.REGISTER_INTEGRATION,
+    type: EVENTS.INTEGRATION_INIT,
     integration: integration
   }
 }
 
-export const enableIntegration = (name) => {
+export const enableIntegration = (name, callback) => {
   return {
     type: EVENTS.ENABLE_INTEGRATION,
-    name: name
+    name: name,
+    callback: callback
   }
 }
 
-export const disableIntegration = (name) => {
+export const disableIntegration = (name, callback) => {
   return {
     type: EVENTS.DISABLE_INTEGRATION,
-    name: name
+    name: name,
+    callback: callback
   }
 }

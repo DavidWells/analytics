@@ -6,7 +6,8 @@ import { getPageData } from '../modules/page'
 export default function pageMiddleware(getIntegrations) {
   return store => next => action => {
     const { type, data, options, callback } = action
-    if (type === EVENTS.PAGE_START) {
+    if (type === EVENTS.PAGE_INIT) {
+      const cb = getCallbackFromArgs(data, options, callback)
       const pageCalls = getIntegrationsWithMethod(getIntegrations(), 'page')
       // No page middleware attached
       if (!pageCalls.length) {
@@ -21,6 +22,7 @@ export default function pageMiddleware(getIntegrations) {
       }
 
       let count = 0
+      let completed = []
       let hasRan = false
       /* Handle all .page calls syncronously */
       pageCalls.filter((provider) => {
@@ -39,14 +41,26 @@ export default function pageMiddleware(getIntegrations) {
         // https://jlongster.com/Two-Weird-Tricks-with-Redux
         const runWhenScriptLoaded = () => {
           const state = store.getState()
+          const { loaded, enabled } = state.integrations[NAMESPACE]
           const pageData = { ...getPageData(), ...data }
           const enrichedOptions = { ...state, ...{ options: options } }
 
-          if (!state.integrations[NAMESPACE].loaded) {
+          if (!enabled) {
+            console.log('ABORT Page viw >>>>>', NAMESPACE, type)
+            count = count + 1
+            // all track calls complete
+            if (pageCalls === pageCalls.length) {
+              // Todo this logic is duplicated above in after abort
+              pageCompleted(store, completed, cb)
+            }
+            return false
+          }
+
+          if (!loaded) {
             // TODO: set max try limit and add calls to local queue on fail
             if (timer > timeoutMax) {
               store.dispatch({
-                type: 'pageTimeout',
+                type: EVENTS.PAGE_TIME_OUT,
                 name: NAMESPACE
               })
               // TODO: save to queue
@@ -73,22 +87,17 @@ export default function pageMiddleware(getIntegrations) {
 
           /* Run Namespaced .page calls */
           store.dispatch({
-            type: `page:${NAMESPACE}`,
+            type: EVENTS.PAGE_NAMESPACE(NAMESPACE),
             data: pageData
           })
 
           // increment success counter
           count = count + 1
+          completed = completed.concat(NAMESPACE)
           // all track calls complete
           if (count === pageCalls.length) {
             // dispatch completion event for middlewares
-            store.dispatch({
-              type: EVENTS.PAGE_COMPLETE,
-            })
-            const cb = getCallbackFromArgs(data, options, callback)
-            if (cb) {
-              cb(store)
-            }
+            pageCompleted(store, completed, cb)
           }
         }
         runWhenScriptLoaded()
@@ -96,5 +105,16 @@ export default function pageMiddleware(getIntegrations) {
     }
     // resume
     return next(action)
+  }
+}
+
+function pageCompleted(store, completed, cb) {
+  // dispatch completion event for middlewares
+  store.dispatch({
+    type: EVENTS.PAGE_COMPLETE,
+    ...{ integrations: completed }
+  })
+  if (cb) {
+    cb(store)
   }
 }
