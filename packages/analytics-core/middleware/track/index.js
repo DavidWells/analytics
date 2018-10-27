@@ -5,23 +5,27 @@ import getCallbackFromArgs from '../../utils/getCallback'
 
 export default function trackMiddleware(getIntegrations) {
   return store => next => action => {
-    const { type, eventName, data, options, callback } = action
+    const { type, eventName, data = {}, options, callback } = action
+    const finalEventName = eventName || data.eventName
     if (type === EVENTS.TRACK_START) {
       // format data payload
-      const payload = formatPayload(eventName, data)
+      const payload = formatPayload(finalEventName, data)
       // setup data
       const dispatchData = {
-        eventName: eventName,
+        eventName: finalEventName,
         payload: payload,
         options: options
       }
 
       // if abort === true stop the rest
-      if (action.abort) {
+      if (action.abort || !finalEventName) {
         store.dispatch({
           ...{ type: EVENTS.TRACK_ABORT },
           ...dispatchData
         })
+        if (!finalEventName) {
+          console.log('Missing eventName')
+        }
         return next(action)
       }
 
@@ -39,6 +43,7 @@ export default function trackMiddleware(getIntegrations) {
       }
 
       let trackCount = 0
+      let completed = []
       let hasRan = false
 
       /* Filter out disabled integrations */
@@ -56,6 +61,7 @@ export default function trackMiddleware(getIntegrations) {
         let timeoutMax = 10000
         let timer = 0
         const runTrackWhenLibraryLoaded = () => {
+          const cb = getCallbackFromArgs(data, options, callback)
           const state = store.getState()
           // enrich options
           const enrichedOptions = { ...state, ...{ options: options } }
@@ -64,11 +70,26 @@ export default function trackMiddleware(getIntegrations) {
           if (!integrationLoaded) {
             // TODO: set max try limit and add calls to local queue on fail
             if (timer > timeoutMax) {
+              // TODO send the event data with timestamp to `failedTrackCall` key?
               store.dispatch({
                 ...dispatchData,
-                ...{ type: 'trackingTimeout' }
+                ...{
+                  type: EVENTS.TRACK_TIME_OUT,
+                  integration: NAMESPACE
+                }
               })
-              // TODO: save to queue
+              // TODO: save to retry queue
+
+              // Fire complete. Todo this logic is duplicated below
+              if (cb) {
+                cb(state)
+              }
+              // dispatch completion event for middlewares
+              store.dispatch({
+                ...{ type: EVENTS.TRACK_COMPLETE },
+                ...dispatchData,
+                ...{ integrations: completed }
+              })
               return false
             }
             timer = timer + 10
@@ -77,7 +98,7 @@ export default function trackMiddleware(getIntegrations) {
           }
 
           /* run integration[x] .track function */
-          provider.track(eventName, payload, enrichedOptions, state)
+          provider.track(finalEventName, payload, enrichedOptions, state)
 
           if (state.context.debug) {
             console.log('DEBUG IS ONNNNNNNNNN')
@@ -98,16 +119,21 @@ export default function trackMiddleware(getIntegrations) {
             },
             ...dispatchData
           })
+
+          completed = completed.concat(NAMESPACE)
           // increment success counter
           trackCount = trackCount + 1
           // all track calls complete
           if (trackCount === trackCalls.length) {
-            const cb = getCallbackFromArgs(data, options, callback)
-            if (cb) cb(state)
+            // Todo this logic is duplicated above in after abort
+            if (cb) {
+              cb(state)
+            }
             // dispatch completion event for middlewares
             store.dispatch({
               ...{ type: EVENTS.TRACK_COMPLETE },
-              ...dispatchData
+              ...dispatchData,
+              ...{ integrations: completed }
             })
           }
         }
