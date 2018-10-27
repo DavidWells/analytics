@@ -29,6 +29,13 @@ export const initialize = (config) => {
     })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga')
     /* eslint-enable */
     ga('create', config.trackingId, 'auto')
+
+    if (config.debug) {
+      // Disable sends to GA http://bit.ly/2Ro0vTR
+      ga('set', 'sendHitTask', null)
+      window.ga_debug = { trace: true }
+    }
+
     // TODO use assumesPageview option
     if (config.assumesPageview) {
       ga('send', 'pageview')
@@ -85,13 +92,13 @@ export const track = (event, payload = {}, analytics) => {
     if (campaign.content) payload.campaignContent = campaign.content;
     if (campaign.term) payload.campaignKeyword = campaign.term;
 
-    var payload = {
-     eventAction: track.event(),
-     eventCategory: track.category() || this._category || 'All',
-     eventLabel: props.label,
-     eventValue: formatValue(props.value || track.revenue()),
-     // Allow users to override their nonInteraction integration setting for any single particluar event.
-     nonInteraction: props.nonInteraction !== undefined ? !!props.nonInteraction : !!opts.nonInteraction
+    const payload = {
+      eventAction: track.event(),
+      eventCategory: track.category() || this._category || 'All',
+      eventLabel: props.label,
+      eventValue: formatValue(props.value || track.revenue()),
+      // Allow users to override their nonInteraction integration setting for any single particluar event.
+      nonInteraction: props.nonInteraction !== undefined ? !!props.nonInteraction : !!opts.nonInteraction
     }
     */
     console.log(`GA Payload Event > [${JSON.stringify(gaData, null, 2)}]`)
