@@ -1,6 +1,6 @@
 {
   "name": "analytics",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Pluggable analytics library",
   "author": "David Wells",
   "license": "MIT",
