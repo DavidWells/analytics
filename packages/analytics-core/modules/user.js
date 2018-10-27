@@ -85,7 +85,6 @@ export default function user(state = initialState, action) {
 
 // Set tracking data for third party plugins
 export const identify = (userId, traits, options, callback) => {
-  console.log('identify', userId, traits, options)
   return {
     type: EVENTS.IDENTIFY_START,
     userId: userId,

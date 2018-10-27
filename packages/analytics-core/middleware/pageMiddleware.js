@@ -43,7 +43,6 @@ export default function pageMiddleware(getIntegrations) {
           const enrichedOptions = { ...state, ...{ options: options } }
 
           if (!state.integrations[NAMESPACE].loaded) {
-            console.log('try again page', NAMESPACE)
             // TODO: set max try limit and add calls to local queue on fail
             if (timer > timeoutMax) {
               store.dispatch({

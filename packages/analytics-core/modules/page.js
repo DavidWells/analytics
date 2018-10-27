@@ -1,8 +1,6 @@
 // Page View Module
 import { inBrowser } from 'analytics-utils'
 import EVENTS from '../events'
-import getIntegrationsWithMethod from '../utils/getIntegrationsWithMethod'
-import getCallbackFromArgs from '../utils/getCallback'
 
 export const getPageData = (pageData = {}) => {
   if (!inBrowser) {

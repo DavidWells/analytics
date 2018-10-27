@@ -17,7 +17,7 @@ export default function trackReducer(state = initialState, action) {
   switch (type) {
     case EVENTS.TRACK:
       const l = (!state.lastEvent) ? data : state.event
-      console.log('>>>>>>>>>>>> state.lastEvent', state.lastEvent)
+      // console.log('>>>>>>>>>>>> state.lastEvent', state.lastEvent)
       // TODO fix last event. 9/25 Still need to fix
       return {
         ...state,
