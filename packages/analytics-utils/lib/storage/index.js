@@ -26,13 +26,14 @@ export function setItem(key, value) {
   if (!inBrowser) {
     return false
   }
+  const saveValue = JSON.stringify(value)
   // Try localStorage
   if (hasLocalStorage) {
-    return localStorage.setItem(key, JSON.stringify(value))
+    return localStorage.setItem(key, saveValue)
   }
   // Fallback to cookie
   try {
-    setCookie(key, value)
+    setCookie(key, saveValue)
   } catch (e) {
     // Fallback to window
     window[key] = value
