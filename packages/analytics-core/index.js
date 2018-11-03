@@ -1,11 +1,11 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import { inBrowser } from 'analytics-utils'
 import dynamicMiddlewares, { addMiddleware, removeMiddleware } from './middleware/dynamicMiddleware'
-import initializeMiddleware from './middleware/initializeMiddleware'
+import initializeMiddleware from './middleware/initialize'
 import trackMiddleware from './middleware/track'
 import pageMiddleware from './middleware/pageMiddleware'
 import integrationMiddleware from './middleware/integrationMiddleware'
-import identifyMiddleware from './middleware/identifyMiddleware'
+import identifyMiddleware from './middleware/identify'
 import context, { makeContext } from './modules/context'
 import integrations, { enableIntegration, disableIntegration } from './modules/integrations'
 import page, { pageView } from './modules/page'
@@ -15,7 +15,6 @@ import dotProp from './utils/dotProp'
 import EVENTS from './events'
 
 const isDev = process.env.NODE_ENV === 'development'
-
 // Only way commonJS will work
 module.exports = (config) => {
   return analytics(config)

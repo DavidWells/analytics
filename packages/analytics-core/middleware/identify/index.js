@@ -1,6 +1,8 @@
-import EVENTS from '../events'
-import getIntegrationsWithMethod from '../utils/getIntegrationsWithMethod'
-import getCallbackFromArgs from '../utils/getCallback'
+import { storage } from 'analytics-utils'
+import { USER_ID, USER_TRAITS } from '../../constants'
+import EVENTS from '../../events'
+import getIntegrationsWithMethod from '../../utils/getIntegrationsWithMethod'
+import getCallbackFromArgs from '../../utils/getCallback'
 
 export default function identifyMiddleware(getIntegrations) {
   return store => next => action => {
@@ -8,6 +10,12 @@ export default function identifyMiddleware(getIntegrations) {
     if (type === EVENTS.IDENTIFY_INIT) {
       const identifyCalls = getIntegrationsWithMethod(getIntegrations(), 'identify')
       const cb = getCallbackFromArgs(traits, options, callback)
+
+      storage.setItem(USER_ID, userId)
+
+      if (traits) {
+        storage.setItem(USER_TRAITS, traits)
+      }
       // No identify middleware attached
       if (!identifyCalls.length) {
         store.dispatch({
@@ -21,6 +29,10 @@ export default function identifyMiddleware(getIntegrations) {
           ...{ type: EVENTS.IDENTIFY_COMPLETE }
         })
       }
+
+      // TODO SAVE ID TO LOCALSTORAGE
+
+      // TODO save traits to localstorage
 
       let count = 0
       let completed = []

@@ -1,9 +1,13 @@
-import EVENTS from '../events'
+import EVENTS from '../../events'
 import { paramsParse } from 'analytics-utils'
 
 // Middleware runs during EVENTS.INITIALIZE
-const initialize = store => next => action => {
+const initializeMiddleware = store => next => action => {
   if (action.type === EVENTS.INITIALIZE) {
+    // 1. Set anonymous ID
+
+    // 2. Parse params
+
     const params = paramsParse()
     if (params) {
       store.dispatch({
@@ -30,4 +34,5 @@ const initialize = store => next => action => {
   }
   return next(action)
 }
-export default initialize
+
+export default initializeMiddleware
