@@ -25,6 +25,7 @@ export default {
   PAGE_COMPLETE: 'pageCompleted',
   PAGE_ABORT: 'pageAborted',
   PAGE_TIME_OUT: 'pageTimedOut',
+
   /* Track actions */
   TRACK_INIT: 'trackInit',
   TRACK: 'track',
@@ -32,10 +33,12 @@ export default {
   TRACK_COMPLETE: 'trackCompleted',
   TRACK_ABORT: 'trackAborted',
   TRACK_TIME_OUT: 'trackTimedOut',
+
   /* Identify actions */
   IDENTIFY_INIT: 'identifyInit',
   IDENTIFY: 'identify',
   IDENTIFY_NAMESPACE: (name) => `identify:${name}`,
   IDENTIFY_COMPLETE: 'identifyCompleted',
-  IDENTIFY_ABORTED: 'identifyAborted' // 'identifyAborted' // TODO add this
+  IDENTIFY_ABORT: 'identifyAborted', // 'identifyAborted' // TODO add this
+  IDENTIFY_TIME_OUT: 'identifyTimedOut'
 }
