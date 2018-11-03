@@ -1,43 +1,20 @@
-import { uuid, inBrowser } from 'analytics-utils'
+import { uuid, storage } from 'analytics-utils'
+import { ANON_ID, USER_ID, USER_TRAITS } from '../constants'
 import EVENTS from '../events'
 
-// TODO come up with ls keys
-const ANALYTICS_ID = 'analytics_id'
+const { getItem, setItem } = storage
 
 const setId = () => {
   const id = uuid()
-  if (!inBrowser) {
-    return id
-  }
-  // TODO refactor with persistance options https://github.com/harrysolovay/state-mint/tree/master/src/persistence/methods
-  localStorage.setItem(ANALYTICS_ID, id)
+  setItem(ANON_ID, id)
   return id
-}
-
-const getId = () => {
-  if (!inBrowser) {
-    return null
-  }
-  return localStorage.getItem(ANALYTICS_ID)
-}
-
-const deleteId = () => {
-  if (!inBrowser) {
-    return null
-  }
-  return localStorage.removeItem(ANALYTICS_ID)
-}
-
-const initializeId = () => {
-  const id = getId()
-  return id || setId()
 }
 
 // user state
 const initialState = {
-  userId: null,
-  anonymousId: initializeId(),
-  traits: {}
+  userId: getItem(USER_ID),
+  anonymousId: getItem(ANON_ID) || setId(),
+  traits: getItem(USER_TRAITS) || {}
 }
 
 // Suggested Traits
