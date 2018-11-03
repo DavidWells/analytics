@@ -62,6 +62,14 @@ function analytics(config = {}) {
     dynamicMiddlewares,
   ])
 
+  const getState = (key) => {
+    const state = store.getState()
+    if (key) {
+      return dotProp(state, key)
+    }
+    return state
+  }
+
   // initial analytics state keys
   const coreReducers = {
     context: context,
@@ -110,7 +118,7 @@ function analytics(config = {}) {
     // initialize integrations
     if (provider && provider.initialize) {
       // load scripts etc.
-      provider.initialize(provider.config)
+      provider.initialize(provider.config, getState)
 
       // run check for loaded here and then dispatch loaded events
       if (provider.loaded && typeof provider.loaded === 'function') {
@@ -130,13 +138,7 @@ function analytics(config = {}) {
 
   const api = {
     // Get all state or state by key
-    getState: (key) => {
-      const state = store.getState()
-      if (key) {
-        return dotProp(state, key)
-      }
-      return state
-    },
+    getState: getState,
     dispatch: store.dispatch,
     subscribe: store.subscribe,
     replaceReducer: store.replaceReducer,
@@ -217,9 +219,30 @@ function analytics(config = {}) {
         removeMiddleware(listener)
       }
     },
+    /**
+     * Enable analytics integration
+     * @param  {string|array} name - name of integration(s) to disable
+     * @param  {Function} callback - callback after enable runs
+     * @example
+     *
+     * enableIntegration('google')
+     *
+     * // enable multiple integrations at once
+     * enableIntegration(['google', 'segment'])
+     */
     enableIntegration: (name, callback) => {
       store.dispatch(enableIntegration(name, callback))
     },
+    /**
+     * Disable analytics integration
+     * @param  {string|array} name - name of integration(s) to disable
+     * @param  {Function} callback - callback after disable runs
+     * @example
+     *
+     * disableIntegration('google')
+     *
+     * disableIntegration(['google', 'segment'])
+     */
     disableIntegration: (name, callback) => {
       store.dispatch(disableIntegration(name, callback))
     },

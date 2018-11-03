@@ -34,12 +34,34 @@ export default function integrations(state = initialState, action) {
       }
       return { ...state, ...newState }
     case EVENTS.DISABLE_INTEGRATION:
+      // handle array of integrations ['vanilla', 'google']
+      if (Array.isArray(action.name)) {
+        newState = action.name.reduce((acc, curr) => {
+          acc[curr] = {
+            ...state[curr],
+            ...{ enabled: false }
+          }
+          return acc
+        }, state)
+        return {...state, ...newState}
+      }
       newState[action.name] = {
         ...state[action.name],
         ...{ enabled: false }
       }
       return {...state, ...newState}
     case EVENTS.ENABLE_INTEGRATION:
+      // handle array of integrations ['vanilla', 'google']
+      if (Array.isArray(action.name)) {
+        newState = action.name.reduce((acc, curr) => {
+          acc[curr] = {
+            ...state[curr],
+            ...{ enabled: true }
+          }
+          return acc
+        }, state)
+        return {...state, ...newState}
+      }
       newState[action.name] = {
         ...state[action.name],
         ...{ enabled: true }
