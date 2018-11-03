@@ -59,7 +59,7 @@ export default function identifyMiddleware(getIntegrations) {
             // TODO: set max try limit and add calls to local queue on fail
             if (timer > timeoutMax) {
               store.dispatch({
-                type: 'identifyTimeout',
+                type: EVENTS.IDENTIFY_TIME_OUT,
                 name: NAMESPACE
               })
               // TODO: save to queue
