@@ -1,4 +1,4 @@
-// Context Reducer
+// Context Reducer.  Follows ducks pattern http://bit.ly/2DnERMc
 /* global BUILD_WEB BUILD_NODE */
 import { inBrowser } from 'analytics-utils'
 import EVENTS from '../events'

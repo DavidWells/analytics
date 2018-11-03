@@ -1,4 +1,4 @@
-// Track Module
+// Track Module. Follows ducks pattern http://bit.ly/2DnERMc
 import EVENTS from '../events'
 import getIntegrationsWithMethod from '../utils/getIntegrationsWithMethod'
 import getCallbackFromArgs from '../utils/getCallback'

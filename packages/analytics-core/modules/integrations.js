@@ -1,4 +1,4 @@
-// Integrations Reducer
+// Integrations Reducer follows dux pattern
 import EVENTS from '../events'
 
 const initialState = {}
