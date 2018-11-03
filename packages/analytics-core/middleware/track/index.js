@@ -28,6 +28,9 @@ export default function trackMiddleware(getIntegrations) {
         if (!eventName) {
           console.log('Missing eventName')
         }
+        if (typeof eventName !== 'string') {
+          console.log('eventName is malformatted')
+        }
         return next(action)
       }
 
