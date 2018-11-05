@@ -15,7 +15,7 @@ export const config = {
 }
 
 // Analytics Integration initialize function
-export const initialize = (config) => {
+export const initialize = (config, context) => {
   if (!config.trackingId) {
     throw new Error('No google tracking id defined')
   }
@@ -44,7 +44,7 @@ export const initialize = (config) => {
 }
 
 // Analytics Integration pageView function
-export const page = (pageData) => {
+export const page = (pageData, options, context) => {
   if (inBrowser && typeof ga !== 'undefined') {
     console.info(`GA Pageview > ${window.location.href}`)
 
@@ -54,7 +54,7 @@ export const page = (pageData) => {
 }
 
 // Analytics Integration track function
-export const track = (event, payload = {}, analytics) => {
+export const track = (event, payload = {}, options, context) => {
   const gaData = {
     // hitType https://bit.ly/2Jab9L1
     hitType: 'event', // 'pageview', 'screenview', 'event', 'transaction', 'item', 'social', 'exception', 'timing'
@@ -107,9 +107,9 @@ export const track = (event, payload = {}, analytics) => {
 }
 
 // Analytics Integration identify function
-export const identify = (id, traits, opts, cb) => {
+export const identify = (id, traits, options, context) => {
   if (inBrowser) {
-    console.log('GA identify', id, traits, opts)
+    console.log('GA identify', id, traits, options)
   }
 
   if (id && typeof ga !== 'undefined') {
