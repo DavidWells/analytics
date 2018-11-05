@@ -7,6 +7,7 @@ export default {
 
   /* Integration actions */
   INTEGRATION_INIT: 'integrationInit',
+  INTEGRATION_NAMESPACE: (name) => `integrationInit:${name}`,
   INTEGRATION_LOADED: 'integrationLoaded',
   INTEGRATION_FAILED: 'integrationFailed',
   INTEGRATION_LOADED_NAME: (name) => `integrationLoaded:${name}`,
