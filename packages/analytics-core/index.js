@@ -51,16 +51,6 @@ function analytics(config = {}) {
     return customIntegrations
   }
 
-  const middlewares = customMiddlewares.concat([
-    // core middlewares
-    initializeMiddleware,
-    identifyMiddleware(getIntegrations),
-    trackMiddleware(getIntegrations),
-    pageMiddleware(getIntegrations),
-    integrationMiddleware,
-    dynamicMiddlewares,
-  ])
-
   const getState = (key) => {
     const state = store.getState()
     if (key) {
@@ -68,6 +58,16 @@ function analytics(config = {}) {
     }
     return state
   }
+
+  const middlewares = customMiddlewares.concat([
+    // core middlewares
+    initializeMiddleware,
+    identifyMiddleware(getIntegrations, getState),
+    trackMiddleware(getIntegrations, getState),
+    pageMiddleware(getIntegrations, getState),
+    integrationMiddleware,
+    dynamicMiddlewares,
+  ])
 
   // initial analytics state keys
   const coreReducers = {
@@ -105,17 +105,21 @@ function analytics(config = {}) {
   // Register, load, and onReady custom integrations
   const providers = Object.keys(customIntegrations)
 
+  store.dispatch({
+    type: EVENTS.INTEGRATION_INIT,
+    providers: providers,
+  })
+
   providers.forEach((int, i) => {
     const provider = customIntegrations[int]
 
-    store.dispatch({
-      type: EVENTS.INTEGRATION_INIT,
-      name: provider.NAMESPACE,
-      integration: provider
-    })
-
     // initialize integrations
     if (provider && provider.initialize) {
+      store.dispatch({
+        type: EVENTS.INTEGRATION_NAMESPACE(provider.NAMESPACE),
+        name: provider.NAMESPACE,
+        integration: provider
+      })
       // load scripts etc.
       provider.initialize(provider.config, getState)
 
@@ -204,6 +208,12 @@ function analytics(config = {}) {
           removeMiddleware(globalListener)
         }
       }
+      /* For future matching of event subpaths `track*`
+      if (name.match(/\*$/)) {
+        const match = (name === '*') ? '.' : name
+        const regex = new RegExp(`${match}`, 'g')
+      }
+      */
       const listener = store => next => action => {
         if (action.type === name) {
           // TODO finalize values passed back
@@ -281,7 +291,8 @@ function checkForScriptReady(config, store, provider, retryCount) {
       name: NAMESPACE
     })
     store.dispatch({
-      type: EVENTS.INTEGRATION_FAILED_NAME(NAMESPACE)
+      type: EVENTS.INTEGRATION_FAILED_NAME(NAMESPACE),
+      name: NAMESPACE
     })
     return false
   }
@@ -295,14 +306,15 @@ function checkForScriptReady(config, store, provider, retryCount) {
   }
 
   // script isLoaded, dispatch generic event
-  store.dispatch({
-    type: EVENTS.INTEGRATION_LOADED,
-    name: NAMESPACE
-  })
+  // store.dispatch({
+  //   type: EVENTS.INTEGRATION_LOADED,
+  //   name: NAMESPACE
+  // })
 
   // dispatch namespaced event
   store.dispatch({
-    type: EVENTS.INTEGRATION_LOADED_NAME(NAMESPACE)
+    type: EVENTS.INTEGRATION_LOADED_NAME(NAMESPACE),
+    name: NAMESPACE
   })
 
   // dispatch ready when all integrations load
