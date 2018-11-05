@@ -3,6 +3,7 @@
 export { default as cookie } from './cookie.js';
 export { default as decodeUri } from './decodeUri.js';
 export { default as extend } from './extend.js';
+export { default as getBrowserLocale } from './getBrowserLocale.js';
 export { default as inBrowser } from './inBrowser.js';
 export { default as isExternalReferrer } from './isExternalReferrer.js';
 export { default as noOp } from './noOp.js';
