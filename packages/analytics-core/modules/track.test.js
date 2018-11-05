@@ -1,12 +1,12 @@
 // src/actions.test.js
-import test from 'ava';
-import { trackEvent, EVENTS } from './track';
+import test from 'ava'
+import { trackEvent, EVENTS } from './track'
 
 let lol = 'hi'
 test.before(t => {
 	// This runs before all tests
 	lol = 'what'
-});
+})
 
 test('trackEvent action', t => {
   console.log('lol', lol)
@@ -19,5 +19,5 @@ test('trackEvent action', t => {
       eventName: 'lol',
       whateverBro: true
     }
-  });
-});
+  })
+})
