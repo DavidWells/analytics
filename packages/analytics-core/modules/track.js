@@ -1,7 +1,5 @@
 // Track Module. Follows ducks pattern http://bit.ly/2DnERMc
 import EVENTS from '../events'
-import getIntegrationsWithMethod from '../utils/getIntegrationsWithMethod'
-import getCallbackFromArgs from '../utils/getCallback'
 
 // Track State
 const initialState = {
@@ -12,18 +10,20 @@ const initialState = {
 
 // track reducer
 export default function trackReducer(state = initialState, action) {
-  const { type, data, eventName } = action
+  const { type, payload, options, eventName } = action
 
   switch (type) {
     case EVENTS.TRACK:
-      const l = (!state.lastEvent) ? data : state.event
-      // console.log('>>>>>>>>>>>> state.lastEvent', state.lastEvent)
-      // TODO fix last event. 9/25 Still need to fix
       return {
         ...state,
         ...{
-          event: data,
-          lastEvent: l
+          event: {
+            eventName,
+            payload,
+            options
+          },
+          lastEvent: action.eventName,
+          history: state.history.concat(action)
         }
       }
     // todo push events to history
