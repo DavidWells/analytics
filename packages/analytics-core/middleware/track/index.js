@@ -3,7 +3,7 @@ import formatPayload from './formatPayload'
 import getIntegrationsWithMethod from '../../utils/getIntegrationsWithMethod'
 import getCallbackFromArgs from '../../utils/getCallback'
 
-export default function trackMiddleware(getIntegrations) {
+export default function trackMiddleware(getIntegrations, getState) {
   return store => next => action => {
     const { type, eventName, data, options, callback } = action
     if (type === EVENTS.TRACK_INIT) {
@@ -106,7 +106,7 @@ export default function trackMiddleware(getIntegrations) {
           }
 
           /* run integration[x] .track function */
-          provider.track(eventName, payload, enrichedOptions, state)
+          provider.track(eventName, payload, enrichedOptions, getState)
 
           if (state.context.debug) {
             console.log('DEBUG IS ONNNNNNNNNN')

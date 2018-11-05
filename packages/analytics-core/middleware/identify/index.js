@@ -4,12 +4,17 @@ import EVENTS from '../../events'
 import getIntegrationsWithMethod from '../../utils/getIntegrationsWithMethod'
 import getCallbackFromArgs from '../../utils/getCallback'
 
-export default function identifyMiddleware(getIntegrations) {
+export default function identifyMiddleware(getIntegrations, getState) {
   return store => next => action => {
     const { type, userId, traits, options, callback } = action
     if (type === EVENTS.IDENTIFY_INIT) {
       const identifyCalls = getIntegrationsWithMethod(getIntegrations(), 'identify')
       const cb = getCallbackFromArgs(traits, options, callback)
+
+      // TODO add aborting
+      // if (action.abort) {
+      //
+      // }
 
       storage.setItem(USER_ID, userId)
 
@@ -95,7 +100,7 @@ export default function identifyMiddleware(getIntegrations) {
           }
 
           /* run integration[x] .identify function */
-          provider.identify(userId, traits, options)
+          provider.identify(userId, traits, options, getState)
 
           /* Run namespaced .identify calls */
           store.dispatch({

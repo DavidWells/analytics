@@ -3,7 +3,7 @@ import getIntegrationsWithMethod from '../utils/getIntegrationsWithMethod'
 import getCallbackFromArgs from '../utils/getCallback'
 import { getPageData } from '../modules/page'
 
-export default function pageMiddleware(getIntegrations) {
+export default function pageMiddleware(getIntegrations, getState) {
   return store => next => action => {
     const { type, data, options, callback } = action
     if (type === EVENTS.PAGE_INIT) {
@@ -83,7 +83,7 @@ export default function pageMiddleware(getIntegrations) {
           }
 
           /* run integration[x] .page function */
-          provider.page(pageData, enrichedOptions)
+          provider.page(pageData, enrichedOptions, getState)
 
           /* Run Namespaced .page calls */
           store.dispatch({
