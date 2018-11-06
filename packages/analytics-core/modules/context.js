@@ -28,6 +28,7 @@ const initialState = {
     // TODO fix version number. npm run publish:patch has wrong version
     version: process.env.VERSION || 'devmode'
   },
+  // locale: '',
   campaign: {}
 }
 
@@ -55,11 +56,11 @@ export default function context(state = initialState, action) {
 
 // Pull plugins and reducers off intital config
 export function makeContext(config) {
-  return Object.keys(config).reduce((accumulator, current) => {
+  return Object.keys(config).reduce((acc, current) => {
     if (current === 'plugins' || current === 'reducers') {
-      return accumulator
+      return acc
     }
-    accumulator[current] = config[current]
-    return accumulator
+    acc[current] = config[current]
+    return acc
   }, {})
 }
