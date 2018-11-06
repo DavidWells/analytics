@@ -4,7 +4,7 @@ import dynamicMiddlewares, { addMiddleware, removeMiddleware } from './middlewar
 import initializeMiddleware from './middleware/initialize'
 import trackMiddleware from './middleware/track'
 import pageMiddleware from './middleware/pageMiddleware'
-import integrationMiddleware from './middleware/integrationMiddleware'
+import integrationMiddleware from './middleware/integration'
 import identifyMiddleware from './middleware/identify'
 import context, { makeContext } from './modules/context'
 import integrations, { enableIntegration, disableIntegration } from './modules/integrations'
@@ -21,29 +21,29 @@ module.exports = (config) => {
 }
 
 function analytics(config = {}) {
-  const plugins = config.plugins || []
   const customReducers = config.reducers || {}
 
-  /* Custom analytic integrations */
-  let customIntegrations = plugins.reduce((obj, p) => {
-    if (typeof p !== 'function' && p.NAMESPACE) {
-      obj[p.NAMESPACE] = p
-      return obj
+  /* Parse plugins array */
+  const plugins = (config.plugins || []).reduce((acc, p) => {
+    if (typeof p !== 'function') {
+      /* analytic integrations */
+      acc.integrations[p.NAMESPACE] = p
+      return acc
     }
-    return obj
-  }, {})
+    /* Custom redux middleware */
+    acc.middlewares = acc.middlewares.concat(p)
+    return acc
+  }, {
+    middlewares: [],
+    integrations: {}
+  })
 
-  /* Custom redux middleware */
-  const customMiddlewares = plugins.reduce((arr, p) => {
-    if (typeof p === 'function') {
-      return arr.concat(p)
-    }
-    return arr
-  }, [])
+  // mutable intregrations object for dynamic loading
+  let customIntegrations = plugins.integrations
 
   if (isDev) {
-    console.log('customIntegrations', customIntegrations)
-    console.log('customMiddlewares', customMiddlewares)
+    console.log('customIntegrations', plugins.integrations)
+    console.log('customMiddlewares', plugins.middlewares)
   }
 
   /* plugin methods(functions) must be kept out of state. thus they live here */
@@ -51,6 +51,7 @@ function analytics(config = {}) {
     return customIntegrations
   }
 
+  // getState helper with dotprop
   const getState = (key) => {
     const state = store.getState()
     if (key) {
@@ -59,13 +60,14 @@ function analytics(config = {}) {
     return state
   }
 
-  const middlewares = customMiddlewares.concat([
+  // Combine middleware
+  const middlewares = plugins.middlewares.concat([
     // core middlewares
     initializeMiddleware,
     identifyMiddleware(getIntegrations, getState),
     trackMiddleware(getIntegrations, getState),
     pageMiddleware(getIntegrations, getState),
-    integrationMiddleware,
+    integrationMiddleware(getIntegrations, getState),
     dynamicMiddlewares,
   ])
 
@@ -108,26 +110,6 @@ function analytics(config = {}) {
   store.dispatch({
     type: EVENTS.INTEGRATION_INIT,
     providers: providers,
-  })
-
-  providers.forEach((int, i) => {
-    const provider = customIntegrations[int]
-
-    // initialize integrations
-    if (provider && provider.initialize) {
-      store.dispatch({
-        type: EVENTS.INTEGRATION_NAMESPACE(provider.NAMESPACE),
-        name: provider.NAMESPACE,
-        integration: provider
-      })
-      // load scripts etc.
-      provider.initialize(provider.config, getState)
-
-      // run check for loaded here and then dispatch loaded events
-      if (provider.loaded && typeof provider.loaded === 'function') {
-        checkForScriptReady({ maxRetries: 1000 }, store, provider)
-      }
-    }
   })
 
   // No providers found. Trigger ready listeners
@@ -279,73 +261,3 @@ function analytics(config = {}) {
 
   return api
 }
-
-// Check for script loaded on page then dispatch actions
-function checkForScriptReady(config, store, provider, retryCount) {
-  retryCount = retryCount || 0
-  const maxRetries = config.maxRetries
-  const { NAMESPACE } = provider
-  if (retryCount > maxRetries) {
-    store.dispatch({
-      type: EVENTS.INTEGRATION_FAILED,
-      name: NAMESPACE
-    })
-    store.dispatch({
-      type: EVENTS.INTEGRATION_FAILED_NAME(NAMESPACE),
-      name: NAMESPACE
-    })
-    return false
-  }
-
-  // check if loaded
-  if (!provider.loaded() && retryCount <= maxRetries) {
-    setTimeout(() => {
-      checkForScriptReady(config, store, provider, ++retryCount)
-    }, 10)
-    return false
-  }
-
-  // script isLoaded, dispatch generic event
-  // store.dispatch({
-  //   type: EVENTS.INTEGRATION_LOADED,
-  //   name: NAMESPACE
-  // })
-
-  // dispatch namespaced event
-  store.dispatch({
-    type: EVENTS.INTEGRATION_LOADED_NAME(NAMESPACE),
-    name: NAMESPACE
-  })
-
-  // dispatch ready when all integrations load
-  const { integrations } = store.getState()
-  const everythingLoaded = Object.keys(integrations).reduce((acc, curr) => {
-    if (!integrations[curr].loaded) {
-      return false
-    }
-    return acc
-  }, true)
-
-  if (everythingLoaded) {
-    // all integrations loaded. do stuff
-    store.dispatch({
-      type: EVENTS.READY
-    })
-  }
-}
-
-/*
-// Reduce once for both sets of data
-const customIntegrations = plugins.reduce((obj, p) => {
-  console.log('arr', obj)
-  if (typeof p !== 'function') {
-    obj.integration[p.NAMESPACE] = p
-    return obj
-  }
-  obj.middleware = obj.middleware.concat(p)
-  return obj
-}, {
-  middleware: [],
-  integration: {}
-})
-*/
