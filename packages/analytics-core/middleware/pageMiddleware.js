@@ -1,6 +1,7 @@
 import EVENTS from '../events'
 import getIntegrationsWithMethod from '../utils/getIntegrationsWithMethod'
 import getCallbackFromArgs from '../utils/getCallback'
+import filterDisabled from '../utils/filterDisabled'
 import { getPageData } from '../modules/page'
 
 export default function pageMiddleware(getIntegrations, getState) {
@@ -25,14 +26,7 @@ export default function pageMiddleware(getIntegrations, getState) {
       let completed = []
       let hasRan = false
       /* Handle all .page calls syncronously */
-      pageCalls.filter((provider) => {
-        const integrations = options && options.integrations
-        const disabled = integrations && integrations[provider.NAMESPACE] === false
-        if (disabled) {
-          console.log('ABORT PageView>>>>>', provider.NAMESPACE, type)
-        }
-        return !disabled
-      }).forEach((provider) => {
+      filterDisabled(pageCalls, options).forEach((provider) => {
         const { NAMESPACE } = provider
         let timeoutMax = 10000
         let timer = 0

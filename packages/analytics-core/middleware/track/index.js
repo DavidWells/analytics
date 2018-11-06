@@ -2,6 +2,7 @@ import EVENTS from '../../events'
 import formatPayload from './formatPayload'
 import getIntegrationsWithMethod from '../../utils/getIntegrationsWithMethod'
 import getCallbackFromArgs from '../../utils/getCallback'
+import filterDisabled from '../../utils/filterDisabled'
 
 export default function trackMiddleware(getIntegrations, getState) {
   return store => next => action => {
@@ -52,15 +53,7 @@ export default function trackMiddleware(getIntegrations, getState) {
       let completed = []
       let hasRan = false
       /* Filter out disabled integrations */
-      trackCalls.filter((provider) => {
-        const integrationsOpts = options && options.integrations
-        const disabled = integrationsOpts && integrationsOpts[provider.NAMESPACE] === false
-        if (disabled) {
-          // console.log('ABORT TRACK>>>>>', provider.NAMESPACE, type)
-        }
-        return !disabled
-      /* Handle all .track calls */
-      }).forEach((provider) => {
+      filterDisabled(trackCalls, options).forEach((provider) => {
         const { NAMESPACE } = provider
         // check for ready state on integration and recursively call til rdy
         let timeoutMax = 10000

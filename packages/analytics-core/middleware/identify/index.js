@@ -3,6 +3,7 @@ import { USER_ID, USER_TRAITS } from '../../constants'
 import EVENTS from '../../events'
 import getIntegrationsWithMethod from '../../utils/getIntegrationsWithMethod'
 import getCallbackFromArgs from '../../utils/getCallback'
+import filterDisabled from '../../utils/filterDisabled'
 
 export default function identifyMiddleware(getIntegrations, getState) {
   return store => next => action => {
@@ -44,15 +45,7 @@ export default function identifyMiddleware(getIntegrations, getState) {
       let hasRan = false
 
       /* Filter out disabled integrations */
-      identifyCalls.filter((provider) => {
-        const integrations = options && options.integrations
-        const disabled = integrations && integrations[provider.NAMESPACE] === false
-        if (disabled) {
-          console.log('ABORT Identify >>>>>', provider.NAMESPACE, type)
-        }
-        return !disabled
-      /* Handle all .identify calls */
-      }).forEach((provider) => {
+      filterDisabled(identifyCalls, options).forEach((provider) => {
         const { NAMESPACE } = provider
         // check for ready state on integration and recursively call til rdy
         let timeoutMax = 10000
