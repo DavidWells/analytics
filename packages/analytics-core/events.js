@@ -13,12 +13,15 @@ export default {
   INTEGRATION_LOADED_NAME: (name) => `integrationLoaded:${name}`,
   INTEGRATION_FAILED_NAME: (name) => `integrationFailed:${name}`,
   // Todo finish this event
-  INTEGRATION_ENABLED: 'integrationEnabled',
-  INTEGRATION_DISABLE: 'integrationDisabled',
   ENABLE_INTEGRATION: 'enableIntegration',
+  INTEGRATION_ENABLED: 'integrationEnabled',
   DISABLE_INTEGRATION: 'disableIntegration',
+  INTEGRATION_DISABLE: 'integrationDisabled',
 
   READY: 'analyticsReady',
+  ONLINE: 'online',
+  OFFLINE: 'offline',
+
   /* Page actions */
   PAGE_INIT: 'pageInit',
   PAGE: 'page',
@@ -41,5 +44,6 @@ export default {
   IDENTIFY_NAMESPACE: (name) => `identify:${name}`,
   IDENTIFY_COMPLETE: 'identifyCompleted',
   IDENTIFY_ABORT: 'identifyAborted', // 'identifyAborted' // TODO add this
-  IDENTIFY_TIME_OUT: 'identifyTimedOut'
+  IDENTIFY_TIME_OUT: 'identifyTimedOut',
+  USER_ID_CHANGED: 'userIdChanged'
 }

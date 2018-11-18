@@ -19,6 +19,7 @@ const initialState = {
   app: null,
   version: null,
   debug: false,
+  offline: false,
   os: {
     name: osName,
   },
@@ -41,6 +42,16 @@ export default function context(state = initialState, action) {
       return {
         ...state,
         ...{ campaign: campaign }
+      }
+    case EVENTS.OFFLINE:
+      return {
+        ...state,
+        ...{ offline: true }
+      }
+    case EVENTS.ONLINE:
+      return {
+        ...state,
+        ...{ offline: false }
       }
     default:
       if (!initialized) {
