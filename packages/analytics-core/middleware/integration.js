@@ -1,7 +1,7 @@
-import EVENTS from '../../events'
-import getIntegrationsWithMethod from '../../utils/getIntegrationsWithMethod'
+import EVENTS from '../events'
+import getIntegrationByMethod from '../utils/getIntegrationByMethod'
 
-export default function integrationMiddleware(getIntegrations, getState) {
+export default function integrationMiddleware(getIntegrations, instance) {
   return store => next => action => {
     const { type, name, callback } = action
     if (type === EVENTS.DISABLE_INTEGRATION || type === EVENTS.ENABLE_INTEGRATION) {
@@ -9,10 +9,20 @@ export default function integrationMiddleware(getIntegrations, getState) {
         callback(name)
       }
     }
-    // Initalize analytic provider load scripts
+
+    // TODO instead of listening to INTEGRATION_INIT listen to INTEGRATION like TRACK. This way these calls can be aborted by middleware
     if (type === EVENTS.INTEGRATION_INIT) {
-      const initCalls = getIntegrationsWithMethod(getIntegrations(), 'initialize')
+      const initCalls = getIntegrationByMethod('initialize', getIntegrations())
       const { integrations } = store.getState()
+
+      // No providers found. Trigger ready listeners
+      if (!initCalls.length) {
+        store.dispatch({
+          type: EVENTS.READY
+        })
+        return next(action)
+      }
+
       initCalls.filter((provider) => {
         const current = integrations[provider.NAMESPACE]
         if (!current) {
@@ -31,7 +41,7 @@ export default function integrationMiddleware(getIntegrations, getState) {
         })
 
         // Run initialize method in analytics provider
-        provider.initialize(provider.config, getState)
+        provider.initialize(provider.config, instance)
 
         // run check for loaded here and then dispatch loaded events
         if (provider.loaded && typeof provider.loaded === 'function') {

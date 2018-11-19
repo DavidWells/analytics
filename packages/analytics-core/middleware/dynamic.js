@@ -12,11 +12,11 @@ const dynamicMiddlewares = store => next => action => {
   return compose(...chain)(next)(action)
 }
 
-const addMiddleware = (...middlewares) => {
+export const addMiddleware = (...middlewares) => {
   dynamic = dynamic.concat(...middlewares)
 }
 
-const removeMiddleware = middleware => {
+export const removeMiddleware = middleware => {
   const index = dynamic.findIndex(d => d === middleware)
   if (index === -1) return
 
@@ -26,13 +26,8 @@ const removeMiddleware = middleware => {
   ]
 }
 
-const resetMiddlewares = () => {
+export const resetMiddlewares = () => {
   dynamic = []
 }
 
 export default dynamicMiddlewares
-export {
-  addMiddleware,
-  removeMiddleware,
-  resetMiddlewares,
-}
