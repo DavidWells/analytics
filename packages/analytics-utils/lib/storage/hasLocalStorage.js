@@ -1,3 +1,8 @@
+/**
+ * Check if browser has access to LocalStorage
+ *
+ * @returns {Boolean}
+ */
 export default function hasLocalStorage() {
   try {
     if (typeof localStorage === 'undefined' || typeof JSON === 'undefined') {
