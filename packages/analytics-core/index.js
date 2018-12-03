@@ -1,26 +1,23 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import { inBrowser } from 'analytics-utils'
-import dynamicMiddlewares, { addMiddleware, removeMiddleware } from './middleware/dynamicMiddleware'
-import initializeMiddleware from './middleware/initialize'
-import trackMiddleware from './middleware/track'
-import pageMiddleware from './middleware/pageMiddleware'
-import integrationMiddleware from './middleware/integration'
-import identifyMiddleware from './middleware/identify'
-import context, { makeContext } from './modules/context'
+import * as middleware from './middleware'
 import integrations, { enableIntegration, disableIntegration } from './modules/integrations'
+import context, { makeContext } from './modules/context'
 import page, { pageView } from './modules/page'
 import track, { trackEvent } from './modules/track'
 import user, { identify } from './modules/user'
 import dotProp from './utils/dotProp'
-import EVENTS from './events'
+import { watch } from './utils/handleNetworkEvents'
+import { mouseOut, tabHidden } from './utils/handleTabEvents'
+import EVENTS, { reservedActions } from './events'
+import getCallback from './utils/getCallback'
 
 const isDev = process.env.NODE_ENV === 'development'
-// Only way commonJS will work
-module.exports = (config) => {
-  return analytics(config)
-}
 
-function analytics(config = {}) {
+const { addMiddleware, removeMiddleware } = middleware
+
+// Only way commonJS will work
+module.exports = function analytics(config = {}) {
   const customReducers = config.reducers || {}
 
   /* Parse plugins array */
@@ -57,21 +54,31 @@ function analytics(config = {}) {
     if (key) {
       return dotProp(state, key)
     }
-    return state
+    return Object.assign({}, state)
   }
 
-  // Combine middleware
+  const instance = getState
+  instance.getState = getState
+  instance.dispatch = (action) => {
+    if (reservedActions.includes(action.type)) {
+      console.log(`Trying to dispatch analytics reservedAction "${action.type}"`)
+      return false
+    }
+    store.dispatch(action)
+  }
+
+  // Combine all middleware
   const middlewares = plugins.middlewares.concat([
-    // core middlewares
-    initializeMiddleware,
-    identifyMiddleware(getIntegrations, getState),
-    trackMiddleware(getIntegrations, getState),
-    pageMiddleware(getIntegrations, getState),
-    integrationMiddleware(getIntegrations, getState),
-    dynamicMiddlewares,
+    // Core analytics middleware
+    middleware.initialize,
+    middleware.integration(getIntegrations, instance),
+    middleware.identify(getIntegrations, instance),
+    middleware.track(getIntegrations, instance),
+    middleware.page(getIntegrations, instance),
+    middleware.dynamic,
   ])
 
-  // initial analytics state keys
+  // Initial analytics state keys
   const coreReducers = {
     context: context,
     user: user,
@@ -92,6 +99,7 @@ function analytics(config = {}) {
     // optional default config overides by user
     {
       context: makeContext(config),
+      // Todo allow for more userland defined initial state?
     },
     // register middleware & plugins used
     composeEnhancers(
@@ -101,25 +109,37 @@ function analytics(config = {}) {
 
   // Init analytics
   store.dispatch({
-    type: EVENTS.INITIALIZE
+    type: EVENTS.INITIALIZE,
+    providers: Object.keys(customIntegrations),
   })
 
-  // Register, load, and onReady custom integrations
-  const providers = Object.keys(customIntegrations)
-
+  // // Register, load, and onReady custom integrations
   store.dispatch({
     type: EVENTS.INTEGRATION_INIT,
-    providers: providers,
+    providers: Object.keys(customIntegrations),
   })
 
-  // No providers found. Trigger ready listeners
-  if (!providers.length) {
-    setTimeout(() => {
-      store.dispatch({
-        type: EVENTS.READY
-      })
-    }, 0)
+  // Watch for network events
+  const networkWatcher = bool => {
+    store.dispatch({
+      type: (bool) ? EVENTS.OFFLINE : EVENTS.ONLINE,
+    })
   }
+  watch(networkWatcher)
+
+  const windowWatcher = bool => {
+    store.dispatch({
+      type: (bool) ? EVENTS.WINDOW_LEAVE : EVENTS.WINDOW_ENTER,
+    })
+  }
+  mouseOut(windowWatcher)
+
+  const tabWatcher = bool => {
+    store.dispatch({
+      type: (bool) ? EVENTS.TAB_HIDDEN : EVENTS.TAB_VISIBLE,
+    })
+  }
+  tabHidden(tabWatcher)
 
   const api = {
     // Get all state or state by key
@@ -128,6 +148,17 @@ function analytics(config = {}) {
     subscribe: store.subscribe,
     replaceReducer: store.replaceReducer,
     // track custom event
+    /**
+     * Track an analytics event
+       @example
+       track('buttonClick', {
+
+        })
+
+       @param {String} html string to be escaped
+       @return {String} escaped html
+       @api public
+     */
     track: (eventName, payload, options, callback) => {
       store.dispatch(
         trackEvent(eventName, payload, options, callback)
@@ -137,27 +168,51 @@ function analytics(config = {}) {
     },
     // trigger page view
     page: (data, options, callback) => {
+      const d = data || {}
       store.dispatch(
-        pageView(data, options, callback)
+        pageView(d, options, callback)
       )
       /* Note promise will return before tracking complete. */
       return Promise.resolve()
     },
-    // set user data
-    identify: (userId, data, options, callback) => {
+    /**
+    * Identify user
+    * @param  {String}   userId  - Unique ID of user
+    * @param  {Object}   traits  - Object of user traits
+    * @param  {Object}   options - Options to pass to indentify call
+    * @param  {Function} callback - Optional callback function after identify completes
+    * @return {Promise}
+    *
+    * @example
+    *
+    *  identify('xyz-123', {
+    *    name: 'steve',
+    *    company: 'hello-clicky'
+    *  })
+    */
+    identify: (userId, traits, options, callback) => {
+      const id = (typeof userId === 'string') ? userId : null
+      const data = (typeof userId === 'object') ? userId : traits
       store.dispatch(
-        identify(userId, data, options, callback)
+        identify(id, data, options, callback)
       )
       /* Note promise will return before tracking complete. */
       return Promise.resolve()
     },
-    // get user data
+    /**
+     * Get user data
+     * @param  {string} key - dot.prop subpath of user data
+     * @example
+     *
+     * user()
+     *
+     * // get subpath
+     * user('company.name')
+     */
     user: (key) => {
-      const user = store.getState().user
-      if (key) {
-        return dotProp(user, key)
-      }
-      return user
+      const user = getState('user')
+      if (!key) return user
+      return dotProp(user, key)
     },
     // analtyics.ready all integrations ready
     ready: (cb) => {
@@ -237,24 +292,27 @@ function analytics(config = {}) {
     disableIntegration: (name, callback) => {
       store.dispatch(disableIntegration(name, callback))
     },
-    // TODO decide if this is good or bad ⊂◉‿◉つ. Exposing publicly could be bad
-    addIntegration: function(t) {
+    load: () => {
+      store.dispatch({
+        type: EVENTS.INTEGRATION_INIT,
+        providers: Object.keys(getIntegrations()),
+      })
+    },
+    addIntegration: (newIntegration) => {
       // TODO if it stays, state loaded needs to be set. Re INTEGRATION_INIT above
       // validate integration
-      if (typeof t === 'object') {
-        const newIntergration = {}
-        newIntergration[t.NAMESPACE] = t
-        customIntegrations = {
-          ...customIntegrations,
-          ...newIntergration
-        }
-        console.log('add new integration dynamically', customIntegrations)
+      if (typeof newIntegration !== 'object') {
+        return false
       }
+      // Set on global integration object
+      customIntegrations = Object.assign({}, customIntegrations, {
+        [`${newIntegration.NAMESPACE}`]: newIntegration
+      })
       // then add it, and init state key
       store.dispatch({
         type: EVENTS.INTEGRATION_INIT,
-        name: t.NAMESPACE,
-        integration: t
+        name: newIntegration.NAMESPACE,
+        integration: newIntegration
       })
     }
   }

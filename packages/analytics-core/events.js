@@ -1,6 +1,6 @@
 // Core Analytic Events
 
-export default {
+const EVENTS = {
   INITIALIZE: 'analyticsInit',
   HANDLE_PARAMS: 'params',
   SET_CAMPAIGN: 'campaign',
@@ -19,8 +19,14 @@ export default {
   INTEGRATION_DISABLE: 'integrationDisabled',
 
   READY: 'analyticsReady',
+
+  /* Browser activity events */
   ONLINE: 'online',
   OFFLINE: 'offline',
+  WINDOW_ENTER: 'windowEntered',
+  WINDOW_LEAVE: 'windowLeft',
+  TAB_HIDDEN: 'tabHidden',
+  TAB_VISIBLE: 'tabVisible',
 
   /* Page actions */
   PAGE_INIT: 'pageInit',
@@ -47,3 +53,10 @@ export default {
   IDENTIFY_TIME_OUT: 'identifyTimedOut',
   USER_ID_CHANGED: 'userIdChanged'
 }
+
+export default EVENTS
+
+export const reservedActions = Object.keys(EVENTS).reduce((acc, curr) => {
+  if (typeof EVENTS[curr] === 'function') return acc
+  return acc.concat(EVENTS[curr])
+}, [])

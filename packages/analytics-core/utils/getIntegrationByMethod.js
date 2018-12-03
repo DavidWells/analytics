@@ -4,7 +4,7 @@
  * @param  {string} method - key of the method name. IE 'track', 'identify' etc
  * @return {array} returns array of integrations with matching method
  */
-export default function getIntegrationWithMethod(integrations, method) {
+export default function getIntegrationByMethod(method, integrations) {
   return Object.keys(integrations).reduce((arr, plugin) => {
     const int = integrations[plugin]
     // console.log('int', int)
