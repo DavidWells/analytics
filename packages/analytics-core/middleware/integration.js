@@ -40,12 +40,11 @@ export default function integrationMiddleware(getIntegrations, instance) {
           integration: provider
         })
 
-        // Run initialize method in analytics provider
-        provider.initialize(provider.config, instance)
-
         // run check for loaded here and then dispatch loaded events
-        if (provider.loaded && typeof provider.loaded === 'function') {
-          checkForScriptReady({ maxRetries: 1000 }, store, provider)
+        if (provider.loaded && typeof provider.loaded === 'function' && !provider.loaded()) {
+          // Run initialize method in analytics provider
+          provider.initialize(provider.config, instance)
+          checkForScriptReady({ maxRetries: 1000 }, store, provider, instance)
         }
       })
     }
@@ -55,7 +54,7 @@ export default function integrationMiddleware(getIntegrations, instance) {
 }
 
 // Check for script loaded on page then dispatch actions
-function checkForScriptReady(config, store, provider, retryCount) {
+function checkForScriptReady(config, store, provider, instance, retryCount) {
   retryCount = retryCount || 0
   const maxRetries = config.maxRetries
   const { NAMESPACE } = provider
@@ -71,10 +70,14 @@ function checkForScriptReady(config, store, provider, retryCount) {
     return false
   }
 
+  // Run initialize method in analytics provider
+  provider.initialize(provider.config, instance)
+
   // check if loaded
   if (!provider.loaded() && retryCount <= maxRetries) {
     setTimeout(() => {
-      checkForScriptReady(config, store, provider, ++retryCount)
+      // Retry until loaded
+      checkForScriptReady(config, store, provider, instance, ++retryCount)
     }, 10)
     return false
   }
