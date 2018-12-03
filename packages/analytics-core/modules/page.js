@@ -1,6 +1,7 @@
 // Page View Reducer. Follows ducks pattern http://bit.ly/2DnERMc
 import { inBrowser } from 'analytics-utils'
 import EVENTS from '../events'
+import timeStamp from '../utils/timestamp'
 
 export const getPageData = (pageData = {}) => {
   if (!inBrowser) {
@@ -41,6 +42,7 @@ export default function page(state = initialState, action) {
 export const pageView = (data, options, callback) => {
   return {
     type: EVENTS.PAGE_INIT,
+    timestamp: timeStamp(),
     data: data,
     options: options,
     callback: callback

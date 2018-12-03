@@ -1,5 +1,6 @@
 import { uuid, storage } from 'analytics-utils'
 import { ANON_ID, USER_ID, USER_TRAITS } from '../constants'
+import timeStamp from '../utils/timestamp'
 import EVENTS from '../events'
 
 const { getItem, setItem } = storage
@@ -64,6 +65,7 @@ export default function user(state = initialState, action) {
 export const identify = (userId, traits, options, callback) => {
   return {
     type: EVENTS.IDENTIFY_INIT,
+    timestamp: timeStamp(),
     userId: userId,
     traits: traits,
     options: options,
