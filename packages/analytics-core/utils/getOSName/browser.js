@@ -1,9 +1,8 @@
 import { inBrowser } from 'analytics-utils'
 
 export default function getBrowserOS() {
-  if (!inBrowser) {
-    return false
-  }
+  if (!inBrowser) return false
+
   const os = navigator.appVersion
   if (os.indexOf('Win') !== -1) return 'Windows'
   if (os.indexOf('Mac') !== -1) return 'MacOS'
