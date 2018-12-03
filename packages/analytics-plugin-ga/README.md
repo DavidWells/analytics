@@ -14,19 +14,21 @@ npm install analytics-plugin-ga --save
 import analytics from 'analytics'
 import googleAnalytics from 'analytics-plugin-ga'
 
-const plugins = [
-  // GA integration
-  googleAnalytics({
-    trackingId: 'UA-121991291',
-    autoTrack: true,
-  }),
-]
-
 const analyticsInstance = analytics({
   app: 'doggieDating',
   version: 100,
-  plugins: plugins
+  plugins: [
+    // GA integration
+    googleAnalytics({
+      trackingId: 'UA-121991291',
+      autoTrack: true,
+    }),
+  ]
 })
 ```
 
 See the [full list of analytics provider plugins](https://github.com/DavidWells/analytics#current-plugins) in the main repo.
+
+## Todo
+
+- [ ] [connect with gtag.js](https://developers.google.com/analytics/devguides/collection/gtagjs/migration)

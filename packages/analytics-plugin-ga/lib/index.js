@@ -4,7 +4,7 @@
  */
 
 /* global ga */
-import { inBrowser, extend } from 'analytics-utils'
+import { inBrowser, extendApi } from 'analytics-utils'
 
 // Analytics Integration Namespace
 export const NAMESPACE = 'google'
@@ -15,8 +15,8 @@ export const config = {
 }
 
 // Analytics Integration initialize function
-export const initialize = (config, context) => {
-  if (!config.trackingId) {
+export const initialize = (configuration, instance) => {
+  if (!configuration.trackingId) {
     throw new Error('No google tracking id defined')
   }
   if (inBrowser && typeof ga === 'undefined') {
@@ -30,21 +30,21 @@ export const initialize = (config, context) => {
     /* eslint-enable */
     ga('create', config.trackingId, 'auto')
 
-    if (config.debug) {
+    if (configuration.debug) {
       // Disable sends to GA http://bit.ly/2Ro0vTR
       ga('set', 'sendHitTask', null)
       window.ga_debug = { trace: true }
     }
 
     // TODO use assumesPageview option
-    if (config.assumesPageview) {
+    if (configuration.assumesPageview) {
       ga('send', 'pageview')
     }
   }
 }
 
 // Analytics Integration pageView function
-export const page = (pageData, options, context) => {
+export const page = (pageData, options, instance) => {
   if (inBrowser && typeof ga !== 'undefined') {
     console.info(`GA Pageview > ${window.location.href}`)
 
@@ -54,7 +54,8 @@ export const page = (pageData, options, context) => {
 }
 
 // Analytics Integration track function
-export const track = (event, payload = {}, options, context) => {
+export const track = (event, payload = {}, options, instance) => {
+  const gaSettings = instance('integrations')[NAMESPACE]
   const gaData = {
     // hitType https://bit.ly/2Jab9L1
     hitType: 'event', // 'pageview', 'screenview', 'event', 'transaction', 'item', 'social', 'exception', 'timing'
@@ -66,7 +67,7 @@ export const track = (event, payload = {}, options, context) => {
     nonInteraction: (payload.nonInteraction !== undefined) ? !!payload.nonInteraction : false
   }
 
-  if (inBrowser) {
+  if (gaSettings.config.debug) {
     console.log(`GOOGLE Event > [${event}] [payload: ${JSON.stringify(payload, null, 2)}]`)
     const debugLabel = (payload.label) ? ` [Label: ${payload.label}]` : ''
     const debugValue = (payload.value) ? ` [Value: ${payload.value}]` : ''
@@ -133,13 +134,17 @@ export const loaded = function() {
 /* Export the integration */
 export default function googleAnalytics(userConfig) {
   const mergedConfig = Object.assign({}, config, userConfig)
+  // Allow for userland overides of base methods
+  const extendedApi = extendApi({
+    initialize,
+    page,
+    track,
+    identify,
+    loaded
+  }, mergedConfig)
   return {
     NAMESPACE: NAMESPACE,
     config: mergedConfig,
-    initialize: extend('initialize', initialize, mergedConfig),
-    page: extend('page', page, mergedConfig),
-    track: extend('track', track, mergedConfig),
-    identify: extend('identify', identify, mergedConfig),
-    loaded: extend('loaded', loaded, mergedConfig)
+    ...extendedApi
   }
 }
