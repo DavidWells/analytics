@@ -35,7 +35,7 @@ export default function integrationMiddleware(getIntegrations, instance) {
         const { NAMESPACE } = provider
 
         store.dispatch({
-          type: EVENTS.INTEGRATION_NAMESPACE(NAMESPACE),
+          type: EVENTS.INTEGRATION_INIT_TYPE(NAMESPACE),
           name: NAMESPACE,
           integration: provider
         })
@@ -64,7 +64,7 @@ function checkForScriptReady(config, store, provider, instance, retryCount) {
       name: NAMESPACE
     })
     store.dispatch({
-      type: EVENTS.INTEGRATION_FAILED_NAME(NAMESPACE),
+      type: EVENTS.INTEGRATION_FAILED_TYPE(NAMESPACE),
       name: NAMESPACE
     })
     return false
@@ -84,7 +84,7 @@ function checkForScriptReady(config, store, provider, instance, retryCount) {
 
   // dispatch namespaced event
   store.dispatch({
-    type: EVENTS.INTEGRATION_LOADED_NAME(NAMESPACE),
+    type: EVENTS.INTEGRATION_LOADED_TYPE(NAMESPACE),
     name: NAMESPACE
   })
 

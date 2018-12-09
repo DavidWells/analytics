@@ -46,7 +46,7 @@ export default function pageMiddleware(getIntegrations, instance) {
 
           /* Run Namespaced .page calls */
           store.dispatch({
-            type: EVENTS.PAGE_NAMESPACE(provider.NAMESPACE),
+            type: EVENTS.PAGE_TYPE(provider.NAMESPACE),
             timestamp: timestamp,
             data: pageData,
           })
@@ -86,7 +86,7 @@ export default function pageMiddleware(getIntegrations, instance) {
 
         const cb = getCallback(data, options, callback)
         if (cb) {
-          cb(store.getState())
+          cb(store.getState(), instance)
         }
       })
     }

@@ -70,7 +70,7 @@ export default function trackMiddleware(getIntegrations, instance) {
           provider.track(eventName, payload, options, instance)
 
           store.dispatch({
-            type: EVENTS.TRACK_NAMESPACE(provider.NAMESPACE),
+            type: EVENTS.TRACK_TYPE(provider.NAMESPACE),
             timestamp: timestamp,
             ...dispatchData
           })
