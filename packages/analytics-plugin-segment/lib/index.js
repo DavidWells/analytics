@@ -8,18 +8,19 @@ export const NAMESPACE = 'segment'
 
 export const config = {
   assumesPageview: true,
-  ignoreAnonymousVisitors: false
+  disableAnonymousTraffic: false
 }
 
 /* initialize Segment script */
 export const initialize = (configuration, instance) => {
-  const { ignoreAnonymousVisitors, trackingId, assumesPageview } = configuration
+  const { disableAnonymousTraffic, trackingId, assumesPageview } = configuration
   const user = instance('user')
-  if (ignoreAnonymousVisitors && (!user || !user.userId)) {
-    return false
-  }
   if (!trackingId) {
     throw new Error('No Setting id defined')
+  }
+  // Disable segment.com if user is not yet identified. Save on MTU
+  if ((!user || !user.userId) && disableAnonymousTraffic) {
+    return false
   }
   /* eslint-disable */
   !function() {
@@ -88,7 +89,7 @@ export const identify = (userId, traits, options, instance) => {
 }
 
 export const loaded = function() {
-  if (inBrowser) {
+  if (!inBrowser) {
     return false
   }
   return window.analytics && !!analytics.initialized
