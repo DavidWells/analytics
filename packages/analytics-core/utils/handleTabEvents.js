@@ -1,28 +1,7 @@
-import throttle from './throttle'
 import { inBrowser } from 'analytics-utils'
 
-export function mouseOut(cb) {
-  let out = false
-  document.addEventListener('mouseout', throttle((e) => {
-    const evt = e || window.event
-    const from = evt.relatedTarget || evt.toElement
-    if (!from || from.nodeNode === 'HTML') {
-      out = true
-      return cb(out)
-    }
-  }))
-  document.addEventListener('mousemove', throttle((e) => {
-    if (out) {
-      out = false
-      return cb(out)
-    }
-  }))
-}
-
 export function tabHidden(cb) {
-  if (!inBrowser) {
-    return false
-  }
+  if (!inBrowser) return false
   const prop = getHiddenProp()
   if (!prop) {
     return false
