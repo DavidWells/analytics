@@ -1,49 +1,14 @@
-import { uuid, storage } from 'analytics-utils'
+import { storage } from 'analytics-utils'
 import { ANON_ID, USER_ID, USER_TRAITS } from '../constants'
 import timeStamp from '../utils/timestamp'
 import EVENTS from '../events'
 
-const { getItem, setItem } = storage
-
-const setId = () => {
-  const id = uuid()
-  setItem(ANON_ID, id)
-  return id
-}
-
 // user state
 const initialState = {
-  userId: getItem(USER_ID),
-  anonymousId: getItem(ANON_ID) || setId(),
-  traits: getItem(USER_TRAITS) || {}
+  userId: storage.getItem(USER_ID),
+  anonymousId: storage.getItem(ANON_ID),
+  traits: storage.getItem(USER_TRAITS) || {}
 }
-
-// Suggested Traits
-/*
-{
-  address: {
-    city: null,
-    country: null,
-    postalCode: null,
-    state: null,
-    street: null
-  },
-  age: 20
-  avatar: 'http://url.com/thumbnail.jpg'
-  birthday: 122321212,
-  createdAt: 1111111,
-  description: 'Description of the user',
-  email: 'email@email.com',
-  firstName: 'david',
-  lastName: 'wells',
-  name: 'david wells',
-  gender: 'male',
-  id: 'String Unique ID in your database for a user',
-  phone: '727-777-8888',
-  title: 'boss ceo',
-  username: 'davidwells',
-}
-*/
 
 // user reducer
 export default function user(state = initialState, action) {
@@ -72,3 +37,30 @@ export const identify = (userId, traits, options, callback) => {
     callback: callback
   }
 }
+
+// Suggested Traits
+/*
+{
+  address: {
+    city: null,
+    country: null,
+    postalCode: null,
+    state: null,
+    street: null
+  },
+  age: 20
+  avatar: 'http://url.com/thumbnail.jpg'
+  birthday: 122321212,
+  createdAt: 1111111,
+  description: 'Description of the user',
+  email: 'email@email.com',
+  firstName: 'david',
+  lastName: 'wells',
+  name: 'david wells',
+  gender: 'male',
+  id: 'String Unique ID in your database for a user',
+  phone: '727-777-8888',
+  title: 'boss ceo',
+  username: 'davidwells',
+}
+*/
