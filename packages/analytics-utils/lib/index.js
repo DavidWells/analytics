@@ -13,6 +13,8 @@ export { default as paramsClean } from './paramsClean.js';
 export { default as paramsGet } from './paramsGet.js';
 export { default as paramsParse } from './paramsParse.js';
 export { default as paramsRemove } from './paramsRemove.js';
+export { default as parseReferrer } from './parseReferrer.js';
 export { default as storage } from './storage';
+export { default as url } from './url.js';
 export { default as uuid } from './uuid.js';
 
