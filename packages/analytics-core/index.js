@@ -8,13 +8,20 @@ import track, { trackEvent } from './modules/track'
 import user, { identify } from './modules/user'
 import dotProp from './utils/dotProp'
 import { watch } from './utils/handleNetworkEvents'
-import { mouseOut, tabHidden } from './utils/handleTabEvents'
+import { tabHidden } from './utils/handleTabEvents'
+import { mouseOut } from './utils/handleWindowEvents'
 import EVENTS, { reservedActions } from './events'
-import getCallback from './utils/getCallback'
+import * as CONSTANTS from './constants'
 
 const isDev = process.env.NODE_ENV === 'development'
 
-const { addMiddleware, removeMiddleware } = middleware
+const {
+  addMiddleware,
+  removeMiddleware,
+  setItem,
+  removeItem,
+  getItem
+} = middleware
 
 // Only way commonJS will work
 module.exports = function analytics(config = {}) {
@@ -48,7 +55,11 @@ module.exports = function analytics(config = {}) {
     return customIntegrations
   }
 
-  // getState helper with dotprop
+  /**
+   * getState helper with dotprop
+   * @param  {[type]} key [description]
+   * @return {[type]}     [description]
+   */
   const getState = (key) => {
     const state = store.getState()
     if (key) {
@@ -66,11 +77,19 @@ module.exports = function analytics(config = {}) {
     }
     store.dispatch(action)
   }
+  // Storage utils
+  instance.getItem = getItem
+  instance.setItem = (key, value) => {
+    store.dispatch(setItem(key, value))
+  }
+  instance.removeItem = (key, value) => {
+    store.dispatch(removeItem(key))
+  }
 
-  // Combine all middleware
   const middlewares = plugins.middlewares.concat([
     // Core analytics middleware
-    middleware.initialize,
+    middleware.storage(),
+    middleware.initialize(instance),
     middleware.integration(getIntegrations, instance),
     middleware.identify(getIntegrations, instance),
     middleware.track(getIntegrations, instance),
@@ -113,7 +132,7 @@ module.exports = function analytics(config = {}) {
     providers: Object.keys(customIntegrations),
   })
 
-  // // Register, load, and onReady custom integrations
+  // Register, load, and onReady custom integrations
   store.dispatch({
     type: EVENTS.INTEGRATION_INIT,
     providers: Object.keys(customIntegrations),
@@ -142,22 +161,28 @@ module.exports = function analytics(config = {}) {
   tabHidden(tabWatcher)
 
   const api = {
-    // Get all state or state by key
+    /**
+     * Get current analytics state, user data, & context
+     * @type {Object}
+     */
     getState: getState,
     dispatch: store.dispatch,
     subscribe: store.subscribe,
     replaceReducer: store.replaceReducer,
-    // track custom event
+    setItem: instance.setItem,
+    removeItem: instance.removeItem,
     /**
      * Track an analytics event
-       @example
-       track('buttonClick', {
-
-        })
-
-       @param {String} html string to be escaped
-       @return {String} escaped html
-       @api public
+     * @param  {String}   eventName - Event name
+     * @param  {Object}   payload   - Event payload
+     * @param  {Object}   options   - Event options
+     * @param  {Function} callback  - Callback to fire after tracking completes
+     * @return {Promise}
+     * @api public
+     *
+     * @Example
+     *
+     * track('buttonClick')
      */
     track: (eventName, payload, options, callback) => {
       store.dispatch(
@@ -166,7 +191,18 @@ module.exports = function analytics(config = {}) {
       /* Note promise will return before tracking complete. */
       return Promise.resolve()
     },
-    // trigger page view
+    /**
+     * Trigger page view
+     * @param  {String}   data - (optional) page data
+     * @param  {Object}   options   - Event options
+     * @param  {Function} callback  - Callback to fire after page view call completes
+     * @return {Promise}
+     * @api public
+     *
+     * @Example
+     *
+     * page()
+     */
     page: (data, options, callback) => {
       const d = data || {}
       store.dispatch(
@@ -204,10 +240,11 @@ module.exports = function analytics(config = {}) {
      * @param  {string} key - dot.prop subpath of user data
      * @example
      *
-     * user()
+     * // get all user data
+     * const userData = analytics.user()
      *
-     * // get subpath
-     * user('company.name')
+     * // get user company name
+     * const companyName = analytics.user('company.name')
      */
     user: (key) => {
       const user = getState('user')
@@ -215,32 +252,38 @@ module.exports = function analytics(config = {}) {
       return dotProp(user, key)
     },
     // analtyics.ready all integrations ready
-    ready: (cb) => {
-      const callback = typeof cb === 'function' ? cb : false
-      if (!callback) return false
+    ready: (callback) => {
+      if (!callback || typeof callback !== 'function') {
+        return false
+      }
       const readyMiddleware = store => next => action => {
         if (action.type === EVENTS.READY) {
-          callback(action, store)
+          callback(action, instance)
         }
         return next(action)
       }
       addMiddleware(readyMiddleware)
       return () => removeMiddleware(readyMiddleware)
     },
-    /* USE .on WITH GREAT CAUTION */
-    on: (name, cb) => {
-      const callback = typeof cb === 'function' ? cb : false
-      if (!callback) return false
+    /**
+     * Attach event listeners to analytic events
+     * @param  {String}   name  - event name to listen for
+     * @param  {Function} callback - callback function to trigger on event
+     * @return {Function} unsubcribe function for listener
+     */
+    on: (name, callback) => {
+      if (!name || !callback || typeof callback !== 'function') {
+        return false
+      }
       // Subscribe to EVERYTHING
       if (name === '*') {
         const globalListener = store => next => action => {
-          // do something on every action *
-          callback(action, store)
+          callback(action, instance)
           return next(action)
         }
-        // will add middleware to existing chain
+        // add middleware to existing chain
         addMiddleware(globalListener)
-        // calling this will destroy listener & remove middleware
+        // return remove middleware function
         return () => {
           removeMiddleware(globalListener)
         }
@@ -253,17 +296,25 @@ module.exports = function analytics(config = {}) {
       */
       const listener = store => next => action => {
         if (action.type === name) {
-          // TODO finalize values passed back
-          callback(action, store)
+          callback(action, instance)
         }
         return next(action)
       }
-      // will add middleware to existing chain
+      // add middleware to existing chain
       addMiddleware(listener)
-      // calling this will destroy listener & remove middleware
+      // return remove middleware function
       return () => {
         removeMiddleware(listener)
       }
+    },
+    /**
+     * Load registered analytic providers.
+     */
+    load: () => {
+      store.dispatch({
+        type: EVENTS.INTEGRATION_INIT,
+        providers: Object.keys(getIntegrations()),
+      })
     },
     /**
      * Enable analytics integration
@@ -292,12 +343,6 @@ module.exports = function analytics(config = {}) {
     disableIntegration: (name, callback) => {
       store.dispatch(disableIntegration(name, callback))
     },
-    load: () => {
-      store.dispatch({
-        type: EVENTS.INTEGRATION_INIT,
-        providers: Object.keys(getIntegrations()),
-      })
-    },
     addIntegration: (newIntegration) => {
       // TODO if it stays, state loaded needs to be set. Re INTEGRATION_INIT above
       // validate integration
@@ -319,3 +364,15 @@ module.exports = function analytics(config = {}) {
 
   return api
 }
+
+/**
+ * Expose available events for third party plugins & listeners
+ * @type {Object}
+ */
+module.exports.EVENTS = EVENTS
+
+/**
+ * Expose available constants for third party plugins & listeners
+ * @type {Object}
+ */
+module.exports.CONSTANTS = CONSTANTS
