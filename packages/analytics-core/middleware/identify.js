@@ -1,4 +1,4 @@
-import { uuid, storage } from 'analytics-utils'
+import { storage } from 'analytics-utils'
 import { USER_ID, USER_TRAITS } from '../constants'
 import EVENTS from '../events'
 import getIntegrationByMethod from '../utils/getIntegrationByMethod'
@@ -40,11 +40,11 @@ export default function identifyMiddleware(getIntegrations, instance) {
       }
 
       if (userId) {
-        storage.setItem(USER_ID, userId)
+        instance.setItem(USER_ID, userId)
       }
 
       if (traits) {
-        storage.setItem(USER_TRAITS, {
+        instance.setItem(USER_TRAITS, {
           ...currentTraits,
           ...traits
         })
@@ -83,7 +83,7 @@ export default function identifyMiddleware(getIntegrations, instance) {
 
           /* Run namespaced .identify calls */
           store.dispatch({
-            type: EVENTS.IDENTIFY_NAMESPACE(provider.NAMESPACE),
+            type: EVENTS.IDENTIFY_TYPE(provider.NAMESPACE),
             timestamp: timestamp
           })
 
