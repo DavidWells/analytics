@@ -14,7 +14,7 @@ export default function paramsRemove(param, callback) {
       const cleanUrl = paramsClean(url, param)
       if (url !== cleanUrl) {
         // replace URL
-        history.replaceState({}, '', cleanUrl)
+        history.replaceState({}, '', cleanUrl) // eslint-disable-line
       }
     }
 
@@ -25,4 +25,3 @@ export default function paramsRemove(param, callback) {
     return resolve()
   })
 }
-
