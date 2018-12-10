@@ -1,6 +1,6 @@
 {
   "name": "analytics-plugin-ga",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Google analytics integration for 'analytics' pkg",
   "author": "David Wells",
   "license": "MIT",
@@ -25,6 +25,6 @@
     "README.md"
   ],
   "dependencies": {
-    "analytics-utils": "^0.0.10"
+    "analytics-utils": "^0.0.11"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "analytics-plugin-segment",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Segment integration for 'analytics' pkg",
   "author": "David Wells",
   "license": "MIT",
