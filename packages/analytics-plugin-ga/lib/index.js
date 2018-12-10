@@ -125,9 +125,7 @@ export const identify = (id, traits, options, context) => {
 
 // Analytics Integration isLibraryLoaded function
 export const loaded = function() {
-  if (!inBrowser) {
-    return true
-  }
+  if (!inBrowser) return true
   return !!window.gaplugins
 }
 

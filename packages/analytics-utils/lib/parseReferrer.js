@@ -16,24 +16,12 @@ export default function parseReferrer(referrer, currentUrl) {
     'medium': '(none)',
     'campaign': '(not set)'
   }
-
-  // No referral found. Return defaults
-  if (!referrer) {
-    return refData
+  // Add raw ref url if external
+  if (referrer && isExternalReferrer(referrer)) {
+    refData.referrer = referrer
   }
-
-  // Add raw ref url
-  refData.referrer = referrer
 
   const domainInfo = parseDomain(referrer)
-
-  // If is internal referral link
-  if (!isExternalReferrer(referrer)) {
-    refData.source = domainInfo.source
-    refData.medium = 'internal'
-    return refData
-  }
-
   // Read referrer URI and infer source
   if (domainInfo && Object.keys(domainInfo).length) {
     refData = Object.assign({}, refData, domainInfo)
@@ -76,7 +64,7 @@ export default function parseReferrer(referrer, currentUrl) {
  * @return {[type]}          [description]
  */
 function parseDomain(referrer) {
-  if (!referrer || !inBrowser || !isExternalReferrer(referrer)) return false
+  if (!referrer || !inBrowser) return false
 
   let referringDomain = getDomainBase(referrer)
   const a = document.createElement('a')
@@ -102,9 +90,10 @@ function parseDomain(referrer) {
   }
 
   // Default
+  const medium = (!isExternalReferrer(referrer)) ? 'internal' : 'referral'
   return {
     source: a.hostname,
-    medium: 'referral'
+    medium: medium
   }
 }
 
