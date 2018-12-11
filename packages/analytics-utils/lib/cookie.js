@@ -1,9 +1,9 @@
-import inBrowser from './inBrowser'
+import hasCookies from './storage/hasCookies'
+
+export const cookiesSupported = hasCookies()
 
 export function setCookie(name, value, days) {
-  if (!inBrowser) {
-    return false
-  }
+  if (!cookiesSupported) return false
   let expires = ''
   if (days) {
     const date = new Date()
@@ -14,9 +14,7 @@ export function setCookie(name, value, days) {
 }
 
 export function getCookie(name) {
-  if (!inBrowser) {
-    return false
-  }
+  if (!cookiesSupported) return false
   const find = `${name}=`
   const allCookies = document.cookie.split(';')
   for (let i = 0; i < allCookies.length; i++) {
@@ -32,5 +30,6 @@ export function getCookie(name) {
 }
 
 export function removeCookie(name) {
+  if (!cookiesSupported) return false
   setCookie(name, '', -1)
 }
