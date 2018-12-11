@@ -1,17 +1,24 @@
 // Context Reducer.  Follows ducks pattern http://bit.ly/2DnERMc
 /* global BUILD_WEB BUILD_NODE */
-import { inBrowser } from 'analytics-utils'
+import { inBrowser, parseReferrer, getBrowserLocale, getTimeZone } from 'analytics-utils'
 import EVENTS from '../events'
 import getOSNameNode from '../utils/getOSName/node'
 import getOSNameBrowser from '../utils/getOSName/browser'
 
 let osName
+let referrer
+let locale
+let timeZone
 if (BUILD_WEB) {
   osName = getOSNameBrowser()
+  referrer = parseReferrer()
+  locale = getBrowserLocale()
+  timeZone = getTimeZone()
 }
 
 if (BUILD_NODE) {
   osName = getOSNameNode()
+  referrer = {}
 }
 
 const initialState = {
@@ -29,8 +36,11 @@ const initialState = {
     // TODO fix version number. npm run publish:patch has wrong version
     version: process.env.VERSION || 'devmode'
   },
-  // locale: '',
-  campaign: {}
+  timezone: timeZone,
+  locale: locale,
+  campaign: {},
+  referrer: referrer,
+  // ip:
 }
 
 // context reducer
