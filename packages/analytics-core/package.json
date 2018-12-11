@@ -33,7 +33,7 @@
     "README.md"
   ],
   "dependencies": {
-    "analytics-utils": "^0.0.8",
+    "analytics-utils": "^0.0.11",
     "redux": "^3.6.0"
   },
   "devDependencies": {
