@@ -2,38 +2,46 @@
  * Referral source plugin
  */
 
-import { decodeUri, parseReferrer, cookie } from 'analytics-utils'
+import { decodeUri, parseReferrer, cookie, storage } from 'analytics-utils'
 
-const { getCookie, setCookie } = cookie
-
-const CONSTANTS = {
-  ORIGINAL_SOURCE: '__user_original_source'
-}
 const EVENTS = {
   SET_ORIGINAL_SOURCE: 'setOriginalSource'
 }
 
-export default function referralSourcePlugin(config) {
+const CONFIG = {
+  storageKey: '__user_original_source'
+}
+
+/**
+ * Track original source of visitors.
+ * @param  {Object} config - settings for referral source tracking
+ * @param  {String} config.storage - overide the location of storage. 'LocalStorage', 'cookie', or 'window'
+ * @param  {String} config.storageKey - overide the storage key. Default '__user_original_source'
+ * @return {Function} - middleware for `analytics`
+ */
+export default function originalSourcePlugin(config) {
   return store => next => action => {
     if (action.type === 'analyticsInit') {
-      const ref = firstReferralSource()
+      const refData = firstReferralSource(config)
       store.dispatch({
         type: EVENTS.SET_ORIGINAL_SOURCE,
-        data: ref
+        data: refData
       })
     }
     return next(action)
   }
 }
 
-function getOriginalSource(referrer) {
+function getOriginalSource(referrer, opts) {
+  const config = opts || {}
+  const key = config.storageKey || CONFIG.storageKey
   // 1. try first source cookie
-  const cookie = getCookie(CONSTANTS.ORIGINAL_SOURCE)
-  if (cookie) {
-    return parsePipeString(cookie)
+  const originalSrc = storage.getItem(key, config)
+  if (originalSrc) {
+    return parsePipeString(originalSrc)
   }
   // 2. try __utmz cookie
-  const utmzCookie = getCookie('__utmz')
+  const utmzCookie = cookie.getCookie('__utmz')
   if (utmzCookie) {
     const parsedCookie = parsePipeString(utmzCookie)
     if (parsedCookie) {
@@ -51,19 +59,22 @@ function getOriginalSource(referrer) {
  * @param  {String|optional} referrer - uri of referral site
  * @return {String}
  */
-function firstReferralSource(referrer) {
+function firstReferralSource(config) {
+  const conf = config || {}
+  const key = conf.storageKey || CONFIG.storageKey
+  // TODO refactor settings to mesh better with storage opts
+  const storageSettings = (!conf.storage) ? {} : { storage: conf.storage }
   // 1. try first source cookie
-  const cookie = getCookie(CONSTANTS.ORIGINAL_SOURCE)
-  if (cookie) {
+  const originalSrc = storage.getItem(key, storageSettings)
+  if (originalSrc) {
     // return stored referrer data
-    return parsePipeString(cookie)
+    return parsePipeString(originalSrc)
+  } else {
+    // Set referral data
+    const originalSource = getOriginalSource(conf.referrer)
+    storage.setItem(key, formatPipeString(originalSource), storageSettings)
+    return originalSource
   }
-
-  // Set referral data
-  const originalSource = getOriginalSource(referrer)
-  setCookie(CONSTANTS.ORIGINAL_SOURCE, formatCookie(originalSource))
-
-  return originalSource
 }
 
 /**
@@ -77,7 +88,7 @@ function firstReferralSource(referrer) {
  *  // utmcsr=SOURCE|utmcmd=MEDIUM[|utmccn=CAMPAIGN][|utmcct=CONTENT][|utmctr=TERM/KEYWORD]
  *
  */
-function formatCookie(obj) {
+function formatPipeString(obj) {
   if (!obj || typeof obj !== 'object') {
     return null
   }
