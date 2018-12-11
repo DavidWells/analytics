@@ -14,7 +14,7 @@ import packageJSON from './package.json'
 // process.env.NODE_ENV = 'development'
 process.env.NODE_ENV = 'production'
 let isProduction = process.env.NODE_ENV === 'production'
-isProduction = false
+// isProduction = false
 const closureOptions = {
   compilationLevel: 'SIMPLE',
   languageIn: 'ECMASCRIPT5_STRICT',
