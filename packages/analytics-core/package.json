@@ -1,6 +1,6 @@
 {
   "name": "analytics",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Pluggable analytics library",
   "author": "David Wells",
   "license": "MIT",
@@ -33,7 +33,7 @@
     "README.md"
   ],
   "dependencies": {
-    "analytics-utils": "^0.0.11",
+    "analytics-utils": "^0.0.12",
     "redux": "^3.6.0"
   },
   "devDependencies": {
