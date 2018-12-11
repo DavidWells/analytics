@@ -109,7 +109,7 @@ module.exports = function analytics(config = {}) {
   let composeEnhancers = compose
   if (inBrowser && config.debug) {
     const withDevTools = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
-    composeEnhancers = (isDev) ? withDevTools : compose
+    composeEnhancers = (config.debug) ? withDevTools : compose
   }
 
   /* Create analytics store! */

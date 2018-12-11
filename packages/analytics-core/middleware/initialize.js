@@ -63,11 +63,6 @@ export default function initializeMiddleware(instance) {
             type: EVENTS.CAMPAIGN,
             campaign: groupedParams.campaign
           })
-          // https://www.analyticsmania.com/post/track-the-initial-traffic-source-of-the-visitor-gtm/
-          console.log(Object.keys(groupedParams.campaign).reduce((acc, curr, i) => {
-            return `${acc}${(i) ? '|' : ''}${curr.replace(/^utm_/, '')}=${groupedParams.campaign[curr]}`
-          }, ''))
-          // utmcsr=davidwells.io|utmcmd=referral|utmccn=(not set)
         }
 
         if (params.an_clean) {
