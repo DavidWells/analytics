@@ -1,5 +1,5 @@
 /**
- * GA analytics integration
+ * GA analytics plugin
  * https://developers.google.com/analytics/devguides/collection/analyticsjs
  */
 
@@ -7,7 +7,7 @@
 import { inBrowser, extendApi } from 'analytics-utils'
 
 // Analytics Integration Namespace
-export const NAMESPACE = 'google'
+export const NAMESPACE = 'google-analytics'
 
 // Analytics Integration Configuration
 export const config = {
@@ -46,8 +46,6 @@ export const initialize = (configuration, instance) => {
 // Analytics Integration pageView function
 export const page = (pageData, options, instance) => {
   if (inBrowser && typeof ga !== 'undefined') {
-    console.info(`GA Pageview > ${window.location.href}`)
-
     ga('set', 'page', pageData.path) // eslint-disable-line
     ga('send', 'pageview') // eslint-disable-line
   }
@@ -55,7 +53,7 @@ export const page = (pageData, options, instance) => {
 
 // Analytics Integration track function
 export const track = (event, payload = {}, options, instance) => {
-  const gaSettings = instance('integrations')[NAMESPACE]
+  const gaSettings = instance.getState('plugins')[NAMESPACE]
   const gaData = {
     // hitType https://bit.ly/2Jab9L1
     hitType: 'event', // 'pageview', 'screenview', 'event', 'transaction', 'item', 'social', 'exception', 'timing'
@@ -102,7 +100,7 @@ export const track = (event, payload = {}, options, instance) => {
       nonInteraction: props.nonInteraction !== undefined ? !!props.nonInteraction : !!opts.nonInteraction
     }
     */
-    console.log(`GA Payload Event > [${JSON.stringify(gaData, null, 2)}]`)
+    // console.log(`GA Payload Event > [${JSON.stringify(gaData, null, 2)}]`)
     ga('send', 'event', gaData)
   }
 }
@@ -110,7 +108,7 @@ export const track = (event, payload = {}, options, instance) => {
 // Analytics Integration identify function
 export const identify = (id, traits, options, context) => {
   if (inBrowser) {
-    console.log('GA identify', id, traits, options)
+    // console.log('GA identify', id, traits, options)
   }
 
   if (id && typeof ga !== 'undefined') {
