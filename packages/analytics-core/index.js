@@ -46,15 +46,12 @@ module.exports = function analytics(config = {}) {
     middlewares: [],
   })
 
-  console.log('plugins testers', parsedOptions.plugins)
-  console.log('integrations w/ core methods', parsedOptions.integrations)
-  console.log('middlewares', parsedOptions.middlewares)
-
   // mutable intregrations object for dynamic loading
   let customPlugins = parsedOptions.plugins
 
   if (isDev) {
-    console.log('customPlugins', parsedOptions.integrations)
+    console.log('Plugins with core "track", "page", "identify" methods', parsedOptions.integrations)
+    console.log('All plugins', parsedOptions.plugins)
     console.log('customMiddlewares', parsedOptions.middlewares)
   }
 
@@ -328,11 +325,11 @@ module.exports = function analytics(config = {}) {
   const middlewares = parsedOptions.middlewares.concat([
     // Core analytics middleware
     middleware.storage(),
-    middleware.plugins(getPlugins, instance),
+    middleware.plugins(instance, getPlugins),
     middleware.initialize(instance),
-    middleware.identify(getPlugins, instance),
-    middleware.track(getPlugins, instance),
-    middleware.page(getPlugins, instance),
+    middleware.identify(instance, getPlugins),
+    middleware.track(instance, getPlugins),
+    middleware.page(instance, getPlugins),
     middleware.dynamic,
   ])
 

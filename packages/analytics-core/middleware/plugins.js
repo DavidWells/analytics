@@ -1,16 +1,17 @@
 import EVENTS from '../events'
 import runHooks from '../utils/runHooks'
 
-export default function pluginMiddleware(getPlugins, instance) {
+export default function pluginMiddleware(instance, getPlugins) {
   return store => next => action => {
     const { type, name, callback } = action
+    let updatedAction = action
     // Dyanmically run registered plugin methods
     if (type && type !== 'track' && type !== 'page' && type !== 'identify') {
       if (action.abort) return next(action)
       const value = runHooks(action, instance, getPlugins())
       if (value) {
-        console.log('original action', action)
-        console.log('value', value)
+        // A plugin has modifed the original action
+        updatedAction = value
       }
     }
 
@@ -60,7 +61,7 @@ export default function pluginMiddleware(getPlugins, instance) {
       })
     }
 
-    return next(action)
+    return next(updatedAction)
   }
 }
 
@@ -76,10 +77,9 @@ function loadPlugin(provider, store, instance) {
   const hasLoadedLogic = provider.loaded
   const isLoaded = provider.loaded && typeof provider.loaded === 'function' && provider.loaded()
   if (!hasLoadedLogic) {
-    console.log('NO loaded logic', provider)
+    // console.log('NO loaded method found for', provider)
     // Emit loaded there is no waiting for this
     if (provider.initialize) {
-      console.log('INITIALIZE', NAMESPACE)
       provider.initialize(provider.config, instance)
     }
     integrationLoaded(NAMESPACE, store)

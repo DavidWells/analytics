@@ -2,7 +2,7 @@ import { storage } from 'analytics-utils'
 import timeStamp from '../utils/timestamp'
 import EVENTS from '../events'
 
-export default function storageMiddleware(getIntegrations, instance) {
+export default function storageMiddleware() {
   /*
   Todo: emit events for keys we care about
   window.addEventListener('storage', (event) => console.log(event));

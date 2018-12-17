@@ -8,7 +8,7 @@ import waitForReady from '../utils/waitForReady'
 
 let eventQueue = []
 
-export default function identifyMiddleware(getIntegrations, instance) {
+export default function identifyMiddleware(instance, getPlugins) {
   return store => next => action => {
     const { userId, traits, options, callback, timestamp } = action
     if (action.type === EVENTS.RESET) {
@@ -78,14 +78,14 @@ export default function identifyMiddleware(getIntegrations, instance) {
       }, 0)
 
       const idCalls = filterDisabled(
-        getPluginByMethod('identify', getIntegrations()),
+        getPluginByMethod('identify', getPlugins()),
         store.getState().plugins,
         options
       ).map((provider) => {
         return waitForReady(provider, timeoutMax, store).then((d) => {
           const { queue } = d
           if (queue) {
-            console.log('ADD call to queue', provider.NAMESPACE)
+            // console.log('ADD call to queue', provider.NAMESPACE)
             eventQueue = eventQueue.concat(`${provider.NAMESPACE}-${userId}`)
             return false
           }

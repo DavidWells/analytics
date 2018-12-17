@@ -1,6 +1,6 @@
 import { paramsParse, paramsRemove, storage, uuid } from 'analytics-utils'
 import EVENTS from '../events'
-import { ANON_ID, USER_ID, USER_TRAITS } from '../constants'
+import { ANON_ID } from '../constants'
 import { identify } from '../modules/user'
 import { trackEvent } from '../modules/track'
 
@@ -73,33 +73,7 @@ export default function initializeMiddleware(instance) {
         }
       }
 
-      // TODO set these?
-      /*
-      var setOriginalReferrer = function(storage) {
-          var referrerString = null;
-
-          var utmSource = getParameterByName('utm_source', window.location.href);
-          if (utmSource) {
-              referrerString = utmSource;
-          } else {
-              var referrer = document.referrer;
-              if (!referrer) {
-                  referrerString = 'direct';
-              } else {
-                  var l = document.createElement('a');
-                  l.href = referrer;
-                  referrerString = l.hostname;
-              }
-          }
-
-          storage.set('originalReferrer', referrerString);
-          return referrerString;
-      }
-      var setOriginalLandingPage = function(storage) {
-          var url = APP_CONFIG.S3_BASE_URL;
-          storage.set('originalLandingPage', url);
-          return url;
-      }
+      /* TODO set these?
       var setFirstVisitDate = function(storage) {
           var now = new Date();
           var year = now.getFullYear().toString();

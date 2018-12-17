@@ -6,7 +6,7 @@ import waitForReady from '../utils/waitForReady'
 
 let eventQueue = []
 
-export default function trackMiddleware(getIntegrations, instance) {
+export default function trackMiddleware(instance, getPlugins) {
   const timeoutMax = 10000
   return store => next => action => {
     const { eventName, payload, options, callback, timestamp } = action
@@ -53,7 +53,7 @@ export default function trackMiddleware(getIntegrations, instance) {
         options
       }
       const trackCalls = filterDisabled(
-        getPluginByMethod('track', getIntegrations()),
+        getPluginByMethod('track', getPlugins()),
         store.getState().plugins,
         options
       ).map((provider) => {
