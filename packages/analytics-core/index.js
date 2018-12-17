@@ -1,11 +1,11 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
-import { inBrowser } from 'analytics-utils'
+import inBrowser from 'analytics-utils/dist/inBrowser'
 import * as middleware from './middleware'
-import integrations, { enableIntegration, disableIntegration } from './modules/integrations'
+import plugins, { enablePlugin, disablePlugin } from './modules/plugins' // registerPlugin
 import context, { makeContext } from './modules/context'
 import page, { pageView } from './modules/page'
 import track, { trackEvent } from './modules/track'
-import user, { identify } from './modules/user'
+import user, { identify, reset } from './modules/user'
 import dotProp from './utils/dotProp'
 import { watch } from './utils/handleNetworkEvents'
 import { tabHidden } from './utils/handleTabEvents'
@@ -15,209 +15,62 @@ import * as CONSTANTS from './constants'
 
 const isDev = process.env.NODE_ENV === 'development'
 
-const {
-  addMiddleware,
-  removeMiddleware,
-  setItem,
-  removeItem,
-  getItem
-} = middleware
+const { addMiddleware, removeMiddleware, setItem, removeItem, getItem } = middleware
+
+const keys = ['track', 'page', 'identify']
+const anyKeyExists = (object, keys) => Object.keys(object).some((key) => keys.includes(key))
 
 // Only way commonJS will work
 module.exports = function analytics(config = {}) {
   const customReducers = config.reducers || {}
 
   /* Parse plugins array */
-  const plugins = (config.plugins || []).reduce((acc, p) => {
-    if (typeof p !== 'function') {
-      /* analytic integrations */
-      acc.integrations[p.NAMESPACE] = p
+  const parsedOptions = (config.plugins || []).reduce((acc, p) => {
+    if (typeof p !== 'function' && p.NAMESPACE) {
+      // If core 'track', 'page', or 'identify' found
+      if (anyKeyExists(p, keys)) {
+        acc.integrations[p.NAMESPACE] = p
+      }
+      if (acc.plugins[p.NAMESPACE]) {
+        throw new Error(`Analytics "${p.NAMESPACE}" loaded twice!`)
+      }
+      acc.plugins[p.NAMESPACE] = p
       return acc
     }
     /* Custom redux middleware */
     acc.middlewares = acc.middlewares.concat(p)
     return acc
   }, {
+    plugins: {},
+    integrations: {},
     middlewares: [],
-    integrations: {}
   })
 
+  console.log('plugins testers', parsedOptions.plugins)
+  console.log('integrations w/ core methods', parsedOptions.integrations)
+  console.log('middlewares', parsedOptions.middlewares)
+
   // mutable intregrations object for dynamic loading
-  let customIntegrations = plugins.integrations
+  let customPlugins = parsedOptions.plugins
 
   if (isDev) {
-    console.log('customIntegrations', plugins.integrations)
-    console.log('customMiddlewares', plugins.middlewares)
+    console.log('customPlugins', parsedOptions.integrations)
+    console.log('customMiddlewares', parsedOptions.middlewares)
   }
 
   /* plugin methods(functions) must be kept out of state. thus they live here */
-  const getIntegrations = () => {
-    return customIntegrations
+  const getPlugins = () => {
+    return customPlugins
   }
 
-  /**
-   * getState helper with dotprop
-   * @param  {[type]} key [description]
-   * @return {[type]}     [description]
-   */
-  const getState = (key) => {
-    const state = store.getState()
-    if (key) {
-      return dotProp(state, key)
-    }
-    return Object.assign({}, state)
-  }
-
-  const instance = getState
-  instance.getState = getState
-  instance.dispatch = (action) => {
-    if (reservedActions.includes(action.type)) {
-      console.log(`Trying to dispatch analytics reservedAction "${action.type}"`)
-      return false
-    }
-    store.dispatch(action)
-  }
-  // Storage utils
-  instance.getItem = getItem
-  instance.setItem = (key, value) => {
-    store.dispatch(setItem(key, value))
-  }
-  instance.removeItem = (key, value) => {
-    store.dispatch(removeItem(key))
-  }
-
-  const middlewares = plugins.middlewares.concat([
-    // Core analytics middleware
-    middleware.storage(),
-    middleware.initialize(instance),
-    middleware.integration(getIntegrations, instance),
-    middleware.identify(getIntegrations, instance),
-    middleware.track(getIntegrations, instance),
-    middleware.page(getIntegrations, instance),
-    middleware.dynamic,
-  ])
-
-  // Initial analytics state keys
-  const coreReducers = {
-    context: context,
-    user: user,
-    page: page,
-    track: track,
-    integrations: integrations
-  }
-
-  let composeEnhancers = compose
-  if (inBrowser && config.debug) {
-    const withDevTools = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
-    composeEnhancers = (config.debug) ? withDevTools : compose
-  }
-
-  /* Create analytics store! */
-  const store = createStore(
-    combineReducers({...coreReducers, ...customReducers}),
-    // optional default config overides by user
-    {
-      context: makeContext(config),
-      // Todo allow for more userland defined initial state?
-    },
-    // register middleware & plugins used
-    composeEnhancers(
-      applyMiddleware(...middlewares)
-    )
-  )
-
-  // Init analytics
-  store.dispatch({
-    type: EVENTS.INITIALIZE,
-    providers: Object.keys(customIntegrations),
-  })
-
-  // Register, load, and onReady custom integrations
-  store.dispatch({
-    type: EVENTS.INTEGRATION_INIT,
-    providers: Object.keys(customIntegrations),
-  })
-
-  // Watch for network events
-  const networkWatcher = bool => {
-    store.dispatch({
-      type: (bool) ? EVENTS.OFFLINE : EVENTS.ONLINE,
-    })
-  }
-  watch(networkWatcher)
-
-  const windowWatcher = bool => {
-    store.dispatch({
-      type: (bool) ? EVENTS.WINDOW_LEAVE : EVENTS.WINDOW_ENTER,
-    })
-  }
-  mouseOut(windowWatcher)
-
-  const tabWatcher = bool => {
-    store.dispatch({
-      type: (bool) ? EVENTS.TAB_HIDDEN : EVENTS.TAB_VISIBLE,
-    })
-  }
-  tabHidden(tabWatcher)
-
-  const api = {
-    /**
-     * Get current analytics state, user data, & context
-     * @type {Object}
-     */
-    getState: getState,
-    dispatch: store.dispatch,
-    subscribe: store.subscribe,
-    replaceReducer: store.replaceReducer,
-    setItem: instance.setItem,
-    removeItem: instance.removeItem,
-    /**
-     * Track an analytics event
-     * @param  {String}   eventName - Event name
-     * @param  {Object}   payload   - Event payload
-     * @param  {Object}   options   - Event options
-     * @param  {Function} callback  - Callback to fire after tracking completes
-     * @return {Promise}
-     * @api public
-     *
-     * @Example
-     *
-     * track('buttonClick')
-     */
-    track: (eventName, payload, options, callback) => {
-      store.dispatch(
-        trackEvent(eventName, payload, options, callback)
-      )
-      /* Note promise will return before tracking complete. */
-      return Promise.resolve()
-    },
-    /**
-     * Trigger page view
-     * @param  {String}   data - (optional) page data
-     * @param  {Object}   options   - Event options
-     * @param  {Function} callback  - Callback to fire after page view call completes
-     * @return {Promise}
-     * @api public
-     *
-     * @Example
-     *
-     * page()
-     */
-    page: (data, options, callback) => {
-      const d = data || {}
-      store.dispatch(
-        pageView(d, options, callback)
-      )
-      /* Note promise will return before tracking complete. */
-      return Promise.resolve()
-    },
+  const instance = {
     /**
     * Identify user
     * @param  {String}   userId  - Unique ID of user
     * @param  {Object}   traits  - Object of user traits
     * @param  {Object}   options - Options to pass to indentify call
     * @param  {Function} callback - Optional callback function after identify completes
-    * @return {Promise}
+    * @api public
     *
     * @example
     *
@@ -232,12 +85,111 @@ module.exports = function analytics(config = {}) {
       store.dispatch(
         identify(id, data, options, callback)
       )
-      /* Note promise will return before tracking complete. */
-      return Promise.resolve()
+    },
+    /**
+     * Track an analytics event
+     * @param  {String}   eventName - Event name
+     * @param  {Object}   payload   - Event payload
+     * @param  {Object}   options   - Event options
+     * @param  {Function} callback  - Callback to fire after tracking completes
+     * @api public
+     *
+     * @example
+     *
+     * analytics.track('buttonClick')
+     */
+    track: (eventName, payload, options, callback) => {
+      store.dispatch(
+        trackEvent(eventName, payload, options, callback)
+      )
+    },
+    /**
+     * Trigger page view
+     * @param  {String}   data - (optional) page data
+     * @param  {Object}   options   - Event options
+     * @param  {Function} callback  - Callback to fire after page view call completes
+     * @api public
+     *
+     * @example
+     *
+     * analytics.page()
+     */
+    page: (data, options, callback) => {
+      const d = data || {}
+      store.dispatch(
+        pageView(d, options, callback)
+      )
+    },
+    /**
+     * getState helper with dotprop
+     * @param  {String} key - (optional) dotprop sub value of state
+     * @return {Any}
+     */
+    getState: (key) => {
+      const state = store.getState()
+      if (key) return dotProp(state, key)
+      return Object.assign({}, state)
+    },
+    /**
+     * Clear all information about the visitor
+     * @param {Function} callback - Handler to run after reset
+     */
+    reset: (callback) => {
+      store.dispatch(reset(callback))
+    },
+    /**
+     * Emit events for other plugins to react to
+     * @param  {Object} action [description]
+     */
+    dispatch: (action) => {
+      if (reservedActions.includes(action.type)) {
+        console.log(`Trying to dispatch analytics reservedAction "${action.type}"`)
+        return false
+      }
+      store.dispatch(action)
+    },
+    /**
+     * Storage utilities for persisting data
+     * @type {Object}
+     */
+    storage: {
+      /**
+       * Get value from storage
+       * @param {String} key - storage key
+       * @param {Object} options - storage options
+       * @return {Any}
+       */
+      getItem: getItem,
+      /**
+       * Set storage value
+       * @param {String} key - storage key
+       * @param {Any} value - storage value
+       * @param {Object} options - storage options
+       */
+      setItem: (key, value, opts) => {
+        store.dispatch(setItem(key, value, opts))
+      },
+      /**
+       * Remove storage value
+       * @param {String} key - storage key
+       * @param {Object} options - storage options
+       */
+      removeItem: (key, opts) => {
+        store.dispatch(removeItem(key, opts))
+      },
+    },
+    /**
+     * Set the anonymous ID of the visitor
+     * @param {String} anonId - Id to set
+     * @param {Object} options - storage options
+     */
+    setAnonymousId: (anonId, opts) => {
+      instance.storage.setItem(CONSTANTS.ANON_ID, anonId, opts)
     },
     /**
      * Get user data
-     * @param  {string} key - dot.prop subpath of user data
+     * @param {String} key - dot.prop subpath of user data
+     *
      * @example
      *
      * // get all user data
@@ -247,122 +199,209 @@ module.exports = function analytics(config = {}) {
      * const companyName = analytics.user('company.name')
      */
     user: (key) => {
-      const user = getState('user')
+      const user = instance.getState('user')
       if (!key) return user
       return dotProp(user, key)
     },
-    // analtyics.ready all integrations ready
+    /**
+     * Fire callback on analytics ready event
+     * @param  {Function} callback - function to trigger when all providers have loaded
+     *
+     * @example
+     *
+     * analytics.ready((action, instance) => {
+     *   console.log('all integrations have loaded')
+     * })
+     *
+     */
     ready: (callback) => {
-      if (!callback || typeof callback !== 'function') {
-        return false
-      }
-      const readyMiddleware = store => next => action => {
-        if (action.type === EVENTS.READY) {
-          callback(action, instance)
-        }
-        return next(action)
-      }
-      addMiddleware(readyMiddleware)
-      return () => removeMiddleware(readyMiddleware)
+      return instance.on(EVENTS.READY, callback)
     },
     /**
-     * Attach event listeners to analytic events
-     * @param  {String}   name  - event name to listen for
-     * @param  {Function} callback - callback function to trigger on event
-     * @return {Function} unsubcribe function for listener
+     * Attach an event handler function for one or more events to the selected elements.
+     * @param  {String}   name - Name of event to listen to
+     * @param  {Function} callback - function to fire on event
+     * @return {Function} - Function to detach listener
+     *
+     * @example
+     *
+     * analytics.on('track', (action, instance) => {
+     *   console.log('track call just happened. Do stuff')
+     * })
      */
     on: (name, callback) => {
       if (!name || !callback || typeof callback !== 'function') {
         return false
       }
-      // Subscribe to EVERYTHING
-      if (name === '*') {
-        const globalListener = store => next => action => {
+      const handler = store => next => action => {
+        // Subscribe to EVERYTHING
+        if (name === '*') {
           callback(action, instance)
-          return next(action)
-        }
-        // add middleware to existing chain
-        addMiddleware(globalListener)
-        // return remove middleware function
-        return () => {
-          removeMiddleware(globalListener)
-        }
-      }
-      /* For future matching of event subpaths `track*`
-      if (name.match(/\*$/)) {
-        const match = (name === '*') ? '.' : name
-        const regex = new RegExp(`${match}`, 'g')
-      }
-      */
-      const listener = store => next => action => {
-        if (action.type === name) {
+        // Subscribe to specific actions
+        } else if (action.type === name) {
           callback(action, instance)
         }
+        /* For future matching of event subpaths `track:*` etc
+        } else if (name.match(/\*$/)) {
+          const match = (name === '*') ? '.' : name
+          const regex = new RegExp(`${match}`, 'g')
+        } */
         return next(action)
       }
-      // add middleware to existing chain
-      addMiddleware(listener)
-      // return remove middleware function
-      return () => {
-        removeMiddleware(listener)
-      }
+      addMiddleware(handler)
+      return () => removeMiddleware(handler)
     },
     /**
-     * Load registered analytic providers.
+     * Attach a handler function to an event and only trigger it only once.
+     * @param  {String} name - Name of event to listen to
+     * @param  {Function} callback - function to fire on event
+     *
+     * @example
+     *
+     * analytics.once('track', (action, instance) => {
+     *   console.log('This will only triggered once')
+     * })
      */
-    load: () => {
-      store.dispatch({
-        type: EVENTS.INTEGRATION_INIT,
-        providers: Object.keys(getIntegrations()),
+    once: (name, callback) => {
+      const remove = instance.on(name, (action) => {
+        callback(action, instance)
+        remove()
       })
     },
     /**
-     * Enable analytics integration
-     * @param  {string|array} name - name of integration(s) to disable
+     * Enable analytics plugin
+     * @param  {String|Array} name - name of integration(s) to disable
      * @param  {Function} callback - callback after enable runs
      * @example
      *
-     * enableIntegration('google')
+     * enablePlugin('google')
      *
      * // enable multiple integrations at once
-     * enableIntegration(['google', 'segment'])
+     * enablePlugin(['google', 'segment'])
      */
-    enableIntegration: (name, callback) => {
-      store.dispatch(enableIntegration(name, callback))
+    enablePlugin: (name, callback) => {
+      store.dispatch(enablePlugin(name, callback))
     },
     /**
-     * Disable analytics integration
+     * Disable analytics plugin
      * @param  {string|array} name - name of integration(s) to disable
      * @param  {Function} callback - callback after disable runs
      * @example
      *
-     * disableIntegration('google')
+     * disablePlugin('google')
      *
-     * disableIntegration(['google', 'segment'])
+     * disablePlugin(['google', 'segment'])
      */
-    disableIntegration: (name, callback) => {
-      store.dispatch(disableIntegration(name, callback))
+    disablePlugin: (name, callback) => {
+      store.dispatch(disablePlugin(name, callback))
     },
-    addIntegration: (newIntegration) => {
-      // TODO if it stays, state loaded needs to be set. Re INTEGRATION_INIT above
+    /**
+     * Load registered analytic providers.
+     * @param  {String} namespace - integration namespace
+     */
+    loadPlugin: (namespace) => {
+      store.dispatch({
+        type: EVENTS.PLUGIN_INIT,
+        // todo handle arrays
+        providers: (namespace) ? [namespace] : Object.keys(getPlugins()),
+      })
+    },
+    /* @TODO if it stays, state loaded needs to be set. Re PLUGIN_INIT above
+    addPlugin: (newPlugin) => {
       // validate integration
-      if (typeof newIntegration !== 'object') {
+      if (typeof newPlugin !== 'object') {
         return false
       }
       // Set on global integration object
-      customIntegrations = Object.assign({}, customIntegrations, {
-        [`${newIntegration.NAMESPACE}`]: newIntegration
+      customPlugins = Object.assign({}, customPlugins, {
+        [`${newPlugin.NAMESPACE}`]: newPlugin
       })
       // then add it, and init state key
       store.dispatch({
-        type: EVENTS.INTEGRATION_INIT,
-        name: newIntegration.NAMESPACE,
-        integration: newIntegration
+        type: EVENTS.PLUGIN_INIT,
+        name: newPlugin.NAMESPACE,
+        plugin: newPlugin
       })
-    }
+    }, */
   }
 
-  return api
+  const middlewares = parsedOptions.middlewares.concat([
+    // Core analytics middleware
+    middleware.storage(),
+    middleware.plugins(getPlugins, instance),
+    middleware.initialize(instance),
+    middleware.identify(getPlugins, instance),
+    middleware.track(getPlugins, instance),
+    middleware.page(getPlugins, instance),
+    middleware.dynamic,
+  ])
+
+  // Initial analytics state keys
+  const coreReducers = {
+    context: context,
+    user: user,
+    page: page,
+    track: track,
+    plugins: plugins
+  }
+
+  let composeEnhancers = compose
+  if (inBrowser && config.debug) {
+    const withDevTools = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+    composeEnhancers = (config.debug) ? withDevTools : compose
+  }
+
+  const initialConfig = makeContext(config)
+  const initialState = {
+    context: initialConfig,
+    // Todo allow for more userland defined initial state?
+  }
+  /* Create analytics store! */
+  const store = createStore(
+    // register reducers
+    combineReducers({...coreReducers, ...customReducers}),
+    // set user defined initial state
+    initialState,
+    // register middleware & plugins used
+    composeEnhancers(applyMiddleware(...middlewares))
+  )
+
+  // Initialize analytics
+  store.dispatch({
+    type: EVENTS.INITIALIZE,
+    plugins: Object.keys(customPlugins),
+    config: initialConfig
+  })
+
+  // Watch for network events
+  watch(offline => {
+    store.dispatch({
+      type: (offline) ? EVENTS.OFFLINE : EVENTS.ONLINE,
+    })
+  })
+  mouseOut(leftWindow => {
+    store.dispatch({
+      type: (leftWindow) ? EVENTS.WINDOW_LEAVE : EVENTS.WINDOW_ENTER,
+    })
+  })
+  tabHidden(tabHidden => {
+    store.dispatch({
+      type: (tabHidden) ? EVENTS.TAB_HIDDEN : EVENTS.TAB_VISIBLE,
+    })
+  })
+
+  /* Optionally expose redux to instance */
+  if (config.exposeRedux) {
+    // Add redux methods to instance
+    return Object.assign({}, instance, {
+      // enables full dispatcher
+      dispatch: store.dispatch,
+      subscribe: store.subscribe,
+      replaceReducer: store.replaceReducer,
+    })
+  }
+
+  return instance
 }
 
 /**

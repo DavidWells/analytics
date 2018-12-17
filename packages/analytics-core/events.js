@@ -11,20 +11,22 @@ const EVENTS = {
   CAMPAIGN: 'campaign',
   /* After all analytics providers are loaded. Ready fires */
   READY: 'analyticsReady',
-
+  /* Clear all user data */
+  RESET: 'analyticsReset',
   /* Integration actions */
-  INTEGRATION_INIT: 'integrationInit',
-  INTEGRATION_INIT_TYPE: (name) => `integrationInit:${name}`,
-  INTEGRATION_LOADED: 'integrationLoaded',
-  INTEGRATION_FAILED: 'integrationFailed',
-  INTEGRATION_LOADED_TYPE: (name) => `integrationLoaded:${name}`,
-  INTEGRATION_FAILED_TYPE: (name) => `integrationFailed:${name}`,
+  PLUGIN_INIT: 'pluginInit',
+  PLUGIN_INIT_TYPE: (name) => `pluginInit:${name}`,
+  // Not in use PLUGIN_LOADED: 'integrationLoaded',
+  // fired when 'loaded' timesout after 10 seconds
+  PLUGIN_FAILED: 'pluginFailed',
+  PLUGIN_LOADED_TYPE: (name) => `pluginReady:${name}`,
+  PLUGIN_FAILED_TYPE: (name) => `pluginFailed:${name}`,
 
   // Todo finish this event
-  ENABLE_INTEGRATION: 'enableIntegration',
-  INTEGRATION_ENABLED: 'integrationEnabled',
-  DISABLE_INTEGRATION: 'disableIntegration',
-  INTEGRATION_DISABLE: 'integrationDisabled',
+  ENABLE_PLUGIN: 'enablePlugin',
+  // Not in use PLUGIN_ENABLED: 'integrationEnabled',
+  DISABLE_PLUGIN: 'disablePlugin',
+  // Not in use PLUGIN_DISABLE: 'integrationDisabled',
 
   /* Browser activity events */
   ONLINE: 'online',

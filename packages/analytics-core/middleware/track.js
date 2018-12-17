@@ -1,5 +1,5 @@
 import EVENTS from '../events'
-import getIntegrationByMethod from '../utils/getIntegrationByMethod'
+import getPluginByMethod from '../utils/getPluginByMethod'
 import getCallback from '../utils/getCallback'
 import filterDisabled from '../utils/filterDisabled'
 import waitForReady from '../utils/waitForReady'
@@ -53,8 +53,8 @@ export default function trackMiddleware(getIntegrations, instance) {
         options
       }
       const trackCalls = filterDisabled(
-        getIntegrationByMethod('track', getIntegrations()),
-        store.getState().integrations,
+        getPluginByMethod('track', getIntegrations()),
+        store.getState().plugins,
         options
       ).map((provider) => {
         return waitForReady(provider, timeoutMax, store).then((d) => {

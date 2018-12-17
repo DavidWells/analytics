@@ -1,7 +1,7 @@
 import { storage } from 'analytics-utils'
-import { USER_ID, USER_TRAITS } from '../constants'
+import { USER_ID, USER_TRAITS, ANON_ID } from '../constants'
 import EVENTS from '../events'
-import getIntegrationByMethod from '../utils/getIntegrationByMethod'
+import getPluginByMethod from '../utils/getPluginByMethod'
 import getCallback from '../utils/getCallback'
 import filterDisabled from '../utils/filterDisabled'
 import waitForReady from '../utils/waitForReady'
@@ -11,6 +11,14 @@ let eventQueue = []
 export default function identifyMiddleware(getIntegrations, instance) {
   return store => next => action => {
     const { userId, traits, options, callback, timestamp } = action
+    if (action.type === EVENTS.RESET) {
+      instance.storage.removeItem(USER_ID)
+      instance.storage.removeItem(USER_TRAITS)
+      instance.storage.removeItem(ANON_ID)
+      if (callback && typeof callback === 'function') {
+        callback()
+      }
+    }
     if (action.type === EVENTS.IDENTIFY_INIT) {
       if (action.abort) {
         store.dispatch({
@@ -40,11 +48,11 @@ export default function identifyMiddleware(getIntegrations, instance) {
       }
 
       if (userId) {
-        instance.setItem(USER_ID, userId)
+        instance.storage.setItem(USER_ID, userId)
       }
 
       if (traits) {
-        instance.setItem(USER_TRAITS, {
+        instance.storage.setItem(USER_TRAITS, {
           ...currentTraits,
           ...traits
         })
@@ -54,20 +62,24 @@ export default function identifyMiddleware(getIntegrations, instance) {
       let ignored = []
       let timeoutMax = 10000
 
+      const identityPayload = {
+        timestamp: timestamp,
+        userId: userId,
+        traits: traits,
+        options: options,
+      }
+
       // setTimeout to ensure runs after `identifyInit`
       setTimeout(() => {
         store.dispatch({
           type: EVENTS.IDENTIFY,
-          timestamp: timestamp,
-          userId: userId,
-          traits: traits,
-          options: options,
+          ...identityPayload
         })
       }, 0)
 
       const idCalls = filterDisabled(
-        getIntegrationByMethod('identify', getIntegrations()),
-        store.getState().integrations,
+        getPluginByMethod('identify', getIntegrations()),
+        store.getState().plugins,
         options
       ).map((provider) => {
         return waitForReady(provider, timeoutMax, store).then((d) => {
@@ -84,7 +96,7 @@ export default function identifyMiddleware(getIntegrations, instance) {
           /* Run namespaced .identify calls */
           store.dispatch({
             type: EVENTS.IDENTIFY_TYPE(provider.NAMESPACE),
-            timestamp: timestamp
+            ...identityPayload
           })
 
           newCompleted = newCompleted.concat(provider.NAMESPACE)
@@ -112,7 +124,7 @@ export default function identifyMiddleware(getIntegrations, instance) {
         setTimeout(() => {
           store.dispatch({
             type: EVENTS.IDENTIFY_COMPLETE,
-            timestamp: timestamp,
+            ...identityPayload,
             ...{ completed: newCompleted },
             ...skipped
           })

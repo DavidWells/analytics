@@ -1,9 +1,8 @@
 import EVENTS from '../events'
-import getIntegrationByMethod from '../utils/getIntegrationByMethod'
+import getPluginByMethod from '../utils/getPluginByMethod'
 import getCallback from '../utils/getCallback'
 import filterDisabled from '../utils/filterDisabled'
 import waitForReady from '../utils/waitForReady'
-import { getPageData } from '../modules/page'
 
 let eventQueue = []
 
@@ -11,26 +10,42 @@ export default function pageMiddleware(getIntegrations, instance) {
   return store => next => action => {
     const { data, options, callback, timestamp } = action
     if (action.type === EVENTS.PAGE_INIT) {
+      if (action.abort) {
+        store.dispatch({
+          type: EVENTS.PAGE_ABORT,
+          timestamp: timestamp,
+          reason: action.reason,
+        })
+        return next(action)
+      }
       // No page middleware attached
       const timeoutMax = 1000
       let newCompleted = []
       let ignored = []
 
-      const pageData = { ...getPageData(), ...data }
-
-      // setTimeout to ensure runs after `pageInit`
-      setTimeout(() => {
+      const pageData = data
+      // TODO verify this is ok idea from plugins
+      const isFrozen = instance.getState('page').abort.includes(timestamp)
+      console.log('isFrozenisFrozenisFrozenisFrozenisFrozen', isFrozen)
+      if (isFrozen) {
         store.dispatch({
-          type: EVENTS.PAGE,
+          type: EVENTS.PAGE_ABORT,
           timestamp: timestamp,
-          data: pageData,
-          options: options,
+          reason: action.reason,
         })
-      }, 0)
+        return next(action)
+      }
+
+      store.dispatch({
+        type: EVENTS.PAGE,
+        timestamp: timestamp,
+        data: pageData,
+        options: options,
+      })
 
       const pageCalls = filterDisabled(
-        getIntegrationByMethod('page', getIntegrations()),
-        store.getState().integrations,
+        getPluginByMethod('page', getIntegrations()),
+        store.getState().plugins,
         options
       ).map((provider) => {
         return waitForReady(provider, timeoutMax, store).then((d) => {
