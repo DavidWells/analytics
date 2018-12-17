@@ -1,9 +1,9 @@
 /**
- * Segment analytics integration
+ * Segment analytics plugin
  */
 import { inBrowser, extend } from 'analytics-utils'
 
-/* integration namespace. Must be unique */
+/* Plugin namespace. Must be unique */
 export const NAMESPACE = 'segment'
 
 export const config = {
@@ -11,20 +11,31 @@ export const config = {
   disableAnonymousTraffic: false
 }
 
+let added = false
+function loadScriptAfterUserHasId(instance) {
+  if (added) return false
+  instance.once('identify', (action) => {
+    instance.loadPlugin(NAMESPACE)
+  })
+  added = true
+}
+
 /* initialize Segment script */
 export const initialize = (configuration, instance) => {
   const { disableAnonymousTraffic, trackingId, assumesPageview } = configuration
-  const user = instance('user')
   if (!trackingId) {
     throw new Error('No Setting id defined')
   }
-  // Disable segment.com if user is not yet identified. Save on MTU
+  const user = instance.user()
+  // Disable segment.com if user is not yet identified. Save on Monthly MTU bill
   if ((!user || !user.userId) && disableAnonymousTraffic) {
+    // load segment when user identified
+    loadScriptAfterUserHasId(instance)
     return false
   }
   /* eslint-disable */
   !function() {
-    var analytics = window.analytics = window.analytics || [];
+    var analytics = window.analytics = window.analytics || []
 
     function isScriptLoaded() {
       const scripts = document.getElementsByTagName('script')
@@ -64,7 +75,7 @@ export const initialize = (configuration, instance) => {
         analytics.load(trackingId);
 
         if (assumesPageview) {
-          analytics.page();
+          analytics.page()
         }
       }
     }
@@ -89,14 +100,12 @@ export const identify = (userId, traits, options, instance) => {
 }
 
 export const loaded = function() {
-  if (!inBrowser) {
-    return false
-  }
+  if (!inBrowser) return true
   return window.analytics && !!analytics.initialized
 }
 
-/* export the integration */
-export default function SegmentIntegration(userConfig) {
+/* export the plugin */
+export default function SegmentPlugin(userConfig) {
   const mergedConfig = {
     // default config
     ...config,
