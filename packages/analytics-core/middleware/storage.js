@@ -26,29 +26,33 @@ export default function storageMiddleware(getIntegrations, instance) {
       store.dispatch({
         type: EVENTS[`${kind}_COMPLETE`],
         timestamp: timestamp,
+        key,
+        value
       })
     }
     return next(action)
   }
 }
 
-export const getItem = (key) => {
-  return storage.getItem(key)
+export const getItem = (key, opts) => {
+  return storage.getItem(key, opts)
 }
 
-export const setItem = (key, value) => {
+export const setItem = (key, value, opts) => {
   return {
     type: EVENTS.SET_ITEM,
     key: key,
     value: value,
+    options: opts,
     timestamp: timeStamp()
   }
 }
 
-export const removeItem = (key) => {
+export const removeItem = (key, opts) => {
   return {
     type: EVENTS.REMOVE_ITEM,
     key: key,
+    options: opts,
     timestamp: timeStamp()
   }
 }

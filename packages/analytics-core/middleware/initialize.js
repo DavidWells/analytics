@@ -6,11 +6,11 @@ import { trackEvent } from '../modules/track'
 
 // Middleware runs during EVENTS.INITIALIZE
 export default function initializeMiddleware(instance) {
-  return store => next => action => {
+  return store => next => async action => {
     if (action.type === EVENTS.INITIALIZE) {
       // 1. Set anonymous ID
       if (!storage.getItem(ANON_ID)) {
-        instance.setItem(ANON_ID, uuid())
+        instance.storage.setItem(ANON_ID, uuid())
       }
 
       // 2. Parse params

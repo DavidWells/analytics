@@ -12,6 +12,13 @@ const initialState = {
 
 // user reducer
 export default function user(state = initialState, action) {
+  // Set anonymousId
+  if (action && action.type === EVENTS.SET_ITEM_COMPLETE && action.key === ANON_ID) {
+    return Object.assign({}, state, {
+      anonymousId: action.value,
+    })
+  }
+
   switch (action.type) {
     case EVENTS.IDENTIFY:
       return Object.assign({}, state, {
@@ -20,6 +27,12 @@ export default function user(state = initialState, action) {
           ...state.traits,
           ...action.traits
         }
+      })
+    case EVENTS.RESET:
+      return Object.assign({}, state, {
+        userId: null,
+        anonymousId: null,
+        traits: null,
       })
     default:
       return state
@@ -34,6 +47,14 @@ export const identify = (userId, traits, options, callback) => {
     userId: userId,
     traits: traits,
     options: options,
+    callback: callback
+  }
+}
+
+export const reset = (callback) => {
+  return {
+    type: EVENTS.RESET,
+    timestamp: timeStamp(),
     callback: callback
   }
 }
