@@ -9,9 +9,7 @@ export default function waitForReady(provider, timeout, store) {
   // console.log('WAIT FOR READ', provider)
   const { NAMESPACE } = provider
   const state = store.getState()
-  // console.log('state', state)
-  // console.log('NAMESPACE', NAMESPACE)
-  const { loaded } = state.integrations[NAMESPACE]
+  const { loaded } = state.plugins[NAMESPACE]
 
   return new Promise((resolve, reject) => {
     if (loaded) {
