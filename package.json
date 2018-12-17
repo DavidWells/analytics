@@ -9,7 +9,8 @@
     "watch": "lerna run watch --parallel",
     "develop": "lerna run develop --parallel",
     "build": "npm run clean && lerna run build",
-    "build:dev": "npm run clean && lerna run build:dev"
+    "build:dev": "npm run clean && lerna run build:dev",
+    "docs": "node ./scripts/docs.js"
   },
   "devDependencies": {
     "ava": "^0.20.0",
@@ -22,8 +23,9 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-es2016": "^6.24.1",
     "babel-preset-es2017": "^6.24.1",
+    "dox": "^0.9.0",
     "lerna": "^3.4.3",
-    "markdown-magic": "^0.1.17",
+    "markdown-magic": "^0.1.25",
     "minimist": "^1.2.0",
     "rimraf": "^2.6.2",
     "rollup": "^0.66.2",

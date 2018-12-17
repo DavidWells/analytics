@@ -121,6 +121,14 @@ module.exports = function analytics(config = {}) {
      * getState helper with dotprop
      * @param  {String} key - (optional) dotprop sub value of state
      * @return {Any}
+     *
+     * @example
+     *
+     * // Get the current state of analytics
+     * analytics.getState()
+     *
+     * // Get a subpath of state
+     * analytics.getState('context.offline')
      */
     getState: (key) => {
       const state = store.getState()
@@ -155,6 +163,10 @@ module.exports = function analytics(config = {}) {
        * @param {String} key - storage key
        * @param {Object} options - storage options
        * @return {Any}
+       *
+       * @example
+       *
+       * analytics.storage.getItem('storage_key')
        */
       getItem: getItem,
       /**
@@ -162,6 +174,10 @@ module.exports = function analytics(config = {}) {
        * @param {String} key - storage key
        * @param {Any} value - storage value
        * @param {Object} options - storage options
+       *
+       * @example
+       *
+       * analytics.storage.setItem('storage_key', 'value')
        */
       setItem: (key, value, opts) => {
         store.dispatch(setItem(key, value, opts))
@@ -170,6 +186,10 @@ module.exports = function analytics(config = {}) {
        * Remove storage value
        * @param {String} key - storage key
        * @param {Object} options - storage options
+       *
+       * @example
+       *
+       * analytics.storage.removeItem('storage_key')
        */
       removeItem: (key, opts) => {
         store.dispatch(removeItem(key, opts))
@@ -271,10 +291,10 @@ module.exports = function analytics(config = {}) {
      * @param  {Function} callback - callback after enable runs
      * @example
      *
-     * enablePlugin('google')
+     * analytics.enablePlugin('google')
      *
      * // enable multiple integrations at once
-     * enablePlugin(['google', 'segment'])
+     * analytics.enablePlugin(['google', 'segment'])
      */
     enablePlugin: (name, callback) => {
       store.dispatch(enablePlugin(name, callback))
@@ -285,9 +305,9 @@ module.exports = function analytics(config = {}) {
      * @param  {Function} callback - callback after disable runs
      * @example
      *
-     * disablePlugin('google')
+     * analytics.disablePlugin('google')
      *
-     * disablePlugin(['google', 'segment'])
+     * analytics.disablePlugin(['google', 'segment'])
      */
     disablePlugin: (name, callback) => {
       store.dispatch(disablePlugin(name, callback))
@@ -295,6 +315,9 @@ module.exports = function analytics(config = {}) {
     /**
      * Load registered analytic providers.
      * @param  {String} namespace - integration namespace
+     *
+     * @example
+     * analytics.loadPlugin('segment')
      */
     loadPlugin: (namespace) => {
       store.dispatch({
