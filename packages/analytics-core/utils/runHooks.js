@@ -11,21 +11,27 @@ export default function runHooks(action, instance, plugins) {
     cache[action.type] = functions
     // TODO bust cache when enable/disable runs
   }
-  console.log('cache', cache)
-  console.log('functions', functions)
+  // console.log('cache', cache)
+  // console.log('functions', functions)
+  const state = instance.getState()
   /* Filter out currently disabled plugins */
   const functionsToRun = filterDisabled(functions,
-    instance.getState().plugins,
+    state.plugins,
     action.options // options
   )
-  console.log('functionsToRun', functionsToRun)
-  return functionsToRun.reduce((acc, func) => {
-    if (acc.abort) return acc
-    const returnValue = func[action.type](action, instance)
+  // console.log('functionsToRun', functionsToRun)
+  return functionsToRun.reduce((modifiedAction, func) => {
+    if (modifiedAction.abort) return modifiedAction
+    const returnValue = func[action.type](modifiedAction, instance)
     if (returnValue && typeof returnValue === 'object') {
-      acc = Object.assign({}, acc, returnValue)
+      modifiedAction = Object.assign({}, modifiedAction, returnValue)
+      if (state.context.debug) {
+        console.log(`Action modification on "${action.type}" action from ${func.NAMESPACE}`, returnValue)
+        console.log('Original action', action)
+        console.log('Modified action', modifiedAction)
+      }
     }
-    return acc
+    return modifiedAction
   }, action)
 }
 
