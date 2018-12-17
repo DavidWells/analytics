@@ -2,6 +2,9 @@
   "name": "analytics",
   "version": "0.0.16",
   "description": "Pluggable analytics library",
+  "keywords": [
+    "analytics"
+  ],
   "author": "David Wells",
   "license": "MIT",
   "main": "dist/analytics.cjs.js",
