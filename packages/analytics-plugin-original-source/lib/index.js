@@ -1,132 +1,105 @@
 /**
- * Referral source plugin
+ * Original traffic source plugin
  */
 
-import { decodeUri, parseReferrer, cookie, storage } from 'analytics-utils'
+import { inBrowser, parseReferrer, cookie, storage } from 'analytics-utils'
+import { formatPipeString, parsePipeString } from './utils'
 
 const EVENTS = {
   SET_ORIGINAL_SOURCE: 'setOriginalSource'
 }
 
 const CONFIG = {
-  storageKey: '__user_original_source'
+  storage: 'localStorage',
+  originalSourceKey: '__user_original_source',
+  originalLandingPageKey: '__user_original_landing_page'
 }
 
-/**
- * Track original source of visitors.
- * @param  {Object} config - settings for referral source tracking
- * @param  {String} config.storage - overide the location of storage. 'LocalStorage', 'cookie', or 'window'
- * @param  {String} config.storageKey - overide the storage key. Default '__user_original_source'
- * @return {Function} - middleware for `analytics`
- */
-export default function originalSourcePlugin(config) {
+/*
+Middleware version of plugin
+export default function originalSourcePlugin(userConfig) {
   return store => next => action => {
     if (action.type === 'analyticsInit') {
-      const refData = firstReferralSource(config)
       store.dispatch({
         type: EVENTS.SET_ORIGINAL_SOURCE,
-        data: refData
+        originalSource: getOriginalSource(userConfig),
+        originalLandingPage: getOriginalLandingPage(userConfig)
       })
     }
     return next(action)
   }
 }
+*/
 
-function getOriginalSource(referrer, opts) {
-  const config = opts || {}
-  const key = config.storageKey || CONFIG.storageKey
-  // 1. try first source cookie
-  const originalSrc = storage.getItem(key, config)
+/**
+ * Track original source of visitors.
+ * @param  {Object} config - settings for referral source tracking
+ * @param  {String} config.storage - overide the location of storage. 'localStorage', 'cookie', or 'window'
+ * @param  {String} config.originalSourceKey - overide the storage key. Default '__user_original_source'
+ * @param  {String} config.originalLandingPageKey - overide the storage key. Default '__user_original_landing_page'
+ * @return {Object} - plugin for `analytics` package
+ */
+export default function firstSource(userConfig) {
+  return {
+    NAMESPACE: 'first-source',
+    // Run function on `analyticsInit` event
+    analyticsInit: (action, instance) => {
+      instance.dispatch({
+        type: EVENTS.SET_ORIGINAL_SOURCE,
+        originalSource: getOriginalSource(userConfig),
+        originalLandingPage: getOriginalLandingPage(userConfig)
+      })
+    }
+  }
+}
+
+export function getOriginalSource(opts = {}) {
+  const config = Object.assign({}, CONFIG, opts)
+  const { referrer, originalSourceKey } = config
+  // 1. try first source browser storage
+  const originalSrc = storage.getItem(originalSourceKey, { storage: config.storage })
   if (originalSrc) {
     return parsePipeString(originalSrc)
   }
-  // 2. try __utmz cookie
+  // 2. then try __utmz cookie
   const utmzCookie = cookie.getCookie('__utmz')
   if (utmzCookie) {
     const parsedCookie = parsePipeString(utmzCookie)
     if (parsedCookie) {
+      setOriginalSource(parsedCookie, config)
       return parsedCookie
     }
   }
-  // 3. Try referrer url and utm params
-  const ref = referrer || document.referrer
+  // 3. Then try referrer url and utm params
+  const ref = (inBrowser) ? (referrer || document.referrer) : ''
   const refData = parseReferrer(ref)
+  setOriginalSource(refData, config)
   return refData
 }
 
-/**
- * Get first referral source of visitor
- * @param  {String|optional} referrer - uri of referral site
- * @return {String}
- */
-function firstReferralSource(config) {
-  const conf = config || {}
-  const key = conf.storageKey || CONFIG.storageKey
-  // TODO refactor settings to mesh better with storage opts
-  const storageSettings = (!conf.storage) ? {} : { storage: conf.storage }
-  // 1. try first source cookie
-  const originalSrc = storage.getItem(key, storageSettings)
-  if (originalSrc) {
-    // return stored referrer data
-    return parsePipeString(originalSrc)
-  } else {
-    // Set referral data
-    const originalSource = getOriginalSource(conf.referrer)
-    storage.setItem(key, formatPipeString(originalSource), storageSettings)
-    return originalSource
-  }
+function setOriginalSource(data, config) {
+  storage.setItem(config.originalSourceKey, formatPipeString(data), {
+    storage: config.storage
+  })
 }
 
 /**
- * Turn object into pipe separated values
- * @param  {Object} [obj={}] - Object to transform
- * @return {String} - pipe separated value
- *
- * @Example
- *
- *  formatCookie({})
- *  // utmcsr=SOURCE|utmcmd=MEDIUM[|utmccn=CAMPAIGN][|utmcct=CONTENT][|utmctr=TERM/KEYWORD]
- *
+ * Get the original landing page of a visitor
+ * @param  {Object} opts - plugin
+ * @parama {String} opts.originalLandingPageKey - Storage key
+ * @parama {String} opts.storage - Storage type
+ * @return {String} original landing page uri
  */
-function formatPipeString(obj) {
-  if (!obj || typeof obj !== 'object') {
-    return null
+export function getOriginalLandingPage(opts = {}) {
+  const config = Object.assign({}, CONFIG, opts)
+  const key = config.originalLandingPageKey
+  const storageConfig = { storage: config.storage }
+  // 1. try first source browser storage
+  const originalLandingPage = storage.getItem(key, storageConfig)
+  if (originalLandingPage) {
+    return originalLandingPage
   }
-  return Object.keys(obj).reduce((acc, curr, i) => {
-    return `${acc}${(i) ? '|' : ''}${curr}=${obj[curr]}`
-  }, '')
-}
-
-/**
- * Parse utmz cookie
- * @param  {String} cookie - utmz cookie value
- * @return {Object} - parsed object of cookie
- *
- * @Example
- *
- * parsePipeString('438.1531.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)')
- *
- * parsePipeString('16602.15.1.1.utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided)')
- */
-function parsePipeString(cookie) {
-  const keyMap = {
-    'utmcsr': 'source',
-    'utmcmd': 'medium',
-    'utmccn': 'campaign',
-    'utmcct': 'content',
-    'utmctr': 'term',
-    'utmgclid': 'gclid', // Google Click ID from autotagged PPC
-    'utmdclid': 'dclid', // Display Click Identifier.
-  }
-  const keyValues = (cookie) ? cookie.split('|') : []
-  return keyValues.reduce((acc, curr, i) => {
-    const val = keyValues[i].split('=')
-    const key = val[0].split('.').pop()
-    if (keyMap[key]) {
-      acc[`${keyMap[key]}`] = decodeUri(val[1])
-    } else if (typeof curr[key] === 'undefined') {
-      acc[key] = decodeUri(val[1])
-    }
-    return acc
-  }, {})
+  const url = (inBrowser) ? window.location.href : ''
+  storage.setItem(key, url, storageConfig)
+  return url
 }
