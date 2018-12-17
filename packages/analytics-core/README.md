@@ -1,6 +1,48 @@
 # Analytics
 
-This is a pluggable analytics library designed to work with any third party analytics tool.
+A pluggable analytics library designed to work with any third party analytics tool.
+
+Connect with your favorite analytic providers, trigger custom logic based on user activity.
+
+## Table of Contents
+<!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
+<details>
+<summary>Click to expand</summary>
+
+- [Features](#features)
+- [Why](#why)
+- [Philosophy](#philosophy)
+- [Install](#install)
+- [Usage](#usage)
+- [Demo](#demo)
+- [API](#api)
+  * [analytics.identify](#analyticsidentify)
+  * [analytics.track](#analyticstrack)
+  * [analytics.page](#analyticspage)
+  * [analytics.getState](#analyticsgetstate)
+  * [analytics.reset](#analyticsreset)
+  * [analytics.dispatch](#analyticsdispatch)
+  * [analytics.storage](#analyticsstorage)
+  * [analytics.storage.getItem](#analyticsstoragegetitem)
+  * [analytics.storage.setItem](#analyticsstoragesetitem)
+  * [analytics.storage.removeItem](#analyticsstorageremoveitem)
+  * [analytics.user](#analyticsuser)
+  * [analytics.ready](#analyticsready)
+  * [analytics.on](#analyticson)
+  * [analytics.once](#analyticsonce)
+  * [analytics.enablePlugin](#analyticsenableplugin)
+  * [analytics.disablePlugin](#analyticsdisableplugin)
+  * [analytics.loadPlugin](#analyticsloadplugin)
+  * [EVENTS](#events)
+  * [CONSTANTS](#constants)
+- [Current plugins](#current-plugins)
+- [Adding Analytics providers plugins](#adding-analytics-providers-plugins)
+  * [React to any event](#react-to-any-event)
+  * [(optionally) Use middleware](#optionally-use-middleware)
+- [Plugin Naming Conventions](#plugin-naming-conventions)
+
+</details>
+<!-- AUTO-GENERATED-CONTENT:END -->
 
 ## Features
 
@@ -10,7 +52,7 @@ This is a pluggable analytics library designed to work with any third party anal
 
 ##  Why
 
-Companies frequently change their analytics requirements and add/remove services to their sites and applications. This can be a time consuming process integrating with N number of third party tools.
+Companies frequently change their analytics requirements and add/remove services to their sites and applications. This can be a time consuming process integrating over and over again with N number of third party tools.
 
 This library solves that.
 
@@ -18,9 +60,7 @@ This library solves that.
 
 > You should never be locked into a tool.
 
-To add or remove an analytics provider simply remove it as middleware.
-
-The provider integrations can be run independently of this library or plugged into other tools.
+To add or remove an analytics provider adjust the `plugins` you load into `analytics`.
 
 ## Install
 
@@ -32,14 +72,18 @@ npm install analytics --save
 
 ```js
 import Analytics from 'analytics'
-import googleAnalytics from 'analytics-plugin-ga'
+import googleAnalyticsPlugin from 'analytics-plugin-ga'
+import customerIOPlugin from 'analytics-plugin-customerio'
 
 const analytics = Analytics({
   app: 'my-app-name',
   version: 100,
   plugins: [
-    googleAnalytics({
+    googleAnalyticsPlugin({
       trackingId: 'UA-121991291',
+    }),
+    customerIOPlugin({
+      siteId: '123-xyz'
     })
   ]
 })
@@ -66,60 +110,68 @@ See [Analytics Demo](https://analytics-demo.netlify.com/) for a site example.
 ## API
 
 <!-- AUTO-GENERATED-CONTENT:START (API_DOCS) -->
-## identify
+### analytics.identify
 
-Identify user
+Identify a user. This will trigger `identify` calls in any installed plugins and will set user data in localStorage
 
-### Arguments
+**Arguments**
 
 - **userId** <code>String</code> - Unique ID of user
 - **traits** <code>Object</code> - Object of user traits
 - **options** <code>Object</code> - Options to pass to indentify call
 - **callback** <code>Function</code> - Optional callback function after identify completes
 
+**Example**
+
 ```js
 identify('xyz-123', {
-   name: 'steve',
-   company: 'hello-clicky'
- })
+  name: 'steve',
+  company: 'hello-clicky'
+})
 ```
 
-## track
+### analytics.track
 
-Track an analytics event
+Track an analytics event. This will trigger `track` calls in any installed plugins
 
-### Arguments
+**Arguments**
 
 - **eventName** <code>String</code> - Event name
 - **payload** <code>Object</code> - Event payload
 - **options** <code>Object</code> - Event options
 - **callback** <code>Function</code> - Callback to fire after tracking completes
 
+**Example**
+
 ```js
 analytics.track('buttonClick')
 ```
 
-## page
+### analytics.page
 
-Trigger page view
+Trigger page view. This will trigger `page` calls in any installed plugins
 
-### Arguments
+**Arguments**
 
 - **data** <code>String</code> - (optional) page data
 - **options** <code>Object</code> - Event options
 - **callback** <code>Function</code> - Callback to fire after page view call completes
 
+**Example**
+
 ```js
 analytics.page()
 ```
 
-## getState
+### analytics.getState
 
-getState helper with dotprop
+Get data about user, activity, or context. You can access sub-keys of state with `dot.prop` syntax.
 
-### Arguments
+**Arguments**
 
 - **key** <code>String</code> - (optional) dotprop sub value of state
+
+**Example**
 
 ```js
 // Get the current state of analytics
@@ -129,86 +181,84 @@ analytics.getState()
 analytics.getState('context.offline')
 ```
 
-## reset
+### analytics.reset
 
-Clear all information about the visitor
+Clear all information about the visitor & reset analytic state.
 
-### Arguments
+**Arguments**
 
 - **callback** <code>Function</code> - Handler to run after reset
 
 
-## dispatch
+### analytics.dispatch
 
-Emit events for other plugins to react to
+Emit events for other plugins or middleware to react to.
 
-### Arguments
+**Arguments**
 
 - **action** <code>Object</code> [description]
 
 
-## storage
+### analytics.storage
 
-Storage utilities for persisting data
+Storage utilities for persisting data. These methods will allow you to save data in localStorage, cookies, or to the window.
 
 
-## getItem
+### analytics.storage.getItem
 
 Get value from storage
 
-### Arguments
+**Arguments**
 
 - **key** <code>String</code> - storage key
 - **options** <code>Object</code> - storage options
+
+**Example**
 
 ```js
 analytics.storage.getItem('storage_key')
 ```
 
-## setItem
+### analytics.storage.setItem
 
 Set storage value
 
-### Arguments
+**Arguments**
 
 - **key** <code>String</code> - storage key
 - **value** <a href="Any.html">Any</a> - storage value
 - **options** <code>Object</code> - storage options
 
+**Example**
+
 ```js
 analytics.storage.setItem('storage_key', 'value')
 ```
 
-## removeItem
+### analytics.storage.removeItem
 
 Remove storage value
 
-### Arguments
+**Arguments**
 
 - **key** <code>String</code> - storage key
 - **options** <code>Object</code> - storage options
+
+**Example**
 
 ```js
 analytics.storage.removeItem('storage_key')
 ```
 
-## setAnonymousId
-
-Set the anonymous ID of the visitor
-
-### Arguments
-
-- **anonId** <code>String</code> - Id to set
-- **options** <code>Object</code> - storage options
-
-
-## user
+### analytics.user
 
 Get user data
 
-### Arguments
+**Arguments**
 
 - **key** <code>String</code> - dot.prop subpath of user data
+
+**Example**
 
 ```js
 // get all user data
@@ -218,13 +268,15 @@ const userData = analytics.user()
 const companyName = analytics.user('company.name')
 ```
 
-## ready
+### analytics.ready
 
 Fire callback on analytics ready event
 
-### Arguments
+**Arguments**
 
 - **callback** <code>Function</code> - function to trigger when all providers have loaded
+
+**Example**
 
 ```js
 analytics.ready((action, instance) => {
@@ -232,14 +284,16 @@ analytics.ready((action, instance) => {
 })
 ```
 
-## on
+### analytics.on
 
 Attach an event handler function for one or more events to the selected elements.
 
-### Arguments
+**Arguments**
 
 - **name** <code>String</code> - Name of event to listen to
 - **callback** <code>Function</code> - function to fire on event
+
+**Example**
 
 ```js
 analytics.on('track', (action, instance) => {
@@ -247,14 +301,16 @@ analytics.on('track', (action, instance) => {
 })
 ```
 
-## once
+### analytics.once
 
 Attach a handler function to an event and only trigger it only once.
 
-### Arguments
+**Arguments**
 
 - **name** <code>String</code> - Name of event to listen to
 - **callback** <code>Function</code> - function to fire on event
+
+**Example**
 
 ```js
 analytics.once('track', (action, instance) => {
@@ -262,14 +318,16 @@ analytics.once('track', (action, instance) => {
 })
 ```
 
-## enablePlugin
+### analytics.enablePlugin
 
 Enable analytics plugin
 
-### Arguments
+**Arguments**
 
 - **name** <code>String</code>|<code>Array</code> - name of integration(s) to disable
 - **callback** <code>Function</code> - callback after enable runs
+
+**Example**
 
 ```js
 analytics.enablePlugin('google')
@@ -278,14 +336,16 @@ analytics.enablePlugin('google')
 analytics.enablePlugin(['google', 'segment'])
 ```
 
-## disablePlugin
+### analytics.disablePlugin
 
 Disable analytics plugin
 
-### Arguments
+**Arguments**
 
 - **name** <code>string</code>|<code>array</code> - name of integration(s) to disable
 - **callback** <code>Function</code> - callback after disable runs
+
+**Example**
 
 ```js
 analytics.disablePlugin('google')
@@ -293,50 +353,59 @@ analytics.disablePlugin('google')
 analytics.disablePlugin(['google', 'segment'])
 ```
 
-## loadPlugin
+### analytics.loadPlugin
 
 Load registered analytic providers.
 
-### Arguments
+**Arguments**
 
 - **namespace** <code>String</code> - integration namespace
+
+**Example**
 
 ```js
 analytics.loadPlugin('segment')
 ```
 
-## EVENTS
+### EVENTS
 
-Expose available events for third party plugins & listeners
+Core Analytic events. These are exposed for third party plugins & listeners
+Use these magic strings to attach functions to event names.
 
 
-## CONSTANTS
+### CONSTANTS
 
-Expose available constants for third party plugins & listeners
+Core Analytic constants. These are exposed for third party plugins & listeners
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 ## Current plugins
 
 - [Google Analytics](https://www.npmjs.com/package/analytics-plugin-ga)
 - [Customer.io](https://www.npmjs.com/package/analytics-plugin-customerio)
+- [Original Source Plugin](https://www.npmjs.com/package/analytics-plugin-original-source)
 - Add yours! 👇
 
 ##  Adding Analytics providers plugins
 
 The library is designed to work with any third party analytics tool.
 
-Here is an example:
+Plugins are just plain javascript objects that expose methods for `analytics` core to register and call.
+
+Here is a quick example of a plugin. This is a 'vanilla' plugin example for connecting a third party analytics tool
 
 ```js
-export default function googleAnalytics(config) {
+// vanilla-example.js
+export default function googleAnalytics(userConfig) {
+  // return object for analytics to use
   return {
+    // All plugins require a namespace
     NAMESPACE: 'google-analytics',
     config: {
-      whatever: 'youWant',
-      googleAnalyticsId: config.id // 'UA-82833-33833'
+      whatEver: userConfig.fooBar,
+      googleAnalyticsId: userConfig.id
     },
     initialize: function() {
-      // load provider script to page (in browser)
+      // load provider script to page
     },
     page: function() {
       // call provider specific page tracking
@@ -348,17 +417,76 @@ export default function googleAnalytics(config) {
       // call provider specific user identify method
     },
     loaded: () => {
-      // return boolean for loaded analytics library
+      // return boolean so analytics knows when it can send data to third party
       return !!window.gaplugins
     }
   }
 }
 ```
 
-Alternatively, you can also add whatever middleware functionality you'd like via redux middleware.
+To use this plugin above, import it and pass it into the `plugins` array when you bootstrap analytics.
 
 ```js
-// logger example
+import Analytics from 'analytics'
+import vanillaExample from './vanilla-example.js'
+
+const analytics = Analytics({
+  app: 'my-app-name',
+  plugins: [
+    vanillaExample({ id: 'xyz-123' }),
+    ...otherPlugins
+  ]
+})
+```
+
+### React to any event
+
+Plugins can react to any event flowing through `analytics`. For example, if you wanted to trigger custom logic when `analytics` bootstraps you can attach a function handler to `analyticsInit`.
+
+For a full list of core events, checkout `events.js`.
+
+```js
+// plugin.js
+export default function firstSource(userConfig) {
+  return {
+    NAMESPACE: 'first-source',
+    // Run function on `analyticsInit` event
+    analyticsInit: (action, instance) => {
+
+      // Do whatever
+
+      // (optionally) Dispatch additional events for other plugins to react to
+      instance.dispatch({
+        type: 'setOriginalSource',
+        originalSource: getOriginalSource(userConfig),
+        originalLandingPage: getOriginalLandingPage(userConfig)
+      })
+    }
+  }
+}
+```
+
+Using this plugin is the same as any other.
+
+```js
+import Analytics from 'analytics'
+import myPlugin from './plugin.js'
+
+const analytics = Analytics({
+  app: 'my-app-name',
+  plugins: [
+    myPlugin(),
+    ...otherPlugins
+  ]
+})
+```
+
+### (optionally) Use middleware
+
+Alternatively, you can also add whatever middleware functionality you'd like from the redux ecosystem.
+
+```js
+// logger-plugin.js redux middleware
 const logger = store => next => action => {
   if (action.type) {
     console.log(`>> dispatching ${action.type}`, JSON.stringify(action))
@@ -371,8 +499,27 @@ const logger = store => next => action => {
 export default logger
 ```
 
-##  Plugin naming conventions
+Using this plugin is the same as any other.
 
-Plugins should follow a naming convention like so:
+```js
+import Analytics from 'analytics'
+import loggerPlugin from './logger-plugin.js'
 
-`analytics-plugin-{your-plugin-name}`
+const analytics = Analytics({
+  app: 'my-app-name',
+  plugins: [
+    ...otherPlugins,
+    loggerPlugin
+  ]
+})
+```
+
+##  Plugin Naming Conventions
+
+Plugins should follow a naming convention before being published to NPM
+
+```
+analytics-plugin-{your-plugin-name}
+
+npm install analytics-plugin-awesome-thing
+```

@@ -49,7 +49,7 @@ module.exports = function analytics(config = {}) {
   // mutable intregrations object for dynamic loading
   let customPlugins = parsedOptions.plugins
 
-  if (isDev) {
+  if (isDev || config.debug) {
     console.log('Plugins with core "track", "page", "identify" methods', parsedOptions.integrations)
     console.log('All plugins', parsedOptions.plugins)
     console.log('customMiddlewares', parsedOptions.middlewares)
@@ -62,7 +62,7 @@ module.exports = function analytics(config = {}) {
 
   const instance = {
     /**
-    * Identify user
+    * Identify a user. This will trigger `identify` calls in any installed plugins and will set user data in localStorage
     * @param  {String}   userId  - Unique ID of user
     * @param  {Object}   traits  - Object of user traits
     * @param  {Object}   options - Options to pass to indentify call
@@ -71,10 +71,10 @@ module.exports = function analytics(config = {}) {
     *
     * @example
     *
-    *  identify('xyz-123', {
-    *    name: 'steve',
-    *    company: 'hello-clicky'
-    *  })
+    * identify('xyz-123', {
+    *   name: 'steve',
+    *   company: 'hello-clicky'
+    * })
     */
     identify: (userId, traits, options, callback) => {
       const id = (typeof userId === 'string') ? userId : null
@@ -84,7 +84,7 @@ module.exports = function analytics(config = {}) {
       )
     },
     /**
-     * Track an analytics event
+     * Track an analytics event. This will trigger `track` calls in any installed plugins
      * @param  {String}   eventName - Event name
      * @param  {Object}   payload   - Event payload
      * @param  {Object}   options   - Event options
@@ -101,7 +101,7 @@ module.exports = function analytics(config = {}) {
       )
     },
     /**
-     * Trigger page view
+     * Trigger page view. This will trigger `page` calls in any installed plugins
      * @param  {String}   data - (optional) page data
      * @param  {Object}   options   - Event options
      * @param  {Function} callback  - Callback to fire after page view call completes
@@ -118,7 +118,7 @@ module.exports = function analytics(config = {}) {
       )
     },
     /**
-     * getState helper with dotprop
+     * Get data about user, activity, or context. You can access sub-keys of state with `dot.prop` syntax.
      * @param  {String} key - (optional) dotprop sub value of state
      * @return {Any}
      *
@@ -136,14 +136,14 @@ module.exports = function analytics(config = {}) {
       return Object.assign({}, state)
     },
     /**
-     * Clear all information about the visitor
+     * Clear all information about the visitor & reset analytic state.
      * @param {Function} callback - Handler to run after reset
      */
     reset: (callback) => {
       store.dispatch(reset(callback))
     },
     /**
-     * Emit events for other plugins to react to
+     * Emit events for other plugins or middleware to react to.
      * @param  {Object} action [description]
      */
     dispatch: (action) => {
@@ -154,7 +154,7 @@ module.exports = function analytics(config = {}) {
       store.dispatch(action)
     },
     /**
-     * Storage utilities for persisting data
+     * Storage utilities for persisting data. These methods will allow you to save data in localStorage, cookies, or to the window.
      * @type {Object}
      */
     storage: {
@@ -195,7 +195,7 @@ module.exports = function analytics(config = {}) {
         store.dispatch(removeItem(key, opts))
       },
     },
-    /**
+    /*!
      * Set the anonymous ID of the visitor
      * @param {String} anonId - Id to set
      * @param {Object} options - storage options
@@ -229,7 +229,6 @@ module.exports = function analytics(config = {}) {
      * analytics.ready((action, instance) => {
      *   console.log('all integrations have loaded')
      * })
-     *
      */
     ready: (callback) => {
       return instance.on(EVENTS.READY, callback)
@@ -425,13 +424,14 @@ module.exports = function analytics(config = {}) {
 }
 
 /**
- * Expose available events for third party plugins & listeners
+ * Core Analytic events. These are exposed for third party plugins & listeners
+ * Use these magic strings to attach functions to event names.
  * @type {Object}
  */
 module.exports.EVENTS = EVENTS
 
 /**
- * Expose available constants for third party plugins & listeners
+ * Core Analytic constants. These are exposed for third party plugins & listeners
  * @type {Object}
  */
 module.exports.CONSTANTS = CONSTANTS
