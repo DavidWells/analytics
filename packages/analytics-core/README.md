@@ -2,7 +2,7 @@
 
 A pluggable analytics library designed to work with any third party analytics tool.
 
-Connect with your favorite analytic providers, trigger custom logic based on user activity.
+Connect with your favorite analytic providers, trigger custom logic based on user activity, or easily provide opt out mechanisms for visitors who wish to turn off analytics entirely.
 
 ## Table of Contents
 <!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
@@ -35,18 +35,20 @@ Connect with your favorite analytic providers, trigger custom logic based on use
   * [analytics.loadPlugin](#analyticsloadplugin)
   * [EVENTS](#events)
   * [CONSTANTS](#constants)
-- [Current plugins](#current-plugins)
+- [Analytic plugins](#analytic-plugins)
 - [Creating analytics plugins](#creating-analytics-plugins)
   * [React to any event](#react-to-any-event)
   * [(optionally) Use middleware](#optionally-use-middleware)
+  * [Opt out example plugin](#opt-out-example-plugin)
 - [Plugin Naming Conventions](#plugin-naming-conventions)
+- [CONTRIBUTING](#contributing)
 
 </details>
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 ## Features
 
-- [x] [Pluggable](#creating-analytics-plugins) - Bring your own third party tool
+- [x] [Pluggable](#analytic-plugins) - Bring your own third party tool
 - [x] Works on client & server-side
 - [x] Test & Debug analytics integrations with time travel & offline mode.
 - [ ] (WIP) In client, works offline. Queues events to send when connection resumes
@@ -379,7 +381,7 @@ Use these magic strings to attach functions to event names.
 Core Analytic constants. These are exposed for third party plugins & listeners
 <!-- AUTO-GENERATED-CONTENT:END -->
 
-## Current plugins
+## Analytic plugins
 
 - [Google Analytics](https://www.npmjs.com/package/analytics-plugin-ga)
 - [Customer.io](https://www.npmjs.com/package/analytics-plugin-customerio)
@@ -515,6 +517,35 @@ const analytics = Analytics({
 })
 ```
 
+### Opt out example plugin
+
+This is a vanilla redux middleware that will opt out users from tracking. There are **many** ways to implement this type of functionality using `analytics`
+
+```js
+const optOutPlugin = store => next => action => {
+  const { type } = action
+  if (type === 'trackInit' || type === 'pageInit' || type === 'trackInit') {
+    // Check cookie/localStorage/Whatever to see if visitor opts out
+
+    // Here I am checking user traits persisted to localStorage
+    const { user } = store.getState()
+    // user has optOut trait cancel action
+    if (user && user.traits.optOut) {
+      return next({
+        ...action,
+        ...{
+          abort: true,
+          reason: 'User opted out'
+        },
+      })
+    }
+  }
+  return next(finalAction)
+}
+
+export default optOutPlugin
+```
+
 ##  Plugin Naming Conventions
 
 Plugins should follow a naming convention before being published to NPM
@@ -524,3 +555,8 @@ analytics-plugin-{your-plugin-name}
 
 npm install analytics-plugin-awesome-thing
 ```
+
+# CONTRIBUTING
+
+Contributions are always welcome, no matter how large or small. Before contributing,
+please read the [code of conduct](CODE_OF_CONDUCT.md).
