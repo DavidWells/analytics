@@ -1,6 +1,6 @@
 # Analytics
 
-This is a pluggable event driven analytics library designed to work with any third party analytics tool.
+This is a pluggable analytics library designed to work with any third party analytics tool.
 
 ## Features
 
@@ -31,19 +31,17 @@ npm install analytics --save
 ## Usage
 
 ```js
-import analyticsLib from 'analytics'
+import Analytics from 'analytics'
 import googleAnalytics from 'analytics-plugin-ga'
 
-const plugins = [
-  googleAnalytics({
-    trackingId: 'UA-121991291',
-  })
-]
-
-const analytics = analyticsLib({
+const analytics = Analytics({
   app: 'my-app-name',
   version: 100,
-  plugins: plugins
+  plugins: [
+    googleAnalytics({
+      trackingId: 'UA-121991291',
+    })
+  ]
 })
 
 // page tracking
@@ -63,7 +61,259 @@ analytics.identify('user-id-xyz', {
 
 ## Demo
 
-Install the clone the https://github.com/DavidWells/analytics-example repo and give it a spin.
+See [Analytics Demo](https://analytics-demo.netlify.com/) for a site example.
+
+## API
+
+<!-- AUTO-GENERATED-CONTENT:START (API_DOCS) -->
+## identify
+
+Identify user
+
+### Arguments
+
+- **userId** <code>String</code> - Unique ID of user
+- **traits** <code>Object</code> - Object of user traits
+- **options** <code>Object</code> - Options to pass to indentify call
+- **callback** <code>Function</code> - Optional callback function after identify completes
+
+```js
+identify('xyz-123', {
+   name: 'steve',
+   company: 'hello-clicky'
+ })
+```
+
+## track
+
+Track an analytics event
+
+### Arguments
+
+- **eventName** <code>String</code> - Event name
+- **payload** <code>Object</code> - Event payload
+- **options** <code>Object</code> - Event options
+- **callback** <code>Function</code> - Callback to fire after tracking completes
+
+```js
+analytics.track('buttonClick')
+```
+
+## page
+
+Trigger page view
+
+### Arguments
+
+- **data** <code>String</code> - (optional) page data
+- **options** <code>Object</code> - Event options
+- **callback** <code>Function</code> - Callback to fire after page view call completes
+
+```js
+analytics.page()
+```
+
+## getState
+
+getState helper with dotprop
+
+### Arguments
+
+- **key** <code>String</code> - (optional) dotprop sub value of state
+
+```js
+// Get the current state of analytics
+analytics.getState()
+
+// Get a subpath of state
+analytics.getState('context.offline')
+```
+
+## reset
+
+Clear all information about the visitor
+
+### Arguments
+
+- **callback** <code>Function</code> - Handler to run after reset
+
+
+## dispatch
+
+Emit events for other plugins to react to
+
+### Arguments
+
+- **action** <code>Object</code> [description]
+
+
+## storage
+
+Storage utilities for persisting data
+
+
+## getItem
+
+Get value from storage
+
+### Arguments
+
+- **key** <code>String</code> - storage key
+- **options** <code>Object</code> - storage options
+
+```js
+analytics.storage.getItem('storage_key')
+```
+
+## setItem
+
+Set storage value
+
+### Arguments
+
+- **key** <code>String</code> - storage key
+- **value** <a href="Any.html">Any</a> - storage value
+- **options** <code>Object</code> - storage options
+
+```js
+analytics.storage.setItem('storage_key', 'value')
+```
+
+## removeItem
+
+Remove storage value
+
+### Arguments
+
+- **key** <code>String</code> - storage key
+- **options** <code>Object</code> - storage options
+
+```js
+analytics.storage.removeItem('storage_key')
+```
+
+## setAnonymousId
+
+Set the anonymous ID of the visitor
+
+### Arguments
+
+- **anonId** <code>String</code> - Id to set
+- **options** <code>Object</code> - storage options
+
+
+## user
+
+Get user data
+
+### Arguments
+
+- **key** <code>String</code> - dot.prop subpath of user data
+
+```js
+// get all user data
+const userData = analytics.user()
+
+// get user company name
+const companyName = analytics.user('company.name')
+```
+
+## ready
+
+Fire callback on analytics ready event
+
+### Arguments
+
+- **callback** <code>Function</code> - function to trigger when all providers have loaded
+
+```js
+analytics.ready((action, instance) => {
+  console.log('all integrations have loaded')
+})
+```
+
+## on
+
+Attach an event handler function for one or more events to the selected elements.
+
+### Arguments
+
+- **name** <code>String</code> - Name of event to listen to
+- **callback** <code>Function</code> - function to fire on event
+
+```js
+analytics.on('track', (action, instance) => {
+  console.log('track call just happened. Do stuff')
+})
+```
+
+## once
+
+Attach a handler function to an event and only trigger it only once.
+
+### Arguments
+
+- **name** <code>String</code> - Name of event to listen to
+- **callback** <code>Function</code> - function to fire on event
+
+```js
+analytics.once('track', (action, instance) => {
+  console.log('This will only triggered once')
+})
+```
+
+## enablePlugin
+
+Enable analytics plugin
+
+### Arguments
+
+- **name** <code>String</code>|<code>Array</code> - name of integration(s) to disable
+- **callback** <code>Function</code> - callback after enable runs
+
+```js
+analytics.enablePlugin('google')
+
+// enable multiple integrations at once
+analytics.enablePlugin(['google', 'segment'])
+```
+
+## disablePlugin
+
+Disable analytics plugin
+
+### Arguments
+
+- **name** <code>string</code>|<code>array</code> - name of integration(s) to disable
+- **callback** <code>Function</code> - callback after disable runs
+
+```js
+analytics.disablePlugin('google')
+
+analytics.disablePlugin(['google', 'segment'])
+```
+
+## loadPlugin
+
+Load registered analytic providers.
+
+### Arguments
+
+- **namespace** <code>String</code> - integration namespace
+
+```js
+analytics.loadPlugin('segment')
+```
+
+## EVENTS
+
+Expose available events for third party plugins & listeners
+
+
+## CONSTANTS
+
+Expose available constants for third party plugins & listeners
+<!-- AUTO-GENERATED-CONTENT:END -->
 
 ## Current plugins
 
