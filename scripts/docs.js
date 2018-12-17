@@ -24,7 +24,7 @@ const config = {
       let updatedContent = ''
       docBlocs.forEach((data) => {
         // console.log('data', data)
-        updatedContent += `## ${data.ctx.name}\n\n`
+        updatedContent += `### ${formatName(data.ctx.name)}\n\n`
         updatedContent += `${data.description.full}\n\n`
         updatedContent += `${formatArguments(data.tags)}`
         updatedContent += formatExample(data.tags).join('\n')
@@ -33,6 +33,21 @@ const config = {
       return updatedContent.replace(/^\s+|\s+$/g, '')
     }
   }
+}
+
+const storageKeys = ['setItem', 'getItem', 'removeItem']
+const constantKeys = ['CONSTANTS', 'EVENTS']
+// const anyKeyExists = (object, keys) => Object.keys(object).some((key) => keys.includes(key))
+
+function formatName(name) {
+  const prefix = 'analytics'
+  if (storageKeys.includes(name)) {
+    return `${prefix}.storage.${name}`
+  }
+  if (constantKeys.includes(name)) {
+    return `${name}`
+  }
+  return `${prefix}.${name}`
 }
 
 function formatExample(tags) {
@@ -51,7 +66,7 @@ function formatArguments(tags) {
   })
   // console.log('theArgs', theArgs)
   if (theArgs.length) {
-    return `### Arguments
+    return `**Arguments**
 
 ${theArgs.join('\n')}
 
@@ -78,13 +93,14 @@ function renderArg(tag) {
 }
 
 function renderExample(example) {
-  return `\`\`\`js
+  return `**Example**
+
+\`\`\`js
 ${example.replace(/^\s+|\s+$/g, '')}
 \`\`\`
 `
 }
 
-const markdownPath = path.join(__dirname, '..', 'README.md')
 const rootDir = path.join(__dirname, '..')
 const markdownFiles = [
   path.join(rootDir, 'README.md'),

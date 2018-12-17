@@ -36,7 +36,7 @@ Connect with your favorite analytic providers, trigger custom logic based on use
   * [EVENTS](#events)
   * [CONSTANTS](#constants)
 - [Current plugins](#current-plugins)
-- [Adding Analytics providers plugins](#adding-analytics-providers-plugins)
+- [Creating analytics plugins](#creating-analytics-plugins)
   * [React to any event](#react-to-any-event)
   * [(optionally) Use middleware](#optionally-use-middleware)
 - [Plugin Naming Conventions](#plugin-naming-conventions)
@@ -46,8 +46,9 @@ Connect with your favorite analytic providers, trigger custom logic based on use
 
 ## Features
 
-- [x] Pluggable via middleware. Bring your own third party tool
+- [x] [Pluggable](#creating-analytics-plugins) - Bring your own third party tool
 - [x] Works on client & server-side
+- [x] Test & Debug analytics integrations with time travel & offline mode.
 - [ ] (WIP) In client, works offline. Queues events to send when connection resumes
 
 ##  Why
@@ -385,7 +386,7 @@ Core Analytic constants. These are exposed for third party plugins & listeners
 - [Original Source Plugin](https://www.npmjs.com/package/analytics-plugin-original-source)
 - Add yours! 👇
 
-##  Adding Analytics providers plugins
+## Creating analytics plugins
 
 The library is designed to work with any third party analytics tool.
 
