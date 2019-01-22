@@ -4,7 +4,7 @@
   "description": "Save original referral source of visitor",
   "author": "David Wells",
   "license": "MIT",
-  "homepage": "https://github.com/DavidWells/analtyics#readme",
+  "homepage": "https://github.com/DavidWells/analytics#readme",
   "main": "dist/analytics-plugin-original-source.js",
   "module": "dist/analytics-plugin-original-source.esm.js",
   "scripts": {
