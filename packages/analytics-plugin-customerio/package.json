@@ -1,6 +1,6 @@
 {
   "name": "analytics-plugin-customerio",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Customer.io plugin for 'analytics'",
   "author": "David Wells",
   "license": "MIT",

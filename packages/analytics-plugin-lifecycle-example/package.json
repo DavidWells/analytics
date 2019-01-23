@@ -1,6 +1,6 @@
 {
   "name": "analytics-plugin-lifecycle-example",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Example plugin with lifecycle methods",
   "author": "David Wells",
   "license": "MIT",

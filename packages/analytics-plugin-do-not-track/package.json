@@ -1,6 +1,6 @@
 {
   "name": "analytics-plugin-do-not-track",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Disable tracking for opted out visitors",
   "author": "David Wells",
   "license": "MIT",

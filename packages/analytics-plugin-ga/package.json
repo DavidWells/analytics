@@ -1,6 +1,6 @@
 {
   "name": "analytics-plugin-ga",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "Google analytics integration for 'analytics' pkg",
   "author": "David Wells",
   "license": "MIT",
