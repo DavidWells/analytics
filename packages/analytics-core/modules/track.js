@@ -1,6 +1,5 @@
 // Track Module. Follows ducks pattern http://bit.ly/2DnERMc
 import EVENTS from '../events'
-import timeStamp from '../utils/timestamp'
 
 // Track State
 const initialState = {
@@ -14,7 +13,7 @@ export default function trackReducer(state = initialState, action) {
   const { type, payload, options, eventName } = action
 
   switch (type) {
-    case EVENTS.TRACK:
+    case EVENTS.track:
       return {
         ...state,
         ...{
@@ -30,17 +29,5 @@ export default function trackReducer(state = initialState, action) {
     // todo push events to history
     default:
       return state
-  }
-}
-
-// // Set tracking data for third party plugins
-export const trackEvent = (eventName, payload, options, callback) => {
-  return {
-    type: EVENTS.TRACK_INIT,
-    timestamp: timeStamp(),
-    eventName: eventName,
-    payload: payload,
-    options: options,
-    callback: callback
   }
 }

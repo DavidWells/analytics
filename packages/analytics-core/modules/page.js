@@ -39,19 +39,9 @@ export default function page(state = initialState, action) {
       return Object.assign({}, state, {
         abort: state.abort.concat(action.timestamp)
       })
-    case EVENTS.PAGE:
+    case EVENTS.page:
       return Object.assign({}, state, action.data)
     default:
       return state
-  }
-}
-
-export const pageView = (data, options, callback) => {
-  return {
-    type: EVENTS.PAGE_INIT,
-    timestamp: timeStamp(),
-    data: { ...getPageData(), ...data },
-    options: options,
-    callback: callback
   }
 }
