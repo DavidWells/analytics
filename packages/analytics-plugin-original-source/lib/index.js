@@ -15,22 +15,6 @@ const CONFIG = {
   originalLandingPageKey: '__user_original_landing_page'
 }
 
-/*
-Middleware version of plugin
-export default function originalSourcePlugin(userConfig) {
-  return store => next => action => {
-    if (action.type === 'analyticsInit') {
-      store.dispatch({
-        type: EVENTS.SET_ORIGINAL_SOURCE,
-        originalSource: getOriginalSource(userConfig),
-        originalLandingPage: getOriginalLandingPage(userConfig)
-      })
-    }
-    return next(action)
-  }
-}
-*/
-
 /**
  * Track original source of visitors.
  * @param  {Object} config - settings for referral source tracking
@@ -41,9 +25,9 @@ export default function originalSourcePlugin(userConfig) {
  */
 export default function firstSource(userConfig) {
   return {
-    NAMESPACE: 'first-source',
+    NAMESPACE: 'original-source',
     // Run function on `analyticsInit` event
-    analyticsInit: (action, instance) => {
+    bootstrap: ({ instance }) => {
       instance.dispatch({
         type: EVENTS.SET_ORIGINAL_SOURCE,
         originalSource: getOriginalSource(userConfig),
