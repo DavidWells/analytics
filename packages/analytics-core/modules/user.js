@@ -13,14 +13,14 @@ const initialState = {
 // user reducer
 export default function user(state = initialState, action) {
   // Set anonymousId
-  if (action && action.type === EVENTS.SET_ITEM_COMPLETE && action.key === ANON_ID) {
+  if (action && action.type === EVENTS.setItemCompleted && action.key === ANON_ID) {
     return Object.assign({}, state, {
       anonymousId: action.value,
     })
   }
 
   switch (action.type) {
-    case EVENTS.IDENTIFY:
+    case EVENTS.identify:
       return Object.assign({}, state, {
         userId: action.userId,
         traits: {
@@ -28,7 +28,7 @@ export default function user(state = initialState, action) {
           ...action.traits
         }
       })
-    case EVENTS.RESET:
+    case EVENTS.reset:
       return Object.assign({}, state, {
         userId: null,
         anonymousId: null,
@@ -42,7 +42,7 @@ export default function user(state = initialState, action) {
 // Set tracking data for third party plugins
 export const identify = (userId, traits, options, callback) => {
   return {
-    type: EVENTS.IDENTIFY_INIT,
+    type: EVENTS.identifyStart,
     timestamp: timeStamp(),
     userId: userId,
     traits: traits,
@@ -53,7 +53,7 @@ export const identify = (userId, traits, options, callback) => {
 
 export const reset = (callback) => {
   return {
-    type: EVENTS.RESET,
+    type: EVENTS.reset,
     timestamp: timeStamp(),
     callback: callback
   }
