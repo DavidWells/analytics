@@ -1,12 +1,12 @@
 /**
  * Return analytic integrations with matching methods
- * @param  {array} integrations - array of currently loaded integrations
+ * @param  {array} plugins - array of currently loaded plugins
  * @param  {string} method - key of the method name. IE 'track', 'identify' etc
  * @return {array} returns array of integrations with matching method
  */
-export default function getPluginByMethod(method, integrations) {
-  return Object.keys(integrations).reduce((arr, plugin) => {
-    const int = integrations[plugin]
+export default function getPluginByMethod(method, plugins) {
+  return Object.keys(plugins).reduce((arr, name) => {
+    const int = plugins[name]
     // console.log('int', int)
     return (int[method]) ? arr.concat(int) : arr
   }, [])

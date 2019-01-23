@@ -9,11 +9,14 @@
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
     "build:cjs": "babel lib --out-dir dist --ignore test.js",
+    "build:es": "babel lib --out-dir dist --ignore test.js",
     "build": "shx rm -f lib/index.js && create-index --ignoreUnsafe -r lib && npm run build:cjs",
     "watch": "babel lib --out-dir dist --ignore test.js --watch",
     "es": "babel-node ./testtwo.js"
   },
-  "keywords": [],
+  "keywords": [
+    "analytics"
+  ],
   "author": "David Wells",
   "license": "MIT",
   "files": [
@@ -35,14 +38,6 @@
         "env",
         {
           "modules": false
-        }
-      ]
-    ],
-    "plugins": [
-      [
-        "transform-es2015-modules-simple-commonjs",
-        {
-          "noInterop": true
         }
       ]
     ]

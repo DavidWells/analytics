@@ -1,27 +1,22 @@
 /**
  * Wait until a given analytics provider is ready.
- * @param  {object} provider - provider object
- * @param  {[type]} timeout  - Max timeout for retries to occur
- * @param  {[type]} store    - analytics store
+ * @param  {Object} data - passthrough resolve data
+ * @param  {Function} predicate - function that resolves true
+ * @param  {Number} timeout - max wait time
  * @return {Promise}
  */
-export default function waitForReady(provider, timeout, store) {
-  // console.log('WAIT FOR READ', provider)
-  const { NAMESPACE } = provider
-  const state = store.getState()
-  const { loaded } = state.plugins[NAMESPACE]
-
+export default function waitForReady(data, predicate, timeout) {
   return new Promise((resolve, reject) => {
-    if (loaded) {
-      return resolve({ provider: provider })
+    if (predicate()) {
+      return resolve(data)
     }
     // Timeout. Add to queue
     if (timeout < 1) {
-      return reject({ provider: provider, queue: true }) // eslint-disable-line
+      return reject({ ...data, queue: true }) // eslint-disable-line
     }
     // Else recursive retry
     return pause(10).then(_ => {
-      return waitForReady(provider, timeout - 10, store).then(resolve, reject)
+      return waitForReady(data, predicate, timeout - 10).then(resolve, reject)
     })
   })
 }

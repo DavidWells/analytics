@@ -1,0 +1,31 @@
+{
+  "name": "analytics-plugin-tab-events",
+  "version": "0.0.1",
+  "description": "Expose tab visiblity events for analytics",
+  "author": "David Wells",
+  "license": "MIT",
+  "homepage": "https://github.com/DavidWells/analytics#readme",
+  "keywords": [
+    "analytics",
+    "analytics-plugin"
+  ],
+  "main": "dist/analytics-plugin-tab-events.js",
+  "module": "dist/analytics-plugin-tab-events.esm.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node ../../scripts/plugins/build.js --nameSpace tab-events",
+    "build:dev": "node ../../scripts/plugins/build.js --nameSpace tab-events --env dev",
+    "watch": "node ../../scripts/plugins/watch.js --nameSpace tab-events",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish",
+    "es": "../../node_modules/.bin/babel-node ./testBabel.js"
+  },
+  "files": [
+    "lib",
+    "dist",
+    "package.json",
+    "package-lock.json",
+    "README.md"
+  ]
+}

@@ -4,7 +4,10 @@
   "description": "Google analytics integration for 'analytics' pkg",
   "author": "David Wells",
   "license": "MIT",
-  "homepage": "https://github.com/DavidWells/analtyics#readme",
+  "homepage": "https://github.com/DavidWells/analytics#readme",
+  "keywords": [
+    "analytics"
+  ],
   "main": "dist/analytics-plugin-ga.js",
   "module": "dist/analytics-plugin-ga.esm.js",
   "scripts": {
@@ -23,8 +26,5 @@
     "package.json",
     "package-lock.json",
     "README.md"
-  ],
-  "dependencies": {
-    "analytics-utils": "^0.0.13"
-  }
+  ]
 }

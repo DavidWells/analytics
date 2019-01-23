@@ -1,12 +1,12 @@
 /**
  * Segment analytics plugin
  */
-import { inBrowser, extend } from 'analytics-utils'
+const inBrowser = typeof window !== 'undefined'
 
 /* Plugin namespace. Must be unique */
 export const NAMESPACE = 'segment'
 
-export const config = {
+const defaultConfig = {
   assumesPageview: true,
   disableAnonymousTraffic: false
 }
@@ -21,8 +21,9 @@ function loadScriptAfterUserHasId(instance) {
 }
 
 /* initialize Segment script */
-export const initialize = (configuration, instance) => {
-  const { disableAnonymousTraffic, trackingId, assumesPageview } = configuration
+export const initialize = ({ config, instance }) => {
+  const { disableAnonymousTraffic, trackingId, assumesPageview } = config
+  // alert(`Plugin Segment: initialize ${JSON.stringify(action)}`)
   if (!trackingId) {
     throw new Error('No Setting id defined')
   }
@@ -83,20 +84,28 @@ export const initialize = (configuration, instance) => {
 }
 
 /* Trigger Segment page view */
-export const page = (pageData, options, instance) => {
-  analytics.page()
+export const page = ({ payload }) => {
+  alert(`Segment page ${JSON.stringify(payload)}`)
+  if (inBrowser && typeof analytics !== 'undefined') {
+    analytics.page()
+  }
 }
 
 /* Track Segment event */
-export const track = (eventName, payload, options, instance) => {
-  console.log(`Segment Event > [${eventName}] [payload: ${JSON.stringify(payload, null, 2)}]`)
-  analytics.track(eventName, payload)
+export const track = ({ payload }) => {
+  const { event, properties } = payload
+  console.log(`Segment Event > [${payload.event}] [payload: ${JSON.stringify(properties, null, 2)}]`)
+  if (inBrowser && typeof analytics !== 'undefined') {
+    analytics.track(event, properties)
+  }
 }
 
 /* Identify Segment user */
-export const identify = (userId, traits, options, instance) => {
-  console.log('Segment identify', userId, traits, options)
-  analytics.identify(userId, traits)
+export const identify = ({ payload }) => {
+  const { userId, traits } = payload
+  if (inBrowser && typeof analytics !== 'undefined' && userId) {
+    analytics.identify(userId, traits)
+  }
 }
 
 export const loaded = function() {
@@ -106,19 +115,24 @@ export const loaded = function() {
 
 /* export the plugin */
 export default function SegmentPlugin(userConfig) {
-  const mergedConfig = {
-    // default config
-    ...config,
-    // user land config
-    ...userConfig
-  }
   return {
     NAMESPACE: NAMESPACE,
-    config: mergedConfig,
-    initialize: extend('initialize', initialize, mergedConfig),
-    page: extend('page', page, mergedConfig),
-    track: extend('track', track, mergedConfig),
-    identify: extend('identify', identify, mergedConfig),
-    loaded: extend('loaded', loaded, mergedConfig)
+    config: {
+      // default config
+      ...defaultConfig,
+      // user land config
+      ...userConfig
+    },
+    initialize,
+    page,
+    track,
+    identify,
+    loaded, //: () => { return true},
+    // trackStart: () => {
+    //   alert('seg before')
+    // },
+    ready: () => {
+      console.log('READY= Segment')
+    }
   }
 }

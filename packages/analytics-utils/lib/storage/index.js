@@ -87,3 +87,11 @@ export function removeItem(key, opts) {
   window[key] = null
   return null
 }
+
+//*
+export default {
+  getItem,
+  setItem,
+  removeItem
+}
+/**/

@@ -42,3 +42,11 @@ export function trimTld(baseDomain) {
   const arr = baseDomain.split('.')
   return (arr.length > 1) ? arr.slice(0, -1).join('.') : baseDomain
 }
+
+//*
+export default {
+  trimTld,
+  getDomainBase,
+  getDomainHost
+}
+/**/

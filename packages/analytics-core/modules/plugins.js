@@ -3,17 +3,42 @@ import EVENTS from '../events'
 
 const initialState = {}
 
+const checkIfLoaded = (loaded) => {
+  return Boolean(loaded())
+}
+
 export default function plugins(state = initialState, action) {
   let newState = {}
-  if (/^pluginInit:/.test(action.type)) {
+  if (action.type === 'initialize:aborted') {
+    return state
+  }
+  if (/^registerPlugin:([^:]*)$/.test(action.type)) {
+    const { plugin } = action
+    if (!plugin) {
+      return state
+    }
     newState[action.name] = {
       enabled: true,
-      loaded: false, // script loaded = false
-      config: action.integration.config || {}
+      loaded: checkIfLoaded(plugin.loaded),
+      config: (plugin && plugin.config) ? plugin.config : {}
     }
     return { ...state, ...newState }
   }
-  if (/^pluginReady:/.test(action.type)) {
+  if (/^initialize:([^:]*)$/.test(action.type)) {
+    const { integration } = action
+    if (!integration) {
+      return state // @TODO remove this check
+    }
+    newState[action.name] = {
+      enabled: true,
+      initialized: true,
+      loaded: checkIfLoaded(integration.loaded),
+      config: (integration && integration.config) ? integration.config : {}
+    }
+    return { ...state, ...newState }
+  }
+  if (/^ready:([^:]*)$/.test(action.type)) {
+    // @TODO name missing from this fix
     newState[action.name] = {
       ...state[action.name],
       ...{ loaded: true }
@@ -22,7 +47,7 @@ export default function plugins(state = initialState, action) {
     return { ...state, ...newState }
   }
   switch (action.type) {
-    case EVENTS.PLUGIN_FAILED:
+    case EVENTS.pluginFailed:
       // console.log('PLUGIN_FAILED', action.name)
       // TODO clean up
       newState[action.name] = {
@@ -30,7 +55,7 @@ export default function plugins(state = initialState, action) {
         ...{ loaded: false }
       }
       return { ...state, ...newState }
-    case EVENTS.DISABLE_PLUGIN:
+    case EVENTS.disablePlugin:
       // handle array of integrations ['vanilla', 'google']
       if (Array.isArray(action.name)) {
         newState = action.name.reduce((acc, curr) => {
@@ -47,7 +72,7 @@ export default function plugins(state = initialState, action) {
         ...{ enabled: false }
       }
       return {...state, ...newState}
-    case EVENTS.ENABLE_PLUGIN:
+    case EVENTS.enablePlugin:
       // handle array of integrations ['vanilla', 'google']
       if (Array.isArray(action.name)) {
         newState = action.name.reduce((acc, curr) => {
@@ -71,14 +96,14 @@ export default function plugins(state = initialState, action) {
 
 export const registerPlugin = (plugin) => {
   return {
-    type: EVENTS.PLUGIN_INIT,
+    type: EVENTS.pluginRegister,
     plugin: plugin
   }
 }
 
 export const enablePlugin = (name, callback) => {
   return {
-    type: EVENTS.ENABLE_PLUGIN,
+    type: EVENTS.enablePlugin,
     name: name,
     callback: callback
   }
@@ -86,7 +111,7 @@ export const enablePlugin = (name, callback) => {
 
 export const disablePlugin = (name, callback) => {
   return {
-    type: EVENTS.DISABLE_PLUGIN,
+    type: EVENTS.disablePlugin,
     name: name,
     callback: callback
   }

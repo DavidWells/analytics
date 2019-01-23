@@ -33,3 +33,9 @@ export function removeCookie(name) {
   if (!cookiesSupported) return false
   setCookie(name, '', -1)
 }
+
+export default {
+  getCookie,
+  setCookie,
+  removeCookie
+}

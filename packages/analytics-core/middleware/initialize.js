@@ -1,13 +1,11 @@
 import { paramsParse, paramsRemove, storage, uuid } from 'analytics-utils'
 import EVENTS from '../events'
 import { ANON_ID } from '../constants'
-import { identify } from '../modules/user'
-import { trackEvent } from '../modules/track'
 
-// Middleware runs during EVENTS.INITIALIZE
+// Middleware runs during EVENTS.initialize
 export default function initializeMiddleware(instance) {
   return store => next => action => {
-    if (action.type === EVENTS.INITIALIZE) {
+    if (action.type === EVENTS.pluginsRegistered) {
       // 1. Set anonymous ID
       if (!storage.getItem(ANON_ID)) {
         instance.storage.setItem(ANON_ID, uuid())
@@ -36,7 +34,7 @@ export default function initializeMiddleware(instance) {
         })
 
         store.dispatch({
-          type: EVENTS.PARAMS,
+          type: EVENTS.params,
           raw: params,
           ...groupedParams
         })
@@ -44,23 +42,21 @@ export default function initializeMiddleware(instance) {
         if (params.an_uid) {
           // timeout to debounce and make sure integration is registered. Todo refactor
           setTimeout(() => {
-            store.dispatch(identify(params.an_uid, groupedParams.traits))
+            instance.identify(params.an_uid, groupedParams.traits)
           }, 0)
         }
 
         if (params.an_event) {
           // timeout to debounce and make sure integration is registered. Todo refactor
           setTimeout(() => {
-            store.dispatch(
-              trackEvent(params.an_event, groupedParams.props)
-            )
+            instance.track(params.an_event, groupedParams.props)
           }, 0)
         }
 
         // if url has utm params
         if (Object.keys(groupedParams.campaign).length) {
           store.dispatch({
-            type: EVENTS.CAMPAIGN,
+            type: EVENTS.campaign,
             campaign: groupedParams.campaign
           })
         }

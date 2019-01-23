@@ -1,0 +1,30 @@
+{
+  "name": "analytics-plugin-do-not-track",
+  "version": "0.0.1",
+  "description": "Disable tracking for opted out visitors",
+  "author": "David Wells",
+  "license": "MIT",
+  "homepage": "https://github.com/DavidWells/analytics#readme",
+  "keywords": [
+    "analytics"
+  ],
+  "main": "dist/analytics-plugin-do-not-track.js",
+  "module": "dist/analytics-plugin-do-not-track.esm.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node ../../scripts/plugins/build.js --nameSpace do-not-track",
+    "build:dev": "node ../../scripts/plugins/build.js --nameSpace do-not-track --env dev",
+    "watch": "node ../../scripts/plugins/watch.js --nameSpace do-not-track",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish",
+    "es": "../../node_modules/.bin/babel-node ./testBabel.js"
+  },
+  "files": [
+    "lib",
+    "dist",
+    "package.json",
+    "package-lock.json",
+    "README.md"
+  ]
+}

@@ -9,26 +9,13 @@ export default function storageMiddleware() {
   */
   return store => next => action => {
     const { type, key, value, timestamp } = action
-    if (type === EVENTS.SET_ITEM || type === EVENTS.REMOVE_ITEM) {
-      const kind = (type === EVENTS.SET_ITEM) ? 'SET_ITEM' : 'REMOVE_ITEM'
+    if (type === EVENTS.setItem || type === EVENTS.removeItem) {
       if (action.abort) {
-        store.dispatch({
-          type: EVENTS[`${kind}_ABORT`],
-          timestamp: timestamp,
-          reason: action.reason,
-        })
         return next(action)
       }
       // Run storage set or remove
-      const method = (type === EVENTS.SET_ITEM) ? 'setItem' : 'removeItem'
+      const method = (type === EVENTS.setItem) ? 'setItem' : 'removeItem'
       storage[method](key, value)
-
-      store.dispatch({
-        type: EVENTS[`${kind}_COMPLETE`],
-        timestamp: timestamp,
-        key,
-        value
-      })
     }
     return next(action)
   }
@@ -40,17 +27,17 @@ export const getItem = (key, opts) => {
 
 export const setItem = (key, value, opts) => {
   return {
-    type: EVENTS.SET_ITEM,
+    type: EVENTS.setItemStart,
+    timestamp: timeStamp(),
     key: key,
     value: value,
     options: opts,
-    timestamp: timeStamp()
   }
 }
 
 export const removeItem = (key, opts) => {
   return {
-    type: EVENTS.REMOVE_ITEM,
+    type: EVENTS.removeItemStart,
     key: key,
     options: opts,
     timestamp: timeStamp()

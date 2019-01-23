@@ -27,7 +27,7 @@ Connect with your favorite analytic providers, trigger custom logic based on use
   * [analytics.storage.setItem](#analyticsstoragesetitem)
   * [analytics.storage.removeItem](#analyticsstorageremoveitem)
   * [analytics.user](#analyticsuser)
-  * [analytics.ready](#analyticsready)
+  * [analytics.ready](#ready)
   * [analytics.on](#analyticson)
   * [analytics.once](#analyticsonce)
   * [analytics.enablePlugin](#analyticsenableplugin)
@@ -444,7 +444,7 @@ const analytics = Analytics({
 
 ### React to any event
 
-Plugins can react to any event flowing through `analytics`. For example, if you wanted to trigger custom logic when `analytics` bootstraps you can attach a function handler to `analyticsInit`.
+Plugins can react to any event flowing through `analytics`. For example, if you wanted to trigger custom logic when `analytics` bootstraps you can attach a function handler to `initialize`.
 
 For a full list of core events, checkout `events.js`.
 
@@ -453,8 +453,8 @@ For a full list of core events, checkout `events.js`.
 export default function firstSource(userConfig) {
   return {
     NAMESPACE: 'first-source',
-    // Run function on `analyticsInit` event
-    analyticsInit: (action, instance) => {
+    // Run function on `initialize` event
+    initialize: (action, instance) => {
 
       // Do whatever
 
@@ -524,7 +524,7 @@ This is a vanilla redux middleware that will opt out users from tracking. There 
 ```js
 const optOutPlugin = store => next => action => {
   const { type } = action
-  if (type === 'trackInit' || type === 'pageInit' || type === 'trackInit') {
+  if (type === 'trackStart' || type === 'pageStart' || type === 'trackStart') {
     // Check cookie/localStorage/Whatever to see if visitor opts out
 
     // Here I am checking user traits persisted to localStorage
