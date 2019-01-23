@@ -1,66 +1,84 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
-import inBrowser from 'analytics-utils/dist/inBrowser'
+import { inBrowser } from 'analytics-utils'
 import * as middleware from './middleware'
 import plugins, { enablePlugin, disablePlugin } from './modules/plugins' // registerPlugin
 import context, { makeContext } from './modules/context'
-import page, { pageView } from './modules/page'
-import track, { trackEvent } from './modules/track'
-import user, { identify, reset } from './modules/user'
+import page, { getPageData } from './modules/page'
+import queue from './modules/queue'
+import track from './modules/track'
+import user, { reset } from './modules/user'
 import dotProp from './utils/dotProp'
+import timestamp from './utils/timestamp'
 import { watch } from './utils/handleNetworkEvents'
-import { tabHidden } from './utils/handleTabEvents'
-import { mouseOut } from './utils/handleWindowEvents'
-import EVENTS, { reservedActions } from './events'
+import getCallback from './utils/getCallback'
+import EVENTS, { eventKeys, isReservedAction } from './events'
+// import heartBeat from './utils/heartbeat'
 import * as CONSTANTS from './constants'
 
 const isDev = process.env.NODE_ENV === 'development'
 
 const { addMiddleware, removeMiddleware, setItem, removeItem, getItem } = middleware
 
-const keys = ['track', 'page', 'identify']
-const anyKeyExists = (object, keys) => Object.keys(object).some((key) => keys.includes(key))
-
-// Only way commonJS will work
-module.exports = function analytics(config = {}) {
+export default function analytics(config = {}) {
   const customReducers = config.reducers || {}
 
   /* Parse plugins array */
   const parsedOptions = (config.plugins || []).reduce((acc, p) => {
     if (typeof p !== 'function' && p.NAMESPACE) {
-      // If core 'track', 'page', or 'identify' found
-      if (anyKeyExists(p, keys)) {
-        acc.integrations[p.NAMESPACE] = p
-      }
+      // Combine all available events
+      const allEvents = new Set(acc.events.concat(Object.keys(p)))
+      acc.events = Array.from(allEvents)
+
       if (acc.plugins[p.NAMESPACE]) {
         throw new Error(`Analytics "${p.NAMESPACE}" loaded twice!`)
       }
       acc.plugins[p.NAMESPACE] = p
+      if (!acc.plugins[p.NAMESPACE].loaded) {
+        // set default loaded func
+        acc.plugins[p.NAMESPACE].loaded = () => { return true }
+      }
       return acc
     }
+
     /* Custom redux middleware */
     acc.middlewares = acc.middlewares.concat(p)
     return acc
   }, {
     plugins: {},
-    integrations: {},
     middlewares: [],
+    events: []
   })
 
   // mutable intregrations object for dynamic loading
   let customPlugins = parsedOptions.plugins
 
   if (isDev || config.debug) {
-    console.log('Plugins with core "track", "page", "identify" methods', parsedOptions.integrations)
-    console.log('All plugins', parsedOptions.plugins)
-    console.log('customMiddlewares', parsedOptions.middlewares)
+    // console.log('All plugins', parsedOptions.plugins)
+    // console.log('customMiddlewares', parsedOptions.middlewares)
   }
 
+  const other = ['config', 'loaded', 'NAMESPACE']
+  const registeredEvents = parsedOptions.events.concat(eventKeys).filter((name) => {
+    return !other.includes(name)
+  })
+  const uniqueEventKeys = new Set(registeredEvents)
+  const systemEvents = Array.from(uniqueEventKeys).sort()
   /* plugin methods(functions) must be kept out of state. thus they live here */
-  const getPlugins = () => {
+  const getPlugins = (asArray) => {
+    if (asArray) {
+      return Object.keys(customPlugins).map((plugin) => {
+        return customPlugins[plugin]
+      })
+    }
     return customPlugins
   }
 
   const instance = {
+    /**
+     * Events exposed by core analytics library and all loaded plugins
+     * @type {Array}
+     */
+    events: systemEvents,
     /**
     * Identify a user. This will trigger `identify` calls in any installed plugins and will set user data in localStorage
     * @param  {String}   userId  - Unique ID of user
@@ -79,9 +97,21 @@ module.exports = function analytics(config = {}) {
     identify: (userId, traits, options, callback) => {
       const id = (typeof userId === 'string') ? userId : null
       const data = (typeof userId === 'object') ? userId : traits
-      store.dispatch(
-        identify(id, data, options, callback)
-      )
+      const opts = options || {}
+      const cb = getCallback(traits, options, callback)
+      const user = instance.user()
+      store.dispatch({
+        type: EVENTS.identifyStart,
+        userId: id,
+        traits: data,
+        options: opts,
+        anonymousId: user.anonymousId,
+        ...(user.id && (user.id !== id) && { previousId: user.id }),
+        meta: {
+          timestamp: timestamp(),
+          ...(cb && { callback: cb })
+        },
+      })
     },
     /**
      * Track an analytics event. This will trigger `track` calls in any installed plugins
@@ -96,9 +126,26 @@ module.exports = function analytics(config = {}) {
      * analytics.track('buttonClick')
      */
     track: (eventName, payload, options, callback) => {
-      store.dispatch(
-        trackEvent(eventName, payload, options, callback)
-      )
+      const name = (typeof eventName === 'object') ? eventName.event : eventName
+      if (!name || typeof name !== 'string') {
+        throw new Error('No eventName not supplied')
+      }
+      const data = (typeof eventName === 'object') ? eventName : (payload || {})
+      const opts = (typeof options === 'object') ? options : {}
+      const cb = getCallback(payload, options, callback)
+      const { userId, anonymousId } = instance.user()
+      store.dispatch({
+        type: EVENTS.trackStart,
+        event: name,
+        properties: data,
+        options: opts,
+        userId: userId,
+        anonymousId: anonymousId,
+        meta: {
+          timestamp: timestamp(),
+          ...(cb && { callback: cb })
+        },
+      })
     },
     /**
      * Trigger page view. This will trigger `page` calls in any installed plugins
@@ -112,10 +159,24 @@ module.exports = function analytics(config = {}) {
      * analytics.page()
      */
     page: (data, options, callback) => {
-      const d = data || {}
-      store.dispatch(
-        pageView(d, options, callback)
-      )
+      const d = (typeof data === 'object') ? data : {}
+      const opts = (typeof options === 'object') ? options : {}
+      const cb = getCallback(data, options, callback)
+      const { userId, anonymousId } = instance.user()
+      store.dispatch({
+        type: EVENTS.pageStart,
+        properties: {
+          ...getPageData(),
+          ...d
+        },
+        options: opts,
+        userId: userId,
+        anonymousId: anonymousId,
+        meta: {
+          timestamp: timestamp(),
+          ...(cb && { callback: cb })
+        },
+      })
     },
     /**
      * Get data about user, activity, or context. You can access sub-keys of state with `dot.prop` syntax.
@@ -147,11 +208,25 @@ module.exports = function analytics(config = {}) {
      * @param  {Object} action [description]
      */
     dispatch: (action) => {
-      if (reservedActions.includes(action.type)) {
+      let theAction = action
+      if (typeof action === 'string') {
+        theAction = { type: action }
+      }
+      if (isReservedAction(action.type)) {
         console.log(`Trying to dispatch analytics reservedAction "${action.type}"`)
         return false
       }
-      store.dispatch(action)
+      // Dispatch actionStart
+      const autoPrefixType = `${theAction.type.replace(/Start$/, '')}Start`
+      // TODO automatically add meta.timestamp
+      store.dispatch({
+        ...theAction,
+        // TODO merge meta
+        meta: {
+          timestamp: timestamp()
+        }
+        // type: `${autoPrefixType}`
+      })
     },
     /**
      * Storage utilities for persisting data. These methods will allow you to save data in localStorage, cookies, or to the window.
@@ -227,11 +302,11 @@ module.exports = function analytics(config = {}) {
      * @example
      *
      * analytics.ready((action, instance) => {
-     *   console.log('all integrations have loaded')
+     *   console.log('all plugins have loaded')
      * })
      */
     ready: (callback) => {
-      return instance.on(EVENTS.READY, callback)
+      return instance.on(EVENTS.ready, callback)
     },
     /**
      * Attach an event handler function for one or more events to the selected elements.
@@ -249,13 +324,16 @@ module.exports = function analytics(config = {}) {
       if (!name || !callback || typeof callback !== 'function') {
         return false
       }
+
+      const position = (name.match(/Start$/)) ? true : false // eslint-disable-line
+
       const handler = store => next => action => {
         // Subscribe to EVERYTHING
         if (name === '*') {
-          callback(action, instance)
+          callback({ action, instance }) // eslint-disable-line
         // Subscribe to specific actions
         } else if (action.type === name) {
-          callback(action, instance)
+          callback({ action, instance }) // eslint-disable-line
         }
         /* For future matching of event subpaths `track:*` etc
         } else if (name.match(/\*$/)) {
@@ -264,8 +342,8 @@ module.exports = function analytics(config = {}) {
         } */
         return next(action)
       }
-      addMiddleware(handler)
-      return () => removeMiddleware(handler)
+      addMiddleware(handler, position)
+      return () => removeMiddleware(handler, position)
     },
     /**
      * Attach a handler function to an event and only trigger it only once.
@@ -292,7 +370,7 @@ module.exports = function analytics(config = {}) {
      *
      * analytics.enablePlugin('google')
      *
-     * // enable multiple integrations at once
+     * // enable multiple plugins at once
      * analytics.enablePlugin(['google', 'segment'])
      */
     enablePlugin: (name, callback) => {
@@ -320,7 +398,7 @@ module.exports = function analytics(config = {}) {
      */
     loadPlugin: (namespace) => {
       store.dispatch({
-        type: EVENTS.PLUGIN_INIT,
+        type: EVENTS.pluginRegister,
         // todo handle arrays
         providers: (namespace) ? [namespace] : Object.keys(getPlugins()),
       })
@@ -337,7 +415,7 @@ module.exports = function analytics(config = {}) {
       })
       // then add it, and init state key
       store.dispatch({
-        type: EVENTS.PLUGIN_INIT,
+        type: EVENTS.pluginRegister,
         name: newPlugin.NAMESPACE,
         plugin: newPlugin
       })
@@ -346,13 +424,12 @@ module.exports = function analytics(config = {}) {
 
   const middlewares = parsedOptions.middlewares.concat([
     // Core analytics middleware
+    middleware.dynamic(true), // Before dynamic middleware <-- fixed pageStart .on listener
+    middleware.plugins(instance, getPlugins, systemEvents),
     middleware.storage(),
-    middleware.plugins(instance, getPlugins),
     middleware.initialize(instance),
-    middleware.identify(instance, getPlugins),
-    middleware.track(instance, getPlugins),
-    middleware.page(instance, getPlugins),
-    middleware.dynamic,
+    middleware.identify(instance),
+    middleware.dynamic() // after dynamic middleware
   ])
 
   // Initial analytics state keys
@@ -361,13 +438,16 @@ module.exports = function analytics(config = {}) {
     user: user,
     page: page,
     track: track,
-    plugins: plugins
+    plugins: plugins,
+    queue: queue
   }
 
   let composeEnhancers = compose
   if (inBrowser && config.debug) {
-    const withDevTools = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
-    composeEnhancers = (config.debug) ? withDevTools : compose
+    const devTools = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+    if (devTools) {
+      composeEnhancers = devTools({ trace: true, traceLimit: 25 })
+    }
   }
 
   const initialConfig = makeContext(config)
@@ -385,29 +465,27 @@ module.exports = function analytics(config = {}) {
     composeEnhancers(applyMiddleware(...middlewares))
   )
 
-  // Initialize analytics
+  // Register plugins
   store.dispatch({
-    type: EVENTS.INITIALIZE,
+    type: EVENTS.bootstrap,
     plugins: Object.keys(customPlugins),
     config: initialConfig
+  })
+
+  // Register plugins
+  store.dispatch({
+    type: EVENTS.registerPlugins,
+    plugins: Object.keys(customPlugins)
   })
 
   // Watch for network events
   watch(offline => {
     store.dispatch({
-      type: (offline) ? EVENTS.OFFLINE : EVENTS.ONLINE,
+      type: (offline) ? EVENTS.offline : EVENTS.online,
     })
   })
-  mouseOut(leftWindow => {
-    store.dispatch({
-      type: (leftWindow) ? EVENTS.WINDOW_LEAVE : EVENTS.WINDOW_ENTER,
-    })
-  })
-  tabHidden(tabHidden => {
-    store.dispatch({
-      type: (tabHidden) ? EVENTS.TAB_HIDDEN : EVENTS.TAB_VISIBLE,
-    })
-  })
+
+  // heartBeat(store)
 
   /* Optionally expose redux to instance */
   if (config.exposeRedux) {
@@ -423,15 +501,16 @@ module.exports = function analytics(config = {}) {
   return instance
 }
 
+export { analytics }
 /**
  * Core Analytic events. These are exposed for third party plugins & listeners
  * Use these magic strings to attach functions to event names.
  * @type {Object}
  */
-module.exports.EVENTS = EVENTS
+export { EVENTS }
 
 /**
  * Core Analytic constants. These are exposed for third party plugins & listeners
  * @type {Object}
  */
-module.exports.CONSTANTS = CONSTANTS
+export { CONSTANTS }

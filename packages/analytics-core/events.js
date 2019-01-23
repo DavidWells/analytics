@@ -2,77 +2,198 @@
  * Core Analytic Events
  */
 
-const EVENTS = {
-  /* Initial bootstrap event */
-  INITIALIZE: 'analyticsInit',
-  /* Handle URL parameters */
-  PARAMS: 'params',
-  /* Handle Campaign URL parameters */
-  CAMPAIGN: 'campaign',
-  /* After all analytics providers are loaded. Ready fires */
-  READY: 'analyticsReady',
-  /* Clear all user data */
-  RESET: 'analyticsReset',
-  /* Integration actions */
-  PLUGIN_INIT: 'pluginInit',
-  PLUGIN_INIT_TYPE: (name) => `pluginInit:${name}`,
-  // Not in use PLUGIN_LOADED: 'integrationLoaded',
-  // fired when 'loaded' timesout after 10 seconds
-  PLUGIN_FAILED: 'pluginFailed',
-  PLUGIN_LOADED_TYPE: (name) => `pluginReady:${name}`,
-  PLUGIN_FAILED_TYPE: (name) => `pluginFailed:${name}`,
+export const eventKeys = [
+  /**
+   * `bootstrap` - Fires when analytics library starts up. This is the first event fired
+   */
+  'bootstrap',
+  /**
+   * `params` - Fires when analytics parses URL parameters
+   */
+  'params',
+  /**
+   * `campaign` - Fires if params contain "utm" parameters
+   */
+  'campaign',
+  /**
+   * `initializeStart` - Fires before `initialize`, allows for plugins to cancel loading of other plugins
+   */
+  'initializeStart',
+  /**
+   * `initialize` - Fires when analytics bootstraps
+   */
+  'initialize',
+  /**
+   * `initializeEnd` - Fires after `initialize`, allows for plugins to run logic after initialization methods run
+   */
+  'initializeEnd',
+  /**
+   * `ready` - Fires when all analytic providers are fully loaded.
+   * This waits for `initialize` and `loaded` to return true
+   */
+  'ready',
+  /**
+   * `reset` - Fires if analytic.reset() is called.
+   * Use this event to run custom cleanup logic (if needed)
+   */
+  'reset',
+  /******************
+   * Page Events
+   ******************/
+  /**
+   * `pageStart` - Fires before 'page' events fire.
+   *  This allows for dynamic page view cancellation based on current state of user or options passed in.
+   */
+  'pageStart',
+  /**
+   * `page` - Core analytics hook for page views.
+   *  If your plugin or integration tracks page views, this is the event to fire on.
+   */
+  'page',
+  /**
+   * `pageEnd` - Fires after all registered 'page' methods fire.
+   */
+  'pageEnd',
+  /**
+   * `pageAborted` - Fires if 'page' call is cancelled by a plugin
+   */
+  'pageAborted',
+  /****************
+   * Track Events
+   ***************/
+  /**
+   * `trackStart` - Called before the 'track' events fires.
+   *  This allows for dynamic page view cancellation based on current state of user or options passed in.
+   */
+  'trackStart',
+  /**
+   * `track` - Core analytics hook for event tracking.
+   *  If your plugin or integration tracks custom events, this is the event to fire on.
+   */
+  'track',
+  /**
+   * `trackEnd` - Fires after all registered 'track' events fire from plugins.
+   */
+  'trackEnd',
+  /**
+   * `trackAborted` - Fires if 'track' call is cancelled by a plugin
+   */
+  'trackAborted',
+  /******************
+   * Identify Events
+   ******************/
+  /**
+   * `identifyStart` - Called before the 'identify' events fires.
+   * This allows for dynamic page view cancellation based on current state of user or options passed in.
+   */
+  'identifyStart',
+  /**
+   * `identify` - Core analytics hook for user identification.
+   *  If your plugin or integration identifies users or user traits, this is the event to fire on.
+   */
+  'identify',
+  /**
+   * `identifyEnd` - Fires after all registered 'identify' events fire from plugins.
+   */
+  'identifyEnd',
+  /**
+   * `identifyAborted` - Fires if 'track' call is cancelled by a plugin
+   */
+  'identifyAborted',
+  /**
+   * `userIdChanged` - Fires when a user id is updated
+   */
+  'userIdChanged',
+  /******************
+   * Plugin Events
+   ******************/
+  /*! Not currently in use
+   * `pluginRegister` - Fires when analytics.enablePlugin is called
+   */
+  'registerPlugins',
+  'pluginRegister',
+  /**
+   * `pluginsRegistered` - Fires after all plugins have been registered
+   */
+  'pluginsRegistered',
+  /**
+   * `pluginFailed` - Fires if a plugin fails to load.
+   * Loading is checked by a 'loaded' method on plugin that returns a boolean.
+   */
+  'pluginFailed',
+  /**
+   * `enablePlugin` - Fires when `analytics.enablePlugin()` is called
+   */
+  'enablePlugin',
+  /**
+   * `disablePlugin` - Fires when `analytics.disablePlugin()` is called
+   */
+  'disablePlugin',
+  /******************
+   * Browser activity events
+   ******************/
+  /**
+   * `online` - Fires when browser network goes online.
+   * This fires only when coming back online from an offline state.
+   */
+  'online',
+  /**
+   * `offline` - Fires when browser network goes offline.
+   */
+  'offline',
+  /******************
+   * Storage events
+   ******************/
+  /**
+   * `setItemStart` - Fires when analtyics.storage.setItem is initialized.
+   * This event gives plugins the ability to intercept keys & values and alter them before they are persisted.
+   */
+  'setItemStart',
+  /**
+   * `setItem` - Fires when analtyics.storage.setItem is called.
+   * This event gives plugins the ability to intercept keys & values and alter them before they are persisted.
+   */
+  'setItem',
+  /**
+   * `setItemEnd` - Fires when setItem storage is complete.
+   */
+  'setItemEnd',
+  /**
+   * `setItemAborted` - Fires when setItem storage is cancelled by a plugin.
+   */
+  'setItemAborted',
+  /**
+   * `removeItemStart` - Fires when analtyics.storage.removeItem is initialized.
+   * This event gives plugins the ability to intercept removeItem calls and abort / alter them.
+   */
+  'removeItemStart',
+  /**
+   * `removeItem` - Fires when analtyics.storage.removeItem is called.
+   * This event gives plugins the ability to intercept removeItem calls and abort / alter them.
+   */
+  'removeItem',
+  /**
+   * `removeItemEnd` - Fires when removeItem storage is complete.
+   */
+  'removeItemEnd',
+  /**
+   * `removeItemAborted` - Fires when removeItem storage is cancelled by a plugin.
+   */
+  'removeItemAborted',
+]
 
-  // Todo finish this event
-  ENABLE_PLUGIN: 'enablePlugin',
-  // Not in use PLUGIN_ENABLED: 'integrationEnabled',
-  DISABLE_PLUGIN: 'disablePlugin',
-  // Not in use PLUGIN_DISABLE: 'integrationDisabled',
-
-  /* Browser activity events */
-  ONLINE: 'online',
-  OFFLINE: 'offline',
-  WINDOW_ENTER: 'windowEntered',
-  WINDOW_LEAVE: 'windowLeft',
-  TAB_HIDDEN: 'tabHidden',
-  TAB_VISIBLE: 'tabVisible',
-
-  /* Page actions */
-  PAGE_INIT: 'pageInit',
-  PAGE: 'page',
-  PAGE_TYPE: (name) => `page:${name}`,
-  PAGE_COMPLETE: 'pageCompleted',
-  PAGE_ABORT: 'pageAborted',
-  PAGE_TIME_OUT: 'pageTimedOut',
-
-  /* Track actions */
-  TRACK_INIT: 'trackInit',
-  TRACK: 'track',
-  TRACK_TYPE: (name) => `track:${name}`,
-  TRACK_COMPLETE: 'trackCompleted',
-  TRACK_ABORT: 'trackAborted',
-  TRACK_TIME_OUT: 'trackTimedOut',
-
-  /* Identify actions */
-  IDENTIFY_INIT: 'identifyInit',
-  IDENTIFY: 'identify',
-  IDENTIFY_TYPE: (name) => `identify:${name}`,
-  IDENTIFY_COMPLETE: 'identifyCompleted',
-  IDENTIFY_ABORT: 'identifyAborted',
-  IDENTIFY_TIME_OUT: 'identifyTimedOut',
-  USER_ID_CHANGED: 'userIdChanged',
-
-  /* storage actions */
-  SET_ITEM: 'setItem',
-  SET_ITEM_ABORT: 'setItemAborted',
-  SET_ITEM_COMPLETE: 'setItemCompleted',
-  REMOVE_ITEM: 'removeItem',
-  REMOVE_ITEM_ABORT: 'removeItemAborted',
-  REMOVE_ITEM_COMPLETE: 'removeItemCompleted',
+const pluginEvents = {
+  pluginRegisterType: (name) => `pluginRegister:${name}`,
+  pluginReadyType: (name) => `pluginReady:${name}`,
 }
+
+const EVENTS = eventKeys.reduce((acc, curr) => {
+  acc[curr] = curr
+  return acc
+}, pluginEvents)
 
 export default EVENTS
 
-export const reservedActions = Object.keys(EVENTS).reduce((acc, curr) => {
-  if (typeof EVENTS[curr] === 'function') return acc
-  return acc.concat(EVENTS[curr])
-}, [])
+export function isReservedAction(type) {
+  return eventKeys.includes(type)
+}

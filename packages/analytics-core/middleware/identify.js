@@ -5,7 +5,7 @@ export default function identifyMiddleware(instance) {
   const { storage } = instance
   return store => next => action => {
     const { userId, traits, options, callback, timestamp } = action
-    if (action.type === EVENTS.analyticsReset) {
+    if (action.type === EVENTS.reset) {
       storage.removeItem(USER_ID)
       storage.removeItem(USER_TRAITS)
       storage.removeItem(ANON_ID)
