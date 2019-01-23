@@ -4,9 +4,13 @@
   "description": "Customer.io plugin for 'analytics'",
   "author": "David Wells",
   "license": "MIT",
-  "homepage": "https://github.com/DavidWells/analtyics#readme",
+  "homepage": "https://github.com/DavidWells/analytics#readme",
   "main": "dist/analytics-plugin-customerio.js",
   "module": "dist/analytics-plugin-customerio.esm.js",
+  "keywords": [
+    "analytics",
+    "analytics-plugin"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "node ../../scripts/plugins/build.js --nameSpace customerIO",
@@ -22,8 +26,5 @@
     "package.json",
     "package-lock.json",
     "README.md"
-  ],
-  "dependencies": {
-    "analytics-utils": "0.0.4"
-  }
+  ]
 }
