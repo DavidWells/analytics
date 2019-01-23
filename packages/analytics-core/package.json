@@ -14,7 +14,7 @@
     "watch": "rollup -c -w",
     "prebuild": "rimraf ./dist",
     "build": "rollup -c",
-    "test": "ava",
+    "test": "ava -v",
     "publish": "git push origin && git push origin --tags",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
@@ -29,6 +29,7 @@
     "middleware",
     "modules",
     "utils",
+    "constants.js",
     "events.js",
     "index.js",
     "package.json",
@@ -40,7 +41,7 @@
     "redux": "^3.6.0"
   },
   "devDependencies": {
-    "ava": "^0.20.0",
+    "ava": "^1.0.1",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",
     "babel-loader": "^7.0.0",
@@ -66,6 +67,14 @@
     "rollup-plugin-strip-banner": "^0.2.0",
     "rollup-plugin-uglify": "^2.0.1",
     "size-limit": "^0.13.2"
+  },
+  "ava": {
+    "babel": {
+      "testOptions": {
+        "babelrc": false,
+        "configFile": false
+      }
+    }
   },
   "babel": {
     "presets": [
