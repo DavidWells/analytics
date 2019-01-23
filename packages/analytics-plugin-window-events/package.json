@@ -6,7 +6,8 @@
   "license": "MIT",
   "homepage": "https://github.com/DavidWells/analytics#readme",
   "keywords": [
-    "analytics"
+    "analytics",
+    "analytics-plugin"
   ],
   "main": "dist/analytics-plugin-window-events.js",
   "module": "dist/analytics-plugin-window-events.esm.js",
