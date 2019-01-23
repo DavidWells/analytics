@@ -444,26 +444,17 @@ const analytics = Analytics({
 
 ### React to any event
 
-Plugins can react to any event flowing through `analytics`. For example, if you wanted to trigger custom logic when `analytics` bootstraps you can attach a function handler to `analyticsInit`.
+Plugins can react to any event flowing through `analytics`. For example, if you wanted to trigger custom logic when `analytics` bootstraps you can attach a function handler to the `bootstrap` event.
 
-For a full list of core events, checkout `events.js`.
+For a full list of core events, checkout [`events.js`](https://github.com/DavidWells/analytics/blob/master/packages/analytics-core/events.js).
 
 ```js
 // plugin.js
 export default function firstSource(userConfig) {
   return {
     NAMESPACE: 'first-source',
-    // Run function on `analyticsInit` event
-    analyticsInit: (action, instance) => {
-
-      // Do whatever
-
-      // (optionally) Dispatch additional events for other plugins to react to
-      instance.dispatch({
-        type: 'setOriginalSource',
-        originalSource: getOriginalSource(userConfig),
-        originalLandingPage: getOriginalLandingPage(userConfig)
-      })
+    bootstrap: ({ event, instance }) => {
+      // Do whatever on `bootstrap`
     }
   }
 }
