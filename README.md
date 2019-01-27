@@ -407,16 +407,16 @@ export default function googleAnalytics(userConfig) {
       whatEver: userConfig.fooBar,
       googleAnalyticsId: userConfig.id
     },
-    initialize: function() {
+    initialize: ({ config }) => {
       // load provider script to page
     },
-    page: function() {
+    page: ({ payload }) => {
       // call provider specific page tracking
     },
-    track: function() {
+    track: ({ payload }) => {
       // call provider specific event tracking
     },
-    identify: function() {
+    identify: ({ payload }) => {
       // call provider specific user identify method
     },
     loaded: () => {
@@ -427,7 +427,7 @@ export default function googleAnalytics(userConfig) {
 }
 ```
 
-To use this plugin above, import it and pass it into the `plugins` array when you bootstrap analytics.
+To use a plugin, import it and pass it into the `plugins` array when you bootstrap `analytics`.
 
 ```js
 import Analytics from 'analytics'
@@ -444,16 +444,18 @@ const analytics = Analytics({
 
 ### React to any event
 
-Plugins can react to any event flowing through `analytics`. For example, if you wanted to trigger custom logic when `analytics` bootstraps you can attach a function handler to the `bootstrap` event.
+Plugins can react to any event flowing through `analytics`. 
+
+For example, if you wanted to trigger custom logic when `analytics` bootstraps you can attach a function handler to the `bootstrap` event.
 
 For a full list of core events, checkout [`events.js`](https://github.com/DavidWells/analytics/blob/master/packages/analytics-core/events.js).
 
 ```js
 // plugin.js
-export default function firstSource(userConfig) {
+export default function myPlugin(userConfig) {
   return {
-    NAMESPACE: 'first-source',
-    bootstrap: ({ event, instance }) => {
+    NAMESPACE: 'my-plugin',
+    bootstrap: ({ payload, config, instance }) => {
       // Do whatever on `bootstrap`
     }
   }
@@ -477,7 +479,7 @@ const analytics = Analytics({
 
 ### (optionally) Use middleware
 
-Alternatively, you can also add whatever middleware functionality you'd like from the redux ecosystem.
+Alternatively, you can also add whatever middleware functionality you'd like from the `redux` ecosystem.
 
 ```js
 // logger-plugin.js redux middleware
