@@ -1,0 +1,15 @@
+
+.log {
+  font-size: 12px;
+}
+.item:nth-child(odd) {
+  background-color: #13deff38;
+}
+.item {
+  display: flex;
+}
+.event {
+  font-weight: bold;
+  display: inline-block;
+  min-width: 220px;
+}
