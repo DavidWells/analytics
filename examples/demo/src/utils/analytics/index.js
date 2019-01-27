@@ -7,7 +7,7 @@ const analytics = Analytics({
   plugins: [
     visualizeLifecycle(),
     googleAnalytics({
-      trackingId: '1111111'
+      trackingId: process.env.REACT_APP_GOOGLE_ANALYTICS_ID
     })
   ]
 })
