@@ -1,6 +1,6 @@
 {
   "name": "analytics-plugin-original-source",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Save original referral source of visitor",
   "author": "David Wells",
   "license": "MIT",
@@ -29,6 +29,6 @@
     "README.md"
   ],
   "dependencies": {
-    "analytics-utils": "^0.0.14"
+    "analytics-utils": "^0.0.15"
   }
 }
