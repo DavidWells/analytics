@@ -2,9 +2,10 @@ import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import { inBrowser } from 'analytics-utils'
 import * as middleware from './middleware'
 import plugins, { enablePlugin, disablePlugin } from './modules/plugins' // registerPlugin
+// import { formatPayload } from './middleware/plugins/engine'
 import context, { makeContext } from './modules/context'
 import page, { getPageData } from './modules/page'
-import queue from './modules/queue'
+// import queue from './modules/queue'
 import track from './modules/track'
 import user, { reset } from './modules/user'
 import dotProp from './utils/dotProp'
@@ -52,14 +53,9 @@ export default function analytics(config = {}) {
   // mutable intregrations object for dynamic loading
   let customPlugins = parsedOptions.plugins
 
-  if (isDev || config.debug) {
-    // console.log('All plugins', parsedOptions.plugins)
-    // console.log('customMiddlewares', parsedOptions.middlewares)
-  }
-
-  const other = ['config', 'loaded', 'NAMESPACE']
+  const nonEvents = ['config', 'loaded', 'NAMESPACE']
   const registeredEvents = parsedOptions.events.concat(eventKeys).filter((name) => {
-    return !other.includes(name)
+    return !nonEvents.includes(name)
   })
   const uniqueEventKeys = new Set(registeredEvents)
   const systemEvents = Array.from(uniqueEventKeys).sort()
@@ -74,11 +70,6 @@ export default function analytics(config = {}) {
   }
 
   const instance = {
-    /**
-     * Events exposed by core analytics library and all loaded plugins
-     * @type {Array}
-     */
-    events: systemEvents,
     /**
     * Identify a user. This will trigger `identify` calls in any installed plugins and will set user data in localStorage
     * @param  {String}   userId  - Unique ID of user
@@ -316,7 +307,7 @@ export default function analytics(config = {}) {
      *
      * @example
      *
-     * analytics.on('track', (action, instance) => {
+     * analytics.on('track', ({ action, instance }) => {
      *   console.log('track call just happened. Do stuff')
      * })
      */
@@ -325,15 +316,28 @@ export default function analytics(config = {}) {
         return false
       }
 
-      const position = (name.match(/Start$/)) ? true : false // eslint-disable-line
+      if (name === '*') {
+        const beforeHandler = store => next => action => {
+          if (action.type.match(/Start$/)) callback({ payload: action, instance }) // eslint-disable-line
+          return next(action)
+        }
+        const afterHandler = store => next => action => {
+          if (!action.type.match(/Start$/)) callback({ payload: action, instance }) // eslint-disable-line
+          return next(action)
+        }
+        addMiddleware(beforeHandler, true)
+        addMiddleware(afterHandler)
+        return () => {
+          removeMiddleware(beforeHandler, true)
+          removeMiddleware(afterHandler)
+        }
+      }
 
+      const position = (name.match(/Start$/)) ? true : false // eslint-disable-line
       const handler = store => next => action => {
         // Subscribe to EVERYTHING
-        if (name === '*') {
-          callback({ action, instance }) // eslint-disable-line
-        // Subscribe to specific actions
-        } else if (action.type === name) {
-          callback({ action, instance }) // eslint-disable-line
+        if (action.type === name) {
+          callback({ payload: action, instance }) // eslint-disable-line
         }
         /* For future matching of event subpaths `track:*` etc
         } else if (name.match(/\*$/)) {
@@ -403,6 +407,11 @@ export default function analytics(config = {}) {
         providers: (namespace) ? [namespace] : Object.keys(getPlugins()),
       })
     },
+    /**
+     * Events exposed by core analytics library and all loaded plugins
+     * @type {Array}
+     */
+    events: systemEvents,
     /* @TODO if it stays, state loaded needs to be set. Re PLUGIN_INIT above
     addPlugin: (newPlugin) => {
       // validate integration
@@ -439,7 +448,7 @@ export default function analytics(config = {}) {
     page: page,
     track: track,
     plugins: plugins,
-    queue: queue
+    // queue: queue
   }
 
   let composeEnhancers = compose
@@ -502,14 +511,14 @@ export default function analytics(config = {}) {
 }
 
 export { analytics }
-/**
+/*
  * Core Analytic events. These are exposed for third party plugins & listeners
  * Use these magic strings to attach functions to event names.
  * @type {Object}
  */
 export { EVENTS }
 
-/**
+/*
  * Core Analytic constants. These are exposed for third party plugins & listeners
  * @type {Object}
  */

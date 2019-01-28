@@ -33,8 +33,7 @@ Connect with your favorite analytic providers, trigger custom logic based on use
   * [analytics.enablePlugin](#analyticsenableplugin)
   * [analytics.disablePlugin](#analyticsdisableplugin)
   * [analytics.loadPlugin](#analyticsloadplugin)
-  * [EVENTS](#events)
-  * [CONSTANTS](#constants)
+  * [analytics.events](#analyticsevents)
 - [Analytic plugins](#analytic-plugins)
 - [Creating analytics plugins](#creating-analytics-plugins)
   * [React to any event](#react-to-any-event)
@@ -55,9 +54,9 @@ Connect with your favorite analytic providers, trigger custom logic based on use
 
 ##  Why
 
-Companies frequently change their analytics requirements and add/remove services to their sites and applications. This can be a time consuming process integrating over and over again with N number of third party tools.
+Companies frequently change analytics & collection requirements. This results in adding & removing analytic services a painful time consuming process.
 
-This library solves that.
+This library aims to solves that with a simple abstraction layer.
 
 ##  Philosophy
 
@@ -91,13 +90,13 @@ const analytics = Analytics({
   ]
 })
 
-// page tracking
+// Fire a page view
 analytics.page()
-// event tracking
+// Fire event tracking
 analytics.track('userPurchase', {
   price: 20
 })
-// identifying users
+// Identify a visitor
 analytics.identify('user-id-xyz', {
   firstName: 'bill',
   lastName: 'murray',
@@ -283,7 +282,7 @@ Fire callback on analytics ready event
 
 ```js
 analytics.ready((action, instance) => {
-  console.log('all integrations have loaded')
+  console.log('all plugins have loaded')
 })
 ```
 
@@ -299,7 +298,7 @@ Attach an event handler function for one or more events to the selected elements
 **Example**
 
 ```js
-analytics.on('track', (action, instance) => {
+analytics.on('track', ({ action, instance }) => {
   console.log('track call just happened. Do stuff')
 })
 ```
@@ -335,7 +334,7 @@ Enable analytics plugin
 ```js
 analytics.enablePlugin('google')
 
-// enable multiple integrations at once
+// enable multiple plugins at once
 analytics.enablePlugin(['google', 'segment'])
 ```
 
@@ -370,23 +369,28 @@ Load registered analytic providers.
 analytics.loadPlugin('segment')
 ```
 
-### EVENTS
+### analytics.events
 
-Core Analytic events. These are exposed for third party plugins & listeners
-Use these magic strings to attach functions to event names.
-
-
-### CONSTANTS
-
-Core Analytic constants. These are exposed for third party plugins & listeners
+Events exposed by core analytics library and all loaded plugins
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 ## Analytic plugins
 
-- [Google Analytics](https://www.npmjs.com/package/analytics-plugin-ga)
-- [Customer.io](https://www.npmjs.com/package/analytics-plugin-customerio)
-- [Original Source Plugin](https://www.npmjs.com/package/analytics-plugin-original-source)
+The `analytics` has a robust plugin system. Here is a list of currently available plugins:
+
+<!-- AUTO-GENERATED-CONTENT:START (PLUGINS) -->
+- [analytics-plugin-customerio](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-customerio) Customer.io plugin for 'analytics' [npm link](https://www.npmjs.com/package/analytics-plugin-customerio).
+- [analytics-plugin-do-not-track](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-do-not-track) Disable tracking for opted out visitors [npm link](https://www.npmjs.com/package/analytics-plugin-do-not-track).
+- [analytics-plugin-ga](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-ga) Google analytics integration for 'analytics' pkg [npm link](https://www.npmjs.com/package/analytics-plugin-ga).
+- [analytics-plugin-google-tag-manager](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-google-tag-manager) Google tag manager plugin for 'analytics' pkg [npm link](https://www.npmjs.com/package/analytics-plugin-google-tag-manager).
+- [analytics-plugin-lifecycle-example](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-lifecycle-example) Example plugin with lifecycle methods [npm link](https://www.npmjs.com/package/analytics-plugin-lifecycle-example).
+- [analytics-plugin-original-source](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-original-source) Save original referral source of visitor [npm link](https://www.npmjs.com/package/analytics-plugin-original-source).
+- [analytics-plugin-segment](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-segment) Segment integration for 'analytics' pkg [npm link](https://www.npmjs.com/package/analytics-plugin-segment).
+- [analytics-plugin-tab-events](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-tab-events) Expose tab visibility events for analytics [npm link](https://www.npmjs.com/package/analytics-plugin-tab-events).
+- [analytics-plugin-window-events](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-window-events) Expose window events for analytics [npm link](https://www.npmjs.com/package/analytics-plugin-window-events).
+- [analytics-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-utils) Analytics utility functions [npm link](https://www.npmjs.com/package/analytics-utils).
 - Add yours! 👇
+<!-- AUTO-GENERATED-CONTENT:END -->
 
 ## Creating analytics plugins
 
@@ -444,7 +448,7 @@ const analytics = Analytics({
 
 ### React to any event
 
-Plugins can react to any event flowing through `analytics`. 
+Plugins can react to any event flowing through `analytics`.
 
 For example, if you wanted to trigger custom logic when `analytics` bootstraps you can attach a function handler to the `bootstrap` event.
 
@@ -457,7 +461,24 @@ export default function myPlugin(userConfig) {
     NAMESPACE: 'my-plugin',
     bootstrap: ({ payload, config, instance }) => {
       // Do whatever on `bootstrap`
-    }
+    },
+    pageStart: ({ payload, config, instance }) => {
+      // Fire custom logic before .page calls
+    },
+    pageEnd: ({ payload, config, instance }) => {
+      // Fire custom logic after .page calls
+    },
+    trackStart: ({ payload, config, instance }) => {
+      // Fire custom logic before .track calls
+    },
+    'track:customerio': ({ payload, config, instance }) => {
+      // Fire custom logic before customer.io plugin runs.
+      // Here you can customize the data sent to individual analytics providers
+    },
+    trackEnd: ({ payload, config, instance }) => {
+      // Fire custom logic after .track calls
+    },
+    ...
   }
 }
 ```
@@ -466,12 +487,16 @@ Using this plugin is the same as any other.
 
 ```js
 import Analytics from 'analytics'
+import customerIoPlugin from 'analytics-plugin-customerio'
 import myPlugin from './plugin.js'
 
 const analytics = Analytics({
   app: 'my-app-name',
   plugins: [
     myPlugin(),
+    customerIoPlugin({
+      trackingId: '1234'
+    })
     ...otherPlugins
   ]
 })
@@ -515,13 +540,14 @@ const analytics = Analytics({
 This is a vanilla redux middleware that will opt out users from tracking. There are **many** ways to implement this type of functionality using `analytics`
 
 ```js
-const optOutPlugin = store => next => action => {
+const optOutMiddleware = store => next => action => {
   const { type } = action
-  if (type === 'trackInit' || type === 'pageInit' || type === 'trackInit') {
+  if (type === 'trackStart' || type === 'pageStart' || type === 'trackStart') {
     // Check cookie/localStorage/Whatever to see if visitor opts out
 
     // Here I am checking user traits persisted to localStorage
     const { user } = store.getState()
+
     // user has optOut trait cancel action
     if (user && user.traits.optOut) {
       return next({
@@ -536,7 +562,7 @@ const optOutPlugin = store => next => action => {
   return next(finalAction)
 }
 
-export default optOutPlugin
+export default optOutMiddleware
 ```
 
 ##  Plugin Naming Conventions

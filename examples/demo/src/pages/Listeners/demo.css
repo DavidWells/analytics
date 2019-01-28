@@ -1,0 +1,19 @@
+.demo-split {
+  display: flex;
+  max-height: 200px;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+.demo-log {
+  min-height: 150px;
+  max-height: 150px;
+  overflow-y: scroll;
+  font-size: 10px;
+  width: 70%;
+}
+.demo-code {
+  background-color: #f4f5f6;
+  color: #637c84;
+  padding: 10px 20px;
+  width: 30%;
+}

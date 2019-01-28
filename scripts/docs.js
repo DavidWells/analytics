@@ -10,11 +10,25 @@ const config = {
       const base = path.resolve('packages')
       const packages = fs.readdirSync(path.resolve('packages'))
         .filter(pkg => !/^\./.test(pkg))
-        .map(pkg => ([pkg, fs.readFileSync(path.join(base, pkg, 'README.md'), 'utf8')]))
-        .map(([pkg, md]) => {
-          const [,, description] = md.split('\n').filter(line => line && line.length > 0)
-          return `- [${pkg}](./packages/${pkg}) ${description}`
+        .map(pkg => ([pkg, fs.readFileSync(path.join(base, pkg, 'package.json'), 'utf8')]))
+        .map(([pkg, json]) => {
+          console.log('json', json)
+          const { name, description } = JSON.parse(json)
+          return `- [${name}](./packages/${pkg}) ${description} [npm link](https://www.npmjs.com/package/${name}).`
         })
+        .join('\n')
+      return packages
+    },
+    PLUGINS(content, options) {
+      const base = path.resolve('packages')
+      const packages = fs.readdirSync(path.resolve('packages'))
+        .filter(pkg => !/^\./.test(pkg))
+        .filter(pkg => pkg !== 'analytics-core')
+        .map(pkg => ([pkg, fs.readFileSync(path.join(base, pkg, 'package.json'), 'utf8')]))
+        .map(([pkg, json]) => {
+          const { name, description } = JSON.parse(json)
+          return `- [${name}](https://github.com/DavidWells/analytics/tree/master/packages/${pkg}) ${description} [npm link](https://www.npmjs.com/package/${name}).`
+        }).concat('- Add yours! 👇')
         .join('\n')
       return packages
     },
@@ -27,6 +41,16 @@ const config = {
         updatedContent += `### ${formatName(data.ctx.name)}\n\n`
         updatedContent += `${data.description.full}\n\n`
         updatedContent += `${formatArguments(data.tags)}`
+        /*
+        <details>
+          <summary>usage example</summary>
+
+          ```js
+          const la = 'foo'
+          ```
+
+        </details>
+         */
         updatedContent += formatExample(data.tags).join('\n')
         updatedContent += `\n`
       })

@@ -1,7 +1,7 @@
 {
   "name": "analytics-plugin-tab-events",
   "version": "0.0.2",
-  "description": "Expose tab visiblity events for analytics",
+  "description": "Expose tab visibility events for analytics",
   "author": "David Wells",
   "license": "MIT",
   "homepage": "https://github.com/DavidWells/analytics#readme",

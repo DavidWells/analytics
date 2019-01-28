@@ -1,7 +1,7 @@
 {
   "name": "analytics-utils",
   "version": "0.0.14",
-  "description": "",
+  "description": "Analytics utility functions",
   "main": "dist/index.js",
   "scripts": {
     "test": "ava -v",

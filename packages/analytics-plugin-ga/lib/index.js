@@ -124,9 +124,6 @@ export default function googleAnalytics(userConfig) {
     loaded: function() {
       if (!inBrowser) return true
       return !!window.gaplugins
-    },
-    ready: () => {
-      alert('GA ready')
     }
   }
 }
