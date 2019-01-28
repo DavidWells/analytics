@@ -1,7 +1,6 @@
 // Page View Reducer. Follows ducks pattern http://bit.ly/2DnERMc
 import { inBrowser } from 'analytics-utils'
 import EVENTS from '../events'
-import timeStamp from '../utils/timestamp'
 
 export const getPageData = (pageData = {}) => {
   if (!inBrowser) return pageData
@@ -26,19 +25,12 @@ export const getPageData = (pageData = {}) => {
 
 // initialState Page Data
 const initialState = {
-  ...getPageData(),
-  abort: []
+  ...getPageData()
 }
 
 // page reducer
 export default function page(state = initialState, action) {
   switch (action.type) {
-    // Todo decide if this is worth it...
-    // Allows for plugin level cancelation by aborting the timestamp trace id of an action
-    case 'Abort':
-      return Object.assign({}, state, {
-        abort: state.abort.concat(action.timestamp)
-      })
     case EVENTS.page:
       return Object.assign({}, state, action.data)
     default:
