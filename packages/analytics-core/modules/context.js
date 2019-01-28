@@ -49,7 +49,7 @@ export default function context(state = initialState, action) {
   const { initialized } = state
   const { type, campaign } = action
   switch (type) {
-    case EVENTS.SET_CAMPAIGN:
+    case EVENTS.campaign:
       return {
         ...state,
         ...{ campaign: campaign }
