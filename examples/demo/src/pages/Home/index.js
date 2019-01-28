@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Link } from "@reach/router"
 import { analyticsHistory } from '../../utils/analytics/plugins/visualize-analytics'
 import analytics from '../../utils/analytics'
+import Log from '../../components/Log'
 import './Home.css'
 
 export default class App extends Component {
@@ -12,9 +13,8 @@ export default class App extends Component {
     }
   }
   componentDidMount() {
-    console.log('analytics', analytics)
-    console.log('analyticsHistory', analyticsHistory)
-    this.listener = analytics.on('*', () => {
+    this.listener = analytics.on('*', ({ payload }) => {
+      console.log(`* listener ${payload.type}`)
       this.setState({
         history: analyticsHistory
       })
@@ -23,38 +23,49 @@ export default class App extends Component {
   componentWillUnmount() {
     this.listener()
   }
-  showAnalyticsActivity = () => {
-    const { history } = this.state
-    return history.map((item, i) => {
-      const event = Object.keys(item).reduce((acc, key) => {
-        if(key === 'type' || key === 'meta') return acc
-        acc[key] = item[key]
-        return acc
-      }, {})
-      return (
-        <div key={i} className='item'>
-          <div className='event'>
-            {item.type}
-          </div>
-          <div className='data'>
-            {JSON.stringify(event)}
-          </div>
-        </div>
-      )
+  doPage = () => {
+    analytics.page(() => {
+      console.log('page callback')
     })
   }
-
+  doTrack = () => {
+    analytics.track('buttonClicked', {
+      foo: 'bar'
+    }, () => {
+      console.log('track callback')
+    })
+  }
+  doIdentify = () => {
+    analytics.identify('xyz-123', {
+     traitOne: 'blue',
+     traitTwo: 'red',
+   }, () => {
+     console.log('identify callback')
+   })
+  }
   render() {
+    const { history } = this.state
     return (
       <div className="App">
         <div>
-          <Link to='/about'>About</Link>
-          <Link to='/'>Home</Link>
+          <Link to='/'>Home</Link> |
+          <Link to='/listeners'>Listeners</Link> |
+          <Link to='/state'>State</Link>
         </div>
-        <div>Analytics</div>
-        <div id='log' className='log'>
-          {this.showAnalyticsActivity()}
-        </div>
+        <h2>Analytics</h2>
+        <button onClick={this.doPage}>
+          analytics.page()
+        </button>
+        <button onClick={this.doTrack}>
+          analytics.track()
+        </button>
+        <button onClick={this.doIdentify}>
+          analytics.identify()
+        </button>
+        <h3>Lifecycle</h3>
+        <Log
+          items={history}
+        />
       </div>
     )
   }

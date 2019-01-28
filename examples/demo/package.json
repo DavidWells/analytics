@@ -6,7 +6,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "deploy": "netlify deploy --dir build --prod"
   },
   "dependencies": {
     "@reach/router": "^1.2.1",
@@ -20,6 +20,7 @@
     "analytics-plugin-segment": "file:../../packages/analytics-plugin-segment",
     "analytics-plugin-tab-events": "file:../../packages/analytics-plugin-tab-events",
     "analytics-utils": "file:../../packages/analytics-utils",
+    "outdent": "^0.7.0",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-scripts": "2.1.3"

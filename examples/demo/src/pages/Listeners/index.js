@@ -12,7 +12,6 @@ let listenerHistory = {
 }
 export default class Listeners extends Component {
   componentDidMount() {
-    console.log('analytics', analytics)
 
     this.listener = analytics.on('*', ({ payload }) => {
       console.log(`* listener ${payload.type}`)
@@ -72,7 +71,7 @@ export default class Listeners extends Component {
           <Link to='/'>Home</Link>
         </div>
         <h2>Listeners</h2>
-        <p>You can listen to analytic events with the .on('event')</p>
+        <p>You can listen to analytic events with the <code>analytics.on('event')</code></p>
         <Demo
           title='Listen to everything via *'
           events={listenerHistory['*']}

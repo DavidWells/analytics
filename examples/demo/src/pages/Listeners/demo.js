@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React from 'react'
+import Log from '../../components/Log'
 import './demo.css'
 
 export default class Demo extends React.Component {
@@ -23,7 +24,7 @@ export default class Demo extends React.Component {
     })
   }
   render() {
-    const { code, title, action } = this.props
+    const { code, title, action, events } = this.props
     return (
       <div className='demo-wrapper'>
         {title && <h3>{title}</h3>}
@@ -37,7 +38,9 @@ export default class Demo extends React.Component {
             </pre>
           </div>
           <div className='demo-log'>
-            {this.showLog()}
+            <Log
+              items={events}
+            />
           </div>
         </div>
       </div>

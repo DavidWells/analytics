@@ -6,6 +6,7 @@
 .pnp.js
 package-lock.json
 yarn.lock
+
 # testing
 /coverage
 
@@ -18,6 +19,7 @@ yarn.lock
 .env.development.local
 .env.test.local
 .env.production.local
+.netlify
 
 npm-debug.log*
 yarn-debug.log*
