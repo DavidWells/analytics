@@ -4,7 +4,7 @@ import EVENTS from '../events'
 export default function identifyMiddleware(instance) {
   const { storage } = instance
   return store => next => action => {
-    const { userId, traits, options, callback, timestamp } = action
+    const { userId, traits, options, callback } = action
     if (action.type === EVENTS.reset) {
       storage.removeItem(USER_ID)
       storage.removeItem(USER_TRAITS)

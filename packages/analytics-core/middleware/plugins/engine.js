@@ -515,23 +515,27 @@ function generateArgs(instance, allPlugins) {
     return {
       /* self: plugin, for future maybe */
       // clone objects to avoid reassign
-      payload: Object.keys(action).reduce((acc, key) => {
-        // redact type from { payload }
-        if (key === 'type') {
-          return acc
-        }
-        if (typeof action[key] === 'object') {
-          acc[key] = Object.assign({}, action[key])
-        } else {
-          acc[key] = action[key]
-        }
-        return acc
-      }, {}),
+      payload: formatPayload(action),
       instance: instance,
       config: config || {},
       abort: abortF
     }
   }
+}
+
+export function formatPayload(action) {
+  return Object.keys(action).reduce((acc, key) => {
+    // redact type from { payload }
+    if (key === 'type') {
+      return acc
+    }
+    if (typeof action[key] === 'object') {
+      acc[key] = Object.assign({}, action[key])
+    } else {
+      acc[key] = action[key]
+    }
+    return acc
+  }, {})
 }
 
 // TODO refactor signature
