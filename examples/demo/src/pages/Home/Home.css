@@ -1,28 +1,25 @@
-
-.log-wrapper {
-
+.App h2 a {
+  text-decoration: none;
 }
-.log {
-  font-size: 12px;
-}
-.log-header, .log-item {
+.App h2 {
   display: flex;
+  align-items: center;
 }
-.log-header div {
-  padding: 10px;
-  padding-left: 0px;
-}
-.log-header-event, .log-event {
-  min-width: 220px;
+.install {
+  font-size: 14px;
+  font-family: monospace;
+  margin-left: 20px;
+  color: grey;
 }
 
-.log-item:nth-child(odd) {
-  background-color: #13deff38;
+.navigation {
+  display: flex;
+  align-items: center;
 }
-.log-event {
-  font-weight: bold;
-  display: inline-block;
-  min-width: 220px;
-  padding: 1px 5px;
-  padding-right: 0px;
+.navigation a {
+  display: flex;
+  margin-left: 10px;
+}
+.navigation a:first-of-type {
+  margin-left: 0px;
 }

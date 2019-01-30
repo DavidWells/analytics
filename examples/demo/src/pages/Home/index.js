@@ -47,12 +47,16 @@ export default class App extends Component {
     const { history } = this.state
     return (
       <div className="App">
-        <div>
-          <Link to='/'>Home</Link> |
-          <Link to='/listeners'>Listeners</Link> |
+        <div className="navigation">
+          <Link to='/'>Home</Link>
+          <Link to='/listeners'>Listeners</Link>
           <Link to='/state'>State</Link>
         </div>
-        <h2>Analytics</h2>
+        <h2>
+          <a href='https://github.com/DavidWells/analytics'>Analytics</a>
+          <span className="install">npm install analytics</span>
+        </h2>
+        <p>Lightweight pluggable analytics library. <a href='https://github.com/DavidWells/analytics#usage'>Read the docs</a></p>
         <button onClick={this.doPage}>
           analytics.page()
         </button>
