@@ -11,7 +11,7 @@ package-lock.json
 .DS_Store
 .tmp
 
-build
+# Build
 dist
-misc
-TODO.md
+lib
+.size-snapshot.json
