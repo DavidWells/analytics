@@ -1,11 +1,9 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import { inBrowser } from 'analytics-utils'
 import * as middleware from './middleware'
-import plugins, { enablePlugin, disablePlugin } from './modules/plugins' // registerPlugin
-// import { formatPayload } from './middleware/plugins/engine'
+import plugins, { enablePlugin, disablePlugin } from './modules/plugins'
 import context, { makeContext } from './modules/context'
 import page, { getPageData } from './modules/page'
-// import queue from './modules/queue'
 import track from './modules/track'
 import user, { reset } from './modules/user'
 import dotProp from './utils/dotProp'
@@ -13,10 +11,9 @@ import timestamp from './utils/timestamp'
 import { watch } from './utils/handleNetworkEvents'
 import getCallback from './utils/getCallback'
 import EVENTS, { eventKeys, isReservedAction } from './events'
-// import heartBeat from './utils/heartbeat'
 import * as CONSTANTS from './constants'
-
-const isDev = process.env.NODE_ENV === 'development'
+// import heartBeat from './utils/heartbeat'
+// import queue from './modules/queue'
 
 const { addMiddleware, removeMiddleware, setItem, removeItem, getItem } = middleware
 
@@ -208,7 +205,7 @@ export default function analytics(config = {}) {
         return false
       }
       // Dispatch actionStart
-      const autoPrefixType = `${theAction.type.replace(/Start$/, '')}Start`
+      // const autoPrefixType = `${theAction.type.replace(/Start$/, '')}Start`
       // TODO automatically add meta.timestamp
       store.dispatch({
         ...theAction,
