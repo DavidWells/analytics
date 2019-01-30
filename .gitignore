@@ -10,7 +10,6 @@ package-lock.json
 .DS_Store
 .tmp
 
-build
 dist
 misc
 queues

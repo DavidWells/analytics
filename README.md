@@ -48,8 +48,9 @@ Connect with your favorite analytic providers, trigger custom logic based on use
 ## Features
 
 - [x] [Pluggable](#analytic-plugins) - Bring your own third party tool
-- [x] Works on client & server-side
 - [x] Test & Debug analytics integrations with time travel & offline mode.
+- [x] Exposes lifecycle for analytic calls allowing for per event cancellation or provider specific payloads
+- [x] Works on client & server-side
 - [ ] (WIP) In client, works offline. Queues events to send when connection resumes
 
 ##  Why
@@ -68,6 +69,12 @@ To add or remove an analytics provider adjust the `plugins` you load into `analy
 
 ```bash
 npm install analytics --save
+```
+
+Or as a script tag:
+
+```html
+<script src="https://unpkg.com/analytics/dist/analytics.min.js"></script>
 ```
 
 ## Usage
@@ -110,6 +117,8 @@ analytics.identify('user-id-xyz', {
 See [Analytics Demo](https://analytics-demo.netlify.com/) for a site example.
 
 ## API
+
+Below is the core API analytics expose once initialized.
 
 <!-- AUTO-GENERATED-CONTENT:START (API_DOCS) -->
 ### analytics.identify

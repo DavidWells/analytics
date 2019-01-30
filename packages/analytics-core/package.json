@@ -17,7 +17,7 @@
     "./lib/analytics.es.js": "./lib/analytics.browser.es.js"
   },
   "scripts": {
-    "watch": "rollup -w -c scripts/build/rollup.config.cjs.js",
+    "watch": "rollup -w -c scripts/build/rollup.config.browser.es.js",
     "test": "ava -v",
     "clean": "rimraf lib dist && mkdirp lib dist",
     "rollup-cjs": "rollup -c scripts/build/rollup.config.cjs.js && rollup -c scripts/build/rollup.config.browser.cjs.js",
