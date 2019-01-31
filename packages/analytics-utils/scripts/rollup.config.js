@@ -9,7 +9,7 @@ import commonjs from 'rollup-plugin-commonjs'
 import { sizeSnapshot } from 'rollup-plugin-size-snapshot'
 import { uglify } from 'rollup-plugin-uglify'
 import { terser } from 'rollup-plugin-terser'
-import pkg from '../../package.json'
+import pkg from '../package.json'
 
 const externals = pkg.dependencies ? Object.keys(pkg.dependencies) : []
 process.env.NODE_ENV = 'production'
@@ -25,19 +25,8 @@ export default config => {
   const isESModule = (config.output.format === 'esm')
   const isIIFE = (config.output.format === 'iife')
   return {
-    input: 'index.js',
+    input: 'src/index.js',
     cache: false,
-    // onwarn: (warning, warn) => {
-    //   console.log('warning', warning)
-    //   // skip certain warnings
-    //   if (warning.code === 'UNUSED_EXTERNAL_IMPORT') return;
-
-    //   // throw on others
-    //   if (warning.code === 'NON_EXISTENT_EXPORT') throw new Error(warning.message);
-
-    //   // Use default for everything else
-    //   warn(warning);
-    // },
     external: config.externals || externals,
     output: config.output,
     plugins: [
@@ -55,10 +44,7 @@ export default config => {
           return source.replace(/['"]use strict['"']/g, '')
         },
       },
-      // Remove node builtins for browser. Might not need
-      ...[
-        config.browser && removeNodeBuiltIns(),
-      ],
+      removeNodeBuiltIns(),
       replace({
         'process.browser': JSON.stringify(!!config.browser),
         'process.env.NODE_ENV': isProduction ? "'production'" : "'development'",

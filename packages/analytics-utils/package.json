@@ -2,44 +2,56 @@
   "name": "analytics-utils",
   "version": "0.0.15",
   "description": "Analytics utility functions",
-  "main": "dist/index.js",
+  "author": "David Wells <hello@davidwells.io>",
+  "license": "MIT",
+  "main": "lib/analytics-utils.cjs.js",
+  "jsnext:main": "lib/analytics-utils.es.js",
+  "module": "lib/analytics-utils.es.js",
+  "browser": {
+    "./lib/analytics-utils.cjs.js": "./lib/analytics-utils.browser.cjs.js",
+    "./lib/analytics-utils.es.js": "./lib/analytics-utils.browser.es.js"
+  },
   "scripts": {
-    "test": "ava -v",
+    "watch": "rollup -w -c scripts/rollup.config.browser.es.js",
+    "clean": "rimraf lib dist && mkdirp lib dist",
+    "rollup-cjs": "rollup -c scripts/rollup.config.cjs.js && rollup -c scripts/rollup.config.browser.cjs.js",
+    "rollup-es": "rollup -c scripts/rollup.config.es.js && rollup -c scripts/rollup.config.browser.es.js",
+    "rollup-iife": "rollup -c scripts/rollup.config.iife.js",
+    "rollup": "npm-run-all --parallel rollup-cjs rollup-es rollup-iife",
+    "minify-dist": "uglifyjs -mc < dist/analytics-utils.js > dist/analytics-utils.min.js",
+    "prepublish": "npm run build",
+    "build": "npm-run-all clean rollup minify-dist",
+    "publish": "git push origin && git push origin --tags",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
-    "release:major": "npm version major && npm publish",
-    "build:cjs": "babel lib --out-dir dist --ignore test.js",
-    "build:es": "babel lib --out-dir dist --ignore test.js",
-    "build": "shx rm -f lib/index.js && create-index --ignoreUnsafe -r lib && npm run build:cjs",
-    "watch": "babel lib --out-dir dist --ignore test.js --watch",
-    "es": "babel-node ./testtwo.js"
+    "release:major": "npm version major && npm publish"
   },
   "keywords": [
     "analytics"
   ],
-  "author": "David Wells",
-  "license": "MIT",
   "files": [
-    "lib",
     "dist",
-    "package.json",
-    "package-lock.json",
+    "lib",
     "README.md"
   ],
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-plugin-transform-es2015-modules-simple-commonjs": "^0.3.0",
-    "create-index": "^2.3.0",
-    "shx": "^0.3.2"
-  },
-  "babel": {
-    "presets": [
-      [
-        "env",
-        {
-          "modules": false
-        }
-      ]
-    ]
+    "@ampproject/rollup-plugin-closure-compiler": "^0.8.5",
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1",
+    "mkdirp": "^0.5.1",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^2.6.3",
+    "rollup": "^1.1.2",
+    "rollup-plugin-babel": "^4.3.2",
+    "rollup-plugin-babel-minify": "^7.0.0",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-node-builtins": "^2.1.2",
+    "rollup-plugin-node-resolve": "^4.0.0",
+    "rollup-plugin-replace": "^2.1.0",
+    "rollup-plugin-size-snapshot": "^0.8.0",
+    "rollup-plugin-strip-banner": "^0.2.0",
+    "rollup-plugin-terser": "^4.0.3",
+    "rollup-plugin-uglify": "^6.0.2",
+    "uglify-js": "^3.4.9"
   }
 }
