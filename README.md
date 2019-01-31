@@ -112,6 +112,48 @@ analytics.identify('user-id-xyz', {
 //...
 ```
 
+<details>
+  <summary>Node.js usage</summary>
+
+  ```js
+  const { analytics } = require('analytics')
+  const analytics = Analytics({
+    app: 'my-app-name',
+    version: 100,
+    plugins: [
+      googleAnalyticsPlugin({
+        trackingId: 'UA-121991291',
+      }),
+      customerIOPlugin({
+        siteId: '123-xyz'
+      })
+    ]
+  })
+
+  // Fire a page view
+  analytics.page()
+  ```
+
+</details>
+
+<details>
+  <summary>Browser usage</summary>
+
+  ```html
+  <script src="https://unpkg.com/analytics/dist/analytics.min.js"></script>
+  <script>
+    const Analytics = analytics({
+      app: 'my-app-name',
+      version: 100,
+      ...plugins
+    })
+
+    Analytics.track()
+  </script>
+  ```
+
+</details>
+
 ## Demo
 
 See [Analytics Demo](https://analytics-demo.netlify.com/) for a site example.
