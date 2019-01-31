@@ -11,12 +11,16 @@ class PageViews extends React.Component {
       console.log('pageStart', payload)
     })
     // register page view on load
-    analytics.page()
+    analytics.page(() => {
+      console.log('page callback')
+    })
   }
   componentDidUpdate(prevProps) {
     if (prevProps.href !== this.props.href) {
       // register page view on route changes
-      analytics.page()
+      analytics.page(() => {
+        console.log('page callback')
+      })
     }
   }
   render() {
