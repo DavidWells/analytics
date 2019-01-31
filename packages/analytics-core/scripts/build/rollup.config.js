@@ -13,10 +13,9 @@ import pkg from '../../package.json'
 
 const externals = Object.keys(pkg.dependencies)
 process.env.NODE_ENV = 'production'
-let isProduction = process.env.NODE_ENV === 'production' && !process.env.ROLLUP_WATCH
 
-console.log('process.env.ROLLUP_WATCH', process.env.ROLLUP_WATCH)
-console.log('isProduction', isProduction)
+let isProduction = process.env.NODE_ENV === 'production' && !process.env.ROLLUP_WATCH
+let doMinify = false
 
 export default config => {
   const { format, file } = config.output
@@ -59,8 +58,6 @@ export default config => {
       removeNodeBuiltIns(),
       replace({
         'process.browser': JSON.stringify(!!config.browser),
-        BUILD_WEB: JSON.stringify(true),
-        BUILD_NODE: JSON.stringify(false),
         'process.env.NODE_ENV': isProduction ? "'production'" : "'development'",
         'process.env.VERSION': JSON.stringify(pkg.version)
       }),
@@ -69,7 +66,7 @@ export default config => {
         // ignore: [ 'conditional-runtime-dependency' ]
       }),
       ...[
-        isProduction && !isESModule && compiler({
+        doMinify && isProduction && !isESModule && compiler({
           compilationLevel: 'SIMPLE',
           languageIn: 'ECMASCRIPT5_STRICT',
           languageOut: (isIIFE) ? 'ECMASCRIPT5' : 'ECMASCRIPT5_STRICT',
@@ -80,9 +77,9 @@ export default config => {
           processCommonJsModules: false,
         }),
         // Try all the shrinkers
-        isProduction && !isESModule && !isIIFE && terser(),
-        isProduction && !isESModule && !isIIFE && minify(),
-        isProduction && !isESModule && !isIIFE && uglify({
+        doMinify && isProduction && !isESModule && !isIIFE && terser(),
+        doMinify && isProduction && !isESModule && !isIIFE && minify(),
+        doMinify && isProduction && !isESModule && !isIIFE && uglify({
           compress: {
             // screw_ie8: true,
             warnings: false

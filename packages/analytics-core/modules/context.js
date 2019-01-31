@@ -9,14 +9,12 @@ let osName
 let referrer
 let locale
 let timeZone
-if (BUILD_WEB) {
+if (process.browser) {
   osName = getOSNameBrowser()
   referrer = parseReferrer()
   locale = getBrowserLocale()
   timeZone = getTimeZone()
-}
-
-if (BUILD_NODE) {
+} else {
   osName = getOSNameNode()
   referrer = {}
 }
