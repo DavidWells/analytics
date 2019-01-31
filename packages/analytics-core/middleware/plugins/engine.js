@@ -466,7 +466,7 @@ export default function runSimpleHooks(action, instance, plugins, store, systemE
     }
 
     if (!coreName.match(/End$/)) {
-      store.dispatch({
+      const endDispatch = {
         ...actionFinal,
         type: `${coreName}End`,
         meta: {
@@ -474,7 +474,14 @@ export default function runSimpleHooks(action, instance, plugins, store, systemE
           called: true
         },
         completed: completed,
-      })
+      }
+      store.dispatch(endDispatch)
+
+      /* Run callback */
+      const cb = getCallback(actionFinal)
+      if (cb) {
+        cb({ instance, payload: endDispatch }) // eslint-disable-line
+      }
     }
   }
   return actionFinal
