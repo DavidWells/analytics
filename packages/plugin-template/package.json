@@ -1,0 +1,25 @@
+{
+  "name": "analytics-plugin-template",
+  "version": "1.0.0",
+  "description": "Example plugin with browser + node module build with treeshaking",
+  "private": true,
+  "main": "lib/analytics-plugin-template.cjs.js",
+  "globalName": "myPluginName",
+  "jsnext:main": "lib/analytics-plugin-template.es.js",
+  "module": "lib/analytics-plugin-template.es.js",
+  "browser": {
+    "./lib/analytics-plugin-template.cjs.js": "./lib/analytics-plugin-template.browser.cjs.js",
+    "./lib/analytics-plugin-template.es.js": "./lib/analytics-plugin-template.browser.es.js"
+  },
+  "scripts": {
+    "build": "node ../../scripts/build/index.js",
+    "watch": "node ../../scripts/build/_watch.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1"
+  }
+}
