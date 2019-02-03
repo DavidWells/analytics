@@ -2,33 +2,43 @@
   "name": "analytics-plugin-original-source",
   "version": "0.0.7",
   "description": "Save original referral source of visitor",
-  "author": "David Wells",
-  "license": "MIT",
-  "homepage": "https://github.com/DavidWells/analytics#readme",
   "keywords": [
     "analytics",
     "analytics-plugin"
   ],
-  "main": "dist/analytics-plugin-original-source.js",
-  "module": "dist/analytics-plugin-original-source.esm.js",
+  "author": "David Wells",
+  "license": "MIT",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node ../../scripts/plugins/build.js --nameSpace original-source",
-    "build:dev": "node ../../scripts/plugins/build.js --nameSpace original-source --env dev",
-    "watch": "node ../../scripts/plugins/watch.js --nameSpace original-source",
+    "build": "node ../../scripts/build/index.js",
+    "watch": "node ../../scripts/build/_watch.js",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
     "es": "../../node_modules/.bin/babel-node ./testBabel.js"
   },
+  "main": "lib/analytics-plugin-original-source.cjs.js",
+  "globalName": "analyticsOriginalSource",
+  "jsnext:main": "lib/analytics-plugin-original-source.es.js",
+  "module": "lib/analytics-plugin-original-source.es.js",
+  "browser": {
+    "./lib/analytics-plugin-original-source.cjs.js": "./lib/analytics-plugin-original-source.browser.cjs.js",
+    "./lib/analytics-plugin-original-source.es.js": "./lib/analytics-plugin-original-source.browser.es.js"
+  },
   "files": [
-    "lib",
     "dist",
-    "package.json",
-    "package-lock.json",
+    "lib",
     "README.md"
   ],
+  "homepage": "https://github.com/DavidWells/analytics#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidWells/analytics.git"
+  },
   "dependencies": {
     "analytics-utils": "^0.0.16"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1"
   }
 }
