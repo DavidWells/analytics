@@ -2,29 +2,40 @@
   "name": "analytics-plugin-do-not-track",
   "version": "0.0.2",
   "description": "Disable tracking for opted out visitors",
+  "keywords": [
+    "analytics",
+    "analytics-plugin"
+  ],
   "author": "David Wells",
   "license": "MIT",
-  "homepage": "https://github.com/DavidWells/analytics#readme",
-  "keywords": [
-    "analytics"
-  ],
-  "main": "dist/analytics-plugin-do-not-track.js",
-  "module": "dist/analytics-plugin-do-not-track.esm.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node ../../scripts/plugins/build.js --nameSpace do-not-track",
-    "build:dev": "node ../../scripts/plugins/build.js --nameSpace do-not-track --env dev",
-    "watch": "node ../../scripts/plugins/watch.js --nameSpace do-not-track",
+    "build": "node ../../scripts/build/index.js",
+    "watch": "node ../../scripts/build/_watch.js",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
     "es": "../../node_modules/.bin/babel-node ./testBabel.js"
   },
+  "main": "lib/analytics-plugin-do-not-track.cjs.js",
+  "globalName": "analyticsDoNotTrack",
+  "jsnext:main": "lib/analytics-plugin-do-not-track.es.js",
+  "module": "lib/analytics-plugin-do-not-track.es.js",
+  "browser": {
+    "./lib/analytics-plugin-do-not-track.cjs.js": "./lib/analytics-plugin-do-not-track.browser.cjs.js",
+    "./lib/analytics-plugin-do-not-track.es.js": "./lib/analytics-plugin-do-not-track.browser.es.js"
+  },
   "files": [
-    "lib",
     "dist",
-    "package.json",
-    "package-lock.json",
+    "lib",
     "README.md"
-  ]
+  ],
+  "homepage": "https://github.com/DavidWells/analytics#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidWells/analytics.git"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1"
+  }
 }
