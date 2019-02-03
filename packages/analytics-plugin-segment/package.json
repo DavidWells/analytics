@@ -1,31 +1,45 @@
 {
   "name": "analytics-plugin-segment",
   "version": "0.0.5",
-  "description": "Segment integration for 'analytics' pkg",
-  "author": "David Wells",
-  "license": "MIT",
-  "homepage": "https://github.com/DavidWells/analytics#readme",
+  "description": "Segment integration for 'analytics' module for browser & node",
   "keywords": [
     "analytics",
     "analytics-plugin"
   ],
-  "main": "dist/analytics-plugin-segment.js",
-  "module": "dist/analytics-plugin-segment.esm.js",
+  "author": "David Wells",
+  "license": "MIT",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node ../../scripts/plugins/build.js --nameSpace segment",
-    "build:dev": "node ../../scripts/plugins/build.js --nameSpace segment --env dev",
-    "watch": "node ../../scripts/plugins/watch.js --nameSpace segment",
+    "build": "node ../../scripts/build/index.js",
+    "watch": "node ../../scripts/build/_watch.js",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
     "es": "../../node_modules/.bin/babel-node ./testBabel.js"
   },
+  "main": "lib/analytics-plugin-segment.cjs.js",
+  "globalName": "analyticsSegment",
+  "jsnext:main": "lib/analytics-plugin-segment.es.js",
+  "module": "lib/analytics-plugin-segment.es.js",
+  "browser": {
+    "./lib/analytics-plugin-segment.cjs.js": "./lib/analytics-plugin-segment.browser.cjs.js",
+    "./lib/analytics-plugin-segment.es.js": "./lib/analytics-plugin-segment.browser.es.js"
+  },
   "files": [
-    "lib",
     "dist",
-    "package.json",
-    "package-lock.json",
+    "lib",
     "README.md"
-  ]
+  ],
+  "homepage": "https://github.com/DavidWells/analytics#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidWells/analytics.git"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1"
+  },
+  "dependencies": {
+    "analytics-node": "^3.3.0"
+  }
 }
