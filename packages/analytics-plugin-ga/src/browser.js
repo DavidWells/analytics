@@ -4,7 +4,6 @@
  */
 
 /* global ga */
-const inBrowser = typeof window !== 'undefined'
 
 // Analytics Integration Configuration
 export const config = {
@@ -21,7 +20,7 @@ export default function googleAnalytics(userConfig) {
       if (!config.trackingId) {
         throw new Error('No google tracking id defined')
       }
-      if (inBrowser && typeof ga === 'undefined') {
+      if (typeof ga === 'undefined') {
         /* eslint-disable */
         (function(i, s, o, g, r, a, m) {
           i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function() {
@@ -50,7 +49,7 @@ export default function googleAnalytics(userConfig) {
       if (config.debug) {
         console.log(`google analytics pageview > [payload: ${JSON.stringify(payload, null, 2)}]`)
       }
-      if (inBrowser && typeof ga !== 'undefined') {
+      if (typeof ga !== 'undefined') {
         ga('set', 'page', properties.path) // eslint-disable-line
         ga('send', 'pageview') // eslint-disable-line
       }
@@ -113,7 +112,7 @@ export default function googleAnalytics(userConfig) {
       if (config.debug) {
         console.log(`google analytics identify > [payload: ${JSON.stringify(payload, null, 2)}]`)
       }
-      if (inBrowser && typeof ga !== 'undefined' && userId) {
+      if (typeof ga !== 'undefined' && userId) {
         ga('set', 'userId', userId)
       }
       /* Todo implement custom dimensions http://bit.ly/2yULdOO & http://bit.ly/2NS5nOE
@@ -121,8 +120,7 @@ export default function googleAnalytics(userConfig) {
       ga('set', {'dimensionX': valueX, 'dimensionY': valueY, 'dimensionZ': valueZ});
       */
     },
-    loaded: function() {
-      if (!inBrowser) return true
+    loaded: () => {
       return !!window.gaplugins
     }
   }
