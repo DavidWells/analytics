@@ -2,13 +2,12 @@
  * Customer.io analytics integration
  */
 /* global _cio */
-const inBrowser = typeof window !== 'undefined'
 
 const config = {
   assumesPageview: true
 }
 
-export default function customerIO(userConfig) {
+export default function customerIOPlugin(userConfig) {
   return {
     NAMESPACE: 'customerio',
     config: Object.assign({}, config, userConfig),
@@ -17,7 +16,7 @@ export default function customerIO(userConfig) {
       if (!siteID) {
         throw new Error('No customer.io siteID defined')
       }
-      if (inBrowser && typeof _cio === 'undefined') {
+      if (typeof _cio === 'undefined') {
         window._cio = [];
         (function() {
           var a, b, c
@@ -39,22 +38,18 @@ export default function customerIO(userConfig) {
       }
     },
     page: ({ payload }) => {
-      if (inBrowser && typeof _cio !== 'undefined') {
-        // console.info(`Customer.io Pageview > ${window.location.href}`)
-        _cio.page(document.location.href, payload.properties) // eslint-disable-line
+      if (typeof _cio !== 'undefined') {
+        _cio.page(document.location.href, payload.properties)
       }
     },
     track: ({ payload }) => {
-      if (inBrowser && typeof _cio !== 'undefined') {
-        const msg = `Customer.io Event > [${payload.event}] [payload: ${JSON.stringify(payload, null, 2)}]`
-        console.log(msg)
+      if (typeof _cio !== 'undefined') {
         _cio.track(payload.event, payload.properties)
       }
     },
     identify: ({ payload }) => {
       const { id, traits } = payload
-      if (inBrowser && typeof _cio !== 'undefined') {
-        console.log('do customer.io identify', id, traits)
+      if (typeof _cio !== 'undefined') {
         _cio.identify({
           id: id,
           ...traits

@@ -2,29 +2,44 @@
   "name": "analytics-plugin-customerio",
   "version": "0.0.5",
   "description": "Customer.io plugin for 'analytics'",
-  "author": "David Wells",
-  "license": "MIT",
-  "homepage": "https://github.com/DavidWells/analytics#readme",
-  "main": "dist/analytics-plugin-customerio.js",
-  "module": "dist/analytics-plugin-customerio.esm.js",
   "keywords": [
     "analytics",
     "analytics-plugin"
   ],
+  "author": "David Wells",
+  "license": "MIT",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node ../../scripts/plugins/build.js --nameSpace customerIO",
-    "build:dev": "node ../../scripts/plugins/build.js --nameSpace customerIO --env dev",
-    "watch": "node ../../scripts/plugins/watch.js --nameSpace customerIO",
+    "build": "node ../../scripts/build/index.js",
+    "watch": "node ../../scripts/build/_watch.js",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
-    "release:major": "npm version major && npm publish"
+    "release:major": "npm version major && npm publish",
+    "es": "../../node_modules/.bin/babel-node ./testBabel.js"
+  },
+  "main": "lib/analytics-plugin-customerio.cjs.js",
+  "globalName": "analyticsCustomerio",
+  "jsnext:main": "lib/analytics-plugin-customerio.es.js",
+  "module": "lib/analytics-plugin-customerio.es.js",
+  "browser": {
+    "./lib/analytics-plugin-customerio.cjs.js": "./lib/analytics-plugin-customerio.browser.cjs.js",
+    "./lib/analytics-plugin-customerio.es.js": "./lib/analytics-plugin-customerio.browser.es.js"
   },
   "files": [
-    "lib",
     "dist",
-    "package.json",
-    "package-lock.json",
+    "lib",
     "README.md"
-  ]
+  ],
+  "homepage": "https://github.com/DavidWells/analytics#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidWells/analytics.git"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1"
+  },
+  "dependencies": {
+    "customerio-node": "^0.5.0"
+  }
 }
