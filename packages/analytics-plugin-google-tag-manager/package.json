@@ -2,30 +2,41 @@
   "name": "analytics-plugin-google-tag-manager",
   "version": "0.0.2",
   "description": "Google tag manager plugin for 'analytics' pkg",
-  "author": "David Wells",
-  "license": "MIT",
-  "homepage": "https://github.com/DavidWells/analytics#readme",
   "keywords": [
     "analytics",
     "analytics-plugin"
   ],
-  "main": "dist/analytics-plugin-google-tag-manager.js",
-  "module": "dist/analytics-plugin-google-tag-manager.esm.js",
+  "author": "David Wells",
+  "license": "MIT",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node ../../scripts/plugins/build.js --nameSpace google-tag-manager",
-    "build:dev": "node ../../scripts/plugins/build.js --nameSpace google-tag-manager --env dev",
-    "watch": "node ../../scripts/plugins/watch.js --nameSpace google-tag-manager",
+    "build": "node ../../scripts/build/index.js",
+    "watch": "node ../../scripts/build/_watch.js",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
     "es": "../../node_modules/.bin/babel-node ./testBabel.js"
   },
+  "main": "lib/analytics-plugin-google-tag-manager.cjs.js",
+  "globalName": "analyticsGtagManager",
+  "jsnext:main": "lib/analytics-plugin-google-tag-manager.es.js",
+  "module": "lib/analytics-plugin-google-tag-manager.es.js",
+  "browser": {
+    "./lib/analytics-plugin-google-tag-manager.cjs.js": "./lib/analytics-plugin-google-tag-manager.browser.cjs.js",
+    "./lib/analytics-plugin-google-tag-manager.es.js": "./lib/analytics-plugin-google-tag-manager.browser.es.js"
+  },
   "files": [
-    "lib",
     "dist",
-    "package.json",
-    "package-lock.json",
+    "lib",
     "README.md"
-  ]
+  ],
+  "homepage": "https://github.com/DavidWells/analytics#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidWells/analytics.git"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1"
+  }
 }

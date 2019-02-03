@@ -1,5 +1,8 @@
-dist
 node_modules
+
+dist
+lib
+.size-snapshot.json
 
 *.log
 
