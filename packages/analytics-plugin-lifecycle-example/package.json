@@ -2,30 +2,40 @@
   "name": "analytics-plugin-lifecycle-example",
   "version": "0.0.2",
   "description": "Example plugin with lifecycle methods",
-  "author": "David Wells",
-  "license": "MIT",
-  "homepage": "https://github.com/DavidWells/analytics#readme",
   "keywords": [
     "analytics",
     "analytics-plugin"
   ],
-  "main": "dist/analytics-plugin-lifecycle-example.js",
-  "module": "dist/analytics-plugin-lifecycle-example.esm.js",
+  "author": "David Wells",
+  "license": "MIT",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node ../../scripts/plugins/build.js --nameSpace lifecycle-example",
-    "build:dev": "node ../../scripts/plugins/build.js --nameSpace lifecycle-example --env dev",
-    "watch": "node ../../scripts/plugins/watch.js --nameSpace lifecycle-example",
+    "build": "node ../../scripts/build/index.js",
+    "watch": "node ../../scripts/build/_watch.js",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
     "es": "../../node_modules/.bin/babel-node ./testBabel.js"
   },
+  "main": "lib/analytics-plugin-lifecycle-example.cjs.js",
+  "globalName": "analyticsOriginalSource",
+  "jsnext:main": "lib/analytics-plugin-lifecycle-example.es.js",
+  "module": "lib/analytics-plugin-lifecycle-example.es.js",
+  "browser": {
+    "./lib/analytics-plugin-lifecycle-example.cjs.js": "./lib/analytics-plugin-lifecycle-example.browser.cjs.js",
+    "./lib/analytics-plugin-lifecycle-example.es.js": "./lib/analytics-plugin-lifecycle-example.browser.es.js"
+  },
   "files": [
-    "lib",
     "dist",
-    "package.json",
-    "package-lock.json",
+    "lib",
     "README.md"
-  ]
+  ],
+  "homepage": "https://github.com/DavidWells/analytics#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidWells/analytics.git"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1"
+  }
 }

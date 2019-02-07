@@ -10,6 +10,7 @@ import dotProp from './utils/dotProp'
 import timestamp from './utils/timestamp'
 import { watch } from './utils/handleNetworkEvents'
 import getCallback from './utils/getCallback'
+import { Debug, composeWithDebug } from './utils/debug'
 import EVENTS, { eventKeys, isReservedAction } from './events'
 import * as CONSTANTS from './constants'
 // import heartBeat from './utils/heartbeat'
@@ -151,6 +152,7 @@ export default function analytics(config = {}) {
       const opts = (typeof options === 'object') ? options : {}
       const cb = getCallback(data, options, callback)
       const { userId, anonymousId } = instance.user()
+
       store.dispatch({
         type: EVENTS.pageStart,
         properties: {
@@ -207,14 +209,27 @@ export default function analytics(config = {}) {
       // Dispatch actionStart
       // const autoPrefixType = `${theAction.type.replace(/Start$/, '')}Start`
       // TODO automatically add meta.timestamp
-      store.dispatch({
+
+      let dispatchData = {
         ...theAction,
         // TODO merge meta
         meta: {
           timestamp: timestamp()
         }
         // type: `${autoPrefixType}`
-      })
+      }
+
+      if (theAction.meta) {
+        dispatchData = {
+          ...dispatchData,
+          meta: {
+            ...dispatchData.meta,
+            ...theAction.meta
+          }
+        }
+      }
+
+      store.dispatch(dispatchData)
     },
     /**
      * Storage utilities for persisting data. These methods will allow you to save data in localStorage, cookies, or to the window.
@@ -315,11 +330,11 @@ export default function analytics(config = {}) {
 
       if (name === '*') {
         const beforeHandler = store => next => action => {
-          if (action.type.match(/Start$/)) callback({ payload: action, instance }) // eslint-disable-line
+          if (action.type.match(/Start$|Start:/)) callback({ payload: action, instance }) // eslint-disable-line
           return next(action)
         }
         const afterHandler = store => next => action => {
-          if (!action.type.match(/Start$/)) callback({ payload: action, instance }) // eslint-disable-line
+          if (!action.type.match(/Start$|Start:/)) callback({ payload: action, instance }) // eslint-disable-line
           return next(action)
         }
         addMiddleware(beforeHandler, true)
@@ -330,11 +345,14 @@ export default function analytics(config = {}) {
         }
       }
 
-      const position = (name.match(/Start$/)) ? true : false // eslint-disable-line
+      const position = (name.match(/Start$|Start:/)) ? true : false // eslint-disable-line
       const handler = store => next => action => {
         // Subscribe to EVERYTHING
         if (action.type === name) {
-          callback({ payload: action, instance }) // eslint-disable-line
+          callback({ // eslint-disable-line
+            payload: action,
+            instance: instance,
+          })
         }
         /* For future matching of event subpaths `track:*` etc
         } else if (name.match(/\*$/)) {
@@ -379,7 +397,7 @@ export default function analytics(config = {}) {
     },
     /**
      * Disable analytics plugin
-     * @param  {string|array} name - name of integration(s) to disable
+     * @param  {String|Array} name - name of integration(s) to disable
      * @param  {Function} callback - callback after disable runs
      * @example
      *
@@ -399,9 +417,9 @@ export default function analytics(config = {}) {
      */
     loadPlugin: (namespace) => {
       store.dispatch({
-        type: EVENTS.pluginRegister,
+        type: EVENTS.loadPlugin,
         // todo handle arrays
-        providers: (namespace) ? [namespace] : Object.keys(getPlugins()),
+        plugins: (namespace) ? [namespace] : Object.keys(getPlugins()),
       })
     },
     /**
@@ -449,10 +467,16 @@ export default function analytics(config = {}) {
   }
 
   let composeEnhancers = compose
+  let composeWithGlobalDebug = compose
   if (inBrowser && config.debug) {
     const devTools = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
     if (devTools) {
       composeEnhancers = devTools({ trace: true, traceLimit: 25 })
+    }
+    composeWithGlobalDebug = function() {
+      if (arguments.length === 0) return Debug()
+      if (typeof arguments[0] === 'object') return composeWithDebug(arguments[0])
+      return composeWithDebug().apply(null, arguments)
     }
   }
 
@@ -468,7 +492,11 @@ export default function analytics(config = {}) {
     // set user defined initial state
     initialState,
     // register middleware & plugins used
-    composeEnhancers(applyMiddleware(...middlewares))
+    composeWithGlobalDebug(
+      composeEnhancers(
+        applyMiddleware(...middlewares),
+      )
+    )
   )
 
   // Register plugins
