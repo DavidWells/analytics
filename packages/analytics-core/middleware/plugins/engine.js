@@ -1,11 +1,19 @@
 import getPluginByMethod from '../../utils/getPluginByMethod'
 import filterDisabled from '../../utils/filterDisabled'
+import waitForReady from '../../utils/waitForReady'
+// import Queue from '../../utils/queue'
 import EVENTS from '../../events'
 
-export default function runSimpleHooks(action, instance, plugins, store, systemEvents) {
-  const { type, meta } = action
+/* Actions */
+const AbortAction = (method, name) => `${method}Aborted:${name}`
+const AbortAllAction = (method) => `${method}Aborted`
+const NameSpacedAction = (coreEvent, pluginName) => `${coreEvent}:${pluginName}`
+const EndAction = (method) => `${method}End`
 
-  if (type === EVENTS.enablePlugin || type === EVENTS.disablePlugin) {
+export default function engine(action, instance, plugins, store, systemEvents) {
+  const { meta } = action
+  const eventType = action.type
+  if (eventType === EVENTS.enablePlugin || eventType === EVENTS.disablePlugin) {
     // @TODO reset function cache
     // cache = {}
   }
@@ -16,34 +24,32 @@ export default function runSimpleHooks(action, instance, plugins, store, systemE
   }
 
   /* certain plugins shouldnt dispatch again to avoid infinite  */
-  let shouldDispatch = type.match(/Start$/)
-
-  let shouldExecute = (type.match(/^ready/)) ? false : true // eslint-disable-line
-  shouldExecute = true // @TODO this seems to be working fine. might not need conditional
+  let shouldDispatch = eventType.match(/Start$/)
 
   let beforeMethods = []
-  let coreName = type
+  let methodToCall = eventType
   let completed = []
+  let queued = []
   let aborted = []
 
-  if (type.match(/Start$/)) {
-    beforeMethods = getPluginByMethod(type, plugins)
-    coreName = type.replace(/Start$/, '')
+  if (eventType.match(/Start$/)) {
+    beforeMethods = getPluginByMethod(eventType, plugins)
+    methodToCall = eventType.replace(/Start$/, '')
   }
 
   /*  */
-  let allPluginMethodCalls = getPluginByMethod(coreName, plugins)
+  let allPluginMethodCalls = getPluginByMethod(methodToCall, plugins)
 
   /* We must register all plugins */
-  if (coreName === 'registerPlugin') {
+  if (methodToCall === 'registerPlugin') {
     allPluginMethodCalls = Object.keys(plugins).map((name) => {
       return plugins[name]
     })
   }
 
-  const allKeys = allPluginMethodCalls.map((plugin) => plugin.NAMESPACE)
+  const allPluginKeys = allPluginMethodCalls.map((plugin) => plugin.NAMESPACE)
   /* make args for functions to concume */
-  const makeArgs = generateArgs(instance, allKeys)
+  const makeArgs = argumentFactory(instance, allPluginKeys)
   /* Grab current state to check if plugins are enabled */
   const state = instance.getState()
   /* Filter out currently disabled plugins */
@@ -51,208 +57,179 @@ export default function runSimpleHooks(action, instance, plugins, store, systemE
 
   /* All ‘blankStart’ calls get processed */
   const actionBefore = activeBeforeMethods.reduce((newAction, plugin) => {
+    const { NAMESPACE } = plugin
     // Call methods. Only called 'actionStart'
     let pluginReturnValue = newAction
-    if (plugin[type] && typeof plugin[type] === 'function') {
+    if (plugin[eventType] && typeof plugin[eventType] === 'function') {
       const funcArgs = makeArgs(newAction, plugin)
       /* Call the plugin function */
-      const returnValue = plugin[type](funcArgs)
+      const returnValue = plugin[eventType](funcArgs)
 
       if (returnValue && typeof returnValue === 'object') {
         pluginReturnValue = Object.assign({}, returnValue, { type: newAction.type })
-        validateReturnValue(newAction.type, pluginReturnValue.type, type, plugin.NAMESPACE)
+        validateReturnValue(newAction.type, pluginReturnValue.type, eventType, NAMESPACE)
       }
 
-      // if (pluginReturnValue.abort && pluginReturnValue.abort.includes(plugin.NAMESPACE)) {
-      //   store.dispatch({
-      //     ...pluginReturnValue,
-      //     type: `${type}Aborted:${plugin.NAMESPACE}`,
-      //   })
-      // }
-
-      // if (shouldDispatch) {
       store.dispatch({
         ...pluginReturnValue,
-        type: `${type}:${plugin.NAMESPACE}`,
+        type: NameSpacedAction(eventType, NAMESPACE),
         meta: {
           ...pluginReturnValue.meta,
           called: true
         },
       })
-      // }
     }
     return Object.assign({}, newAction, pluginReturnValue)
   }, action)
   // console.log('Action value: actionBefore', actionBefore)
 
   /* newActionValue contains abort. Stop everything else */
-  if (shouldDispatch && actionBefore.abort && actionBefore.abort.length === allKeys.length) {
+  if (shouldDispatch && shouldAbortAll(actionBefore, allPluginKeys.length)) {
     store.dispatch({
-      type: `${coreName}Aborted`,
-      plugins: actionBefore.abort,
-      reason: actionBefore.reason,
+      type: `${methodToCall}Aborted`,
+      abort: actionBefore.abort,
     })
     return actionBefore
   }
 
   // 🔥 @TODO do we want to emit an aborted event if { plugins: { vanilla: false }}
-  let activeMethods = filterDisabled(allPluginMethodCalls, state.plugins, action.options)
-  // console.log(`activeMethods type:${type} | core:${coreName}`, activeMethods)
+  let activePlugins = filterDisabled(allPluginMethodCalls, state.plugins, action.options)
 
-  const allNameSpacedCalls = activeMethods.reduce((acc, kind) => {
-    const nsAction = `${coreName}:${kind.NAMESPACE}`
-    // different for whateverStart
-    const nsActionOther = `${type}:${kind.NAMESPACE}`
+  const allNameSpacedCalls = activePlugins.reduce((acc, plugin) => {
+    const { NAMESPACE } = plugin
+    // `typeStart:pluginName`
+    const nameSpacedActionStart = NameSpacedAction(eventType, NAMESPACE)
+    // `type:pluginName`
+    const nameSpacedAction = NameSpacedAction(methodToCall, NAMESPACE)
+    // Length of action name. A.k.a how many colons :
+    const actionDepth = (nameSpacedAction.match(/:/g) || []).length
 
-    const nsActionType = nsAction.match(/:/g) || []
-    // console.log('nsActionA', nsAction)
-    // console.log('nsActionB', nsActionOther)
-    // console.log('nsAction#', nsActionType.length)
-    // console.log('nsAction=', nsAction === nsActionOther)
-    /* Ignore 'action:plugin:plugin' calls */
-    if (nsActionType.length > 1) {
-      // console.log(`${nsAction} ignored`)
+    /* Ignore 'action:plugin:other-plugin' calls */
+    if (actionDepth > 1) {
       return acc
     }
     /* Look for hookStart:xyz & hook:xyz */
     let beforeFuncs = []
-    if (nsAction !== nsActionOther) {
-      /* get matching plugin[action + Before] functions */
-      beforeFuncs = getPluginByMethod(nsActionOther, plugins).map((p) => {
+    if (nameSpacedAction !== nameSpacedActionStart) {
+      /* get matching plugin[action + Start] functions */
+      beforeFuncs = getPluginByMethod(nameSpacedActionStart, plugins).map((p) => {
         return {
-          event: nsActionOther,
+          event: nameSpacedActionStart,
           NAMESPACE: p.NAMESPACE,
-          func: p[nsActionOther]
+          func: p[nameSpacedActionStart]
         }
       })
     }
     /* get matching plugin[action] functions */
-    const foundFuncs = getPluginByMethod(nsAction, plugins).map((p) => {
+    const foundFuncs = getPluginByMethod(nameSpacedAction, plugins).map((p) => {
       return {
-        event: nsAction,
+        event: nameSpacedAction,
         NAMESPACE: p.NAMESPACE,
-        func: p[nsAction]
+        func: p[nameSpacedAction]
       }
     })
     /* combine before funcs & namespaced functions */
     const combinedFunctionsToRun = beforeFuncs.concat(foundFuncs)
     if (combinedFunctionsToRun.length) {
-      acc[kind.NAMESPACE] = combinedFunctionsToRun
+      acc[NAMESPACE] = combinedFunctionsToRun
     }
     return acc
   }, {})
 
-  /* Payloads are cached and passed through the chain for plugin specific calls */
-  let payloads = {}
-  let actionNameSpaced = actionBefore
-  // 🔥 🔥 🔥 DOUBLE CHECK should execute against other plugin methods
-  if (shouldExecute) {
-    /* Loop over active plugins & call all matching plugin methods */
-    actionNameSpaced = activeMethods.reduce((newAction, plugin) => {
-      // alert(`${typeof theAction.abort}`)
-      if (shouldAbort(newAction, plugin.NAMESPACE)) {
-        if (shouldDispatch) {
-          store.dispatch({
-            type: `${coreName}Aborted:${plugin.NAMESPACE}`,
-            plugins: newAction.abort,
-            reason: newAction.reason,
-            abortData: newAction.abortData,
-            here: 'sup'
-          })
-        }
+  /* EventPayloads are cached and passed through the chain for plugin specific calls */
+  let eventPayloads = {}
 
-        // @TODO Append to aborted array here
-        aborted = addToArray(aborted, plugin.NAMESPACE)
-        return newAction
+  /* Loop over active plugins & call all matching plugin methods */
+  const nameSpacedAction = activePlugins.reduce((newAction, plugin) => {
+    const { NAMESPACE } = plugin
+    if (shouldAbort(newAction, NAMESPACE)) {
+      if (shouldDispatch) {
+        store.dispatch({
+          type: AbortAction(methodToCall, NAMESPACE),
+          abort: newAction.abort,
+        })
       }
 
-      /* Loop over ‘method:{PluginName}’ functions and derive new action value */
-      const methods = allNameSpacedCalls[plugin.NAMESPACE]
-      if (methods) {
-        const nameSpacedAction = methods.reduce((accum, nsPlugin) => {
-          /* If abort and abort matches the plugin name. exit early */
-          if (accum.abort && accum.abort.includes(plugin.NAMESPACE)) {
-            // store.dispatch({
-            //   type: `${coreName}Aborted:${plugin.NAMESPACE}`,
-            //   plugins: accum.abort,
-            //   reason: accum.reason,
-            //   abortData: accum.abortData,
-            //   xxxxorHere: 'xxxxxx'
-            // })
-            // if (state.context.debug) {
-            //   console.log(`"${nsPlugin.event}" method not called in ${nsPlugin.pluginName} plugin.`)
-            //   console.log(`Reason: abort("${accum.reason}") from "${accum.caller}" plugin`)
-            // }
-            return accum
-          }
-
-          let pluginReturnValue = {}
-          if (nsPlugin.func && typeof nsPlugin.func === 'function') {
-            /* check for namespaced called of same plugin name */
-            validateMethod(nsPlugin.event, nsPlugin.NAMESPACE)
-
-            /* Call plugin method */
-            const returnValue = nsPlugin.func(
-              makeArgs({
-                ...accum,
-                // from: 'namespacedAction',
-              }, plugin, nsPlugin) // <== needs nsPlugin for correct abort traces
-            )
-
-            if (returnValue && typeof returnValue === 'object') {
-              pluginReturnValue = Object.assign({}, returnValue, { type: accum.type })
-              validateReturnValue(accum.type, pluginReturnValue.type, nsPlugin.event, nsPlugin.NAMESPACE)
-              // pluginReturnValue = returnValue
-            }
-          }
-
-          if (pluginReturnValue.abort && pluginReturnValue.abort.includes(plugin.NAMESPACE)) { // @todo check array for name? maybe not bc u can only abort your namespace
-            if (shouldDispatch) {
-              store.dispatch({
-                type: `${coreName}Aborted:${plugin.NAMESPACE}`,
-                plugins: pluginReturnValue.abort,
-                reason: pluginReturnValue.reason,
-                abortData: pluginReturnValue.abortData,
-              })
-            }
-            // @TODO Append to aborted array here
-            aborted = addToArray(aborted, plugin.NAMESPACE)
-            /* Aborted return early. Seems to be working */
-            return pluginReturnValue
-          }
-          const combine = Object.assign({}, accum, pluginReturnValue)
-          // console.log(`ABORTED= ${type} ${plugin.NAMESPACE}`, combine)
-          return combine
-        }, newAction)
-
-        /* `name:method` Abort() was called. Exit early */
-        if (nameSpacedAction.abort && nameSpacedAction.abort.includes(plugin.NAMESPACE)) {
-          // console.log('nameSpacedAction.abort', nameSpacedAction.abort)
-          // alert(`abort ${plugin.NAMESPACE}.${coreName} now`)
-          return Object.assign({}, newAction, nameSpacedAction)
-        }
-
-        if (nameSpacedAction && typeof nameSpacedAction === 'object') {
-          /* Save plugin specific action payload. (If plugins have altered a specific call) */
-          payloads[plugin.NAMESPACE] = Object.assign({}, nameSpacedAction)
-          // Return original action so we don't modify all calls
-          return newAction // <--- Object.assign({}, theAction, nameSpacedAction)
-        }
-      }
-
-      /* Save payload for specific calls */
-      payloads[plugin.NAMESPACE] = Object.assign({}, newAction)
-
+      // @TODO Append to aborted array here
+      aborted = addToArray(aborted, NAMESPACE)
       return newAction
-    }, actionBefore)
-  }
-  // console.log('Action value: actionNameSpaced', actionNameSpaced)
+    }
+
+    /* Loop over ‘method:{PluginName}’ functions and derive new action value */
+    const methods = allNameSpacedCalls[NAMESPACE]
+    if (methods) {
+      const nameSpacedAction = methods.reduce((accum, nsPlugin) => {
+        const SUB_NAMESPACE = nsPlugin.NAMESPACE
+        /* If abort and abort matches the plugin name. exit early */
+        if (shouldAbort(accum, NAMESPACE)) {
+          // if (state.context.debug) {
+          //   console.log(`"${nsPlugin.event}" method not called in ${nsPlugin.pluginName} plugin.`)
+          //   console.log(`Reason: abort("${accum.reason}") from "${accum.caller}" plugin`)
+          // }
+          return accum
+        }
+
+        let pluginReturnValue = {}
+        if (nsPlugin.func && typeof nsPlugin.func === 'function') {
+          /* check for namespaced called of same plugin name */
+          validateMethod(nsPlugin.event, SUB_NAMESPACE)
+
+          const payload = accum
+          const functionArgs = makeArgs(payload, plugin, nsPlugin) // <== needs nsPlugin for correct abort traces
+          /* Call plugin method */
+          const returnValue = nsPlugin.func(functionArgs)
+
+          if (returnValue && typeof returnValue === 'object') {
+            pluginReturnValue = Object.assign({}, returnValue, { type: accum.type })
+            validateReturnValue(accum.type, pluginReturnValue.type, nsPlugin.event, SUB_NAMESPACE)
+            // pluginReturnValue = returnValue
+          }
+        }
+
+        if (shouldAbort(pluginReturnValue, NAMESPACE)) {
+          // @todo check array for name? maybe not bc u can only abort your namespace
+          if (shouldDispatch) {
+            store.dispatch({
+              type: AbortAction(methodToCall, NAMESPACE),
+              abort: pluginReturnValue.abort,
+            })
+          }
+          // @TODO Append to aborted array here
+          aborted = addToArray(aborted, NAMESPACE)
+          /* Aborted return early. Seems to be working */
+          return pluginReturnValue
+        }
+        const combine = Object.assign({}, accum, pluginReturnValue)
+        // console.log(`ABORTED= ${eventType} ${plugin.NAMESPACE}`, combine)
+        return combine
+      }, newAction)
+
+      /* `name:method` Abort() was called. Exit early */
+      if (shouldAbort(nameSpacedAction, NAMESPACE)) {
+        // console.log('nameSpacedAction.abort', nameSpacedAction.abort)
+        // alert(`abort ${plugin.NAMESPACE}.${methodToCall} now`)
+        return Object.assign({}, newAction, nameSpacedAction)
+      }
+
+      if (nameSpacedAction && typeof nameSpacedAction === 'object') {
+        /* Save plugin specific action payload. (If plugins have altered a specific call) */
+        eventPayloads[NAMESPACE] = Object.assign({}, nameSpacedAction)
+        // Return original action so we don't modify all calls
+        return newAction // <--- Object.assign({}, theAction, nameSpacedAction)
+      }
+    }
+
+    /* Save payload for specific calls */
+    eventPayloads[NAMESPACE] = Object.assign({}, newAction)
+
+    return newAction
+  }, actionBefore)
 
   /**
    * Filter over the plugin method calls and remove aborted plugin by name
    */
-  const coreMethodsToCall = activeMethods.filter((plugin) => {
-    if (shouldAbort(actionNameSpaced, plugin.NAMESPACE)) {
+  const coreMethodsToCall = activePlugins.filter((plugin) => {
+    if (shouldAbort(nameSpacedAction, plugin.NAMESPACE)) {
       aborted = addToArray(aborted, plugin.NAMESPACE)
       return false
     }
@@ -260,51 +237,44 @@ export default function runSimpleHooks(action, instance, plugins, store, systemE
   })
 
   /*
-  if (DEBUG) {
-    console.log(`>>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━(type:${type})<<`)
-    console.log(`>>(type:${type})---(coreName:${coreName})`)
-    console.log(`>>Before       ${coreName}`, activeBeforeMethods)
-    console.log(`>>Namespaced:  ${coreName}`, allNameSpacedCalls)
-    console.log(`>>Core         ${coreName}`, coreMethodsToCall)
-    console.log(`>>──────────────────────────────────────────────────(type:${type})<<`)
-  }
+  console.log(`>>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━(type:${eventType})<<`)
+  console.log(`>>(Event:${eventType})---(method:${methodToCall})`)
+  console.log(`>>Before       ${methodToCall}`, activeBeforeMethods)
+  console.log(`>>Namespaced:  ${methodToCall}`, allNameSpacedCalls)
+  console.log(`>>Core         ${methodToCall}`, coreMethodsToCall)
+  console.log(`>>──────────────────────────────────────────────────(type:${eventType})<<`)
   /**/
 
   /**
    * Run final reducer over the core methods to call
    *
-   * 1. Runs method['name'] with scoped payload
+   * 1. Runs method['name'] with plugin scoped payload
    * 2a. If method returns abort call, stop the flow
    * 2b. If no abort, continue over all
    */
   const actionFinal = coreMethodsToCall.reduce((newAction, plugin, i) => {
-    /* actionForSpecificPlugin pulled from previous reducer */
     const { NAMESPACE } = plugin
-    const actionForSpecificPlugin = payloads[NAMESPACE]
+    const pluginSpecificPayload = eventPayloads[NAMESPACE]
     const lastCall = coreMethodsToCall.length === (i + 1)
 
     if (shouldAbort(newAction, NAMESPACE)) {
-      if (newAction.abort && newAction.abort.length === allKeys.length) {
-        console.log('Everything aborted', `${coreName}Aborted:${NAMESPACE}`)
+      if (shouldAbortAll(newAction, allPluginKeys.length)) {
+        console.log('Everything aborted', AbortAction(methodToCall, NAMESPACE))
         // @TODO figure out if you want to emit all the abort events
         // return newAction
       }
       if (shouldDispatch) {
         store.dispatch({
-          type: `${coreName}Aborted:${NAMESPACE}`,
-          plugins: newAction.abort,
-          reason: newAction.reason,
-          abortData: newAction.abortData,
+          type: AbortAction(methodToCall, NAMESPACE),
+          abort: newAction.abort,
         })
       }
 
-      // @TODO Append to aborted array here
-      // aborted = aborted.concat(plugin.NAMESPACE)
       aborted = addToArray(aborted, NAMESPACE)
 
-      if (shouldDispatch && lastCall) { // && !type.match(/End$/)
+      if (shouldDispatch && lastCall) { // && !eventType.match(/End$/)
         const endDispatch = {
-          type: `${coreName}End`,
+          type: EndAction(methodToCall),
           aborted: aborted,
           completed: completed,
           ...cleanAction(newAction),
@@ -323,141 +293,215 @@ export default function runSimpleHooks(action, instance, plugins, store, systemE
       return newAction
     }
 
-    let cleanedAction = cleanAction(actionForSpecificPlugin)
+    let cleanedAction = cleanAction(pluginSpecificPayload)
     let pluginReturnValue = {}
-
-    if (plugin[coreName] && typeof plugin[coreName] === 'function') {
-      /* check for namespaced called of same plugin name. Example "ready:plugin-one" is not allowed in "plugin-one" */
-      validateMethod(coreName, NAMESPACE)
+    let actionQueued = false
+    if (plugin[methodToCall] && typeof plugin[methodToCall] === 'function') {
+      /* check for namespaced called of same plugin name.
+      Example "ready:plugin-one" is not allowed in "plugin-one" */
+      validateMethod(methodToCall, NAMESPACE)
 
       const state = instance.getState()
       const pluginsFromState = state.plugins
-      const isLoaded = isPluginLoaded(pluginsFromState[NAMESPACE], type)
+      const isLoaded = isPluginLoaded(pluginsFromState[NAMESPACE], eventType)
       const isOffline = state.context.offline
 
-      /* @TODO handle offline queuing */
-      if (isOffline) {
-        // store.dispatch({
-        //   type: 'queue-offline',
-        //   originalType: type,
-        //   plugin: plugin.NAMESPACE,
-        //   action: cleanedAction
-        // })
-      }
       /* Call plugin method */
       let returnValue
 
-      if (isLoaded) {
-        returnValue = plugin[coreName](
-          makeArgs({
-            ...cleanedAction,
-            type: type, // WAS coreName... verify this doesnt break others
-          }, plugin)
-        )
-      } else {
+      /* @TODO handle offline queuing */
+      if (isOffline) {
+        console.log('Offline queue action')
+      }
+
+      if (!isLoaded) {
+        console.log(`Plugin "${NAMESPACE}" not loaded yet. Queue action ${methodToCall}`)
+
+        const queueItem = {
+          ...cleanedAction,
+          type: eventType,
+          meta: {
+            ...cleanedAction.meta,
+            queued: true,
+            plugins: [ NAMESPACE ]
+          },
+        }
+
+        // theQueue.enqueue(queueItem)
+
         /* @TODO handle queuing */
         if (shouldDispatch) { // && action.meta.queue === true?
-          // add action to a queue.
-          // Do I need to check for what needs to get queued?
-          // How to handle partial failures? (like GA failing but segment working)
+          const p = {
+            type: 'queue',
+            plugin: NAMESPACE,
+            method: methodToCall,
+            action: queueItem
+          }
+          // dispatch queue
+          store.dispatch(p)
+
+          queued = addToArray(queued, NAMESPACE)
+
+          // Set side effect wait for ready
+          const checkForLoaded = () => {
+            const p = instance.getState('plugins')
+            return p[NAMESPACE].loaded
+          }
+          waitForReady(plugin, checkForLoaded, 10000).then((d) => {
+            console.log(`Loaded ${methodToCall}`, NAMESPACE)
+            const data = {
+              aborted: aborted,
+              completed: completed,
+              total: coreMethodsToCall
+            }
+            // Causing double dispatches...
+            // doLogic(p, plugins, instance, store, data)
+          }).catch((e) => {
+            console.log(`Error loading ${NAMESPACE} for ${methodToCall} call`, e)
+            // TODO dispatch failure
+          })
         }
+
+        // actionQueued = true
+
+        // Set queued true and avoid dispatching below
+        // returnValue = {
+        //   ...cleanedAction,
+        //   queued: true
+        // }
+      }
+
+      if (isLoaded) {
+        const payload = {
+          ...cleanedAction,
+          type: eventType, // WAS methodToCall... verify this doesnt break others
+        }
+        const functionArgs = makeArgs(payload, plugin)
+        returnValue = plugin[methodToCall](functionArgs)
+
+        completed = addToArray(completed, NAMESPACE)
       }
 
       if (returnValue && typeof returnValue === 'object') {
-        pluginReturnValue = Object.assign({}, returnValue, { type: type })
-        validateReturnValue(type, pluginReturnValue.type, coreName, NAMESPACE)
-        // pluginReturnValue = returnValue
+        pluginReturnValue = Object.assign({}, returnValue, { type: eventType })
+        validateReturnValue(eventType, pluginReturnValue.type, methodToCall, NAMESPACE)
       }
     }
 
-    completed = addToArray(completed, NAMESPACE)
+    console.log('pluginReturnValue.queued', NAMESPACE, actionQueued)
 
-    const nameSpacedEvent = `${coreName}:${NAMESPACE}`
-    const count = nameSpacedEvent.match(/:/g) || []
-    // console.log(`count ${nameSpacedEvent}`, count.length)
-    if (shouldDispatch && count.length < 3) {
-      /* const x = allNameSpacedCalls[plugin.NAMESPACE] || []
-      const y = x.map((thing) => {
-        return `${thing.NAMESPACE}.${thing.event}`
+    /**********************************************
+     * Dispatch Namespaced event
+     * ex: 'page:google-tag-manager'
+     **********************************************/
+
+    const nameSpacedEvent = `${methodToCall}:${NAMESPACE}`
+    const actionDepth = (nameSpacedEvent.match(/:/g) || []).length
+    if (shouldDispatch && actionDepth < 3 && !queued.includes(NAMESPACE)) {
+      /* const scopedCalls = allNameSpacedCalls[plugin.NAMESPACE] || []
+      const functionsCalled = scopedCalls.map((invidualMethod) => {
+        return `${invidualMethod.NAMESPACE}.${invidualMethod.event}`
       })
+      console.log('functionsCalled', functionsCalled)
       /**/
 
-      // NEED to attach something to this event to stop functions from running again next time
       store.dispatch({
         // ...pluginReturnValue,
         type: nameSpacedEvent,
         ...cleanedAction,
         meta: {
           ...cleanedAction.meta,
-          called: (count.length === 1) ? true : null,
+          called: (actionDepth === 1) ? true : null,
         },
       })
     }
 
-    if (pluginReturnValue.abort && pluginReturnValue.abort.length === allKeys.length) {
+    if (shouldAbortAll(pluginReturnValue, allPluginKeys.length)) {
       // if (shouldDispatch) {
       store.dispatch({
-        type: `${coreName}Aborted`,
-        plugins: pluginReturnValue.abort,
-        reason: pluginReturnValue.reason,
-        abortData: pluginReturnValue.abortData,
+        type: AbortAllAction(methodToCall),
+        abort: pluginReturnValue.abort,
       })
       // }
     }
 
     // Only emit end events on 'name' and 'name:plugin' events
     const maxEmit = 2 // (minus 1)
-    if (shouldDispatch && lastCall && count.length < maxEmit) { // && !type.match(/End$/)
+    if (shouldDispatch && lastCall && actionDepth < maxEmit) { // && !eventType.match(/End$/)
       // IF types are the same the action has already dispatched
       const obj = Object.assign({}, cleanedAction, pluginReturnValue)
-      if (coreName !== type && !pluginReturnValue.abort) {
+      console.log('merged Obj', obj)
+      /**
+       * 🔥🔥
+       * Todo fix the object that passes into the core method calls
+       * It is picking up the 'page:segment' payload and thats not right
+       *
+       * 'obj' is wrong
+       *
+       * newAction is the right payload.
+       *
+       * Test it when pageStart and page alter it
+       */
+      console.log('original obj', newAction)
+      if (methodToCall !== eventType) {
+        /**********************************************
+         * Dispatch Core event
+         * ex: 'page'
+         **********************************************/
         store.dispatch({
-          ...obj,
-          type: `${coreName}`,
+          ...newAction,
+          type: methodToCall,
           meta: {
-            ...obj.meta,
+            ...newAction.meta,
             called: true
           },
         })
       }
-      const endDispatch = {
-        ...obj,
-        type: `${coreName}End`,
-        meta: {
-          ...obj.meta,
-          aborted: aborted, // TODO fix this array
-          completed: completed,
-        },
-      }
-      store.dispatch(endDispatch)
-      /* Fire callbacks if found. analytics.track('thing', callbackFunc) */
-      const cb = getCallback(newAction)
-      if (cb) {
-        /** @TODO figure out exact args calls and .on will get */
-        const cbArgs = makeArgs(endDispatch, plugin)
-        const finalCBArgs = Object.assign({}, cbArgs)
-        delete finalCBArgs.abort
-        cb(finalCBArgs)
-      }
+      /**********************************************
+       * Dispatch Core event End
+       * ex: 'pageEnd'
+       **********************************************/
+      // if (!actionQueued) { // prevents double dispatch
+        const endDispatch = {
+          ...newAction,
+          type: EndAction(methodToCall),
+          meta: {
+            ...newAction.meta,
+            aborted: aborted, // TODO fix this array
+            completed: completed,
+            queued: queued
+          },
+        }
+        store.dispatch(endDispatch)
+        /* Fire callbacks if found. analytics.track('thing', callbackFunc) */
+        const cb = getCallback(newAction)
+        if (cb) {
+          /** @TODO figure out exact args calls and .on will get */
+          const cbArgs = makeArgs(endDispatch, plugin)
+          const finalCBArgs = Object.assign({}, cbArgs)
+          delete finalCBArgs.abort
+          cb(finalCBArgs)
+        }
+      // }
     }
     // console.log('pluginReturnValue', pluginReturnValue)
     return Object.assign({}, newAction, pluginReturnValue)
-    // return newAction
-  }, actionNameSpaced)
+  }, nameSpacedAction)
   // console.log('Action value: actionFinal', actionFinal)
 
   /**
    * Fallthrough case
    * If no plugin methods are found, we need to trigger the additional actions
    */
-  const CORE_EVENT = systemEvents.includes(type)
+  const CORE_EVENT = systemEvents.includes(eventType)
   if (CORE_EVENT && !coreMethodsToCall.length && shouldDispatch) {
-    // alert(`no methods for ${coreName} found`)
-    if (!coreName.match(/:/) || !coreName.match(/End$/)) {
-      // console.log('coreName', coreName)
+    const isEnd = methodToCall.match(/End$/)
+    // alert(`no methods for ${methodToCall} found`)
+    if (!methodToCall.match(/:/) || !isEnd) {
+      // console.log('methodToCall', methodToCall)
       store.dispatch({
         ...actionFinal,
-        type: coreName,
+        type: methodToCall,
         meta: {
           ...actionFinal.meta,
           called: true
@@ -465,10 +509,10 @@ export default function runSimpleHooks(action, instance, plugins, store, systemE
       })
     }
 
-    if (!coreName.match(/End$/)) {
+    if (!isEnd) {
       const endDispatch = {
         ...actionFinal,
-        type: `${coreName}End`,
+        type: EndAction(methodToCall),
         meta: {
           ...actionFinal.meta,
           called: true
@@ -507,7 +551,7 @@ function notAbortableError(action, method) {
  * @param  {[type]} allPlugins [description]
  * @return {[type]}            [description]
  */
-function generateArgs(instance, allPlugins) {
+function argumentFactory(instance, allPlugins) {
   return function (action, plugin, otherPlugin) {
     const { config, NAMESPACE } = plugin
     let method = `${NAMESPACE}.${action.type}`
@@ -545,6 +589,28 @@ export function formatPayload(action) {
   }, {})
 }
 
+function shouldAbort({ abort }, pluginName) {
+  if (!abort) return false
+  if (abort === true) return true
+  return includes(abort, pluginName) || (abort && includes(abort.plugins, pluginName))
+}
+
+function shouldAbortAll({ abort }, pluginsCount) {
+  if (!abort) return false
+  if (abort === true || typeof abort === 'string') return true
+  const { plugins } = abort
+  return isArray(abort) && (abort.length === pluginsCount) || isArray(plugins) && (plugins.length === pluginsCount)
+}
+
+function isArray(arr) {
+  return Array.isArray(arr)
+}
+
+function includes(arr, name) {
+  if (!arr || !isArray(arr)) return false
+  return arr.includes(name)
+}
+
 // TODO refactor signature
 function abortFunction(pluginName, method, abortablePlugins, otherPlugin, action) {
   return function (reason, plugins) {
@@ -558,12 +624,11 @@ function abortFunction(pluginName, method, abortablePlugins, otherPlugin, action
     }
     return {
       ...action, // 🔥 todo verify this merge is ok
-      abort: pluginsToAbort,
-      reason: reason,
-      abortData: {
-        plugin: caller,
-        method: method,
-        reason: reason
+      abort: {
+        reason: reason,
+        plugins: pluginsToAbort,
+        caller: method,
+        // _: caller
       }
     }
   }
@@ -594,13 +659,7 @@ function cleanAction(action) {
   const newAction = Object.assign({}, action)
   delete newAction.type
   delete newAction.abort
-  delete newAction.reason
-  delete newAction.abortData
   return newAction
-}
-
-function shouldAbort(action, name) {
-  return action && action.abort && Array.isArray(action.abort) && action.abort.includes(name)
 }
 
 function validateReturnValue(originalActionType, updatedActionType, functionName, pluginName) {
