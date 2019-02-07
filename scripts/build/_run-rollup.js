@@ -13,6 +13,10 @@ module.exports = function runRollup(directory) {
         name: conf.output.name,
         // sourcemap: false,
       }
+      // Exend for global libs https://rollupjs.org/guide/en#javascript-api
+      if (conf.output.extend) {
+        data.extend = true
+      }
       result.write(data)
       console.log(`End ${conf.output.format} build ${conf.output.file}`)
       return data

@@ -9,16 +9,20 @@ const dir = process.cwd()
 async function runBuild(dir) {
   try {
     const data = await runRollup(dir)
-    const hasIife = data.find((output) => {
-      return output.format === 'iife'
-    })
+    const hasIife = data.find((output) => output.format === 'iife')
 
     if (hasIife) {
       const filePath = path.join(dir, hasIife.file)
       const destination = path.join(dir, hasIife.file.replace(/\.js/, '.min.js'))
       console.log('read', filePath)
       console.log('write', destination)
-      await uglify(filePath, destination)
+      // need to wait a sec for other build to finish
+      const fileName = path.basename(destination)
+
+      // 🔥🔥🔥 hack to fix main analytics build. Remove in future
+      if (fileName !== 'analytics.min.js') {
+        await uglify(filePath, destination)
+      }
     }
 
     console.log('hasIife', hasIife)

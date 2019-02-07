@@ -14,7 +14,6 @@ import { Debug, composeWithDebug } from './utils/debug'
 import EVENTS, { eventKeys, isReservedAction } from './events'
 import * as CONSTANTS from './constants'
 // import heartBeat from './utils/heartbeat'
-// import queue from './modules/queue'
 
 const { addMiddleware, removeMiddleware, setItem, removeItem, getItem } = middleware
 

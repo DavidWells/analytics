@@ -10,6 +10,7 @@ const commonjs = require('rollup-plugin-commonjs')
 const { sizeSnapshot } = require('rollup-plugin-size-snapshot')
 const { uglify } = require('rollup-plugin-uglify')
 const { terser } = require('rollup-plugin-terser')
+const json = require('rollup-plugin-json')
 
 process.env.NODE_ENV = 'production'
 let isProduction = process.env.NODE_ENV === 'production' && !process.env.ROLLUP_WATCH
@@ -21,7 +22,6 @@ module.exports = function generateConfig(directory) {
   const inputPath = path.join(`${directory}/src`, 'index.js')
   const rollupConfigs = getFormats(pkg)
 
-  console.log('rollupConfigs', rollupConfigs)
   return rollupConfigs.map((config) => {
     const { format, file } = config.output
     console.log()
@@ -43,6 +43,7 @@ module.exports = function generateConfig(directory) {
         }),
         babel({
           exclude: 'node_modules/**',
+          runtimeHelpers: true
         }),
         {
           transform(source) {
@@ -59,6 +60,27 @@ module.exports = function generateConfig(directory) {
           include: 'node_modules/**',
           // ignore: [ 'conditional-runtime-dependency' ]
         }),
+        ...[
+          !isIIFE && json({
+            // All JSON files will be parsed by default,
+            // but you can also specifically include/exclude files
+            include: 'node_modules/**',
+
+            // for tree-shaking, properties will be declared as
+            // variables, using either `var` or `const`
+            preferConst: true, // Default: false
+
+            // specify indentation for the generated default export —
+            // defaults to '\t'
+            indent: '  ',
+
+            // ignores indent and generates the smallest code
+            compact: true, // Default: false
+
+            // generate a named export for every property of the JSON object
+            namedExports: true // Default: true
+          })
+        ],
         ...[
           doMinify && isProduction && !isESModule && compiler({
             compilationLevel: 'SIMPLE',
@@ -103,12 +125,18 @@ Build these formats
 function getFormats(pkg) {
   const { name, globalName, browser, module: moduleName, main } = pkg
 
-  const includeIife = (!globalName) ? [] : [{
-    output: {
-      name: globalName,
-      format: 'iife',
-      file: `dist/${name}.js`,
-    },
+  const iifeName = (typeof globalName === 'object') ? globalName.name : globalName
+  const iifeSettings = {
+    name: iifeName,
+    format: 'iife',
+    file: `dist/${name}.js`,
+  }
+  if (globalName && globalName.extend) {
+    iifeSettings.extend = true
+  }
+
+  const includeIife = (!iifeName) ? [] : [{
+    output: iifeSettings,
     externals: [],
     browser: true
   }]
