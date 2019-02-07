@@ -122,6 +122,10 @@ export const eventKeys = [
    */
   'pluginFailed',
   /**
+   * `loadPlugin` - Fires when `analytics.loadPlugin()` is called
+   */
+  'loadPlugin',
+  /**
    * `enablePlugin` - Fires when `analytics.enablePlugin()` is called
    */
   'enablePlugin',

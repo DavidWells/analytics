@@ -17,6 +17,8 @@
     "./lib/analytics.es.js": "./lib/analytics.browser.es.js"
   },
   "scripts": {
+    "test": "ava --verbose",
+    "test:watch": "ava --verbose --watch",
     "watch": "rollup -w -c scripts/build/rollup.config.browser.es.js",
     "clean": "rimraf lib dist && mkdirp lib dist",
     "rollup-cjs": "rollup -c scripts/build/rollup.config.cjs.js && rollup -c scripts/build/rollup.config.browser.cjs.js",
@@ -43,13 +45,22 @@
     "analytics-utils": "^0.0.16",
     "redux": "^3.6.0"
   },
+  "ava": {
+    "sources": [
+			"**/*.{js}",
+			"!dist/**/*",
+      "!lib/**/*"
+		]
+  },
   "devDependencies": {
     "@ampproject/rollup-plugin-closure-compiler": "^0.8.5",
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.3.1",
+    "ava": "^1.2.1",
     "mkdirp": "^0.5.1",
     "npm-run-all": "^4.1.5",
     "rimraf": "^2.6.3",
+    "sinon": "7.2.3",
     "rollup": "^1.1.2",
     "rollup-plugin-babel": "^4.3.2",
     "rollup-plugin-babel-minify": "^7.0.0",

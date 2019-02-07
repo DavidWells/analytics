@@ -1,5 +1,6 @@
 import EVENTS from '../../events'
 import waitForReady from '../../utils/waitForReady'
+import runMethod from './runMethod'
 import runPlugins from './engine'
 
 export default function pluginMiddleware(instance, getPlugins, systemEvents) {
@@ -11,56 +12,11 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
       return next(action)
     }
 
-    if (type === EVENTS.registerPlugins) {
-      const plugins = getPlugins(true)
-      plugins.map((plugin, i) => { // eslint-disable-line
-        const lastCall = plugins.length === (i + 1)
-        /* Register plugins */
-        store.dispatch({
-          type: `registerPlugin:${plugin.NAMESPACE}`, // EVENTS.pluginRegisterType(NAMESPACE),
-          name: plugin.NAMESPACE,
-          plugin: plugin
-        })
-
-        /* All plugins registered */
-        if (lastCall) {
-          store.dispatch({
-            type: `pluginsRegistered`,
-            plugins: plugins.map((p) => {
-              return p.NAMESPACE
-            })
-          })
-        }
-      })
-    }
-
-    // Dyanmically run registered plugin methods
-    const returnValue = runPlugins(
-      action,
-      instance,
-      getPlugins(),
-      store,
-      systemEvents
-    )
-    if (returnValue && typeof returnValue === 'object') {
-      // A plugin has modifed the original action
-      updatedAction = returnValue
-      // console.log('updatedAction', updatedAction)
-    }
-
     if (type === EVENTS.disablePlugin || type === EVENTS.enablePlugin) {
       // TODO run initialize if not loaded
       if (callback) {
         callback(name)
       }
-    }
-
-    if (type === 'pluginsRegistered') {
-      // Initialize plugins
-      store.dispatch({
-        type: EVENTS.initializeStart,
-        plugins: action.plugins
-      })
     }
 
     //*  || type.match(/^initializeAbort:/)
@@ -77,9 +33,6 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
           store.dispatch({
             type: `ready:${NAMESPACE}`, // EVENTS.pluginReadyType(NAMESPACE)
             name: NAMESPACE,
-            // _: {
-            //   methodCalled: true
-            // },
             events: Object.keys(plugin).filter((name) => {
               const remove = ['NAMESPACE', 'config', 'loaded']
               return !remove.includes(name)
@@ -110,6 +63,72 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
         }, 0)
       })
     }
+
+    if (type === EVENTS.registerPlugins) {
+      const plugins = getPlugins(true)
+      plugins.map((plugin, i) => { // eslint-disable-line
+        const lastCall = plugins.length === (i + 1)
+        /* Register plugins */
+        store.dispatch({
+          type: `registerPlugin:${plugin.NAMESPACE}`, // EVENTS.pluginRegisterType(NAMESPACE),
+          name: plugin.NAMESPACE,
+          plugin: plugin
+        })
+
+        /* All plugins registered initialize */
+        if (lastCall) {
+          store.dispatch({
+            type: EVENTS.initializeStart,
+            plugins: plugins.map((p) => {
+              return p.NAMESPACE
+            })
+          })
+        }
+      })
+    }
+    /* New plugin system
+    // if (type === 'initializeStart' || type === 'initialize') {
+    const plugins = getPlugins()
+    console.log('run the thing', type)
+    console.time('test')
+    return runMethod({
+      ...action,
+      ...{
+        // options: {
+        //   // plugins: {
+        //   //   other: false
+        //   // }
+        // }
+      }
+    }, plugins, instance, store).then((d) => {
+      console.log('d', d)
+      const combineAction = {
+        ...action,
+        ...d
+      }
+      console.log('combineAction', combineAction)
+      console.timeEnd('test')
+      next(combineAction)
+    })
+    */
+
+    /* Old plugin system */
+    // Dyanmically run registered plugin methods
+    let returnValue
+    returnValue = runPlugins(
+      action,
+      instance,
+      getPlugins(),
+      store,
+      systemEvents
+    )
+    if (returnValue && typeof returnValue === 'object') {
+      // A plugin has modifed the original action
+      updatedAction = returnValue
+      // console.log('updatedAction', updatedAction)
+    }
+    /**/
+
     /**/
 
     return next(updatedAction)
