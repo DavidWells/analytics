@@ -1,10 +1,10 @@
 import EVENTS from '../../events'
 import waitForReady from '../../utils/waitForReady'
-import runMethod from './runMethod'
 import runPlugins from './engine'
+// import runPlugins from './old-engine'
 
 export default function pluginMiddleware(instance, getPlugins, systemEvents) {
-  return store => next => action => {
+  return store => next => async action => {
     const { type, name, callback } = action
     let updatedAction = action
 
@@ -64,72 +64,12 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
       })
     }
 
-    if (type === EVENTS.registerPlugins) {
-      const plugins = getPlugins(true)
-      plugins.map((plugin, i) => { // eslint-disable-line
-        const lastCall = plugins.length === (i + 1)
-        /* Register plugins */
-        store.dispatch({
-          type: `registerPlugin:${plugin.NAMESPACE}`, // EVENTS.pluginRegisterType(NAMESPACE),
-          name: plugin.NAMESPACE,
-          plugin: plugin
-        })
-
-        /* All plugins registered initialize */
-        if (lastCall) {
-          store.dispatch({
-            type: EVENTS.initializeStart,
-            plugins: plugins.map((p) => {
-              return p.NAMESPACE
-            })
-          })
-        }
-      })
+    /* New plugin system */
+    if (type !== 'bootstrap') {
+      // console.log('run the thing', type)
+      const updated = await runPlugins(action, getPlugins, instance, store)
+      return next(updated)
     }
-    /* New plugin system
-    // if (type === 'initializeStart' || type === 'initialize') {
-    const plugins = getPlugins()
-    console.log('run the thing', type)
-    console.time('test')
-    return runMethod({
-      ...action,
-      ...{
-        // options: {
-        //   // plugins: {
-        //   //   other: false
-        //   // }
-        // }
-      }
-    }, plugins, instance, store).then((d) => {
-      console.log('d', d)
-      const combineAction = {
-        ...action,
-        ...d
-      }
-      console.log('combineAction', combineAction)
-      console.timeEnd('test')
-      next(combineAction)
-    })
-    */
-
-    /* Old plugin system */
-    // Dyanmically run registered plugin methods
-    let returnValue
-    returnValue = runPlugins(
-      action,
-      instance,
-      getPlugins(),
-      store,
-      systemEvents
-    )
-    if (returnValue && typeof returnValue === 'object') {
-      // A plugin has modifed the original action
-      updatedAction = returnValue
-      // console.log('updatedAction', updatedAction)
-    }
-    /**/
-
-    /**/
 
     return next(updatedAction)
   }

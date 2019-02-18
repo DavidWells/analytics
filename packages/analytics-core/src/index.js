@@ -1,6 +1,7 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import { inBrowser } from 'analytics-utils'
 import * as middleware from './middleware'
+import DynamicMiddleware from './middleware/dynamic'
 import plugins, { enablePlugin, disablePlugin } from './modules/plugins'
 import context, { makeContext } from './modules/context'
 import page, { getPageData } from './modules/page'
@@ -13,9 +14,9 @@ import getCallback from './utils/getCallback'
 import { Debug, composeWithDebug } from './utils/debug'
 import EVENTS, { eventKeys, isReservedAction } from './events'
 import * as CONSTANTS from './constants'
-// import heartBeat from './utils/heartbeat'
+// import heartBeat from './utils/heartbeatx'
 
-const { addMiddleware, removeMiddleware, setItem, removeItem, getItem } = middleware
+const { setItem, removeItem, getItem } = middleware
 
 export default function analytics(config = {}) {
   const customReducers = config.reducers || {}
@@ -27,6 +28,8 @@ export default function analytics(config = {}) {
       const allEvents = new Set(acc.events.concat(Object.keys(p)))
       acc.events = Array.from(allEvents)
 
+      acc.pluginsArray = acc.pluginsArray.concat(p)
+
       if (acc.plugins[p.NAMESPACE]) {
         throw new Error(`Analytics "${p.NAMESPACE}" loaded twice!`)
       }
@@ -37,18 +40,19 @@ export default function analytics(config = {}) {
       }
       return acc
     }
-
     /* Custom redux middleware */
     acc.middlewares = acc.middlewares.concat(p)
     return acc
   }, {
     plugins: {},
+    pluginsArray: [],
     middlewares: [],
     events: []
   })
 
   // mutable intregrations object for dynamic loading
   let customPlugins = parsedOptions.plugins
+  const pluginKeys = Object.keys(customPlugins)
 
   const nonEvents = ['config', 'loaded', 'NAMESPACE']
   const registeredEvents = parsedOptions.events.concat(eventKeys).filter((name) => {
@@ -65,6 +69,8 @@ export default function analytics(config = {}) {
     }
     return customPlugins
   }
+
+  const { addMiddleware, removeMiddleware, dynamicMiddlewares } = new DynamicMiddleware()
 
   const instance = {
     /**
@@ -202,8 +208,8 @@ export default function analytics(config = {}) {
         theAction = { type: action }
       }
       if (isReservedAction(action.type)) {
-        console.log(`Trying to dispatch analytics reservedAction "${action.type}"`)
-        return false
+        throw new Error(`Trying to dispatch analytics reservedAction "${action.type}"`)
+        // return false
       }
       // Dispatch actionStart
       // const autoPrefixType = `${theAction.type.replace(/Start$/, '')}Start`
@@ -223,7 +229,8 @@ export default function analytics(config = {}) {
           ...dispatchData,
           meta: {
             ...dispatchData.meta,
-            ...theAction.meta
+            ...theAction.meta,
+            // ...(dispatchData.meta.timestamp ? { timestamp: dispatchData.meta.timestamp } : {})
           }
         }
       }
@@ -326,6 +333,9 @@ export default function analytics(config = {}) {
       if (!name || !callback || typeof callback !== 'function') {
         return false
       }
+      if (name === 'bootstrap') {
+        throw new Error('Not allowed to listen to bootstrap')
+      }
 
       if (name === '*') {
         const beforeHandler = store => next => action => {
@@ -336,15 +346,15 @@ export default function analytics(config = {}) {
           if (!action.type.match(/Start$|Start:/)) callback({ payload: action, instance }) // eslint-disable-line
           return next(action)
         }
-        addMiddleware(beforeHandler, true)
-        addMiddleware(afterHandler)
+        addMiddleware(beforeHandler, 'before')
+        addMiddleware(afterHandler, 'after')
         return () => {
-          removeMiddleware(beforeHandler, true)
-          removeMiddleware(afterHandler)
+          removeMiddleware(beforeHandler, 'before')
+          removeMiddleware(afterHandler, 'after')
         }
       }
 
-      const position = (name.match(/Start$|Start:/)) ? true : false // eslint-disable-line
+      const position = (name.match(/Start$|Start:/)) ? 'before' : 'after' // eslint-disable-line
       const handler = store => next => action => {
         // Subscribe to EVERYTHING
         if (action.type === name) {
@@ -447,12 +457,12 @@ export default function analytics(config = {}) {
 
   const middlewares = parsedOptions.middlewares.concat([
     // Core analytics middleware
-    middleware.dynamic(true), // Before dynamic middleware <-- fixed pageStart .on listener
+    dynamicMiddlewares('before'), // Before dynamic middleware <-- fixed pageStart .on listener
     middleware.plugins(instance, getPlugins, systemEvents),
     middleware.storage(),
     middleware.initialize(instance),
     middleware.identify(instance),
-    middleware.dynamic() // after dynamic middleware
+    dynamicMiddlewares('after') // after dynamic middleware
   ])
 
   // Initial analytics state keys
@@ -461,7 +471,7 @@ export default function analytics(config = {}) {
     user: user,
     page: page,
     track: track,
-    plugins: plugins,
+    plugins: plugins(getPlugins),
     // queue: queue
   }
 
@@ -482,6 +492,16 @@ export default function analytics(config = {}) {
   const initialConfig = makeContext(config)
   const initialState = {
     context: initialConfig,
+    plugins: parsedOptions.pluginsArray.reduce((acc, plugin) => {
+      const { NAMESPACE, config, loaded } = plugin
+      acc[NAMESPACE] = {
+        enabled: true,
+        initialized: false,
+        loaded: Boolean(loaded()),
+        config: config || {}
+      }
+      return acc
+    }, {})
     // Todo allow for more userland defined initial state?
   }
   /* Create analytics store! */
@@ -498,17 +518,41 @@ export default function analytics(config = {}) {
     )
   )
 
-  // Register plugins
+  // Syncronously call bootstrap & register Plugin methods
+
+  /* Bootstap analytic plugins */
   store.dispatch({
     type: EVENTS.bootstrap,
-    plugins: Object.keys(customPlugins),
+    plugins: pluginKeys,
     config: initialConfig
   })
 
-  // Register plugins
+  /* Register analytic plugins */
   store.dispatch({
     type: EVENTS.registerPlugins,
-    plugins: Object.keys(customPlugins)
+    plugins: pluginKeys
+  })
+
+  parsedOptions.pluginsArray.map((plugin, i) => {
+    const { bootstrap } = plugin
+    if (bootstrap && typeof bootstrap === 'function') {
+      bootstrap({ instance, payload: plugin })
+    }
+    const lastCall = plugins.length === (i + 1)
+    /* Register plugins */
+    store.dispatch({
+      type: `registerPlugin:${plugin.NAMESPACE}`, // EVENTS.pluginRegisterType(NAMESPACE),
+      name: plugin.NAMESPACE,
+      plugin: plugin
+    })
+
+    /* All plugins registered initialize */
+    if (lastCall) {
+      store.dispatch({
+        type: EVENTS.initializeStart,
+        plugins: pluginKeys
+      })
+    }
   })
 
   // Watch for network events
