@@ -9,7 +9,10 @@ export function Debug() {
       const store = createStore(reducer, preloadedState, enhancer)
       const origDispatch = store.dispatch
       const dispatch = (action) => {
-        window.__ANALYTICS_HISTORY__.push(action.action)
+        const a = action.action || action
+        if (process.browser) {
+          window.__ANALYTICS_HISTORY__.push(a)
+        }
         return origDispatch(action)
       }
       return Object.assign(store, { dispatch: dispatch })
