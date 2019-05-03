@@ -5,7 +5,7 @@ import { ANON_ID } from '../constants'
 // Middleware runs during EVENTS.initialize
 export default function initializeMiddleware(instance) {
   return store => next => action => {
-    if (action.type === EVENTS.pluginsRegistered) {
+    if (action.type === EVENTS.bootstrap) {
       // 1. Set anonymous ID
       if (!storage.getItem(ANON_ID)) {
         instance.storage.setItem(ANON_ID, uuid())
