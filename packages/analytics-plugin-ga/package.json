@@ -1,6 +1,6 @@
 {
   "name": "analytics-plugin-ga",
-  "version": "0.0.19",
+  "version": "0.1.0",
   "description": "Google analytics integration for 'analytics' pkg",
   "keywords": [
     "analytics",

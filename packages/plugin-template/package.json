@@ -1,6 +1,6 @@
 {
   "name": "analytics-plugin-template",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Example plugin with browser + node module build with treeshaking",
   "private": true,
   "main": "lib/analytics-plugin-template.cjs.js",
