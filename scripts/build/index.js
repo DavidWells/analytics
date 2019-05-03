@@ -6,6 +6,8 @@ const runRollup = require('./_run-rollup')
 const uglify = require('./_uglify')
 const dir = process.cwd()
 
+process.env.NODE_ENV = 'production'
+
 async function runBuild(dir) {
   try {
     const data = await runRollup(dir)
