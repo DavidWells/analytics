@@ -1,14 +1,19 @@
 
-export default function fitlerDisabled(methodCalls, settings = {}, options = {}) {
-  return methodCalls.filter((current) => {
-    const name = current.NAMESPACE
-    const { integrations } = options
+export default function fitlerDisabledPlugins(allPlugins, settings = {}, options = {}) {
+  return Object.keys(allPlugins).filter((name) => {
+    const { plugins } = options
+    const pluginsFromOpt = plugins || {}
+    if (pluginsFromOpt[name] === false) {
+      return false
+    }
     // If enabled by options. Overide settings
-    if (integrations && integrations[name] && integrations[name] === true) {
+    if (pluginsFromOpt[name] === true) {
       return true
     }
-    const disabledBySettings = settings[name] && settings[name].enabled === false
-    const disabledByOptions = integrations && integrations[name] === false
-    return !disabledBySettings && !disabledByOptions
-  })
+    // else use state.plugin settings
+    if (settings[name] && settings[name].enabled === false) {
+      return false
+    }
+    return true
+  }).map((name) => allPlugins[name])
 }
