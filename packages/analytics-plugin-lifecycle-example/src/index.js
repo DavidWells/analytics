@@ -21,31 +21,31 @@ export default {
       console.log('on("pageEnd:lifecycle-example") handler')
     })
   },
-  pageStart: ({ abort, config }) => {
+  pageStart: ({ abort, payload, config }) => {
     console.log('pageStart')
   },
-  page: ({ abort, config }) => {
+  page: ({ payload, config }) => {
     console.log('page')
   },
-  pageEnd: ({ abort, config }) => {
+  pageEnd: ({ payload, config }) => {
     console.log('pageEnd')
   },
-  identifyStart: ({ abort, config }) => {
+  identifyStart: ({ abort, payload, config }) => {
     console.log('identifyStart')
   },
-  identify: ({ abort, config }) => {
+  identify: ({ payload, config }) => {
     console.log('identify')
   },
-  identifyEnd: ({ abort, config }) => {
+  identifyEnd: ({ payload, config }) => {
     console.log('identifyEnd')
   },
-  trackStart: ({ abort, config }) => {
+  trackStart: ({ abort, payload, config }) => {
     console.log('trackStart')
   },
-  track: ({ abort, config }) => {
+  track: ({ payload, config }) => {
     console.log('track')
   },
-  trackEnd: ({ abort, config }) => {
+  trackEnd: ({ payload, config }) => {
     console.log('trackEnd')
   }
 }
