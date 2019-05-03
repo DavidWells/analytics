@@ -16,12 +16,13 @@ export default function createReducer(getPlugins) {
     if (/^registerPlugin:([^:]*)$/.test(action.type)) {
       const name = action.type.split(':')[1]
       const pluginInstance = getPlugins()[name]
-      if (!pluginInstance) {
+      if (!pluginInstance || !name) {
         return state
       }
       newState[name] = {
         enabled: true,
-        initialized: false,
+        /* if no initialization method. Set initialized true */
+        initialized: (pluginInstance.initialize) ? false : true, // eslint-disable-line
         loaded: Boolean(pluginInstance.loaded()),
         config: pluginInstance.config || {}
       }
@@ -30,11 +31,11 @@ export default function createReducer(getPlugins) {
     if (/^initialize:([^:]*)$/.test(action.type)) {
       const name = action.type.split(':')[1]
       const pluginInstance = getPlugins()[name]
-      if (!pluginInstance) {
+      if (!pluginInstance || !name) {
         return state
       }
-      newState[action.name] = {
-        ...state[action.name],
+      newState[name] = {
+        ...state[name],
         ...{
           initialized: true,
           loaded: Boolean(pluginInstance.loaded())
