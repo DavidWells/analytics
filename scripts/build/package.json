@@ -24,7 +24,7 @@
     "rollup-plugin-strip-banner": "^0.2.0",
     "rollup-plugin-terser": "^4.0.3",
     "rollup-plugin-uglify": "^6.0.2",
-    "sane": "^4.0.2",
+    "sane": "^4.1.0",
     "uglify-js": "^3.4.9"
   }
 }
