@@ -9,17 +9,17 @@ test.beforeEach((t) => {
 
 test('Lifecycle should execute in correct order', async (t) => {
   const executionOrder = []
+  const { context } = t
+  const pageStartListener = context.sandbox.spy()
+  const pageListener = context.sandbox.spy()
+  const pageEndListener = context.sandbox.spy()
 
-  const pageStartListener = t.context.sandbox.spy()
-  const pageListener = t.context.sandbox.spy()
-  const pageEndListener = t.context.sandbox.spy()
-
-  const pageStartMethod = t.context.sandbox.spy()
-  const pageMethod = t.context.sandbox.spy()
-  const pageEndMethod = t.context.sandbox.spy()
-  const secondPageStartMethod = t.context.sandbox.spy()
-  const secondPageMethod = t.context.sandbox.spy()
-  const secondPageEndMethod = t.context.sandbox.spy()
+  const pageStartMethod = context.sandbox.spy()
+  const pageMethod = context.sandbox.spy()
+  const pageEndMethod = context.sandbox.spy()
+  const secondPageStartMethod = context.sandbox.spy()
+  const secondPageMethod = context.sandbox.spy()
+  const secondPageEndMethod = context.sandbox.spy()
 
   const analytics = Analytics({
     app: 'appname',

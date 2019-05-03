@@ -1,5 +1,6 @@
 import test from 'ava'
 import sinon from 'sinon'
+import delay from './utils/delay'
 import Analytics from '../src'
 
 test.beforeEach((t) => {
@@ -9,12 +10,13 @@ test.beforeEach((t) => {
 test('should call .on listenering in correct order', async (t) => {
   const executionOrder = []
   const pageExecutionOrder = []
-  const pageSpy = t.context.sandbox.spy()
-  const pageSpyTwo = t.context.sandbox.spy()
-  const onPageStartSpy = t.context.sandbox.spy()
-  const onPageSpy = t.context.sandbox.spy()
-  const onPageEndSpy = t.context.sandbox.spy()
-  const onPageCallback = t.context.sandbox.spy()
+  const { context } = t
+  const pageSpy = context.sandbox.spy()
+  const pageSpyTwo = context.sandbox.spy()
+  const onPageStartSpy = context.sandbox.spy()
+  const onPageSpy = context.sandbox.spy()
+  const onPageEndSpy = context.sandbox.spy()
+  const onPageCallback = context.sandbox.spy()
 
   const analytics = Analytics({
     app: 'appname',
@@ -76,8 +78,37 @@ test('should call .on listenering in correct order', async (t) => {
   t.deepEqual(executionOrder, [1, 2, 3, 4])
 })
 
-function delay(timeout) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, timeout)
+test('should call .once listeners only once', async (t) => {
+  const { context } = t
+  const pageSpy = context.sandbox.spy()
+  const onPageSpy = context.sandbox.spy()
+  const oncePageSpy = context.sandbox.spy()
+
+  const analytics = Analytics({
+    app: 'appname',
+    version: 100,
+    plugins: [
+      {
+        NAMESPACE: 'test-plugin',
+        page: pageSpy
+      }
+    ]
   })
-}
+
+  analytics.once('page', oncePageSpy)
+
+  analytics.on('page', onPageSpy)
+
+  analytics.page()
+
+  analytics.page()
+
+  // Timeout for async actions to fire
+  await delay(1000)
+
+  t.is(pageSpy.callCount, 2)
+
+  t.is(onPageSpy.callCount, 2)
+
+  t.is(oncePageSpy.callCount, 1)
+})
