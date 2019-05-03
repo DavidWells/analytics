@@ -1,6 +1,4 @@
-// import getPluginByMethod from '../../utils/getPluginByMethod'
 import fitlerDisabledPlugins from '../../utils/filterDisabled'
-// import waitForReady from '../../utils/waitForReady'
 
 export default async function (action, getPlugins, instance, store) {
   const pluginObject = getPlugins()
@@ -19,8 +17,11 @@ export default async function (action, getPlugins, instance, store) {
 
   /* Remove plugins that are disabled by options or by settings */
   const activePlugins = fitlerDisabledPlugins(pluginObject, state.plugins, action.options)
+  // console.log('activePlugins', activePlugins)
   const allActivePluginKeys = activePlugins.map((p) => p.NAMESPACE)
 
+  const allMatches = getAllMatchingCalls(eventType, activePlugins, pluginObject)
+  // console.log('allMatchesallMatches', allMatches)
   // console.log('allActivePluginKeys', allActivePluginKeys)
   // console.log('allActivePluginKeys.length', allActivePluginKeys.length)
   // console.log('activePlugins', activePlugins)
@@ -38,9 +39,13 @@ export default async function (action, getPlugins, instance, store) {
    */
   const beforeAction = await processEvent({
     action: action,
-    data: cleanMatch,
+    data: {
+      exact: allMatches.before,
+      namespaced: allMatches.beforeNS
+    },
     state: state,
     allPlugins: pluginObject,
+    allMatches,
     instance,
     store
   })
@@ -59,8 +64,8 @@ export default async function (action, getPlugins, instance, store) {
 
   // console.log(`activeAndNonAbortedCalls ${action.type}`, activeAndNonAbortedCalls)
   const duringType = eventType.replace(/Start$/, '')
-  const duringMethods = getMatchingMethods(eventType.replace(/Start$/, ''), activePlugins)
-
+  // const duringMethods = getMatchingMethods(eventType.replace(/Start$/, ''), activePlugins)
+  // console.log('duringMethods', duringMethods)
   /* Already processed and ran these methods */
   if (duringType === eventType) {
     // console.log('NAMES MATCH Dont process again', duringType, eventType)
@@ -71,9 +76,14 @@ export default async function (action, getPlugins, instance, store) {
       ...beforeAction,
       type: formatMethod(eventType)
     },
-    data: duringMethods,
+    // data: duringMethods,
+    data: {
+      exact: allMatches.during,
+      namespaced: allMatches.duringNS
+    },
     state: state,
     allPlugins: pluginObject,
+    allMatches,
     instance,
     store
   })
@@ -85,9 +95,14 @@ export default async function (action, getPlugins, instance, store) {
       ...duringAction,
       type: afterName
     },
-    data: getMatchingMethods(afterName, activePlugins),
+    // data: getMatchingMethods(afterName, activePlugins),
+    data: {
+      exact: allMatches.after,
+      namespaced: allMatches.afterNS
+    },
     state: state,
     allPlugins: pluginObject,
+    allMatches,
     instance,
     store
   })
@@ -104,9 +119,8 @@ export default async function (action, getPlugins, instance, store) {
 }
 
 function getCallback(action) {
-  if (!action.meta) {
-    return false
-  }
+  if (!action.meta) return false
+
   return Object.keys(action.meta).reduce((acc, key) => {
     const thing = action.meta[key]
     if (typeof thing === 'function') {
@@ -126,12 +140,39 @@ async function processEvent({
   instance,
   state,
   allPlugins,
+  allMatches,
   store
 }) {
   const { plugins } = state
   const method = action.type
-  // console.log('datadatadata PROCESS', method)
-  // console.log('datadatadata', data)
+
+  // console.log(`data ${method}`, data)
+  // console.log(`data allMatches ${method}`, allMatches)
+  let abortable = data.exact.map((x) => {
+    return x.pluginName
+  })
+
+  /* If abort is called from xyzStart */
+  if (method.match(/Start$/)) {
+    abortable = allMatches.during.map((x) => {
+      return x.pluginName
+    })
+  }
+
+  /* make args for functions to concume */
+  const makeArgs = argumentFactory(instance, abortable)
+  // console.log('makeArgs', makeArgs)
+
+  /* Check if plugin loaded, if not mark action for queue */
+  const queueData = data.exact.reduce((acc, thing) => {
+    const { pluginName, methodName } = thing
+    let addToQueue = false
+    if (!methodName.match(/^initialize/)) {
+      addToQueue = !plugins[pluginName].loaded
+    }
+    acc[`${pluginName}`] = addToQueue
+    return acc
+  }, {})
 
   /* generate plugin specific payloads */
   const payloads = await data.exact.reduce(async (scoped, curr, i) => {
@@ -145,10 +186,35 @@ async function processEvent({
           return curScopeData
         }
 
+        /* Make sure plugins don’t call themselves */
+        validateMethod(p.methodName, p.pluginName)
+
+        function genAbort(currentAct, pname, otherPlug) {
+          return function (reason, plugins) {
+            const callsite = otherPlug || pname
+            // console.log(`__abort msg: ${reason}`)
+            // console.log(`__abort ${pname}`)
+            // console.log(`__abort xxx: ${plugins}`)
+            // console.log(`__abort otherPlug`, otherPlug)
+            return {
+              ...currentAct, // 🔥 todo verify this merge is ok
+              abort: {
+                reason: reason,
+                plugins: plugins || [pname],
+                caller: method,
+                from: callsite
+              }
+            }
+          }
+        }
+
+        // console.log(`funcArgs ${method}`, funcArgs)
         const val = await p.method({
           payload: curScopeData,
           instance,
+          abort: genAbort(curScopeData, pluginName, p.pluginName),
           config: getConfig(pluginName, plugins, allPlugins),
+          plugins: plugins
         })
         const returnValue = (typeof val === 'object') ? val : {}
         return Promise.resolve({
@@ -174,6 +240,7 @@ async function processEvent({
     const currentPlugin = allPlugins[pluginName]
     const currentActionValue = await promise
     const payloadValue = (payloads[pluginName]) ? payloads[pluginName] : {}
+
     if (shouldAbort(payloadValue, pluginName)) {
       // console.log(`> Abort from payload specific "${pluginName}" abort value`, payloadValue)
       abortDispatch({
@@ -198,13 +265,49 @@ async function processEvent({
       }
       return Promise.resolve(currentActionValue)
     }
+
+    if (queueData.hasOwnProperty(pluginName) && queueData[pluginName] === true) {
+      // console.log('Queue this instead', pluginName)
+      store.dispatch({
+        type: `queue`,
+        plugin: pluginName,
+        payload: payloadValue,
+        meta: {
+          called: true
+        },
+      })
+      return Promise.resolve(currentActionValue)
+    }
+    /*
+    const checkForLoaded = () => {
+      const p = instance.getState('plugins')
+      return p[currentPlugin.NAMESPACE].loaded
+    }
+    // const p = instance.getState('plugins')
+    console.log(`loaded "${currentPlugin.NAMESPACE}" > ${method}:`, p[currentPlugin.NAMESPACE].loaded)
+    // await waitForReady(currentPlugin, checkForLoaded, 10000).then((d) => {
+    //   console.log(`Loaded ${method}`, currentPlugin.NAMESPACE)
+    // }).catch((e) => {
+    //   console.log(`Error ${method} ${currentPlugin.NAMESPACE}`, e)
+    //   // TODO dispatch failure
+    // })
+    */
+
+    // @TODO figure out if we want queuing semantics
+
+    const funcArgs = makeArgs(payloads[pluginName], allPlugins[pluginName])
+
+    // console.log(`funcArgs ${method} ${pluginName}`, funcArgs)
+
     /* Run the plugin function */
     const val = await currentPlugin[method]({
       hello: pluginName,
+      abort: funcArgs.abort,
       // Send in original action value or scope payload
       payload: payloads[pluginName], // || currentActionValue,
       instance,
       config: getConfig(pluginName, plugins, allPlugins),
+      plugins: plugins
     })
 
     const returnValue = (typeof val === 'object') ? val : {}
@@ -248,7 +351,8 @@ async function processEvent({
   if (!method.match(/Start$/) &&
       !method.match(/^registerPlugin/) &&
       !method.match(/^ready/) &&
-      !method.match(/^bootstrap/)
+      !method.match(/^bootstrap/) &&
+      !method.match(/^params/)
   ) {
     store.dispatch({
       ...resolvedAction,
@@ -319,7 +423,7 @@ function getEventNames(eventType, namespace) {
 /* Collect all calls for a given event in the system */
 function getAllMatchingCalls(eventType, activePlugins, allPlugins) {
   const eventNames = getEventNames(eventType)
-  console.log('eventNames', eventNames)
+  // console.log('eventNames', eventNames)
   // 'eventStart', 'event', & `eventEnd`
   const core = eventNames.map((word) => {
     return getPluginFunctions(word, activePlugins)
@@ -328,7 +432,7 @@ function getAllMatchingCalls(eventType, activePlugins, allPlugins) {
   return activePlugins.reduce((acc, plugin) => {
     const { NAMESPACE } = plugin
     const nameSpacedEvents = getEventNames(eventType, NAMESPACE)
-    console.log('eventNames namespaced', nameSpacedEvents)
+    // console.log('eventNames namespaced', nameSpacedEvents)
     const [ beforeFuncs, duringFuncs, afterFuncs ] = nameSpacedEvents.map((word) => {
       return getPluginFunctions(word, activePlugins)
     })
@@ -390,4 +494,105 @@ function isArray(arr) {
 function includes(arr, name) {
   if (!arr || !isArray(arr)) return false
   return arr.includes(name)
+}
+
+/**
+ * Generate arguments to pass to plugin methods
+ * @param  {Object} instance - analytics instance
+ * @param  {[type]} allPlugins [description]
+ * @return {[type]}            [description]
+ */
+function argumentFactory(instance, abortablePlugins) {
+  // console.log('abortablePlugins', abortablePlugins)
+  return function (action, plugin, otherPlugin) {
+    const { config, NAMESPACE } = plugin
+    let method = `${NAMESPACE}.${action.type}`
+    if (otherPlugin) {
+      method = otherPlugin.event
+    }
+
+    const abortF = (action.type.match(/Start$/))
+      ? abortFunction(NAMESPACE, method, abortablePlugins, otherPlugin, action)
+      : notAbortableError(action, method)
+
+    return {
+      /* self: plugin, for future maybe */
+      // clone objects to avoid reassign
+      payload: formatPayload(action),
+      instance: instance,
+      config: config || {},
+      abort: abortF
+    }
+  }
+}
+
+function abortFunction(pluginName, method, abortablePlugins, otherPlugin, action) {
+  return function (reason, plugins) {
+    const caller = (otherPlugin) ? otherPlugin.NAMESPACE : pluginName
+    let pluginsToAbort = (plugins && isArray(plugins)) ? plugins : abortablePlugins
+    if (otherPlugin) {
+      pluginsToAbort = (plugins && isArray(plugins)) ? plugins : [pluginName]
+      if (!pluginsToAbort.includes(pluginName) || pluginsToAbort.length !== 1) {
+        throw new Error(`Method "${method}" can only abort "${pluginName}" plugin. ${JSON.stringify(pluginsToAbort)} input valid`)
+      }
+    }
+    return {
+      ...action, // 🔥 todo verify this merge is ok
+      abort: {
+        reason: reason,
+        plugins: pluginsToAbort,
+        caller: method,
+        _: caller
+      }
+    }
+  }
+}
+
+function notAbortableError(action, method) {
+  return () => {
+    throw new Error(`Action "${action.type}" is not cancellable. Remove abort call from plugin ${method}`)
+  }
+}
+
+/**
+ * Verify plugin is not calling itself with whatever:myPluginName self refs
+ */
+function validateMethod(actionName, pluginName) {
+  const text = getNameSpacedAction(actionName)
+  const methodCallMatchesPluginNamespace = text && (text.name === pluginName)
+  if (methodCallMatchesPluginNamespace) {
+    const sub = getNameSpacedAction(text.method)
+    const subText = (sub) ? `or "${sub.method}"` : ''
+    throw new Error([`Plugin "${pluginName}" is calling method [${actionName}]`,
+      `Plugins should not call their own namespace.`,
+      `Use "${text.method}" ${subText} in "${pluginName}" plugin instead of "${actionName}"`]
+      .join('\n')
+    )
+  }
+}
+
+function getNameSpacedAction(event) {
+  const split = event.match(/(.*):(.*)/)
+  if (!split) {
+    return false
+  }
+  return {
+    method: split[1],
+    name: split[2],
+  }
+}
+
+function formatPayload(action) {
+  return Object.keys(action).reduce((acc, key) => {
+    // redact type from { payload }
+    if (key === 'type') {
+      return acc
+    }
+    if (typeof action[key] === 'object') {
+      acc[key] = Object.assign({}, action[key])
+    } else {
+      acc[key] = action[key]
+    }
+    return acc
+  }, {})
 }

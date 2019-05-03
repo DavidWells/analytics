@@ -6,7 +6,8 @@ import plugins, { enablePlugin, disablePlugin } from './modules/plugins'
 import context, { makeContext } from './modules/context'
 import page, { getPageData } from './modules/page'
 import track from './modules/track'
-import user, { reset } from './modules/user'
+import queue from './modules/queue'
+import user, { reset, getPersistedUserData } from './modules/user'
 import dotProp from './utils/dotProp'
 import timestamp from './utils/timestamp'
 import { watch } from './utils/handleNetworkEvents'
@@ -14,7 +15,7 @@ import getCallback from './utils/getCallback'
 import { Debug, composeWithDebug } from './utils/debug'
 import EVENTS, { eventKeys, isReservedAction } from './events'
 import * as CONSTANTS from './constants'
-// import heartBeat from './utils/heartbeatx'
+import heartBeat from './utils/heartbeat'
 
 const { setItem, removeItem, getItem } = middleware
 
@@ -94,9 +95,12 @@ export default function analytics(config = {}) {
       const opts = options || {}
       const cb = getCallback(traits, options, callback)
       const user = instance.user()
+      // @TODO extract userID logic into reusable function
+      const finUserId = id || getPersistedUserData().userId
+
       store.dispatch({
         type: EVENTS.identifyStart,
-        userId: id,
+        userId: finUserId,
         traits: data,
         options: opts,
         anonymousId: user.anonymousId,
@@ -296,11 +300,19 @@ export default function analytics(config = {}) {
      * // get all user data
      * const userData = analytics.user()
      *
+     * // get user id
+     * const userId = analytics.user('userId')
+     *
      * // get user company name
-     * const companyName = analytics.user('company.name')
+     * const companyName = analytics.user('traits.company.name')
      */
     user: (key) => {
+      const persistedUser = getPersistedUserData()
       const user = instance.getState('user')
+      // TODO sync persisted data with state
+      // console.log('xxx user', user)
+      // console.log('xxx user persistedUser', persistedUser)
+
       if (!key) return user
       return dotProp(user, key)
     },
@@ -339,11 +351,23 @@ export default function analytics(config = {}) {
 
       if (name === '*') {
         const beforeHandler = store => next => action => {
-          if (action.type.match(/Start$|Start:/)) callback({ payload: action, instance }) // eslint-disable-line
+          if (action.type.match(/Start$|Start:/)) {
+            callback({ // eslint-disable-line
+              payload: action,
+              instance,
+              plugins: customPlugins
+            })
+          }
           return next(action)
         }
         const afterHandler = store => next => action => {
-          if (!action.type.match(/Start$|Start:/)) callback({ payload: action, instance }) // eslint-disable-line
+          if (!action.type.match(/Start$|Start:/)) {
+            callback({ // eslint-disable-line
+              payload: action,
+              instance,
+              plugins: customPlugins
+            })
+          }
           return next(action)
         }
         addMiddleware(beforeHandler, 'before')
@@ -361,6 +385,7 @@ export default function analytics(config = {}) {
           callback({ // eslint-disable-line
             payload: action,
             instance: instance,
+            plugins: customPlugins
           })
         }
         /* For future matching of event subpaths `track:*` etc
@@ -456,7 +481,7 @@ export default function analytics(config = {}) {
   }
 
   const middlewares = parsedOptions.middlewares.concat([
-    // Core analytics middleware
+    /* Core analytics middleware */
     dynamicMiddlewares('before'), // Before dynamic middleware <-- fixed pageStart .on listener
     middleware.plugins(instance, getPlugins, systemEvents),
     middleware.storage(),
@@ -465,14 +490,14 @@ export default function analytics(config = {}) {
     dynamicMiddlewares('after') // after dynamic middleware
   ])
 
-  // Initial analytics state keys
+  /* Initial analytics state keys */
   const coreReducers = {
     context: context,
     user: user,
     page: page,
     track: track,
     plugins: plugins(getPlugins),
-    // queue: queue
+    queue: queue
   }
 
   let composeEnhancers = compose
@@ -490,8 +515,11 @@ export default function analytics(config = {}) {
   }
 
   const initialConfig = makeContext(config)
+  const initialUser = getPersistedUserData()
+  // console.log('initialUser', initialUser)
   const initialState = {
     context: initialConfig,
+    user: initialUser,
     plugins: parsedOptions.pluginsArray.reduce((acc, plugin) => {
       const { NAMESPACE, config, loaded } = plugin
       acc[NAMESPACE] = {
@@ -501,7 +529,7 @@ export default function analytics(config = {}) {
         config: config || {}
       }
       return acc
-    }, {})
+    }, {}),
     // Todo allow for more userland defined initial state?
   }
   /* Create analytics store! */
@@ -530,13 +558,13 @@ export default function analytics(config = {}) {
   /* Register analytic plugins */
   store.dispatch({
     type: EVENTS.registerPlugins,
-    plugins: pluginKeys
+    plugins: pluginKeys,
   })
 
   parsedOptions.pluginsArray.map((plugin, i) => {
-    const { bootstrap } = plugin
+    const { bootstrap, config } = plugin
     if (bootstrap && typeof bootstrap === 'function') {
-      bootstrap({ instance, payload: plugin })
+      bootstrap({ instance, config, payload: plugin })
     }
     const lastCall = plugins.length === (i + 1)
     /* Register plugins */
@@ -562,7 +590,7 @@ export default function analytics(config = {}) {
     })
   })
 
-  // heartBeat(store)
+  heartBeat(store, getPlugins)
 
   /* Optionally expose redux to instance */
   if (config.exposeRedux) {
