@@ -1,13 +1,13 @@
 /**
- * Simply middleware plugin for analytics to visualize events running
+ * Simple middleware plugin for analytics to visualize events running
  * through the analytics event chain
  */
 
-export const analyticsHistory = []
+export const initialHistory = []
 
 export default function visualizeState() {
 	return store => next => action => {
-  	analyticsHistory.push(action)
+  	initialHistory.push(action)
     return next(action)
 	}
 }

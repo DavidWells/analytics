@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import About from './pages/About'
 import Listeners from './pages/Listeners'
 import State from './pages/State'
+import KitchenSink from './pages/KitchenSink'
 import PageViewTracking from './components/PageViews'
 import { Router } from "@reach/router"
 import './index.css'
@@ -16,6 +17,7 @@ const App = (
     <About path="/about" />
     <Listeners path='/listeners' />
     <State path='/state' />
+    <KitchenSink path='/kitchen-sink' />
   </Router>
   </>
 )

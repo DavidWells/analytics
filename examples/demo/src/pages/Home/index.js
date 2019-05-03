@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from "@reach/router"
-import { analyticsHistory } from '../../utils/analytics/plugins/visualize-analytics'
+import { initialHistory } from '../../utils/analytics/plugins/visualize-analytics'
 import analytics from '../../utils/analytics'
 import Log from '../../components/Log'
 import './Home.css'
@@ -9,15 +9,23 @@ export default class App extends Component {
   constructor (props, context) {
     super(props, context)
     this.state = {
-      history: analyticsHistory
+      history: window.__ANALYTICS_HISTORY__ || []
     }
   }
   componentDidMount() {
     this.listener = analytics.on('*', ({ payload }) => {
-      console.log(`* listener ${payload.type}`)
       this.setState({
-        history: analyticsHistory
+        history: window.__ANALYTICS_HISTORY__.concat(payload)
       })
+    })
+    setInterval(() => {
+      this.setState({
+        history: window.__ANALYTICS_HISTORY__
+      })
+    }, 1000);
+
+    analytics.on('page:segment', ({ payload }) => {
+      console.log('analytics.on page:segment')
     })
   }
   componentWillUnmount() {
@@ -36,7 +44,7 @@ export default class App extends Component {
     })
   }
   doIdentify = () => {
-    analytics.identify('xyz-123', {
+    analytics.identify('xyz-777', {
      traitOne: 'blue',
      traitTwo: 'red',
    }, () => {
@@ -51,6 +59,7 @@ export default class App extends Component {
           <Link to='/'>Home</Link>
           <Link to='/listeners'>Listeners</Link>
           <Link to='/state'>State</Link>
+          <Link to='/kitchen-sink'>Kitchen Sink</Link>
         </div>
         <h2>
           <a href='https://github.com/DavidWells/analytics'>Analytics</a>
