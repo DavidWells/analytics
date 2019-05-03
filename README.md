@@ -51,7 +51,8 @@ Connect with your favorite analytic providers, trigger custom logic based on use
 - [x] Test & Debug analytics integrations with time travel & offline mode.
 - [x] Exposes lifecycle for analytic calls allowing for per event cancellation or provider specific payloads
 - [x] Works on client & server-side
-- [ ] (WIP) In client, works offline. Queues events to send when connection resumes
+- [x] Queues events to send when analytic libraries are loaded
+- [ ] (WIP) works offline
 
 ##  Why
 
@@ -149,6 +150,9 @@ analytics.identify('user-id-xyz', {
     })
 
     Analytics.track()
+
+    // optionally expose to window
+    window.Analytics = Analytics
   </script>
   ```
 
@@ -317,8 +321,11 @@ Get user data
 // get all user data
 const userData = analytics.user()
 
+// get user id
+const userId = analytics.user('userId')
+
 // get user company name
-const companyName = analytics.user('company.name')
+const companyName = analytics.user('traits.company.name')
 ```
 
 ### analytics.ready
@@ -395,7 +402,7 @@ Disable analytics plugin
 
 **Arguments**
 
-- **name** <code>string</code>|<code>array</code> - name of integration(s) to disable
+- **name** <code>String</code>|<code>Array</code> - name of integration(s) to disable
 - **callback** <code>Function</code> - callback after disable runs
 
 **Example**
@@ -436,10 +443,11 @@ The `analytics` has a robust plugin system. Here is a list of currently availabl
 - [analytics-plugin-google-tag-manager](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-google-tag-manager) Google tag manager plugin for 'analytics' pkg [npm link](https://www.npmjs.com/package/analytics-plugin-google-tag-manager).
 - [analytics-plugin-lifecycle-example](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-lifecycle-example) Example plugin with lifecycle methods [npm link](https://www.npmjs.com/package/analytics-plugin-lifecycle-example).
 - [analytics-plugin-original-source](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-original-source) Save original referral source of visitor [npm link](https://www.npmjs.com/package/analytics-plugin-original-source).
-- [analytics-plugin-segment](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-segment) Segment integration for 'analytics' pkg [npm link](https://www.npmjs.com/package/analytics-plugin-segment).
+- [analytics-plugin-segment](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-segment) Segment integration for 'analytics' module for browser & node [npm link](https://www.npmjs.com/package/analytics-plugin-segment).
 - [analytics-plugin-tab-events](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-tab-events) Expose tab visibility events for analytics [npm link](https://www.npmjs.com/package/analytics-plugin-tab-events).
 - [analytics-plugin-window-events](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-window-events) Expose window events for analytics [npm link](https://www.npmjs.com/package/analytics-plugin-window-events).
 - [analytics-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-utils) Analytics utility functions [npm link](https://www.npmjs.com/package/analytics-utils).
+- [analytics-plugin-template](https://github.com/DavidWells/analytics/tree/master/packages/plugin-template) Example plugin with browser + node module build with treeshaking [npm link](https://www.npmjs.com/package/analytics-plugin-template).
 - Add yours! 👇
 <!-- AUTO-GENERATED-CONTENT:END -->
 
