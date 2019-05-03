@@ -3,15 +3,16 @@ import { ANON_ID, USER_ID, USER_TRAITS } from '../constants'
 import timeStamp from '../utils/timestamp'
 import EVENTS from '../events'
 
-// user state
-const initialState = {
-  userId: storage.getItem(USER_ID),
-  anonymousId: storage.getItem(ANON_ID),
-  traits: storage.getItem(USER_TRAITS) || {}
+export function getPersistedUserData() {
+  return {
+    userId: storage.getItem(USER_ID),
+    anonymousId: storage.getItem(ANON_ID),
+    traits: storage.getItem(USER_TRAITS) || {}
+  }
 }
 
 // user reducer
-export default function user(state = initialState, action) {
+export default function user(state = {}, action) {
   // Set anonymousId
   if (action && action.type === EVENTS.setItemCompleted && action.key === ANON_ID) {
     return Object.assign({}, state, {
@@ -36,18 +37,6 @@ export default function user(state = initialState, action) {
       })
     default:
       return state
-  }
-}
-
-// Set tracking data for third party plugins
-export const identify = (userId, traits, options, callback) => {
-  return {
-    type: EVENTS.identifyStart,
-    timestamp: timeStamp(),
-    userId: userId,
-    traits: traits,
-    options: options,
-    callback: callback
   }
 }
 
