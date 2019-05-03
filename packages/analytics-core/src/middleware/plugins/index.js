@@ -1,7 +1,6 @@
 import EVENTS from '../../events'
 import waitForReady from '../../utils/waitForReady'
 import runPlugins from './engine'
-// import runPlugins from './old-engine'
 
 export default function pluginMiddleware(instance, getPlugins, systemEvents) {
   return store => next => async action => {
@@ -42,7 +41,7 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
           // It's loaded! run the command
         }).catch((e) => {
           // Timeout Add to queue
-          console.log('Error generic waitForReady e', e)
+          // console.log('Error generic waitForReady. Push this to queue', e)
           if (e instanceof Error) {
             throw new Error(e)
           }
@@ -66,7 +65,6 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
 
     /* New plugin system */
     if (type !== 'bootstrap') {
-      // console.log('run the thing', type)
       const updated = await runPlugins(action, getPlugins, instance, store)
       return next(updated)
     }
