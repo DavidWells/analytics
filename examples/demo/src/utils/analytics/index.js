@@ -1,6 +1,7 @@
 import Analytics from 'analytics'
 import googleAnalytics from 'analytics-plugin-ga'
 import segmentPlugin from 'analytics-plugin-segment'
+import doNotTrack from 'analytics-plugin-do-not-track'
 import exampleProviderPlugin from './plugins/provider-example'
 import visualizeLifecycle from './plugins/visualize-analytics'
 
@@ -16,6 +17,9 @@ const analytics = Analytics({
   debug: true,
   plugins: [
     visualizeLifecycle(),
+    // doNotTrack({
+    //   enabled: true
+    // }),
     segmentPlugin({
       writeKey: 'f3W8BZ0iCGrk1STIsMZV7JXfMGB7aMiW',
       disableAnonymousTraffic: true,
