@@ -33,7 +33,7 @@ const config = {
       return packages
     },
     API_DOCS(content, options) {
-      const fileContents = fs.readFileSync(path.join(__dirname, '..', 'packages/analytics-core/index.js'), 'utf-8')
+      const fileContents = fs.readFileSync(path.join(__dirname, '..', 'packages/analytics-core/src/index.js'), 'utf-8')
       const docBlocs = dox.parseComments(fileContents, { raw: true, skipSingleStar: true })
       let updatedContent = ''
       docBlocs.forEach((data) => {
