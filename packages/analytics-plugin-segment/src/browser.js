@@ -4,8 +4,6 @@
  */
 /* global analytics */
 
-const NAMESPACE = 'segment'
-
 const defaultConfig = {
   assumesPageview: true,
   disableAnonymousTraffic: false
@@ -20,6 +18,22 @@ export default function SegmentPlugin(userConfig) {
       ...defaultConfig,
       // user land config
       ...userConfig
+    },
+    bootstrap: ({ config, instance }) => {
+      /* Load segment script after userId exists */
+      if (config.disableAnonymousTraffic) {
+        instance.once('identifyStart', ({ payload, plugins }) => {
+          const self = plugins['segment']
+          if (!self.loaded()) {
+            self.initialize({ instance, payload, config: self.config })
+            // @Todo abstract into method
+            instance.dispatch({
+              type: `ready:segment`,
+              name: 'segment',
+            })
+          }
+        })
+      }
     },
     initialize,
     /* Trigger Segment page view */
@@ -47,27 +61,18 @@ export default function SegmentPlugin(userConfig) {
   }
 }
 
-let added = false
-function loadScriptAfterUserHasId(instance) {
-  if (added) return false
-  instance.once('identify', (action) => {
-    instance.loadPlugin(NAMESPACE)
-  })
-  added = true
-}
-
 /* initialize Segment script */
-export const initialize = ({ config, instance }) => {
+export const initialize = ({ config, instance, payload }) => {
   const { disableAnonymousTraffic, writeKey, assumesPageview } = config
-  // alert(`Plugin Segment: initialize ${JSON.stringify(action)}`)
   if (!writeKey) {
     throw new Error('No segment writeKey')
   }
-  const user = instance.user()
+  const user = instance.user() || {}
+  const payloadId = payload || {}
+  const userFromStorage = instance.storage.getItem('__user_id')
+  const noUserId = (!user.userId && !payloadId.userId && !userFromStorage)
   // Disable segment.com if user is not yet identified. Save on Monthly MTU bill
-  if ((!user || !user.userId) && disableAnonymousTraffic) {
-    // load segment when user identified
-    loadScriptAfterUserHasId(instance)
+  if (noUserId && disableAnonymousTraffic) {
     return false
   }
   /* eslint-disable */
