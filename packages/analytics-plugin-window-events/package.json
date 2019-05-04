@@ -9,13 +9,18 @@
     "analytics",
     "analytics-plugin"
   ],
-  "main": "dist/analytics-plugin-window-events.js",
-  "module": "dist/analytics-plugin-window-events.esm.js",
+  "main": "lib/analytics-plugin-window-events.cjs.js",
+  "globalName": "analyticsWindowEvents",
+  "jsnext:main": "lib/analytics-plugin-window-events.es.js",
+  "module": "lib/analytics-plugin-window-events.es.js",
+  "browser": {
+    "./lib/analytics-plugin-window-events.cjs.js": "./lib/analytics-plugin-window-events.browser.cjs.js",
+    "./lib/analytics-plugin-window-events.es.js": "./lib/analytics-plugin-window-events.browser.es.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node ../../scripts/plugins/build.js --nameSpace window-events",
-    "build:dev": "node ../../scripts/plugins/build.js --nameSpace window-events --env dev",
-    "watch": "node ../../scripts/plugins/watch.js --nameSpace window-events",
+    "build": "node ../../scripts/build/index.js",
+    "watch": "node ../../scripts/build/_watch.js",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
