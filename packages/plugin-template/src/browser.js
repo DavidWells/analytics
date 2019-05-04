@@ -1,5 +1,5 @@
 /**
- * Browser side
+ * Browser implementation
  */
 
 const config = {
@@ -18,21 +18,21 @@ export default function analyticPlugin(userConfig) {
     initialize: ({ config }) => {
       console.log('Load browser scripts!')
     },
-    // page view
+    /* page view */
     page: ({ payload, config }) => {
       console.log('Run pageview in browser')
     },
-    // track event
+    /* track event */
     track: ({ payload, config }) => {
       console.log('track event in browser')
     },
-    // identify user
+    /* identify user */
     identify: ({ payload }) => {
       console.log('identify user in browser')
     },
-    // Verify script loaded
+    /* Verify script loaded */
     loaded: function() {
-      return !!window.gaplugins
+      return !!window.myWindowGlobal
     }
   }
 }

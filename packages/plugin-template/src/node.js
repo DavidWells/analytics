@@ -1,6 +1,13 @@
 /**
- * Node side
+ * Node implementation
  */
+
+let sdk
+let client
+if (!process.browser) {
+  /* include your node side SDK */
+  // sdk = require('analytics-node')
+}
 
 const config = {
   assumesPageview: true
@@ -16,24 +23,25 @@ export default function analyticPlugin(userConfig) {
       ...userConfig
     },
     initialize: ({ config }) => {
-      console.log('Not needed in node')
+      /* initialize client */
+      client = sdk('xyz')
     },
-    // page view
+    /* page view */
     page: ({ payload, config }) => {
       console.log('Run pageview in node')
+      client.page()
     },
-    // track event
+    /* track event */
     track: ({ payload, config }) => {
       console.log('track event in node')
+      client.track()
     },
-    // identify user
+    /* identify user */
     identify: ({ payload }) => {
       console.log('identify user in node')
+      client.identify()
     },
-    /* Not needed in node
-    loaded: function() {
-      return true
-    }
-    */
+    /* Not needed in node */
+    // loaded: () {}
   }
 }
