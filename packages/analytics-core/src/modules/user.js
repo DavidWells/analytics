@@ -14,7 +14,7 @@ export function getPersistedUserData() {
 // user reducer
 export default function user(state = {}, action) {
   // Set anonymousId
-  if (action && action.type === EVENTS.setItemCompleted && action.key === ANON_ID) {
+  if (action && action.type === EVENTS.setItemEnd && action.key === ANON_ID) {
     return Object.assign({}, state, {
       anonymousId: action.value,
     })
