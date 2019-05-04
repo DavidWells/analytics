@@ -21,6 +21,10 @@ export default async function (action, getPlugins, instance, store) {
   const allActivePluginKeys = activePlugins.map((p) => p.NAMESPACE)
 
   const allMatches = getAllMatchingCalls(eventType, activePlugins, pluginObject)
+  /*
+    @TODO cache matches and purge on enable/disable/add plugin
+  */
+
   // console.log('allMatchesallMatches', allMatches)
   // console.log('allActivePluginKeys', allActivePluginKeys)
   // console.log('allActivePluginKeys.length', allActivePluginKeys.length)
@@ -30,7 +34,7 @@ export default async function (action, getPlugins, instance, store) {
   // const matchingMethods = getCalls(eventType, activePlugins, pluginObject)
   // console.log(`matchingMethods:${eventType}`, matchingMethods)
 
-  const cleanMatch = getMatchingMethods(eventType, activePlugins)
+  // const cleanMatch = getMatchingMethods(eventType, activePlugins)
   // console.log(`cleanMatch:${eventType}`, cleanMatch)
   /**
    * .🔥 🔥 Design processEvents API

@@ -1,5 +1,6 @@
 import test from 'ava'
 import sinon from 'sinon'
+import delay from './utils/delay'
 import Analytics from '../src'
 
 test.beforeEach((t) => {
@@ -50,9 +51,3 @@ test('should call .on listeners & callback if no plugins', async (t) => {
   // Ensure the callbacks are called in the correct order
   t.deepEqual(executionOrder, [1, 2, 3, 4])
 })
-
-function delay(timeout) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, timeout)
-  })
-}
