@@ -1,13 +1,10 @@
 import React from 'react'
-import { Link } from "@reach/router"
+import Navigation from '../../fragments/Nav'
 
 const About = () => (
   <div>
+    <Navigation />
     <h1>About</h1>
-    <nav>
-      <Link to="/">Home</Link> |{" "}
-      <Link to="dashboard">Dashboard</Link>
-    </nav>
     <div>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vitae mauris arcu, eu pretium nisi.
       Praesent fringilla ornare ullamcorper. Pellentesque diam orci, sodales in blandit ut, placerat quis felis.

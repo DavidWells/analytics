@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Link } from "@reach/router"
 import { initialHistory } from '../../utils/analytics/plugins/visualize-analytics'
 import analytics from '../../utils/analytics'
+import Navigation from '../../fragments/Nav'
 import Log from '../../components/Log'
 import './Home.css'
 
@@ -55,12 +56,7 @@ export default class App extends Component {
     const { history } = this.state
     return (
       <div className="App">
-        <div className="navigation">
-          <Link to='/'>Home</Link>
-          <Link to='/listeners'>Listeners</Link>
-          <Link to='/state'>State</Link>
-          <Link to='/kitchen-sink'>Kitchen Sink</Link>
-        </div>
+        <Navigation />
         <h2>
           <a href='https://github.com/DavidWells/analytics'>Analytics</a>
           <span className="install">npm install analytics</span>
@@ -76,9 +72,7 @@ export default class App extends Component {
           analytics.identify()
         </button>
         <h3>Lifecycle</h3>
-        <Log
-          items={history}
-        />
+        <Log items={history} />
       </div>
     )
   }

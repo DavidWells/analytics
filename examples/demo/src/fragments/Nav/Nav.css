@@ -1,0 +1,12 @@
+
+.navigation {
+  display: flex;
+  align-items: center;
+}
+.navigation a {
+  display: flex;
+  margin-left: 10px;
+}
+.navigation a:first-of-type {
+  margin-left: 0px;
+}

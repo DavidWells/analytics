@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import analytics from '../../utils/analytics'
 import Log from '../../components/Log'
-import { Link } from "@reach/router"
+import Navigation from '../../fragments/Nav'
 // import './Home.css'
 
 export default class App extends Component {
@@ -166,9 +166,8 @@ export default class App extends Component {
     const { history } = this.state
     return (
       <div className="app">
-        <div>
-          <Link to='/'>Home</Link>
-        </div>
+        <Navigation />
+        <h2>Kitchen Sink</h2>
         <div>
           <button onClick={this.handleTrack}>
             Track

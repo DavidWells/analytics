@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Link } from "@reach/router"
+import Navigation from '../../fragments/Nav'
 import outdent from 'outdent'
 import Demo from './demo'
 import analytics from '../../utils/analytics'
@@ -67,9 +67,7 @@ export default class Listeners extends Component {
   render() {
     return (
       <div className="App">
-        <div>
-          <Link to='/'>Home</Link>
-        </div>
+        <Navigation />
         <h2>Listeners</h2>
         <p>You can listen to analytic events with the <code>analytics.on('event')</code></p>
         <Demo

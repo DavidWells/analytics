@@ -9,7 +9,10 @@
   font-size: 14px;
   font-family: monospace;
   margin-left: 20px;
-  color: grey;
+  color: #353535;
+  padding: 10px;
+  background: #eaeaea;
+  border-radius: 3px;
 }
 
 .navigation {

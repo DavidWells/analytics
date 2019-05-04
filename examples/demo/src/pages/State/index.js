@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Link } from "@reach/router"
+import Navigation from '../../fragments/Nav'
 import analytics from '../../utils/analytics'
 import './State.css'
 
@@ -24,9 +24,7 @@ export default class App extends Component {
     const { currentState } = this.state
     return (
       <div className="App">
-        <div>
-          <Link to='/'>Home</Link>
-        </div>
+        <Navigation />
         <h2>Analytics State</h2>
         <div className='state'>
           <pre>
