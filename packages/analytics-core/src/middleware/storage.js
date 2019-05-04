@@ -38,8 +38,8 @@ export const setItem = (key, value, opts) => {
 export const removeItem = (key, opts) => {
   return {
     type: EVENTS.removeItemStart,
+    timestamp: timeStamp(),
     key: key,
     options: opts,
-    timestamp: timeStamp()
   }
 }

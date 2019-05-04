@@ -6,12 +6,12 @@ import { ANON_ID } from '../constants'
 export default function initializeMiddleware(instance) {
   return store => next => action => {
     if (action.type === EVENTS.bootstrap) {
-      // 1. Set anonymous ID
+      /* 1. Set anonymous ID */
       if (!storage.getItem(ANON_ID)) {
         instance.storage.setItem(ANON_ID, uuid())
       }
 
-      // 2. Parse params
+      /* 2. Parse url params */
       const params = paramsParse()
       const paramsArray = Object.keys(params)
       if (paramsArray.length) {
@@ -94,9 +94,6 @@ export default function initializeMiddleware(instance) {
           return daysSince.toString();
       }
       */
-      // handle user indenfication here
-
-      // handle initial visitor source here
     }
     return next(action)
   }
