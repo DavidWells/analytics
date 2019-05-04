@@ -4,6 +4,9 @@
 
 exports.onRouteUpdate = ({ location }, options) => {
   if (typeof Analytics !== 'undefined') {
+    if (options && options.debug) {
+      console.log('analytics.page() called')
+    }
     // On every route change fire this
     Analytics.page()
   }
