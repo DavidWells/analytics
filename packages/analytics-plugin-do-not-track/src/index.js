@@ -1,4 +1,6 @@
 
+// const doNotTrack = !(navigator.doNotTrack == "1" || window.doNotTrack == "1")
+
 // Todo design API for doNotTrack to allow for fine grained permissions
 export default function doNotTrackPlugin(userConfig = {}) {
   return {
