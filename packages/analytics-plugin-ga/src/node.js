@@ -7,24 +7,23 @@ if (!process.browser) {
   ua = require('universal-analytics')
 }
 
-const config = {}
+const config = {
+  /* Your site tracking ID */
+  trackingId: null
+}
 
 const NAMESPACE = 'google-analytics'
 
-let client
-
 /* Export the integration */
 export default function googleAnalytics(userConfig) {
-  // Allow for userland overides of base methods
+  const gaSettings = {
+    ...config,
+    ...userConfig
+  }
+  const client = ua(gaSettings.trackingId)
   return {
     NAMESPACE: NAMESPACE,
-    config: {
-      ...config,
-      ...userConfig
-    },
-    initialize: ({ config }) => {
-      client = ua(config.trackingId)
-    },
+    config: gaSettings,
     // page view
     page: ({ payload, config }) => {
       const { properties } = payload
