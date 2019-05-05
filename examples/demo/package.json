@@ -19,6 +19,7 @@
     "analytics-plugin-original-source": "file:../../packages/analytics-plugin-original-source",
     "analytics-plugin-segment": "file:../../packages/analytics-plugin-segment",
     "analytics-plugin-tab-events": "file:../../packages/analytics-plugin-tab-events",
+    "analytics-plugin-window-events": "file:../../packages/analytics-plugin-window-events",
     "analytics-utils": "file:../../packages/analytics-utils",
     "outdent": "^0.7.0",
     "react": "^16.7.0",

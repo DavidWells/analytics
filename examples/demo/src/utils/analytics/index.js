@@ -2,6 +2,8 @@ import Analytics from 'analytics'
 import googleAnalytics from 'analytics-plugin-ga'
 import segmentPlugin from 'analytics-plugin-segment'
 import doNotTrack from 'analytics-plugin-do-not-track'
+import tabEvents from 'analytics-plugin-tab-events'
+import windowEvents from 'analytics-plugin-window-events'
 import exampleProviderPlugin from './plugins/provider-example'
 import visualizeLifecycle from './plugins/visualize-analytics'
 
@@ -12,11 +14,15 @@ const reduxPlugin = store => next => action => {
   return next(action)
 }
 
+var tabInterval
+
 /* initialize analytics and load plugins */
 const analytics = Analytics({
   debug: true,
   plugins: [
     visualizeLifecycle(),
+    tabEvents(),
+    // windowEvents(),
     // doNotTrack({
     //   enabled: true
     // }),
@@ -33,8 +39,28 @@ const analytics = Analytics({
     reduxPlugin,
     {
       NAMESPACE: 'custom',
-      customEvent: () => {
-        alert('yo')
+      tabHidden: () => {
+        console.log('TAB HIDDEN')
+        var tabHiddenCount = 0
+        tabInterval = setInterval(() => {
+          console.log(tabHiddenCount++)
+        }, 500)
+      },
+      tabVisible: () => {
+        console.log('Tab Now visible again')
+        clearInterval(tabInterval)
+      },
+      tabHiddenEnd: () => {
+        console.log('TAB HIDDEN Last')
+      }
+    },
+    {
+      NAMESPACE: 'custom-two',
+      tabHidden: () => {
+        console.log('TAB HIDDEN 2')
+      },
+      tabHiddenEnd: () => {
+        console.log('TAB HIDDEN Last 2')
       }
     }
   ]
