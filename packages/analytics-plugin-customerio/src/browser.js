@@ -1,20 +1,25 @@
+/* global _cio */
 /**
  * Customer.io analytics integration
+ * Loads client side JS https://customer.io/docs/javascript-quick-start
  */
-/* global _cio */
 
 const config = {
-  assumesPageview: true
+  /* Customer.io site ID */
+  siteId: null
 }
 
-export default function customerIOPlugin(userConfig) {
+export default function customerIOPlugin(userConfig = {}) {
   return {
     NAMESPACE: 'customerio',
-    config: Object.assign({}, config, userConfig),
+    config: {
+      ...config,
+      ...userConfig
+    },
     initialize: ({ config }) => {
-      const { siteID } = config
-      if (!siteID) {
-        throw new Error('No customer.io siteID defined')
+      const { siteId } = config
+      if (!siteId) {
+        throw new Error('No customer.io siteId defined')
       }
       if (typeof _cio === 'undefined') {
         window._cio = [];
@@ -31,7 +36,7 @@ export default function customerIOPlugin(userConfig) {
           var s = document.getElementsByTagName('script')[0]
           t.async = true
           t.id = 'cio-tracker'
-          t.setAttribute('data-site-id', siteID)
+          t.setAttribute('data-site-id', siteId)
           t.src = 'https://assets.customer.io/assets/track.js'
           s.parentNode.insertBefore(t, s)
         })()

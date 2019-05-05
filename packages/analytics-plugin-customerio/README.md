@@ -4,8 +4,9 @@ Integration with [customer.io](https://customer.io/) for [analytics](https://www
 
 ## Install
 
-```bash
-npm install analytics-plugin-customerio --save
+```
+npm install analytics
+npm install analytics-plugin-customerio
 ```
 
 ## Usage
