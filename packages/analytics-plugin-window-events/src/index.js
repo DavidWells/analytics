@@ -1,4 +1,3 @@
-const inBrowser = typeof window !== 'undefined'
 
 const EVENTS = {
   /**
@@ -57,7 +56,7 @@ function throttle(func, wait) {
 }
 
 export function mouseOut(cb) {
-  if (!inBrowser) return false
+  if (typeof window === 'undefined') return false
   let out = false
   document.addEventListener('mouseout', throttle((e) => {
     const evt = e || window.event
