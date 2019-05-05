@@ -1,4 +1,7 @@
-const inBrowser = typeof window !== 'undefined'
+/**
+ * Expose Tab visbility events to analtyics
+ * Trigger analytics actions when tab is hidden or visible
+ */
 
 const EVENTS = {
   /**
@@ -17,7 +20,7 @@ export default function tabEventsPlugin(userConfig = {}) {
     EVENTS: EVENTS,
     config: Object.assign({}, userConfig),
     bootstrap: ({ instance }) => {
-      // Dispatch events when tab visiblity changes
+      /* Dispatch event when tab visiblity changes */
       onTabChange(isHidden => {
         instance.dispatch({
           type: (isHidden) ? EVENTS.tabHidden : EVENTS.tabVisible,
@@ -28,11 +31,9 @@ export default function tabEventsPlugin(userConfig = {}) {
 }
 
 export function onTabChange(cb) {
-  if (!inBrowser) return false
+  if (typeof window === 'undefined') return false
   const prop = getHiddenProp()
-  if (!prop) {
-    return false
-  }
+  if (!prop) return false
   const event = `${prop.replace(/[H|h]idden/, '')}visibilitychange`
   document.addEventListener(event, () => {
     if (document[prop]) return cb(true) // eslint-disable-line
