@@ -1,27 +1,29 @@
 # Segment plugin for `analytics`
 
-Integration with segment for [analytics](https://www.npmjs.com/package/analytics)
+Integration with [segment](https://segment.com/) for [analytics](https://www.npmjs.com/package/analytics)
 
 ## Install
 
-```bash
-npm install analytics-plugin-segment --save
+```
+npm install analytics
+npm install analytics-plugin-segment
 ```
 
 ## Usage
 
 ```js
 import analytics from 'analytics'
-import segment from 'analytics-plugin-segment'
+import segmentPlugin from 'analytics-plugin-segment'
 
 const analyticsInstance = analytics({
-  app: 'doggieDating',
+  app: 'my-app',
   version: 100,
   plugins: [
-    // segment integration
-    segment({
+    /* segment integration */
+    segmentPlugin({
       trackingId: 'abc12345xyz'
     }),
+    // ...other plugins
   ]
 })
 ```
