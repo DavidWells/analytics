@@ -4,18 +4,18 @@
  */
 /* global analytics */
 
-const defaultConfig = {
-  assumesPageview: true,
+const config = {
+  /* Disable anonymous MTU */
   disableAnonymousTraffic: false
 }
 
 /* export the plugin */
-export default function SegmentPlugin(userConfig) {
+export default function SegmentPlugin(userConfig = {}) {
   return {
     NAMESPACE: 'segment',
     config: {
       // default config
-      ...defaultConfig,
+      ...config,
       // user land config
       ...userConfig
     },
@@ -67,12 +67,9 @@ export const initialize = ({ config, instance, payload }) => {
   if (!writeKey) {
     throw new Error('No segment writeKey')
   }
-  const user = instance.user() || {}
-  const payloadId = payload || {}
-  const userFromStorage = instance.storage.getItem('__user_id')
-  const noUserId = (!user.userId && !payloadId.userId && !userFromStorage)
+  const userID = instance.user('userId')
   // Disable segment.com if user is not yet identified. Save on Monthly MTU bill
-  if (noUserId && disableAnonymousTraffic) {
+  if (!userID && disableAnonymousTraffic) {
     return false
   }
   /* eslint-disable */
