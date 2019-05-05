@@ -5,6 +5,8 @@
 import { inBrowser, parseReferrer, cookie, storage } from 'analytics-utils'
 import { formatPipeString, parsePipeString } from './utils'
 
+const NAMESPACE = 'original-source'
+
 const EVENTS = {
   SET_ORIGINAL_SOURCE: 'setOriginalSource'
 }
@@ -25,7 +27,8 @@ const CONFIG = {
  */
 export default function firstSource(userConfig) {
   return {
-    NAMESPACE: 'original-source',
+    NAMESPACE: NAMESPACE,
+    EVENTS: EVENTS,
     // Run function on `analyticsInit` event
     bootstrap: ({ instance }) => {
       instance.dispatch({
