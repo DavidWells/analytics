@@ -2,7 +2,7 @@
  * Core Analytic Events
  */
 
-export const eventKeys = [
+export const coreEvents = [
   /**
    * `bootstrap` - Fires when analytics library starts up. This is the first event fired
    */
@@ -191,7 +191,7 @@ const pluginEvents = {
   pluginReadyType: (name) => `pluginReady:${name}`,
 }
 
-const EVENTS = eventKeys.reduce((acc, curr) => {
+const EVENTS = coreEvents.reduce((acc, curr) => {
   acc[curr] = curr
   return acc
 }, pluginEvents)
@@ -199,5 +199,5 @@ const EVENTS = eventKeys.reduce((acc, curr) => {
 export default EVENTS
 
 export function isReservedAction(type) {
-  return eventKeys.includes(type)
+  return coreEvents.includes(type)
 }

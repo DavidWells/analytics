@@ -1,17 +1,10 @@
 import { storage } from 'analytics-utils'
 import { ANON_ID, USER_ID, USER_TRAITS } from '../constants'
 import timeStamp from '../utils/timestamp'
+import globalContext from '../utils/global'
 import EVENTS from '../events'
 
-export function getPersistedUserData() {
-  return {
-    userId: storage.getItem(USER_ID),
-    anonymousId: storage.getItem(ANON_ID),
-    traits: storage.getItem(USER_TRAITS) || {}
-  }
-}
-
-// user reducer
+/* user reducer */
 export default function user(state = {}, action) {
   // Set anonymousId
   if (action && action.type === EVENTS.setItemEnd && action.key === ANON_ID) {
@@ -45,6 +38,39 @@ export const reset = (callback) => {
     type: EVENTS.reset,
     timestamp: timeStamp(),
     callback: callback
+  }
+}
+
+export function getPersistedUserData() {
+  return {
+    userId: storage.getItem(USER_ID),
+    anonymousId: storage.getItem(ANON_ID),
+    traits: storage.getItem(USER_TRAITS) || {}
+  }
+}
+
+export const tempKey = (key) => `__TEMP__${key}`
+
+export function getUserProp(key, instance, payload) {
+  /* 1. Try current state */
+  const currentId = instance.getState('user')[key]
+  if (currentId) return currentId
+
+  /* 2. Try event payload */
+  if (payload && typeof payload === 'object' && payload[key]) {
+    return payload[key]
+  }
+
+  /* 3. Try persisted data */
+  const persistedInfo = getPersistedUserData()[key]
+  if (persistedInfo) {
+    // console.log(`persisted ${key}`, findId)
+    return persistedInfo
+  }
+
+  /* 4. Else, try to get in memory placeholder. TODO watch this for future issues */
+  if (globalContext[tempKey(key)]) {
+    return globalContext[tempKey(key)]
   }
 }
 

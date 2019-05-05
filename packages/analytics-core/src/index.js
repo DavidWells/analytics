@@ -7,14 +7,15 @@ import context, { makeContext } from './modules/context'
 import page, { getPageData } from './modules/page'
 import track from './modules/track'
 import queue from './modules/queue'
-import user, { reset, getPersistedUserData } from './modules/user'
+import user, { reset, getUserProp, tempKey, getPersistedUserData } from './modules/user'
 import dotProp from './utils/dotProp'
 import timestamp from './utils/timestamp'
 import { watch } from './utils/handleNetworkEvents'
 import getCallback from './utils/getCallback'
 import { Debug, composeWithDebug } from './utils/debug'
-import EVENTS, { eventKeys, isReservedAction } from './events'
+import EVENTS, { coreEvents, isReservedAction } from './events'
 import * as CONSTANTS from './constants'
+import globalContext from './utils/global'
 import heartBeat from './utils/heartbeat'
 
 const { setItem, removeItem, getItem } = middleware
@@ -25,9 +26,17 @@ export default function analytics(config = {}) {
   /* Parse plugins array */
   const parsedOptions = (config.plugins || []).reduce((acc, p) => {
     if (typeof p !== 'function' && p.NAMESPACE) {
-      // Combine all available events
-      const allEvents = new Set(acc.events.concat(Object.keys(p)))
-      acc.events = Array.from(allEvents)
+      // if plugin exposes EVENTS capture available events
+      const definedEvents = (p.EVENTS) ? Object.keys(p.EVENTS).map((k) => {
+        return p.EVENTS[k]
+      }) : []
+      // Convert available methods into events
+      const methodsToEvents = Object.keys(p)
+      // Combine events
+      const allEvents = methodsToEvents.concat(definedEvents)
+      // Dedupe events list
+      const allEventsUnique = new Set(acc.events.concat(allEvents))
+      acc.events = Array.from(allEventsUnique)
 
       acc.pluginsArray = acc.pluginsArray.concat(p)
 
@@ -53,14 +62,18 @@ export default function analytics(config = {}) {
 
   // mutable intregrations object for dynamic loading
   let customPlugins = parsedOptions.plugins
-  const pluginKeys = Object.keys(customPlugins)
 
-  const nonEvents = ['config', 'loaded', 'NAMESPACE']
-  const registeredEvents = parsedOptions.events.concat(eventKeys).filter((name) => {
+  /* Grab all registered events from plugins loaded */
+  const nonEvents = ['NAMESPACE', 'EVENTS', 'config', 'loaded']
+  const pluginEvents = parsedOptions.events.filter((name) => {
     return !nonEvents.includes(name)
   })
-  const uniqueEventKeys = new Set(registeredEvents)
-  const systemEvents = Array.from(uniqueEventKeys).sort()
+  const uniqueEvents = new Set(pluginEvents.concat(coreEvents).filter((name) => {
+    return !nonEvents.includes(name)
+  }))
+  const allSystemEvents = Array.from(uniqueEvents).sort()
+  const allPluginEvents = pluginEvents.sort()
+
   /* plugin methods(functions) must be kept out of state. thus they live here */
   const getPlugins = (asArray) => {
     if (asArray) {
@@ -95,12 +108,15 @@ export default function analytics(config = {}) {
       const opts = options || {}
       const cb = getCallback(traits, options, callback)
       const user = instance.user()
-      // @TODO extract userID logic into reusable function
-      const finUserId = id || getPersistedUserData().userId
+
+      /* sets temporary in memory id. Not to be relied on */
+      globalContext[tempKey('userId')] = id
+
+      const resolvedId = id || data.userId || getUserProp('userId', instance, data)
 
       store.dispatch({
         type: EVENTS.identifyStart,
-        userId: finUserId,
+        userId: resolvedId,
         traits: data,
         options: opts,
         anonymousId: user.anonymousId,
@@ -131,14 +147,17 @@ export default function analytics(config = {}) {
       const data = (typeof eventName === 'object') ? eventName : (payload || {})
       const opts = (typeof options === 'object') ? options : {}
       const cb = getCallback(payload, options, callback)
-      const { userId, anonymousId } = instance.user()
+
+      const id = getUserProp('userId', instance, payload)
+      const anonId = getUserProp('anonymousId', instance, payload)
+
       store.dispatch({
         type: EVENTS.trackStart,
         event: name,
         properties: data,
         options: opts,
-        userId: userId,
-        anonymousId: anonymousId,
+        userId: id,
+        anonymousId: anonId,
         meta: {
           timestamp: timestamp(),
           ...(cb && { callback: cb })
@@ -160,7 +179,9 @@ export default function analytics(config = {}) {
       const d = (typeof data === 'object') ? data : {}
       const opts = (typeof options === 'object') ? options : {}
       const cb = getCallback(data, options, callback)
-      const { userId, anonymousId } = instance.user()
+
+      const userId = getUserProp('userId', instance, d)
+      const anonymousId = getUserProp('anonymousId', instance, d)
 
       store.dispatch({
         type: EVENTS.pageStart,
@@ -223,8 +244,10 @@ export default function analytics(config = {}) {
         ...theAction,
         // TODO merge meta
         meta: {
-          timestamp: timestamp()
-        }
+          timestamp: timestamp(),
+          // TODO verify __oa
+          __oa: theAction.type
+        },
         // type: `${autoPrefixType}`
       }
 
@@ -307,11 +330,12 @@ export default function analytics(config = {}) {
      * const companyName = analytics.user('traits.company.name')
      */
     user: (key) => {
-      const persistedUser = getPersistedUserData()
+      if (key === 'userId' || key === 'id') {
+        const findId = getUserProp('userId', instance)
+        return findId
+      }
+
       const user = instance.getState('user')
-      // TODO sync persisted data with state
-      // console.log('xxx user', user)
-      // console.log('xxx user persistedUser', persistedUser)
 
       if (!key) return user
       return dotProp(user, key)
@@ -337,7 +361,7 @@ export default function analytics(config = {}) {
      *
      * @example
      *
-     * analytics.on('track', ({ action, instance }) => {
+     * analytics.on('track', ({ payload, instance }) => {
      *   console.log('track call just happened. Do stuff')
      * })
      */
@@ -460,7 +484,12 @@ export default function analytics(config = {}) {
      * Events exposed by core analytics library and all loaded plugins
      * @type {Array}
      */
-    events: systemEvents,
+    events: allSystemEvents,
+    /**
+     * Events exposed by all loaded plugins
+     * @type {Array}
+     */
+    pluginEvents: allPluginEvents
     /* @TODO if it stays, state loaded needs to be set. Re PLUGIN_INIT above
     addPlugin: (newPlugin) => {
       // validate integration
@@ -483,7 +512,10 @@ export default function analytics(config = {}) {
   const middlewares = parsedOptions.middlewares.concat([
     /* Core analytics middleware */
     dynamicMiddlewares('before'), // Before dynamic middleware <-- fixed pageStart .on listener
-    middleware.plugins(instance, getPlugins, systemEvents),
+    middleware.plugins(instance, getPlugins, {
+      all: allSystemEvents,
+      plugins: allPluginEvents
+    }),
     middleware.storage(),
     middleware.initialize(instance),
     middleware.identify(instance),
@@ -524,7 +556,8 @@ export default function analytics(config = {}) {
       const { NAMESPACE, config, loaded } = plugin
       acc[NAMESPACE] = {
         enabled: true,
-        initialized: false,
+        // If plugin has no initilaize method, set initilized to true
+        initialized: (!plugin.initialize) ? true : false, // eslint-disable-line
         loaded: Boolean(loaded()),
         config: config || {}
       }
@@ -547,6 +580,7 @@ export default function analytics(config = {}) {
   )
 
   // Syncronously call bootstrap & register Plugin methods
+  const pluginKeys = Object.keys(customPlugins)
 
   /* Bootstap analytic plugins */
   store.dispatch({
@@ -583,14 +617,17 @@ export default function analytics(config = {}) {
     }
   })
 
-  // Watch for network events
-  watch(offline => {
-    store.dispatch({
-      type: (offline) ? EVENTS.offline : EVENTS.online,
+  if (process.browser) {
+    /* Watch for network events */
+    watch(offline => {
+      store.dispatch({
+        type: (offline) ? EVENTS.offline : EVENTS.online,
+      })
     })
-  })
 
-  heartBeat(store, getPlugins)
+    // Only tick heartbeat in browser
+    heartBeat(store, getPlugins)
+  }
 
   /* Optionally expose redux to instance */
   if (config.exposeRedux) {
