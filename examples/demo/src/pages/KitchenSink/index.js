@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import analytics from '../../utils/analytics'
 import Log from '../../components/Log'
 import Navigation from '../../fragments/Nav'
-// import './Home.css'
 
 export default class App extends Component {
   constructor (props, context) {
@@ -110,7 +109,7 @@ export default class App extends Component {
   }
   handlePageNoSegment = () => {
     analytics.page(null, {
-      integrations: {
+      plugins: {
         segment: false
       }
     })
