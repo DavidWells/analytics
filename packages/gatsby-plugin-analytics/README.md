@@ -1,11 +1,14 @@
 # gatsby-plugin-analytics
 
-Easily add [`analytics`](https://github.com/davidwells/analytics) to your Gatsby site.
+Easily add the [`analytics`](https://analytics-demo.netlify.com/) npm package to your Gatsby site.
+
+[`analytics`](https://www.npmjs.com/package/analytics) is a lightweight pluggable analytics library designed to work with any third party analytics tool.
 
 ## Install
 
 ```
-npm install --save gatsby-plugin-analytics
+npm install gatsby-plugin-analytics
+npm install analytics
 ```
 
 ## How to use
@@ -50,52 +53,54 @@ npm install --save gatsby-plugin-analytics
       ]
     })
 
-    // Important! Set global 'Analytics' so Gatsby can automatically track page views on route changes
-    window.Analytics = analytics
+    // Set to global so analytics plugin will work with Gatsby
+    if (typeof window !== 'undefined') {
+      window.Analytics = analytics
+    }
 
     /* export for consumption in your components for .track & .identify calls */
     export default analytics
     ```
 
-    Important! Remember to expose to `window.Analytics` so Gatbsy can make the `analytics.page()` calls when route transitions happen.
+    **Important!** Remember to expose to `window.Analytics` so Gatsby can make the `analytics.page()` calls when route transitions happen.
 
-3. **Import analytics**
+    Make sure to import this file into a base component so analytics loads on first page load.
 
-    Import your `analytics.js` file into a root component to ensure that it is initialized and the `window.Analytics` is set.
+## Using `track` & `identify`
 
-4. **(Optionally), use `analytics.track` & `analytics.identify` in your site**
+If you want to `track` custom events or `identify` specific users, you can import your analytics instance and call the [`analytics` API](https://github.com/DavidWells/analytics#usage)
 
-    If you want to `track` custom events or `identify` specific users, you can import your analytics instance and call the [`analytics` API](https://github.com/DavidWells/analytics#usage)
+```js
+import React, { Component } from 'react'
+// path to your analytics instance
+import analytics from '/analytics'
 
-    ```js
-    import React, { Component } from 'react'
-    // path to your analytics instance
-    import analytics from '/analytics'
+export default class App extends Component {
+  doTrack = () => {
+    analytics.track('buttonClicked', {
+      foo: 'bar'
+    })
+  }
+  doIdentify = () => {
+    analytics.identify('xyz-777', {
+      traitOne: 'blue',
+      traitTwo: 'red',
+    })
+  }
+  render() {
+    const { history } = this.state
+    return (
+      <div className="App">
+        <button onClick={this.doTrack}>
+          Buy This Now
+        </button>
+        <button onClick={this.doIdentify}>
+          Login
+        </button>
+      </div>
+    )
+  }
+}
+```
 
-    export default class App extends Component {
-      doTrack = () => {
-        analytics.track('buttonClicked', {
-          foo: 'bar'
-        })
-      }
-      doIdentify = () => {
-        analytics.identify('xyz-777', {
-          traitOne: 'blue',
-          traitTwo: 'red',
-        })
-      }
-      render() {
-        const { history } = this.state
-        return (
-          <div className="App">
-            <button onClick={this.doTrack}>
-              Buy This Now
-            </button>
-            <button onClick={this.doIdentify}>
-              Login
-            </button>
-          </div>
-        )
-      }
-    }
-    ```
+See the [demo site](https://analytics-demo.netlify.com/) and [src](https://github.com/DavidWells/analytics/tree/master/examples/demo) for more information
