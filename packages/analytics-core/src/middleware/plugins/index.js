@@ -65,7 +65,7 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
 
     /* New plugin system */
     if (type !== 'bootstrap') {
-      const updated = await runPlugins(action, getPlugins, instance, store)
+      const updated = await runPlugins(action, getPlugins, instance, store, systemEvents)
       return next(updated)
     }
 

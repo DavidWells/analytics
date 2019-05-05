@@ -1,6 +1,6 @@
 import fitlerDisabledPlugins from '../../utils/filterDisabled'
 
-export default async function (action, getPlugins, instance, store) {
+export default async function (action, getPlugins, instance, store, eventsInfo) {
   const pluginObject = getPlugins()
   const eventType = action.type
   /* If action already dispatched exit early */
@@ -51,7 +51,8 @@ export default async function (action, getPlugins, instance, store) {
     allPlugins: pluginObject,
     allMatches,
     instance,
-    store
+    store,
+    EVENTS: eventsInfo
   })
   // console.log('____ beforeAction out', beforeAction)
 
@@ -89,7 +90,8 @@ export default async function (action, getPlugins, instance, store) {
     allPlugins: pluginObject,
     allMatches,
     instance,
-    store
+    store,
+    EVENTS: eventsInfo
   })
   // console.log('____ duringAction', duringAction)
 
@@ -108,7 +110,8 @@ export default async function (action, getPlugins, instance, store) {
     allPlugins: pluginObject,
     allMatches,
     instance,
-    store
+    store,
+    EVENTS: eventsInfo
   })
   // console.log('____ afterAction', afterAction)
 
@@ -145,7 +148,8 @@ async function processEvent({
   state,
   allPlugins,
   allMatches,
-  store
+  store,
+  EVENTS
 }) {
   const { plugins } = state
   const method = action.type
@@ -358,11 +362,25 @@ async function processEvent({
       !method.match(/^bootstrap/) &&
       !method.match(/^params/)
   ) {
+    if (EVENTS.plugins.includes(method)) {
+      // console.log(`Dont dispatch for ${method}`, resolvedAction)
+      // return resolvedAction
+    }
+    /*
+    🔥🔥🔥
+      Verify this original action setup.
+      It's intended to keep actions from double dispatching themselves
+    */
+    if (resolvedAction.meta && resolvedAction.meta.__oa === method) {
+      console.log(`Dont dispatch for ${method}`, resolvedAction)
+      return resolvedAction
+    }
     store.dispatch({
       ...resolvedAction,
       ...{
         meta: {
-          called: true
+          called: true,
+          __oa: resolvedAction.type
         }
       }
     })
@@ -458,23 +476,6 @@ function getAllMatchingCalls(eventType, activePlugins, allPlugins) {
     duringNS: {},
     after: core[2],
     afterNS: {}
-  })
-}
-
-function getMatchingMethods(eventType, activePlugins) {
-  const exact = getPluginFunctions(eventType, activePlugins)
-  // console.log('exact', exact)
-  // Gather nameSpaced Events
-  return activePlugins.reduce((acc, plugin) => {
-    const { NAMESPACE } = plugin
-    const clean = getPluginFunctions(`${eventType}:${NAMESPACE}`, activePlugins)
-    if (clean.length) {
-      acc.namespaced[NAMESPACE] = clean
-    }
-    return acc
-  }, {
-    exact: exact,
-    namespaced: {}
   })
 }
 
@@ -600,3 +601,22 @@ function formatPayload(action) {
     return acc
   }, {})
 }
+
+/*
+function getMatchingMethods(eventType, activePlugins) {
+  const exact = getPluginFunctions(eventType, activePlugins)
+  // console.log('exact', exact)
+  // Gather nameSpaced Events
+  return activePlugins.reduce((acc, plugin) => {
+    const { NAMESPACE } = plugin
+    const clean = getPluginFunctions(`${eventType}:${NAMESPACE}`, activePlugins)
+    if (clean.length) {
+      acc.namespaced[NAMESPACE] = clean
+    }
+    return acc
+  }, {
+    exact: exact,
+    namespaced: {}
+  })
+}
+*/
