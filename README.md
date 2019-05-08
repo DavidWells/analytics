@@ -34,6 +34,7 @@ Connect with your favorite analytic providers, trigger custom logic based on use
   * [analytics.disablePlugin](#analyticsdisableplugin)
   * [analytics.loadPlugin](#analyticsloadplugin)
   * [analytics.events](#analyticsevents)
+  * [analytics.pluginEvents](#analyticspluginevents)
 - [Analytic plugins](#analytic-plugins)
 - [Creating analytics plugins](#creating-analytics-plugins)
   * [React to any event](#react-to-any-event)
@@ -174,9 +175,9 @@ Identify a user. This will trigger `identify` calls in any installed plugins and
 **Arguments**
 
 - **userId** <code>String</code> - Unique ID of user
-- **traits** <code>Object</code> - Object of user traits
-- **options** <code>Object</code> - Options to pass to indentify call
-- **callback** <code>Function</code> - Optional callback function after identify completes
+- **[traits]** <code>Object</code> - Object of user traits
+- **[options]** <code>Object</code> - Options to pass to identify call
+- **[callback]** <code>Function</code> - Optional callback function after identify completes
 
 **Example**
 
@@ -194,9 +195,9 @@ Track an analytics event. This will trigger `track` calls in any installed plugi
 **Arguments**
 
 - **eventName** <code>String</code> - Event name
-- **payload** <code>Object</code> - Event payload
-- **options** <code>Object</code> - Event options
-- **callback** <code>Function</code> - Callback to fire after tracking completes
+- **[payload]** <code>Object</code> - Event payload
+- **[options]** <code>Object</code> - Event options
+- **[callback]** <code>Function</code> - Callback to fire after tracking completes
 
 **Example**
 
@@ -210,9 +211,9 @@ Trigger page view. This will trigger `page` calls in any installed plugins
 
 **Arguments**
 
-- **data** <code>String</code> - (optional) page data
-- **options** <code>Object</code> - Event options
-- **callback** <code>Function</code> - Callback to fire after page view call completes
+- **[data]** <code>String</code> - (optional) page data
+- **[options]** <code>Object</code> - Event options
+- **[callback]** <code>Function</code> - Callback to fire after page view call completes
 
 **Example**
 
@@ -226,7 +227,7 @@ Get data about user, activity, or context. You can access sub-keys of state with
 
 **Arguments**
 
-- **key** <code>String</code> - (optional) dotprop sub value of state
+- **[key]** <code>string</code> - (optional) dotprop sub value of state
 
 **Example**
 
@@ -244,7 +245,7 @@ Clear all information about the visitor & reset analytic state.
 
 **Arguments**
 
-- **callback** <code>Function</code> - Handler to run after reset
+- **[callback]** <code>Function</code> - Handler to run after reset
 
 
 ### analytics.dispatch
@@ -253,7 +254,7 @@ Emit events for other plugins or middleware to react to.
 
 **Arguments**
 
-- **action** <code>Object</code> [description]
+- **action** <code>Object</code> - event to dispatch
 
 
 ### analytics.storage
@@ -268,7 +269,7 @@ Get value from storage
 **Arguments**
 
 - **key** <code>String</code> - storage key
-- **options** <code>Object</code> - storage options
+- **[options]** <code>Object</code> - storage options
 
 **Example**
 
@@ -283,8 +284,8 @@ Set storage value
 **Arguments**
 
 - **key** <code>String</code> - storage key
-- **value** <a href="Any.html">Any</a> - storage value
-- **options** <code>Object</code> - storage options
+- **value** <a href="any.html">any</a> - storage value
+- **[options]** <code>Object</code> - storage options
 
 **Example**
 
@@ -299,7 +300,7 @@ Remove storage value
 **Arguments**
 
 - **key** <code>String</code> - storage key
-- **options** <code>Object</code> - storage options
+- **[options]** <code>Object</code> - storage options
 
 **Example**
 
@@ -313,7 +314,7 @@ Get user data
 
 **Arguments**
 
-- **key** <code>String</code> - dot.prop subpath of user data
+- **[key]** <code>String</code> - dot.prop subpath of user data
 
 **Example**
 
@@ -356,7 +357,7 @@ Attach an event handler function for one or more events to the selected elements
 **Example**
 
 ```js
-analytics.on('track', ({ action, instance }) => {
+analytics.on('track', ({ payload, instance }) => {
   console.log('track call just happened. Do stuff')
 })
 ```
@@ -384,8 +385,8 @@ Enable analytics plugin
 
 **Arguments**
 
-- **name** <code>String</code>|<code>Array</code> - name of integration(s) to disable
-- **callback** <code>Function</code> - callback after enable runs
+- **plugins** <code>String</code>|<code>Array</code> - name of plugins(s) to disable
+- **[callback]** <code>Function</code> - callback after enable runs
 
 **Example**
 
@@ -430,6 +431,11 @@ analytics.loadPlugin('segment')
 ### analytics.events
 
 Events exposed by core analytics library and all loaded plugins
+
+
+### analytics.pluginEvents
+
+Events exposed by all loaded plugins
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 ## Analytic plugins
@@ -447,6 +453,7 @@ The `analytics` has a robust plugin system. Here is a list of currently availabl
 - [analytics-plugin-tab-events](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-tab-events) Expose tab visibility events for analytics [npm link](https://www.npmjs.com/package/analytics-plugin-tab-events).
 - [analytics-plugin-window-events](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-window-events) Expose window events for analytics [npm link](https://www.npmjs.com/package/analytics-plugin-window-events).
 - [analytics-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-utils) Analytics utility functions [npm link](https://www.npmjs.com/package/analytics-utils).
+- [gatsby-plugin-analytics](https://github.com/DavidWells/analytics/tree/master/packages/gatsby-plugin-analytics) Easily add analytics to your Gatsby site. [npm link](https://www.npmjs.com/package/gatsby-plugin-analytics).
 - [analytics-plugin-template](https://github.com/DavidWells/analytics/tree/master/packages/plugin-template) Example plugin with browser + node module build with treeshaking [npm link](https://www.npmjs.com/package/analytics-plugin-template).
 - Add yours! 👇
 <!-- AUTO-GENERATED-CONTENT:END -->
