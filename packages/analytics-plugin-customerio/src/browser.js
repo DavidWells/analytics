@@ -1,20 +1,33 @@
 /* global _cio */
-/**
- * Customer.io analytics integration
- * Loads client side JS https://customer.io/docs/javascript-quick-start
- */
 
+/* Default configuration */
 const config = {
   /* Customer.io site ID */
   siteId: null
 }
 
-export default function customerIOPlugin(userConfig = {}) {
+// Because customer.io automatically fired a page view onLoad
+// We need to ignore the first .page() call
+let initialPageViewFired = false
+
+/**
+ * Customer.io analytics integration
+ * @link https://customer.io/docs/javascript-quick-start
+ * @param {object} pluginConfig - Plugin settings
+ * @param {string} pluginConfig.siteId - Customer.io site Id for client side tracking
+ * @return {object} Analytics plugin
+ * @example
+ *
+ * customerIOPlugin({
+ *   siteId: '123-xyz'
+ * })
+ */
+export default function customerIOPlugin(pluginConfig = {}) {
   return {
     NAMESPACE: 'customerio',
     config: {
       ...config,
-      ...userConfig
+      ...pluginConfig
     },
     initialize: ({ config }) => {
       const { siteId } = config
@@ -43,6 +56,12 @@ export default function customerIOPlugin(userConfig = {}) {
       }
     },
     page: ({ payload }) => {
+      /* ignore the first .page() call b/c customer.io already fired it */
+      if (!initialPageViewFired) {
+        initialPageViewFired = true
+        return
+      }
+
       if (typeof _cio !== 'undefined') {
         _cio.page(document.location.href, payload.properties)
       }
