@@ -9,3 +9,11 @@ export default function getTimeZone() {
   }
   return Intl.DateTimeFormat().resolvedOptions().timeZone
 }
+
+/* alt approach
+try {
+  return Intl.DateTimeFormat().resolvedOptions().timeZone
+} catch (error) {
+  // nothing
+}
+*/

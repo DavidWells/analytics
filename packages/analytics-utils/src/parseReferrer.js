@@ -5,7 +5,8 @@ import { trimTld, getDomainBase } from './url'
 
 /**
  * Checks a given url and parses referrer data
- * @param  {String} ref - (optional) referring URL
+ * @param  {String} [referrer] - (optional) referring URL
+ * @param  {String} [currentUrl] - (optional) the current url
  * @return {Object}     [description]
  */
 export default function parseReferrer(referrer, currentUrl) {
@@ -61,7 +62,7 @@ export default function parseReferrer(referrer, currentUrl) {
 /**
  * Client side domain parser for determining marketing data.
  * @param  {String} referrer - ref url
- * @return {[type]}          [description]
+ * @return {Object}
  */
 function parseDomain(referrer) {
   if (!referrer || !inBrowser) return false
@@ -110,51 +111,18 @@ const searchEngines = {
   'aol.com': 'q',
   'lycos.com': 'q',
   'ask.com': 'q',
-  'altavista.com': 'q',
   'cnn.com': 'query',
   'about.com': 'terms',
-  'alltheweb.com': 'q',
-  'voila.fr': 'rdata',
   'baidu.com': 'wd',
-  'alice.com': 'qs',
   'yandex.com': 'text',
   'seznam.cz': 'q',
   'search.com': 'q',
-  'szukacz.pl': 'q',
   'yam.com': 'k',
-  'pchome.com': 'q',
   'kvasir.no': 'q',
-  'sesam.no': 'q',
-  'ozu.es': 'q',
   'terra.com': 'query',
   'mynet.com': 'q',
-  'ekolay.net': 'q',
   'rambler.ru': 'words',
   'google': 'q',
-  'wp.pl': {
-    'p': 'szukaj ',
-    'n': 'wirtulana polska'
-  },
-  'online.onetcenter.org': {
-    'p': 'qt',
-    'n': 'o*net'
-  },
-  'najdi.org.mk': {
-    'p': 'q',
-    'n': 'najdi'
-  },
-  'search.virgilio.it': {
-    'p': 'qs',
-    'n': 'virgilio'
-  },
-  'mamma.com': {
-    'p': 'query',
-    'n': 'mama'
-  },
-  'search.netscape.com': {
-    'p': 'query',
-    'n': 'netscape'
-  },
   'bing.com': {
     'p': 'q',
     'n': 'live'
