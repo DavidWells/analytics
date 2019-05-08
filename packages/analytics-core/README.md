@@ -1,6 +1,6 @@
 # Analytics
 
-A pluggable analytics library designed to work with any third party analytics tool.
+An extendable analytics library designed to work with any third party analytics tool.
 
 Connect with your favorite analytic providers, trigger custom logic based on user activity, or easily provide opt out mechanisms for visitors who wish to turn off analytics entirely.
 
@@ -47,7 +47,7 @@ Connect with your favorite analytic providers, trigger custom logic based on use
 
 ## Features
 
-- [x] [Pluggable](#analytic-plugins) - Bring your own third party tool
+- [x] [Extendable](#analytic-plugins) - Bring your own third party tool & plugins
 - [x] Test & Debug analytics integrations with time travel & offline mode.
 - [x] Exposes lifecycle for analytic calls allowing for per event cancellation or provider specific payloads
 - [x] Works on client & server-side

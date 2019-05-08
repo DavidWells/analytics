@@ -149,12 +149,12 @@ export const coreEvents = [
    * Storage events
    ******************/
   /**
-   * `setItemStart` - Fires when analtyics.storage.setItem is initialized.
+   * `setItemStart` - Fires when analytics.storage.setItem is initialized.
    * This event gives plugins the ability to intercept keys & values and alter them before they are persisted.
    */
   'setItemStart',
   /**
-   * `setItem` - Fires when analtyics.storage.setItem is called.
+   * `setItem` - Fires when analytics.storage.setItem is called.
    * This event gives plugins the ability to intercept keys & values and alter them before they are persisted.
    */
   'setItem',
@@ -167,12 +167,12 @@ export const coreEvents = [
    */
   'setItemAborted',
   /**
-   * `removeItemStart` - Fires when analtyics.storage.removeItem is initialized.
+   * `removeItemStart` - Fires when analytics.storage.removeItem is initialized.
    * This event gives plugins the ability to intercept removeItem calls and abort / alter them.
    */
   'removeItemStart',
   /**
-   * `removeItem` - Fires when analtyics.storage.removeItem is called.
+   * `removeItem` - Fires when analytics.storage.removeItem is called.
    * This event gives plugins the ability to intercept removeItem calls and abort / alter them.
    */
   'removeItem',
