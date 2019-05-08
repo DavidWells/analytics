@@ -1,21 +1,30 @@
-/**
- * GA analytics plugin
- * https://developers.google.com/analytics/devguides/collection/analyticsjs
- */
-
 /* global ga */
+// import '../../analytics-core/src/pluginTypeDef'
 
 // Analytics Integration Configuration
 export const config = {
-  assumesPageview: true
+  /* Google analytics tracking ID */
+  trackingId: null,
 }
 
-/* Export the integration */
-export default function googleAnalytics(userConfig) {
+/**
+ * Google analytics plugin
+ * @link https://analytics.google.com/analytics/web/
+ * @link https://developers.google.com/analytics/devguides/collection/analyticsjs
+ * @param {object} pluginConfig - Plugin settings
+ * @param {string} pluginConfig.trackingId - site tracking Id
+ * @return {AnalyticsPlugin}
+ * @example
+ *
+ * googleAnalytics({
+ *   siteId: '123-xyz'
+ * })
+ */
+export default function googleAnalytics(pluginConfig) {
   // Allow for userland overides of base methods
   return {
     NAMESPACE: 'google-analytics',
-    config: Object.assign({}, config, userConfig),
+    config: Object.assign({}, config, pluginConfig),
     initialize: ({ config }) => {
       if (!config.trackingId) {
         throw new Error('No google tracking id defined')
@@ -37,10 +46,11 @@ export default function googleAnalytics(userConfig) {
           window.ga_debug = { trace: true }
         }
 
-        // TODO use assumesPageview option
-        if (config.assumesPageview) {
+        /* Fire page view when script loads
+        if (config.firePageViewOnLoad) {
           ga('send', 'pageview')
         }
+        */
       }
     },
     // Google Analytics page view
