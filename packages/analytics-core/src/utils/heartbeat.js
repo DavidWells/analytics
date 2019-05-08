@@ -43,11 +43,17 @@ export default function heartBeat(store, getPlugins) {
             })
 
             /* Then redispatch for .on listeners / other middleware */
+            const pluginEvent = `${currentMethod}:${currentPlugin}`
             store.dispatch({
               ...processAction.payload,
-              type: `${currentMethod}:${currentPlugin}`,
+              type: pluginEvent,
               meta: {
                 called: true,
+              },
+              /* Internal data for analytics engine */
+              _: {
+                called: pluginEvent,
+                from: 'queueDrain'
               }
             })
           }

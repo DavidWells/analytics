@@ -4,7 +4,8 @@ export default async function (action, getPlugins, instance, store, eventsInfo) 
   const pluginObject = getPlugins()
   const eventType = action.type
   /* If action already dispatched exit early */
-  if (action.meta && action.meta.called) {
+  if (action._ && action._.called) {
+    // console.log('Already called', action._.called)
     // This makes it so plugin methods dont get fired twice.
     return action
   }
@@ -25,21 +26,10 @@ export default async function (action, getPlugins, instance, store, eventsInfo) 
     @TODO cache matches and purge on enable/disable/add plugin
   */
 
-  // console.log('allMatchesallMatches', allMatches)
-  // console.log('allActivePluginKeys', allActivePluginKeys)
-  // console.log('allActivePluginKeys.length', allActivePluginKeys.length)
-  // console.log('activePlugins', activePlugins)
-
-  /* Gather and process all matching methods from plugins */
-  // const matchingMethods = getCalls(eventType, activePlugins, pluginObject)
-  // console.log(`matchingMethods:${eventType}`, matchingMethods)
-
-  // const cleanMatch = getMatchingMethods(eventType, activePlugins)
-  // console.log(`cleanMatch:${eventType}`, cleanMatch)
   /**
-   * .🔥 🔥 Design processEvents API
-   * You have all the events in matchingMethods refactor how it works
-   * It creates a namepaced payload and fires the given
+   * Process all 'actionBefore' hooks
+   * Example:
+   *  This is process 'pageStart' methods from plugins and update the event to send through
    */
   const beforeAction = await processEvent({
     action: action,
@@ -76,6 +66,11 @@ export default async function (action, getPlugins, instance, store, eventsInfo) 
     // console.log('NAMES MATCH Dont process again', duringType, eventType)
   }
 
+  /**
+   * Process all 'action' hooks
+   * Example:
+   *  This is process 'page' methods from plugins and update the event to send through
+   */
   const duringAction = (duringType === eventType) ? beforeAction : await processEvent({
     action: {
       ...beforeAction,
@@ -95,13 +90,17 @@ export default async function (action, getPlugins, instance, store, eventsInfo) 
   })
   // console.log('____ duringAction', duringAction)
 
+  /**
+   * Process all 'actionEnd' hooks
+   * Example:
+   *  This is process 'pageEnd' methods from plugins and update the event to send through
+   */
   const afterName = `${formatMethod(eventType)}End`
   const afterAction = await processEvent({
     action: {
       ...duringAction,
       type: afterName
     },
-    // data: getMatchingMethods(afterName, activePlugins),
     data: {
       exact: allMatches.after,
       namespaced: allMatches.afterNS
@@ -280,9 +279,11 @@ async function processEvent({
         type: `queue`,
         plugin: pluginName,
         payload: payloadValue,
-        meta: {
-          called: true
-        },
+        /* Internal data for analytics engine */
+        _: {
+          called: `queue`,
+          from: 'queueMechanism'
+        }
       })
       return Promise.resolve(currentActionValue)
     }
@@ -335,19 +336,19 @@ async function processEvent({
         store
       })
     } else {
-      const tttt = `${method}:${pluginName}`
-      const actionDepth = (tttt.match(/:/g) || []).length
+      const nameSpaceEvent = `${method}:${pluginName}`
+      const actionDepth = (nameSpaceEvent.match(/:/g) || []).length
       if (actionDepth < 2 &&
         !method.match(/^bootstrap/) &&
         !method.match(/^ready/)
       ) {
         instance.dispatch({
           ...x,
-          type: `${method}:${pluginName}`,
-          meta: {
-            called: true,
-            subMethod: true,
-          },
+          type: nameSpaceEvent,
+          _: {
+            called: nameSpaceEvent,
+            from: 'submethod'
+          }
         })
       }
     }
@@ -371,16 +372,17 @@ async function processEvent({
       Verify this original action setup.
       It's intended to keep actions from double dispatching themselves
     */
-    if (resolvedAction.meta && resolvedAction.meta.__oa === method) {
+    if (resolvedAction._ && resolvedAction._.originalAction === method) {
       // console.log(`Dont dispatch for ${method}`, resolvedAction)
       return resolvedAction
     }
     store.dispatch({
       ...resolvedAction,
       ...{
-        meta: {
-          called: true,
-          __oa: resolvedAction.type
+        _: {
+          originalAction: resolvedAction.type,
+          called: resolvedAction.type,
+          from: 'engineEnd'
         }
       }
     })
@@ -391,12 +393,14 @@ async function processEvent({
 
 function abortDispatch({ data, method, instance, pluginName, store }) {
   const postFix = (pluginName) ? `:${pluginName}` : ''
+  const abortEvent = `${method}Aborted${postFix}`
   store.dispatch({
     ...data,
-    type: `${method}Aborted${postFix}`,
-    meta: {
-      called: true
-    },
+    type: abortEvent,
+    _: {
+      called: abortEvent,
+      from: 'abort'
+    }
   })
 }
 
