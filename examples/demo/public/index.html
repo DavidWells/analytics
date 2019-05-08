@@ -3,15 +3,16 @@
   <head>
     <meta charset="utf-8" />
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="theme-color" content="#000000" />
 
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
     <title>Analytics Demo</title>
+    <script src="https://browser.sentry-cdn.com/5.1.3/bundle.min.js" crossorigin="anonymous"></script>
+    <script>
+      Sentry.init({ dsn: 'https://d455294009a14ff0bbe66516b96e65d6@sentry.io/1455338' });
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
