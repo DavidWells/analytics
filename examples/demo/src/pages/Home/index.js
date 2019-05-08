@@ -28,6 +28,10 @@ export default class App extends Component {
     analytics.on('page:segment', ({ payload }) => {
       console.log('analytics.on page:segment')
     })
+
+    analytics.on('page', ({ payload }) => {
+      console.log('PAGE', payload)
+    })
   }
   componentWillUnmount() {
     this.listener()
@@ -61,15 +65,17 @@ export default class App extends Component {
           <a href='https://github.com/DavidWells/analytics'>Analytics</a>
           <span className="install">npm install analytics</span>
         </h2>
-        <p>Lightweight pluggable analytics library. <a href='https://github.com/DavidWells/analytics#usage'>Read the docs</a></p>
+        <p>
+          Lightweight extendable analytics library. <a href='https://github.com/DavidWells/analytics#usage'>Read the docs</a>
+        </p>
         <button onClick={this.doPage}>
-          analytics.page()
+          {`analytics.page()`}
         </button>
         <button onClick={this.doTrack}>
-          analytics.track()
+          {`analytics.track()`}
         </button>
         <button onClick={this.doIdentify}>
-          analytics.identify()
+          {`analytics.identify()`}
         </button>
         <h3>Lifecycle</h3>
         <Log items={history} />

@@ -4,6 +4,7 @@ import segmentPlugin from 'analytics-plugin-segment'
 import doNotTrack from 'analytics-plugin-do-not-track'
 import tabEvents from 'analytics-plugin-tab-events'
 import windowEvents from 'analytics-plugin-window-events'
+import customerIoPlugin from 'analytics-plugin-customerio'
 import exampleProviderPlugin from './plugins/provider-example'
 import visualizeLifecycle from './plugins/visualize-analytics'
 
@@ -26,6 +27,9 @@ const analytics = Analytics({
     // doNotTrack({
     //   enabled: true
     // }),
+    customerIoPlugin({
+      siteId: '4dfdba9c7f1a6d60f779'
+    }),
     segmentPlugin({
       writeKey: 'f3W8BZ0iCGrk1STIsMZV7JXfMGB7aMiW',
       disableAnonymousTraffic: true,
