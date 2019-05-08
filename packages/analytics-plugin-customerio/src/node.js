@@ -1,13 +1,10 @@
-/**
- * Customer.io Node Plugin
- * uses https://github.com/customerio/customerio-node
- */
-
+/* import serverside SDK */
 let CustomerIO
 if (!process.browser) {
   CustomerIO = require('customerio-node')
 }
 
+/* Default configuration */
 const config = {
   /* Customer.io site ID */
   siteId: null,
@@ -15,7 +12,21 @@ const config = {
   apiKey: null,
 }
 
-/* Export the integration */
+/**
+ * Customer.io analytics server side integration. Uses https://github.com/customerio/customerio-node
+ * @link https://customer.io/docs/api/
+ * @param {object} pluginConfig - Plugin settings
+ * @param {string} pluginConfig.siteId - Customer.io site Id for server side tracking
+ * @param {string} pluginConfig.apiKey - Customer.io API key for server side tracking
+ * @return {object} Analytics plugin
+ *
+ * @example
+ *
+ * customerIOPlugin({
+ *   siteId: '123-xyz',
+ *   apiKey: '9876543'
+ * })
+ */
 export default function customerIOPlugin(userConfig) {
   // Allow for userland overides of base methods
   const cioConfig = {
