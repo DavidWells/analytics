@@ -2,31 +2,62 @@
 import { inBrowser } from 'analytics-utils'
 import EVENTS from '../events'
 
+function canonicalUrl() {
+  if (!inBrowser) return
+  const tags = document.getElementsByTagName('link')
+  for (var i = 0, tag; tag = tags[i]; i++) {
+    if (tag.getAttribute('rel') === 'canonical') {
+      return tag.getAttribute('href')
+    }
+  }
+}
+
+function urlPath(url) {
+  const regex = /(http[s]?:\/\/)?([^\/\s]+\/)(.*)/g
+  const matches = regex.exec(url)
+  const pathMatch = (matches && matches[3]) ? matches[3].split('?')[0].replace(/#.*$/, '') : ''
+  return `/${pathMatch}`
+}
+
+/**
+ * Return the canonical URL and rmove the hash.
+ * @param  {string} search - search param
+ * @return {string} return current canonical URL
+ */
+function currentUrl(search) {
+  const canonical = canonicalUrl()
+  if (!canonical) return window.location.href.replace(/#.*$/, '')
+  return canonical.match(/\?/) ? canonical : `${canonical}${search}`
+}
+
 export const getPageData = (pageData = {}) => {
   if (!inBrowser) return pageData
   const { title, referrer } = document
   const { location, innerWidth, innerHeight } = window
-  const { hash, search, pathname, href } = location
+  const { hash, search } = location
+  const url = currentUrl(search)
   const page = {
     title: title,
-    url: href,
-    path: pathname,
+    url: url,
+    path: urlPath(url),
     hash: hash,
     search: search,
     width: innerWidth,
     height: innerHeight,
-    ...pageData
   }
   if (referrer && referrer !== '') {
     page.referrer = referrer
   }
-  return page
+
+  return {
+    ...page,
+    /* .page() user overrrides */
+    ...pageData
+  }
 }
 
 // initialState Page Data
-const initialState = {
-  ...getPageData()
-}
+const initialState = getPageData()
 
 // page reducer
 export default function page(state = initialState, action) {
