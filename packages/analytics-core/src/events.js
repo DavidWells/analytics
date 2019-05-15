@@ -33,10 +33,20 @@ export const coreEvents = [
    */
   'ready',
   /**
+   * `resetStart` - Fires if analytic.reset() is called.
+   * Use this event to cancel reset based on a specific condition
+   */
+  'resetStart',
+  /**
    * `reset` - Fires if analytic.reset() is called.
    * Use this event to run custom cleanup logic (if needed)
    */
   'reset',
+  /**
+   * `resetEnd` - Fires after analytic.reset() is called.
+   * Use this event to run a callback after user data is reset
+   */
+  'resetEnd',
   /******************
    * Page Events
    ******************/
