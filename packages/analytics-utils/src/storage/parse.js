@@ -1,9 +1,14 @@
-export default function parse(result) {
+/**
+ * Safe JSON parse
+ * @param  {*} input - value to parse
+ * @return {*} parsed input
+ */
+export default function parse(input) {
   let value
   try {
-    value = JSON.parse(result)
+    value = JSON.parse(input)
     if (typeof value === 'undefined') {
-      value = result
+      value = input
     }
     if (value === 'true') {
       value = true
@@ -15,7 +20,7 @@ export default function parse(result) {
       value = parseFloat(value)
     }
   } catch (e) {
-    value = result
+    value = input
   }
   return value
 }
