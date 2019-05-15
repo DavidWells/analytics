@@ -32,6 +32,18 @@ export default class App extends Component {
     analytics.on('page', ({ payload }) => {
       console.log('PAGE', payload)
     })
+
+    // analytics.on('reset', ({ payload }) => {
+    //   alert('middle reset')
+    // })
+    //
+    // analytics.on('resetStart', ({ payload }) => {
+    //   alert('start reset')
+    // })
+    //
+    // analytics.on('resetEnd', ({ payload }) => {
+    //   alert('end reset')
+    // })
   }
   componentWillUnmount() {
     this.listener()

@@ -28,7 +28,8 @@ const analytics = Analytics({
     //   enabled: true
     // }),
     customerIoPlugin({
-      siteId: '4dfdba9c7f1a6d60f779'
+      siteId: '4dfdba9c7f1a6d60f779',
+      disableAnonymousTraffic: true,
     }),
     segmentPlugin({
       writeKey: 'f3W8BZ0iCGrk1STIsMZV7JXfMGB7aMiW',
