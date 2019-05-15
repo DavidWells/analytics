@@ -1,8 +1,7 @@
 import parse from './parse'
-import checkLocalStorage from './hasLocalStorage'
-import { getCookie, setCookie, removeCookie, cookiesSupported } from '../cookie'
 import globalContext from '../globalContext'
-const hasLocalStorage = checkLocalStorage()
+import hasLocalStorage from './hasLocalStorage'
+import { getCookie, setCookie, removeCookie, cookiesSupported } from '../cookie'
 
 /**
  * Get storage item from localStorage, cookie, or window
@@ -15,12 +14,12 @@ export function getItem(key, options = {}) {
   if (!key) return null
   const { storage } = options
   /* 1. Try localStorage */
-  if (hasLocalStorage && (!storage || storage === 'localStorage')) {
+  if (useLocal(storage)) {
     const value = localStorage.getItem(key)
     if (value || storage === 'localStorage') return parse(value)
   }
   /* 2. Fallback to cookie */
-  if (cookiesSupported && (!storage || storage === 'cookie')) {
+  if (useCookie(storage)) {
     const value = getCookie(key)
     if (value || storage === 'cookie') return parse(value)
   }
@@ -42,14 +41,14 @@ export function setItem(key, value, options = {}) {
   const saveValue = JSON.stringify(value)
 
   /* 1. Try localStorage */
-  if (hasLocalStorage && (!storage || storage === 'localStorage')) {
+  if (useLocal(storage)) {
     // console.log('SET as localstorage', saveValue)
     const oldValue = parse(localStorage.getItem(key))
     localStorage.setItem(key, saveValue)
     return { value, oldValue, type: 'localStorage' }
   }
   /* 2. Fallback to cookie */
-  if (cookiesSupported && (!storage || storage === 'cookie')) {
+  if (useCookie(storage)) {
     // console.log('SET as cookie', saveValue)
     const oldValue = parse(getCookie(key))
     setCookie(key, saveValue)
@@ -73,18 +72,26 @@ export function removeItem(key, options = {}) {
 
   const { storage } = options
   /* 1. Try localStorage */
-  if (hasLocalStorage && (!storage || storage === 'localStorage')) {
+  if (useLocal(storage)) {
     localStorage.removeItem(key)
     return null
   }
   /* 2. Fallback to cookie */
-  if (cookiesSupported && (!storage || storage === 'cookie')) {
+  if (useCookie(storage)) {
     removeCookie(key)
     return null
   }
   /* 3. Fallback to window/global */
   globalContext[key] = null
   return null
+}
+
+function useLocal(storage) {
+  return hasLocalStorage && (!storage || storage === 'localStorage')
+}
+
+function useCookie(storage) {
+  return cookiesSupported && (!storage || storage === 'cookie')
 }
 
 export default {

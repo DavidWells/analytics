@@ -1,9 +1,11 @@
+import inBrowser from '../inBrowser'
 /**
  * Check if browser has access to LocalStorage
  *
  * @returns {Boolean}
  */
-export default function hasLocalStorage() {
+function hasLocalStorage() {
+  if (!inBrowser) return false
   try {
     if (typeof localStorage === 'undefined' || typeof JSON === 'undefined') {
       return false
@@ -16,3 +18,5 @@ export default function hasLocalStorage() {
   }
   return true
 }
+
+export default hasLocalStorage()
