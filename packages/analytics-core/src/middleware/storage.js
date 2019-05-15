@@ -8,14 +8,17 @@ export default function storageMiddleware() {
   window.addEventListener('storage', (event) => console.log(event));
   */
   return store => next => action => {
-    const { type, key, value, timestamp } = action
+    const { type, key, value, options } = action
     if (type === EVENTS.setItem || type === EVENTS.removeItem) {
       if (action.abort) {
         return next(action)
       }
       // Run storage set or remove
-      const method = (type === EVENTS.setItem) ? 'setItem' : 'removeItem'
-      storage[method](key, value)
+      if (type === EVENTS.setItem) {
+        storage.setItem(key, value, options)
+      } else {
+        storage.removeItem(key, options)
+      }
     }
     return next(action)
   }
