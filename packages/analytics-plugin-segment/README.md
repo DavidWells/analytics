@@ -21,7 +21,7 @@ const analyticsInstance = analytics({
   plugins: [
     /* segment integration */
     segmentPlugin({
-      trackingId: 'abc12345xyz'
+      writeKey: 'abc12345xyz'
     }),
     // ...other plugins
   ]
