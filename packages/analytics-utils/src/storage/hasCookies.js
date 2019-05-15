@@ -7,11 +7,12 @@ import inBrowser from '../inBrowser'
 export default function hasCookies() {
   try {
     if (!inBrowser) return false
+    const key = 'cookietest='
     // Try to set cookie
-    document.cookie = 'cookietest=1'
-    const cookiesEnabled = document.cookie.indexOf('cookietest=') !== -1
+    document.cookie = `${key}1`
+    const cookiesEnabled = document.cookie.indexOf(key) !== -1
     // Cleanup cookie
-    document.cookie = 'cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT'
+    document.cookie = `${key}1; expires=Thu, 01-Jan-1970 00:00:01 GMT`
     return cookiesEnabled
   } catch (e) {
     return false

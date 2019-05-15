@@ -3,6 +3,7 @@ import parseParams from './paramsParse'
 import isExternalReferrer from './isExternalReferrer'
 import { trimTld, getDomainBase } from './url'
 
+const googleKey = 'google'
 /**
  * Checks a given url and parses referrer data
  * @param  {String} [referrer] - (optional) referring URL
@@ -42,7 +43,7 @@ export default function parseReferrer(referrer, currentUrl) {
       // dclid - cpc Cost-Per-Thousand Impressions
       // gclid - cpc Cost per Click
       if (key.match(/^(d|g)clid/)) {
-        acc['source'] = 'google'
+        acc['source'] = googleKey
         acc['medium'] = (params.gclid) ? 'cpc' : 'cpm'
         acc[key] = params[key]
       }
@@ -52,7 +53,7 @@ export default function parseReferrer(referrer, currentUrl) {
     refData = Object.assign({}, refData, gaParams)
 
     if (params.dclid || params.gclid) {
-      refData['source'] = 'google'
+      refData['source'] = googleKey
       refData['medium'] = (params.gclid) ? 'cpc' : 'cpm'
     }
   }
@@ -72,8 +73,8 @@ function parseDomain(referrer) {
   a.href = referrer
 
   // Shim for the billion google search engines
-  if (a.hostname.indexOf('google') > -1) {
-    referringDomain = 'google'
+  if (a.hostname.indexOf(googleKey) > -1) {
+    referringDomain = googleKey
   }
 
   // If is search engine
