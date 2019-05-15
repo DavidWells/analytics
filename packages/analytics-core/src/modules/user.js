@@ -35,7 +35,7 @@ export default function user(state = {}, action) {
 
 export const reset = (callback) => {
   return {
-    type: EVENTS.reset,
+    type: EVENTS.resetStart,
     timestamp: timeStamp(),
     callback: callback
   }

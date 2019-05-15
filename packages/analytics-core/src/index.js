@@ -20,6 +20,26 @@ import heartBeat from './utils/heartbeat'
 
 const { setItem, removeItem, getItem } = middleware
 
+/**
+  * Analytics library
+  * @param {object} config - analytics core config
+  * @param {string} [config.app] - Name of site / app
+  * @param {string} [config.version] - Version of your app
+  * @param {array}  [config.plugins] - Array of analytics plugins
+  * @return {object} Analytics Instance
+  * @example
+  *
+  * import Analytics from 'analytics'
+  *
+  * // initialize analytics
+  * const analytics = Analytics({
+  *   app: 'my-awesome-app',
+  *   plugins: [
+  *     ...importedPlugins
+  *   ]
+  * })
+  *
+  */
 export default function analytics(config = {}) {
   const customReducers = config.reducers || {}
 
@@ -92,14 +112,31 @@ export default function analytics(config = {}) {
     * @param  {String}   userId  - Unique ID of user
     * @param  {Object}   [traits]  - Object of user traits
     * @param  {Object}   [options] - Options to pass to identify call
-    * @param  {Function} [callback] - Optional callback function after identify completes
+    * @param  {Function} [callback] - Callback function after identify completes
     * @api public
     *
     * @example
     *
-    * identify('xyz-123', {
+    * // Basic user id identify
+    * analytics.identify('xyz-123')
+    *
+    * // Identify with additional traits
+    * analytics.identify('xyz-123', {
     *   name: 'steve',
     *   company: 'hello-clicky'
+    * })
+    *
+    * // Disable identify for specific plugin
+    * analytics.identify('xyz-123', {}, {
+    *  plugins: {
+    *    // disable for segment plugin
+    *    segment: false
+    *  }
+    * })
+    *
+    * // Fire callback with 2nd or 3rd argument
+    * analytics.identify('xyz-123', () => {
+    *   console.log('do this after identify')
     * })
     */
     identify: (userId, traits, options, callback) => {
@@ -117,7 +154,7 @@ export default function analytics(config = {}) {
       store.dispatch({
         type: EVENTS.identifyStart,
         userId: resolvedId,
-        traits: data,
+        traits: data || {},
         options: opts,
         anonymousId: user.anonymousId,
         ...(user.id && (user.id !== id) && { previousId: user.id }),
@@ -137,7 +174,29 @@ export default function analytics(config = {}) {
      *
      * @example
      *
-     * analytics.track('buttonClick')
+     * // Basic event tracking
+     * analytics.track('buttonClicked')
+     *
+     * // Event tracking with payload
+     * analytics.track('itemPurchased', {
+     *   price: 11,
+     *   sku: '1234'
+     * })
+     *
+     * // Disable specific plugin on track
+     * analytics.track('cartAbandoned', {
+     *   items: ['xyz', 'abc']
+     * }, {
+     *  plugins: {
+     *    // disable track event for segment
+     *    segment: false
+     *  }
+     * })
+     *
+     * // Fire callback with 2nd or 3rd argument
+     * analytics.track('newsletterSubscribed', () => {
+     *   console.log('do this after track')
+     * })
      */
     track: (eventName, payload, options, callback) => {
       const name = (typeof eventName === 'object') ? eventName.event : eventName
@@ -166,14 +225,33 @@ export default function analytics(config = {}) {
     },
     /**
      * Trigger page view. This will trigger `page` calls in any installed plugins
-     * @param  {String}   [data] - (optional) page data
-     * @param  {Object}   [options] - Event options
+     * @param  {String}   [data] - Page data overrides.
+     * @param  {Object}   [options] - Page tracking options
      * @param  {Function} [callback] - Callback to fire after page view call completes
      * @api public
      *
      * @example
      *
+     * // Basic page tracking
      * analytics.page()
+     *
+     * // Page tracking with page data overides
+     * analytics.page({
+     *   url: 'https://google.com'
+     * })
+     *
+     * // Disable specific plugin page tracking
+     * analytics.page({}, {
+     *  plugins: {
+     *    // disable page tracking event for segment
+     *    segment: false
+     *  }
+     * })
+     *
+     * // Fire callback with 1st, 2nd or 3rd argument
+     * analytics.page(() => {
+     *   console.log('do this after page')
+     * })
      */
     page: (data, options, callback) => {
       const d = (typeof data === 'object') ? data : {}
@@ -185,10 +263,7 @@ export default function analytics(config = {}) {
 
       store.dispatch({
         type: EVENTS.pageStart,
-        properties: {
-          ...getPageData(),
-          ...d
-        },
+        properties: getPageData(d),
         options: opts,
         userId: userId,
         anonymousId: anonymousId,
@@ -199,125 +274,19 @@ export default function analytics(config = {}) {
       })
     },
     /**
-     * Get data about user, activity, or context. You can access sub-keys of state with `dot.prop` syntax.
-     * @param  {string} [key] - (optional) dotprop sub value of state
-     * @return {any}
-     *
-     * @example
-     *
-     * // Get the current state of analytics
-     * analytics.getState()
-     *
-     * // Get a subpath of state
-     * analytics.getState('context.offline')
-     */
-    getState: (key) => {
-      const state = store.getState()
-      if (key) return dotProp(state, key)
-      return Object.assign({}, state)
-    },
-    /**
-     * Clear all information about the visitor & reset analytic state.
-     * @param {Function} [callback] - Handler to run after reset
-     */
-    reset: (callback) => {
-      store.dispatch(reset(callback))
-    },
-    /**
-     * Emit events for other plugins or middleware to react to.
-     * @param  {Object} action - event to dispatch
-     */
-    dispatch: (action) => {
-      const actionData = (typeof action === 'string') ? { type: action } : action
-      if (isReservedAction(actionData.type)) {
-        throw new Error(`Trying to dispatch analytics reservedAction "${actionData.type}"`)
-        // return false
-      }
-      const meta = actionData.meta || {}
-      const _private = action._ || {}
-      // Dispatch actionStart
-      // const autoPrefixType = `${theAction.type.replace(/Start$/, '')}Start`
-      // TODO automatically add meta.timestamp
-
-      const dispatchData = {
-        ...actionData,
-        // TODO merge meta
-        meta: {
-          timestamp: timestamp(),
-          ...meta,
-        },
-        _: {
-          originalAction: actionData.type,
-          ..._private
-        }
-        // type: `${autoPrefixType}`
-      }
-
-      store.dispatch(dispatchData)
-    },
-    /**
-     * Storage utilities for persisting data. These methods will allow you to save data in localStorage, cookies, or to the window.
-     * @type {Object}
-     */
-    storage: {
-      /**
-       * Get value from storage
-       * @param {String} key - storage key
-       * @param {Object} [options] - storage options
-       * @return {Any}
-       *
-       * @example
-       *
-       * analytics.storage.getItem('storage_key')
-       */
-      getItem: getItem,
-      /**
-       * Set storage value
-       * @param {String} key - storage key
-       * @param {any} value - storage value
-       * @param {Object} [options] - storage options
-       *
-       * @example
-       *
-       * analytics.storage.setItem('storage_key', 'value')
-       */
-      setItem: (key, value, options) => {
-        store.dispatch(setItem(key, value, options))
-      },
-      /**
-       * Remove storage value
-       * @param {String} key - storage key
-       * @param {Object} [options] - storage options
-       *
-       * @example
-       *
-       * analytics.storage.removeItem('storage_key')
-       */
-      removeItem: (key, options) => {
-        store.dispatch(removeItem(key, options))
-      },
-    },
-    /*!
-     * Set the anonymous ID of the visitor
-     * @param {String} anonymousId - anonymous Id to set
-     * @param {Object} [options] - storage options
-     */
-    setAnonymousId: (anonymousId, options) => {
-      instance.storage.setItem(CONSTANTS.ANON_ID, anonymousId, options)
-    },
-    /**
      * Get user data
-     * @param {String} [key] - dot.prop subpath of user data
+     * @param {String} [key] - dot.prop.path of user data. Example: 'traits.company.name'
      * @returns {any} value of user data or null
+     *
      * @example
      *
-     * // get all user data
+     * // Get all user data
      * const userData = analytics.user()
      *
-     * // get user id
+     * // Get user id
      * const userId = analytics.user('userId')
      *
-     * // get user company name
+     * // Get user company name
      * const companyName = analytics.user('traits.company.name')
      */
     user: (key) => {
@@ -332,14 +301,26 @@ export default function analytics(config = {}) {
       return dotProp(user, key)
     },
     /**
+     * Clear all information about the visitor & reset analytic state.
+     * @param {Function} [callback] - Handler to run after reset
+     *
+     * @example
+     *
+     * // Reset current visitor
+     * analytics.reset()
+     */
+    reset: (callback) => {
+      store.dispatch(reset(callback))
+    },
+    /**
      * Fire callback on analytics ready event
      * @param  {Function} callback - function to trigger when all providers have loaded
      * @returns {Function} - Function to detach listener
      *
      * @example
      *
-     * analytics.ready((action, instance) => {
-     *   console.log('all plugins have loaded')
+     * analytics.ready() => {
+     *   console.log('all plugins have loaded or were skipped', payload)
      * })
      */
     ready: (callback) => {
@@ -353,9 +334,16 @@ export default function analytics(config = {}) {
      *
      * @example
      *
-     * analytics.on('track', ({ payload, instance }) => {
+     * // Fire function when 'track' calls happen
+     * analytics.on('track', ({ payload }) => {
      *   console.log('track call just happened. Do stuff')
      * })
+     *
+     * // Remove listener before it is called
+     * const removeListener = analytics.on('track', ({ payload }) => {
+     *   console.log('This will never get called')
+     * })
+     * removeListener() // cleanup .on listener
      */
     on: (name, callback) => {
       if (!name || !callback || typeof callback !== 'function') {
@@ -422,16 +410,77 @@ export default function analytics(config = {}) {
      *
      * @example
      *
-     * analytics.once('track', (action, instance) => {
+     * // Fire function only once 'track'
+     * analytics.once('track', ({ payload }) => {
      *   console.log('This will only triggered once')
      * })
+     *
+     * // Remove listener before it is called
+     * const removeOnce = analytics.once('track', ({ payload }) => {
+     *   console.log('This will never get called')
+     * })
+     * removeOnce() // cleanup once function
      */
     once: (name, callback) => {
       const listener = instance.on(name, (action) => {
-        callback(action, instance)
+        callback({ // eslint-disable-line
+          payload: action,
+          instance: instance,
+          plugins: customPlugins
+        })
         listener()
       })
       return listener
+    },
+    /**
+     * Get data about user, activity, or context. Access sub-keys of state with `dot.prop` syntax.
+     * @param  {string} [key] - dot.prop.path value of state
+     * @return {any}
+     *
+     * @example
+     *
+     * // Get the current state of analytics
+     * analytics.getState()
+     *
+     * // Get a subpath of state
+     * analytics.getState('context.offline')
+     */
+    getState: (key) => {
+      const state = store.getState()
+      if (key) return dotProp(state, key)
+      return Object.assign({}, state)
+    },
+    /*!
+     * Emit events for other plugins or middleware to react to.
+     * @param  {Object} action - event to dispatch
+     */
+    dispatch: (action) => {
+      const actionData = (typeof action === 'string') ? { type: action } : action
+      if (isReservedAction(actionData.type)) {
+        throw new Error(`Trying to dispatch analytics reservedAction "${actionData.type}"`)
+        // return false
+      }
+      const meta = actionData.meta || {}
+      const _private = action._ || {}
+      // Dispatch actionStart
+      // const autoPrefixType = `${theAction.type.replace(/Start$/, '')}Start`
+      // TODO automatically add meta.timestamp
+
+      const dispatchData = {
+        ...actionData,
+        // TODO merge meta
+        meta: {
+          timestamp: timestamp(),
+          ...meta,
+        },
+        _: {
+          originalAction: actionData.type,
+          ..._private
+        }
+        // type: `${autoPrefixType}`
+      }
+
+      store.dispatch(dispatchData)
     },
     /**
      * Enable analytics plugin
@@ -441,7 +490,7 @@ export default function analytics(config = {}) {
      *
      * analytics.enablePlugin('google')
      *
-     * // enable multiple plugins at once
+     * // Enable multiple plugins at once
      * analytics.enablePlugin(['google', 'segment'])
      */
     enablePlugin: (plugins, callback) => {
@@ -460,7 +509,7 @@ export default function analytics(config = {}) {
     disablePlugin: (name, callback) => {
       store.dispatch(disablePlugin(name, callback))
     },
-    /**
+    /*!
      * Load registered analytic providers.
      * @param  {String} namespace - integration namespace
      *
@@ -475,11 +524,81 @@ export default function analytics(config = {}) {
       })
     },
     /**
+     * Storage utilities for persisting data.
+     * These methods will allow you to save data in localStorage, cookies, or to the window.
+     * @type {Object}
+     *
+     * @example
+     *
+     * // Pull storage off analytics instance
+     * const { storage } = analytics
+     *
+     * // Get value
+     * storage.getItem('storage_key')
+     *
+     * // Set value
+     * storage.setItem('storage_key', 'value')
+     *
+     * // Remove value
+     * storage.removeItem('storage_key')
+     */
+    storage: {
+      /**
+       * Get value from storage
+       * @param {String} key - storage key
+       * @param {Object} [options] - storage options
+       * @return {Any}
+       *
+       * @example
+       *
+       * analytics.storage.getItem('storage_key')
+       */
+      getItem: getItem,
+      /**
+       * Set storage value
+       * @param {String} key - storage key
+       * @param {any} value - storage value
+       * @param {Object} [options] - storage options
+       *
+       * @example
+       *
+       * analytics.storage.setItem('storage_key', 'value')
+       */
+      setItem: (key, value, options) => {
+        store.dispatch(setItem(key, value, options))
+      },
+      /**
+       * Remove storage value
+       * @param {String} key - storage key
+       * @param {Object} [options] - storage options
+       *
+       * @example
+       *
+       * analytics.storage.removeItem('storage_key')
+       */
+      removeItem: (key, options) => {
+        store.dispatch(removeItem(key, options))
+      },
+    },
+    /*!
+     * Set the anonymous ID of the visitor
+     * @param {String} anonymousId - anonymous Id to set
+     * @param {Object} [options] - storage options
+     *
+     * @example
+     *
+     * // Set anonymous ID
+     * analytics.setAnonymousId('1234567')
+     */
+    setAnonymousId: (anonymousId, options) => {
+      instance.storage.setItem(CONSTANTS.ANON_ID, anonymousId, options)
+    },
+    /*!
      * Events exposed by core analytics library and all loaded plugins
      * @type {Array}
      */
     events: allSystemEvents,
-    /**
+    /*!
      * Events exposed by all loaded plugins
      * @type {Array}
      */
