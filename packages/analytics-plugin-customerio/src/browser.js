@@ -3,7 +3,9 @@
 /* Default configuration */
 const config = {
   /* Customer.io site ID */
-  siteId: null
+  siteId: null,
+  /* Disable anonymous events from firing */
+  disableAnonymousTraffic: false
 }
 
 // Because customer.io automatically fired a page view onLoad
@@ -55,7 +57,10 @@ export default function customerIOPlugin(pluginConfig = {}) {
         })()
       }
     },
-    page: ({ payload }) => {
+    page: ({ payload, config }) => {
+      if (config.disableAnonymousTraffic && !payload.userId) return
+      // disableAnonymousPageView
+      // disableAnonymousTrack
       /* ignore the first .page() call b/c customer.io already fired it */
       if (!initialPageViewFired) {
         initialPageViewFired = true
@@ -66,16 +71,25 @@ export default function customerIOPlugin(pluginConfig = {}) {
         _cio.page(document.location.href, payload.properties)
       }
     },
-    track: ({ payload }) => {
+    reset: ({ instance }) => {
+      /* Clear customer.io cookies on reset */
+      const { storage } = instance
+      const opts = { storage: 'cookie' }
+      storage.removeItem('_cio', opts)
+      storage.removeItem('_cioid', opts)
+    },
+    track: ({ payload, config }) => {
+      if (config.disableAnonymousTraffic && !payload.userId) return
+
       if (typeof _cio !== 'undefined') {
         _cio.track(payload.event, payload.properties)
       }
     },
     identify: ({ payload }) => {
-      const { id, traits } = payload
-      if (typeof _cio !== 'undefined') {
+      const { userId, traits } = payload
+      if (typeof _cio !== 'undefined' && userId) {
         _cio.identify({
-          id: id,
+          id: userId,
           ...traits
         })
       }
