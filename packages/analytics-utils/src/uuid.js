@@ -5,10 +5,10 @@ export default function uuid() {
     lut[i] = (i < 16 ? '0' : '') + (i).toString(16)
   }
   return (function () {
-    const d0 = Math.random() * 0xffffffff | 0
-    const d1 = Math.random() * 0xffffffff | 0
-    const d2 = Math.random() * 0xffffffff | 0
-    const d3 = Math.random() * 0xffffffff | 0
+    const d0 = genNumber()
+    const d1 = genNumber()
+    const d2 = genNumber()
+    const d3 = genNumber()
     /* eslint-disable */
     return `${lut[d0 & 0xff] + lut[d0 >> 8 & 0xff] + lut[d0 >> 16 & 0xff] + lut[d0 >> 24 & 0xff]}-${
       lut[d1 & 0xff]}${lut[d1 >> 8 & 0xff]}-${lut[d1 >> 16 & 0x0f | 0x40]}${lut[d1 >> 24 & 0xff]}-${
@@ -16,4 +16,8 @@ export default function uuid() {
       }${lut[d3 & 0xff]}${lut[d3 >> 8 & 0xff]}${lut[d3 >> 16 & 0xff]}${lut[d3 >> 24 & 0xff]}`
     /* eslint-enable */
   }())
+}
+
+function genNumber() {
+  return Math.random() * 0xffffffff | 0
 }
