@@ -71,6 +71,9 @@ function formatName(name) {
   if (constantKeys.includes(name)) {
     return `${name}`
   }
+  if (name === prefix) {
+    return 'Configuration'
+  }
   return `${prefix}.${name}`
 }
 
@@ -113,7 +116,8 @@ ${theArgs.join('\n')}
 }
 */
 function renderArg(tag) {
-  return `- **${tag.name}** ${tag.typesDescription} ${tag.description}`
+  const optionalText = (tag.name.match(/^\[/)) ? '(optional) ' : ''
+  return `- **${tag.name}** ${optionalText}${tag.typesDescription} ${tag.description}`
 }
 
 function renderExample(example) {
