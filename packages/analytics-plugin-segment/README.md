@@ -12,10 +12,10 @@ npm install analytics-plugin-segment
 ## Usage
 
 ```js
-import analytics from 'analytics'
+import Analytics from 'analytics'
 import segmentPlugin from 'analytics-plugin-segment'
 
-const analyticsInstance = analytics({
+const analytics = Analytics({
   app: 'my-app',
   version: 100,
   plugins: [
@@ -25,6 +25,11 @@ const analyticsInstance = analytics({
     }),
     // ...other plugins
   ]
+})
+
+// Send tracking event
+analytics.track('buttonPressed', {
+  label: 'buy now'
 })
 ```
 
