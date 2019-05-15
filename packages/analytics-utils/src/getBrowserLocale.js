@@ -1,9 +1,7 @@
 import inBrowser from './inBrowser'
 
 export default function getBrowserLocale() {
-  if (!inBrowser) {
-    return null
-  }
+  if (!inBrowser) return null
   const { language, languages, userLanguage } = navigator
   if (languages && languages.length) {
     // latest versions of Chrome and Firefox set this correctly

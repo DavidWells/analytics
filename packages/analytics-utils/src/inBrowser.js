@@ -1,3 +1,5 @@
-
-const isInBrowser = typeof window !== 'undefined'
-export default isInBrowser
+/**
+ * In browser context
+ * @return {Boolean} true if in browser
+ */
+export default typeof window !== 'undefined'

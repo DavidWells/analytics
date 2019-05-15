@@ -6,12 +6,15 @@
 //
 // export default context
 
+/* global self globalThis */
+
 const getGlobal = () => {
+  /* eslint-disable */
   if (typeof self !== 'undefined' && self) {
     return self
   }
+  /* eslint-enable */
 
-  /* istanbul ignore next */
   if (typeof window !== 'undefined' && window) {
     return window
   }

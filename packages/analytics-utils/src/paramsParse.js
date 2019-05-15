@@ -1,6 +1,11 @@
 import inBrowser from './inBrowser'
 import decode from './decodeUri'
 
+/**
+ * Get search string from given url
+ * @param  {string} [url] - optional url string. If no url, window.location.search will be used
+ * @return {string} url search string
+ */
 function getSearchString(url) {
   if (url) {
     const p = url.match(/\?(.*)/)
@@ -9,6 +14,11 @@ function getSearchString(url) {
   return inBrowser && window.location.search.substring(1)
 }
 
+/**
+ * Parse url parameters into javascript object
+ * @param  {string} [url] - URI to parse. If no url supplied window.location will be used
+ * @return {object} parsed url parameters
+ */
 export default function paramsParse(url) {
   const searchString = getSearchString(url)
   return (searchString) ? getParamsAsObject(searchString) : {}
