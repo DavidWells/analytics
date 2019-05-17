@@ -51,8 +51,13 @@ export default function SegmentPlugin(userConfig = {}) {
     /* Identify Segment user */
     identify: ({ payload }) => {
       const { userId, traits } = payload
-      if (typeof analytics !== 'undefined' && userId) {
-        analytics.identify(userId, traits)
+      if (typeof analytics !== 'undefined') {
+        if (typeof userId === 'string') {
+          analytics.identify(userId, traits)
+        }
+        else {
+          analytics.identify(traits)
+        }
       }
     },
     loaded: () => {
