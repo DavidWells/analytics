@@ -52,8 +52,8 @@ The `analytics` library allows users to:
 ## Features
 
 - [x] [Extendable](#analytic-plugins) - Bring your own third party tool & plugins
-- [x] Test & Debug analytics integrations with time travel & offline mode.
-- [x] Exposes lifecycle for analytic calls allowing for per event cancellation or provider specific payloads
+- [x] Test & debug analytics integrations with time travel & offline mode
+- [x] Add functionality/modify tracking calls with baked in lifecycle hooks
 - [x] Works on client & server-side
 - [x] Queues events to send when analytic libraries are loaded
 - [ ] (WIP) works offline
