@@ -36,28 +36,27 @@ export default function SegmentPlugin(userConfig = {}) {
       }
     },
     initialize,
-    /* Trigger Segment page view */
+    /* Trigger Segment page view http://bit.ly/2LSPFr1 */
     page: ({ payload }) => {
-      if (typeof analytics !== 'undefined') {
-        analytics.page(payload.properties)
-      }
+      if (typeof analytics === 'undefined') return
+
+      analytics.page(payload.properties)
     },
-    /* Track Segment event */
+    /* Track Segment event http://bit.ly/2WLnYkK */
     track: ({ payload }) => {
-      if (typeof analytics !== 'undefined') {
-        analytics.track(payload.event, payload.properties)
-      }
+      if (typeof analytics === 'undefined') return
+
+      analytics.track(payload.event, payload.properties)
     },
-    /* Identify Segment user */
+    /* Identify Segment user http://bit.ly/2VL45xD */
     identify: ({ payload }) => {
+      if (typeof analytics === 'undefined') return
       const { userId, traits } = payload
-      if (typeof analytics !== 'undefined') {
-        if (typeof userId === 'string') {
-          analytics.identify(userId, traits)
-        }
-        else {
-          analytics.identify(traits)
-        }
+
+      if (typeof userId === 'string') {
+        analytics.identify(userId, traits)
+      } else {
+        analytics.identify(traits)
       }
     },
     loaded: () => {
