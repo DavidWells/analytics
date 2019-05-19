@@ -19,10 +19,10 @@ This guide will walk you though installing and hooking up analytics
     Import `analytics` and initialize the library with the analytics plugins of your choice.
 
     ```js
-    /* src/analyticsInstance.js */
-    import analyticsLib from 'analytics'
+    /* src/analytics.js */
+    import Analytics from 'analytics'
 
-    const analytics = analyticsLib({
+    const analytics = Analytics({
       app: 'app-name',
       plugins: [
         // ... your analytics integrations
@@ -35,7 +35,7 @@ This guide will walk you though installing and hooking up analytics
 3. Use in code
 
     ```js
-    import analytics from './analyticsInstance'
+    import analytics from './analytics'
 
     /* Track page views */
     analytics.page()

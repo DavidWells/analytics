@@ -6,4 +6,6 @@ title: Contributing to analytics
 
 If you'd like to contribute to the `analytics` project please checkout the repo!
 
+Pull requests are welcome!
+
 [analytics repo](https://github.com/DavidWells/analytics/blob/master/CONTRIBUTING.md)
