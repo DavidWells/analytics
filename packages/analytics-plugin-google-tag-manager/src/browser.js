@@ -1,20 +1,31 @@
-/**
- * Google tag manager plugin
- * https://developers.google.com/tag-manager/devguide
- */
-
 /* global dataLayer */
 
-// Analytics Integration Configuration
 export const config = {
-  assumesPageview: true
+  debug: false,
+  containerId: null,
+  // assumesPageview: true,
 }
 
-export default function googleTagManager(userConfig) {
+/**
+ * Google tag manager plugin
+ * @link https://developers.google.com/tag-manager/
+ * @param {object} pluginConfig - Plugin settings
+ * @param {string} pluginConfig.containerId - The Container ID uniquely identifies the GTM Container.
+ * @return {object} Analytics plugin
+ * @example
+ *
+ * googleTagManager({
+ *   containerId: 'GTM-123xyz'
+ * })
+ */
+export default function googleTagManager(pluginConfig = {}) {
   // Allow for userland overides of base methods
   return {
     NAMESPACE: 'google-tag-manager',
-    config: Object.assign({}, config, userConfig),
+    config: {
+      ...config,
+      ...pluginConfig
+    },
     initialize: ({ config }) => {
       const { containerId } = config
       if (!containerId) {
@@ -38,7 +49,7 @@ export default function googleTagManager(userConfig) {
         dataLayer.push(payload.properties)
       }
     },
-    track: ({ payload, options }) => {
+    track: ({ payload, options, config }) => {
       if (typeof dataLayer !== 'undefined') {
         const { anonymousId, userId, properties, category } = payload
         const formattedPayload = properties
@@ -51,10 +62,12 @@ export default function googleTagManager(userConfig) {
         if (!category) {
           formattedPayload.category = 'All'
         }
-        console.log('gtag push', {
-          event: payload.event,
-          ...formattedPayload
-        })
+        if (config.debug) {
+          console.log('gtag push', {
+            event: payload.event,
+            ...formattedPayload
+          })
+        }
         dataLayer.push({
           event: payload.event,
           ...formattedPayload
