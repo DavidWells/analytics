@@ -536,6 +536,7 @@ analytics.storage.removeItem('storage_key')
 The `analytics` has a robust plugin system. Here is a list of currently available plugins:
 
 <!-- AUTO-GENERATED-CONTENT:START (PLUGINS) -->
+- [analytics-cli](https://github.com/DavidWells/analytics/tree/master/packages/analytics-cli) CLI for `analytics` pkg [npm link](https://www.npmjs.com/package/analytics-cli).
 - [analytics-plugin-customerio](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-customerio) Customer.io plugin for 'analytics' [npm link](https://www.npmjs.com/package/analytics-plugin-customerio).
 - [analytics-plugin-do-not-track](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-do-not-track) Disable tracking for opted out visitors [npm link](https://www.npmjs.com/package/analytics-plugin-do-not-track).
 - [analytics-plugin-ga](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-ga) Google analytics integration for 'analytics' pkg [npm link](https://www.npmjs.com/package/analytics-plugin-ga).

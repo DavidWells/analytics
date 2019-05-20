@@ -1,0 +1,56 @@
+{
+  "name": "analytics-cli",
+  "description": "CLI for `analytics` pkg",
+  "version": "0.0.1",
+  "author": "David Wells <hello@davidwells.io>",
+  "repository": "DavidWells/analytics",
+  "license": "MIT",
+  "bin": {
+    "analytics": "./bin/run"
+  },
+  "bugs": "https://github.com/DavidWells/analytics/issues",
+  "dependencies": {
+    "@oclif/command": "^1.5.1",
+    "@oclif/config": "^1.7.6",
+    "@oclif/plugin-help": "^2.1.2",
+    "dox": "^0.9.0",
+    "markdown-magic": "^0.1.25",
+    "prettier": "^1.17.1"
+  },
+  "devDependencies": {
+    "@oclif/dev-cli": "^1.17.0",
+    "globby": "^8.0.1"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "files": [
+    "/bin",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json",
+    "/src"
+  ],
+  "homepage": "https://github.com/DavidWells/aws-profile-utils",
+  "keywords": [
+    "oclif"
+  ],
+  "main": "src/index.js",
+  "oclif": {
+    "commands": "./src/commands",
+    "bin": "analytics",
+    "hooks": {
+      "init": [
+        "./src/hooks/init"
+      ]
+    },
+    "plugins": [
+      "@oclif/plugin-help"
+    ]
+  },
+  "scripts": {
+    "postpack": "rm -f oclif.manifest.json npm-shrinkwrap.json",
+    "prepack": "oclif-dev manifest && oclif-dev readme && npm shrinkwrap",
+    "test": "echo NO TESTS",
+    "version": "oclif-dev readme && git add README.md"
+  }
+}
