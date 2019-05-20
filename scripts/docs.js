@@ -133,6 +133,8 @@ const rootDir = path.join(__dirname, '..')
 const markdownFiles = [
   path.join(rootDir, 'README.md'),
   path.join(rootDir, 'packages/**/**.md'),
+  path.join(rootDir, 'packages/**/**.md'),
+  `!${path.join(rootDir, 'packages/**/node_modules/**/**.md')}`,
   '!node_modules'
 ]
 markdownMagic(markdownFiles, config, () => {
