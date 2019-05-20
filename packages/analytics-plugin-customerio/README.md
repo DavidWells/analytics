@@ -2,31 +2,54 @@
 
 Integration with [customer.io](https://customer.io/) for [analytics](https://www.npmjs.com/package/analytics) package.
 
-## Install
+<!-- ANALYTICS_DOCS:START (TOC) -->
+- [Usage](#usage)
+- [Plugin Options](#plugin-options)
+<!-- ANALYTICS_DOCS:END (TOC) -->
 
-```
-npm install analytics
-npm install analytics-plugin-customerio
-```
-
+<!-- ANALYTICS_DOCS:START (USAGE) -->
 ## Usage
 
+Install `analytics` and `analytics-plugin-customerio` packages
+
+```
+npm install analytics analytics-plugin-customerio
+```
+
+Import and initialize in project
+
 ```js
-import analytics from 'analytics'
-import customerIO from 'analytics-plugin-customerio'
+import Analytics from 'analytics'
+import customerIOPlugin from 'analytics-plugin-customerio'
 
-const plugins = [
-  customerIO({
-    siteId: '4dfdbaxyz12360f779'
-  }),
-  // ... other plugins
-]
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    customerIOPlugin({
+      siteId: '123-xyz'
+    })
+  ]
+})
 
-const analyticsInstance = analytics({
-  app: 'doggieDating',
-  version: 100,
-  plugins: plugins
+```
+<!-- ANALYTICS_DOCS:END -->
+
+<!-- ANALYTICS_DOCS:START (API) -->
+## Plugin Options
+
+**Arguments**
+
+- **pluginConfig** <code>object</code> - Plugin settings
+- **pluginConfig.siteId** <code>string</code> - Customer.io site Id for client side tracking
+
+**Example**
+
+```js
+customerIOPlugin({
+  siteId: '123-xyz'
 })
 ```
+<!-- ANALYTICS_DOCS:END -->
+
 
 See the [full list of analytics provider plugins](https://github.com/DavidWells/analytics#current-plugins) in the main repo.

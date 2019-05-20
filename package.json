@@ -11,7 +11,7 @@
     "develop": "lerna run develop --parallel",
     "build": "npm run clean && lerna run build",
     "build:dev": "npm run clean && lerna run build:dev",
-    "docs": "node ./scripts/docs.js"
+    "docs": "node ./scripts/docs.js && lerna run docs"
   },
   "devDependencies": {
     "@ampproject/rollup-plugin-closure-compiler": "^0.8.5",

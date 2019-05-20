@@ -27,11 +27,11 @@ const config = {
  *   apiKey: '9876543'
  * })
  */
-export default function customerIOPlugin(userConfig) {
+export default function customerIOPlugin(pluginConfig = {}) {
   // Allow for userland overides of base methods
   const cioConfig = {
     ...config,
-    ...userConfig
+    ...pluginConfig
   }
 
   const cio = new CustomerIO(cioConfig.siteId, cioConfig.apiKey)
