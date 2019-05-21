@@ -1,7 +1,7 @@
 {
   "name": "analytics-cli",
   "description": "CLI for `analytics` pkg",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "David Wells <hello@davidwells.io>",
   "repository": "DavidWells/analytics",
   "license": "MIT",

@@ -1,6 +1,6 @@
 {
   "name": "analytics-plugin-google-tag-manager",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Google tag manager plugin for 'analytics' pkg",
   "keywords": [
     "analytics",
