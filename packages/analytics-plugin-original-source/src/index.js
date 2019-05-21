@@ -1,13 +1,7 @@
-/**
- * Original traffic source plugin
- */
-
 import { inBrowser, parseReferrer, cookie, storage } from 'analytics-utils'
 import { formatPipeString, parsePipeString } from './utils'
 
-const NAMESPACE = 'original-source'
-
-const EVENTS = {
+const events = {
   SET_ORIGINAL_SOURCE: 'setOriginalSource'
 }
 
@@ -19,22 +13,26 @@ const CONFIG = {
 
 /**
  * Track original source of visitors.
- * @param  {Object} config - settings for referral source tracking
- * @param  {String} config.storage - overide the location of storage. 'localStorage', 'cookie', or 'window'
- * @param  {String} config.originalSourceKey - overide the storage key. Default '__user_original_source'
- * @param  {String} config.originalLandingPageKey - overide the storage key. Default '__user_original_landing_page'
+ * @param  {Object} [pluginConfig] - settings for referral source tracking
+ * @param  {String} [pluginConfig.storage] - overide the location of storage. 'localStorage', 'cookie', or 'window'
+ * @param  {String} [pluginConfig.originalSourceKey] - overide the storage key. Default '__user_original_source'
+ * @param  {String} [pluginConfig.originalLandingPageKey] - overide the storage key. Default '__user_original_landing_page'
  * @return {Object} - plugin for `analytics` package
  */
-export default function firstSource(userConfig) {
+export default function originalSourcePlugin(pluginConfig = {}) {
   return {
-    NAMESPACE: NAMESPACE,
-    EVENTS: EVENTS,
+    NAMESPACE: 'original-source',
+    EVENTS: events,
+    config: {
+      ...CONFIG,
+      ...pluginConfig
+    },
     // Run function on `analyticsInit` event
-    bootstrap: ({ instance }) => {
+    bootstrap: ({ instance, config }) => {
       instance.dispatch({
-        type: EVENTS.SET_ORIGINAL_SOURCE,
-        originalSource: getOriginalSource(userConfig),
-        originalLandingPage: getOriginalLandingPage(userConfig)
+        type: events.SET_ORIGINAL_SOURCE,
+        originalSource: getOriginalSource(config),
+        originalLandingPage: getOriginalLandingPage(config)
       })
     }
   }
