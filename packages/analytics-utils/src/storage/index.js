@@ -5,14 +5,14 @@ import { getCookie, setCookie, removeCookie, cookiesSupported } from '../cookie'
 
 /**
  * Get storage item from localStorage, cookie, or window
- * @param  {[type]} key - key of item to get
- * @param  {Object} opts - (optional)
- * @param  {String} opts.storage - Define type of storage to pull from.
+ * @param  {string} key - key of item to get
+ * @param  {object|string} [options] - storage options. If string location of where to get storage
+ * @param  {string} [options.storage] - Define type of storage to pull from.
  * @return {Any}  the value of key
  */
 export function getItem(key, options = {}) {
   if (!key) return null
-  const { storage } = options
+  const storage = getStorageType(options)
   /* 1. Try localStorage */
   if (useLocal(storage)) {
     const value = localStorage.getItem(key)
@@ -29,15 +29,16 @@ export function getItem(key, options = {}) {
 
 /**
  * Store values in localStorage, cookie, or window
- * @param {String} key - key of item to set
- * @param {Any} value - value of item to set
- * @param {Object} opts - (optional)
- * @param {String} opts.storage - Define type of storage to set to.
+ * @param {string} key - key of item to set
+ * @param {*} value - value of item to set
+ * @param {object|string} [options] - storage options. If string location of where to get storage
+ * @param {string} [options.storage] - Define type of storage to pull from.
+ * @returns {object} returns old value, new values, & location of storage
  */
 export function setItem(key, value, options = {}) {
   if (!key || !value) return false
 
-  const { storage } = options
+  const storage = getStorageType(options)
   const saveValue = JSON.stringify(value)
 
   /* 1. Try localStorage */
@@ -63,14 +64,14 @@ export function setItem(key, value, options = {}) {
 
 /**
  * Remove values from localStorage, cookie, or window
- * @param {String} key - key of item to set
- * @param {Object} opts - (optional)
- * @param {String} opts.storage - Define type of storage to set to.
+ * @param {string} key - key of item to set
+ * @param {object|string} [options] - storage options. If string location of where to get storage
+ * @param {string} [options.storage] - Define type of storage to pull from.
  */
 export function removeItem(key, options = {}) {
   if (!key) return false
 
-  const { storage } = options
+  const storage = getStorageType(options)
   /* 1. Try localStorage */
   if (useLocal(storage)) {
     localStorage.removeItem(key)
@@ -84,6 +85,10 @@ export function removeItem(key, options = {}) {
   /* 3. Fallback to window/global */
   globalContext[key] = null
   return null
+}
+
+function getStorageType(options) {
+  return (typeof options === 'string') ? options : options.storage
 }
 
 function useLocal(storage) {
