@@ -9,6 +9,7 @@
   "author": "David Wells",
   "license": "MIT",
   "scripts": {
+    "docs": "node ../analytics-cli/bin/run docs",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "node ../../scripts/build/index.js",
     "watch": "node ../../scripts/build/_watch.js",
