@@ -53,17 +53,17 @@ test('Lifecycle should execute in correct order', async (t) => {
       pageStart: ({ abort, config }) => {
         executionOrder.push('pageStart:plugin-one')
         pageStartMethod()
-        console.log('pageStart')
+        console.log('1. pageStart')
       },
       page: ({ abort, config }) => {
         executionOrder.push('page:plugin-one')
         pageMethod()
-        console.log('page')
+        console.log('2. page')
       },
       pageEnd: ({ abort, config }) => {
         executionOrder.push('pageEnd:plugin-one')
         pageEndMethod()
-        console.log('pageEnd')
+        console.log('3. pageEnd')
       },
       ready: () => {
         executionOrder.push('ready:plugin-one')

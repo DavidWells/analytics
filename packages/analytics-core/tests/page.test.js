@@ -1,7 +1,6 @@
 import test from 'ava'
 import sinon from 'sinon'
 import delay from './utils/delay'
-import generateInstance from './utils/generateInstance'
 import Analytics from '../src'
 
 test.beforeEach((t) => {
@@ -13,14 +12,18 @@ test.cb('should call page function in plugin', (t) => {
   const trackSpy = t.context.sandbox.spy()
   const identifySpy = t.context.sandbox.spy()
 
-  const analytics = generateInstance([
-    {
-      NAMESPACE: 'test-plugin',
-      track: trackSpy,
-      page: pageSpy,
-      identify: identifySpy
-    }
-  ])
+  const analytics = Analytics({
+    app: 'appname',
+    version: 100,
+    plugins: [
+      {
+        NAMESPACE: 'test-plugin',
+        track: trackSpy,
+        page: pageSpy,
+        identify: identifySpy
+      }
+    ]
+  })
 
   analytics.page(() => {
     t.is(pageSpy.callCount, 1)
