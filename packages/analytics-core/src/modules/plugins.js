@@ -52,14 +52,14 @@ export default function createReducer(getPlugins) {
       return { ...state, ...newState }
     }
     switch (action.type) {
-      case EVENTS.pluginFailed:
+      /* case EVENTS.pluginFailed:
         // console.log('PLUGIN_FAILED', action.name)
-        // TODO clean up
         newState[action.name] = {
           ...state[action.name],
           ...{ loaded: false }
         }
         return { ...state, ...newState }
+      */
       case EVENTS.disablePlugin:
         // handle array of integrations ['vanilla', 'google']
         if (Array.isArray(action.name)) {
@@ -100,18 +100,14 @@ export default function createReducer(getPlugins) {
   }
 }
 
-export const registerPlugin = (plugin) => {
-  return {
-    type: EVENTS.pluginRegister,
-    plugin: plugin
-  }
-}
-
 export const enablePlugin = (name, callback) => {
   return {
     type: EVENTS.enablePlugin,
     name: name,
-    callback: callback
+    callback: callback,
+    _: {
+      originalAction: EVENTS.enablePlugin,
+    }
   }
 }
 
@@ -119,6 +115,9 @@ export const disablePlugin = (name, callback) => {
   return {
     type: EVENTS.disablePlugin,
     name: name,
-    callback: callback
+    callback: callback,
+    _: {
+      originalAction: EVENTS.disablePlugin,
+    }
   }
 }
