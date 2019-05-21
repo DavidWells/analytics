@@ -117,24 +117,10 @@ export const coreEvents = [
   /******************
    * Plugin Events
    ******************/
-  /*! Not currently in use
-   * `pluginRegister` - Fires when analytics.enablePlugin is called
+  /**
+   * `registerPlugins` - Fires when analytics is registering plugins
    */
   'registerPlugins',
-  'pluginRegister',
-  /**
-   * `pluginsRegistered` - Fires after all plugins have been registered
-   */
-  'pluginsRegistered',
-  /**
-   * `pluginFailed` - Fires if a plugin fails to load.
-   * Loading is checked by a 'loaded' method on plugin that returns a boolean.
-   */
-  'pluginFailed',
-  /**
-   * `loadPlugin` - Fires when `analytics.loadPlugin()` is called
-   */
-  'loadPlugin',
   /**
    * `enablePlugin` - Fires when `analytics.enablePlugin()` is called
    */
@@ -143,6 +129,10 @@ export const coreEvents = [
    * `disablePlugin` - Fires when `analytics.disablePlugin()` is called
    */
   'disablePlugin',
+  /**
+   * `loadPlugin` - Fires when `analytics.loadPlugin()` is called
+   */
+  'loadPlugin',
   /******************
    * Browser activity events
    ******************/
@@ -197,8 +187,8 @@ export const coreEvents = [
 ]
 
 const pluginEvents = {
-  pluginRegisterType: (name) => `pluginRegister:${name}`,
-  pluginReadyType: (name) => `pluginReady:${name}`,
+  registerPluginType: (name) => `registerPlugin:${name}`,
+  pluginReadyType: (name) => `ready:${name}`,
 }
 
 const EVENTS = coreEvents.reduce((acc, curr) => {

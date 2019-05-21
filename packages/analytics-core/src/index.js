@@ -106,6 +106,8 @@ export default function analytics(config = {}) {
 
   const { addMiddleware, removeMiddleware, dynamicMiddlewares } = new DynamicMiddleware()
 
+  const nonAbortable = () => { throw new Error('Abort not allowed from listener') }
+
   const instance = {
     /**
     * Identify a user. This will trigger `identify` calls in any installed plugins and will set user data in localStorage
@@ -389,7 +391,8 @@ export default function analytics(config = {}) {
           callback({ // eslint-disable-line
             payload: action,
             instance: instance,
-            plugins: customPlugins
+            plugins: customPlugins,
+            abort: nonAbortable
           })
         }
         /* For future matching of event subpaths `track:*` etc
@@ -422,12 +425,17 @@ export default function analytics(config = {}) {
      * removeOnce() // cleanup once function
      */
     once: (name, callback) => {
+      if (!name || !callback || typeof callback !== 'function') {
+        return false
+      }
       const listener = instance.on(name, (action) => {
         callback({ // eslint-disable-line
           payload: action,
           instance: instance,
-          plugins: customPlugins
+          plugins: customPlugins,
+          abort: nonAbortable
         })
+        // detach listener after its called once
         listener()
       })
       return listener
@@ -458,17 +466,14 @@ export default function analytics(config = {}) {
       const actionData = (typeof action === 'string') ? { type: action } : action
       if (isReservedAction(actionData.type)) {
         throw new Error(`Trying to dispatch analytics reservedAction "${actionData.type}"`)
-        // return false
       }
       const meta = actionData.meta || {}
       const _private = action._ || {}
       // Dispatch actionStart
       // const autoPrefixType = `${theAction.type.replace(/Start$/, '')}Start`
-      // TODO automatically add meta.timestamp
 
       const dispatchData = {
         ...actionData,
-        // TODO merge meta
         meta: {
           timestamp: timestamp(),
           ...meta,
@@ -597,12 +602,12 @@ export default function analytics(config = {}) {
      * Events exposed by core analytics library and all loaded plugins
      * @type {Array}
      */
-    events: allSystemEvents,
-    /*!
-     * Events exposed by all loaded plugins
-     * @type {Array}
-     */
-    pluginEvents: allPluginEvents
+    events: {
+      all: allSystemEvents,
+      core: coreEvents,
+      plugins: allPluginEvents,
+      // byType: () => {} @Todo grab logic from engine and give inspectable events
+    },
     /* @TODO if it stays, state loaded needs to be set. Re PLUGIN_INIT above
     addPlugin: (newPlugin) => {
       // validate integration
@@ -625,6 +630,7 @@ export default function analytics(config = {}) {
   const middlewares = parsedOptions.middlewares.concat([
     /* Core analytics middleware */
     dynamicMiddlewares('before'), // Before dynamic middleware <-- fixed pageStart .on listener
+    /* Plugin engine */
     middleware.plugins(instance, getPlugins, {
       all: allSystemEvents,
       plugins: allPluginEvents
@@ -632,7 +638,8 @@ export default function analytics(config = {}) {
     middleware.storage(),
     middleware.initialize(instance),
     middleware.identify(instance),
-    dynamicMiddlewares('after') // after dynamic middleware
+    /* after dynamic middleware */
+    dynamicMiddlewares('after')
   ])
 
   /* Initial analytics state keys */
@@ -681,7 +688,7 @@ export default function analytics(config = {}) {
   /* Create analytics store! */
   const store = createStore(
     // register reducers
-    combineReducers({...coreReducers, ...customReducers}),
+    combineReducers({ ...coreReducers, ...customReducers }),
     // set user defined initial state
     initialState,
     // register middleware & plugins used
@@ -692,7 +699,7 @@ export default function analytics(config = {}) {
     )
   )
 
-  // Synchronously call bootstrap & register Plugin methods
+  /* Synchronously call bootstrap & register Plugin methods */
   const pluginKeys = Object.keys(customPlugins)
 
   /* Bootstrap analytic plugins */
@@ -708,7 +715,7 @@ export default function analytics(config = {}) {
     plugins: pluginKeys,
   })
 
-  parsedOptions.pluginsArray.map((plugin, i) => {
+  parsedOptions.pluginsArray.map((plugin, i) => { // eslint-disable-line
     const { bootstrap, config } = plugin
     if (bootstrap && typeof bootstrap === 'function') {
       bootstrap({ instance, config, payload: plugin })
@@ -716,7 +723,7 @@ export default function analytics(config = {}) {
     const lastCall = plugins.length === (i + 1)
     /* Register plugins */
     store.dispatch({
-      type: `registerPlugin:${plugin.NAMESPACE}`, // EVENTS.pluginRegisterType(NAMESPACE),
+      type: EVENTS.registerPluginType(plugin.NAMESPACE),
       name: plugin.NAMESPACE,
       plugin: plugin
     })
@@ -738,7 +745,7 @@ export default function analytics(config = {}) {
       })
     })
 
-    // Only tick heartbeat in browser
+    /* Tick heartbeat for queued events */
     heartBeat(store, getPlugins)
   }
 
