@@ -85,6 +85,14 @@ var config = {
 
       // TODO parse AST and get available methods
       const lib = require(path.resolve(pkg.main))
+
+      if (typeof lib === 'function') {
+        const string = lib.toString()
+        // console.log('string', string)
+        
+        // const methods = lib()
+        // console.log('methods', methods)
+      }
       // console.log('lib', lib)
       return updatedContent
     }
@@ -141,6 +149,18 @@ const analytics = Analytics({
     ${example.replace(/^\s+|\s+$/g, '')}
   ]
 })
+
+/* Track page views */
+analytics.page()
+
+/* Track custom events */
+analytics.track('buttonClicked')
+
+/* Identify visitors */
+analytics.identify('user-xzy-123', {
+  name: 'Bill Murray',
+  cool: true
+})
 `
   const formattedCode = prettier.format(code, { semi: false, singleQuote: true, parser: 'babel' })
 
@@ -148,7 +168,7 @@ const analytics = Analytics({
 
 Install \`analytics\` and \`${pkg}\` packages
 
-\`\`\`
+\`\`\`bash
 npm install analytics ${pkg}
 \`\`\`
 
