@@ -18,10 +18,30 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
       }
     }
 
+    if (type === EVENTS.loadPlugin) {
+      // Rerun initialize calls in plugins
+      const allPlugins = getPlugins()
+      const pluginsToLoad = Object.keys(allPlugins).filter((name) => {
+        return action.plugins.includes(name)
+      }).reduce((acc, curr) => {
+        acc[curr] = allPlugins[curr]
+        return acc
+      }, {})
+      const initializeAction = {
+        type: EVENTS.initializeStart,
+        plugins: action.plugins
+      }
+      const updated = await runPlugins(initializeAction, pluginsToLoad, instance, store, systemEvents)
+      return next(updated)
+    }
+
     //*  || type.match(/^initializeAbort:/)
     if (type === EVENTS.initializeEnd) {
       const allPlugins = getPlugins()
-      const allInitialized = Object.keys(allPlugins).map((name) => {
+      const pluginsArray = Object.keys(allPlugins)
+      const allInitialized = pluginsArray.filter((name) => {
+        return action.plugins.includes(name)
+      }).map((name) => {
         return allPlugins[name]
       })
       let completed = []
@@ -30,7 +50,7 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
         const { loaded, NAMESPACE } = plugin
         return waitForReady(plugin, loaded, 10000).then((d) => {
           store.dispatch({
-            type: `ready:${NAMESPACE}`, // EVENTS.pluginReadyType(NAMESPACE)
+            type: EVENTS.pluginReadyType(NAMESPACE), // `ready:${NAMESPACE}`
             name: NAMESPACE,
             events: Object.keys(plugin).filter((name) => {
               const remove = ['NAMESPACE', 'config', 'loaded']
@@ -54,11 +74,13 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
       Promise.all(allCalls).then((calls) => {
         // setTimeout to ensure runs after 'page'
         setTimeout(() => {
-          store.dispatch({
-            type: 'ready',
-            plugins: completed,
-            failed: failed
-          })
+          if (pluginsArray.length === allCalls.length) {
+            store.dispatch({
+              type: 'ready',
+              plugins: completed,
+              failed: failed
+            })
+          }
         }, 0)
       })
     }
