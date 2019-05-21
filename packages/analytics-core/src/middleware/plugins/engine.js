@@ -1,37 +1,37 @@
 import fitlerDisabledPlugins from '../../utils/filterDisabled'
 
 export default async function (action, getPlugins, instance, store, eventsInfo) {
-  const pluginObject = getPlugins()
-  const eventType = action.type
-  /* If action already dispatched exit early */
+  const pluginObject = (typeof getPlugins === 'function') ? getPlugins() : getPlugins
+  const originalType = action.type
+  const updatedType = originalType.replace(/Start$/, '')
+
+  /* If action already dispatched exit early. This makes it so plugin methods are not fired twice. */
   if (action._ && action._.called) {
     // console.log('Already called', action._.called)
-    // This makes it so plugin methods dont get fired twice.
     return action
   }
 
-  // const actionDepth = (eventType.match(/:/g) || []).length
+  // const actionDepth = (originalType.match(/:/g) || []).length
   // if (actionDepth > 2) {
   //   return action
   // }
+  
   const state = instance.getState()
-
   /* Remove plugins that are disabled by options or by settings */
   const activePlugins = fitlerDisabledPlugins(pluginObject, state.plugins, action.options)
   // console.log('activePlugins', activePlugins)
   const allActivePluginKeys = activePlugins.map((p) => p.NAMESPACE)
-
-  const allMatches = getAllMatchingCalls(eventType, activePlugins, pluginObject)
-  /*
-    @TODO cache matches and purge on enable/disable/add plugin
-  */
+  // console.log('allActivePluginKeys', allActivePluginKeys)
+  const allMatches = getAllMatchingCalls(originalType, activePlugins, pluginObject)
+  // console.log('allMatches', allMatches)
+  /* @TODO cache matches and purge on enable/disable/add plugin */
 
   /**
    * Process all 'actionBefore' hooks
    * Example:
-   *  This is process 'pageStart' methods from plugins and update the event to send through
+   *  This is processes 'pageStart' methods from plugins and update the event to send through the chain
    */
-  const beforeAction = await processEvent({
+  const actionBefore = await processEvent({
     action: action,
     data: {
       exact: allMatches.before,
@@ -44,94 +44,90 @@ export default async function (action, getPlugins, instance, store, eventsInfo) 
     store,
     EVENTS: eventsInfo
   })
-  // console.log('____ beforeAction out', beforeAction)
+  // console.log('____ actionBefore out', actionBefore)
 
   /* Abort if ‘eventBefore’ returns abort data */
-  if (shouldAbortAll(beforeAction, allActivePluginKeys.length)) {
-    return beforeAction
+  if (shouldAbortAll(actionBefore, allActivePluginKeys.length)) {
+    return actionBefore
   }
 
   /* Filter over the plugin method calls and remove aborted plugin by name */
   const activeAndNonAbortedCalls = activePlugins.filter((plugin) => {
-    if (shouldAbort(beforeAction, plugin.NAMESPACE)) return false
+    if (shouldAbort(actionBefore, plugin.NAMESPACE)) return false
     return true
   })
-
   // console.log(`activeAndNonAbortedCalls ${action.type}`, activeAndNonAbortedCalls)
-  const duringType = eventType.replace(/Start$/, '')
-  // const duringMethods = getMatchingMethods(eventType.replace(/Start$/, ''), activePlugins)
-  // console.log('duringMethods', duringMethods)
-  /* Already processed and ran these methods */
-  if (duringType === eventType) {
-    // console.log('NAMES MATCH Dont process again', duringType, eventType)
-  }
 
-  /**
-   * Process all 'action' hooks
-   * Example:
-   *  This is process 'page' methods from plugins and update the event to send through
-   */
-  const duringAction = (duringType === eventType) ? beforeAction : await processEvent({
-    action: {
-      ...beforeAction,
-      type: formatMethod(eventType)
-    },
-    // data: duringMethods,
-    data: {
-      exact: allMatches.during,
-      namespaced: allMatches.duringNS
-    },
-    state: state,
-    allPlugins: pluginObject,
-    allMatches,
-    instance,
-    store,
-    EVENTS: eventsInfo
-  })
-  // console.log('____ duringAction', duringAction)
+  let actionDuring
+  if (originalType === updatedType) {
+    /* If type the same don't double process */
+    actionDuring = actionBefore
+  } else {
+    /**
+     * Process all 'action' hooks
+     * Example: This is process 'page' methods from plugins and update the event to send through
+     */
+    actionDuring = await processEvent({
+      action: {
+        ...actionBefore,
+        type: updatedType
+      },
+      data: {
+        exact: allMatches.during,
+        namespaced: allMatches.duringNS
+      },
+      state: state,
+      allPlugins: pluginObject,
+      allMatches,
+      instance,
+      store,
+      EVENTS: eventsInfo
+    })
+  }
+  // console.log('____ actionDuring', actionDuring)
 
   /**
    * Process all 'actionEnd' hooks
    * Example:
    *  This is process 'pageEnd' methods from plugins and update the event to send through
    */
-  const afterName = `${formatMethod(eventType)}End`
-  const afterAction = await processEvent({
-    action: {
-      ...duringAction,
-      type: afterName
-    },
-    data: {
-      exact: allMatches.after,
-      namespaced: allMatches.afterNS
-    },
-    state: state,
-    allPlugins: pluginObject,
-    allMatches,
-    instance,
-    store,
-    EVENTS: eventsInfo
-  })
-  // console.log('____ afterAction', afterAction)
+  // 🔥 Only trigger `eventTypeEnd` if originalAction has Start ending. Verify
+  if (originalType.match(/Start$/)) {
+    const afterName = `${updatedType}End`
+    const actionAfter = await processEvent({
+      action: {
+        ...actionDuring,
+        type: afterName
+      },
+      data: {
+        exact: allMatches.after,
+        namespaced: allMatches.afterNS
+      },
+      state: state,
+      allPlugins: pluginObject,
+      allMatches,
+      instance,
+      store,
+      EVENTS: eventsInfo
+    })
+    // console.log('____ actionAfter', actionAfter)
 
-  /* Fire callback if supplied */
-  const cb = getCallback(afterAction)
-  if (cb) {
-    /** @TODO figure out exact args calls and .on will get */
-    cb({ payload: afterAction }) // eslint-disable-line
+    /* Fire callback if supplied */
+    const cb = getCallback(actionAfter)
+    if (cb) {
+      /** @TODO figure out exact args calls and .on will get */
+      cb({ payload: actionAfter }) // eslint-disable-line
+    }
   }
 
-  return beforeAction
+  return actionBefore
 }
 
 function getCallback(action) {
   if (!action.meta) return false
-
   return Object.keys(action.meta).reduce((acc, key) => {
     const thing = action.meta[key]
-    if (typeof thing === 'function') {
-      return thing
-    }
+    if (typeof thing === 'function') return thing
     return acc
   }, false)
 }
@@ -174,7 +170,8 @@ async function processEvent({
   const queueData = data.exact.reduce((acc, thing) => {
     const { pluginName, methodName } = thing
     let addToQueue = false
-    if (!methodName.match(/^initialize/)) {
+    // Queue actions if plugin not loaded except for initialize and reset
+    if (!methodName.match(/^initialize/) && !methodName.match(/^reset/)) {
       addToQueue = !plugins[pluginName].loaded
     }
     acc[`${pluginName}`] = addToQueue
@@ -325,11 +322,11 @@ async function processEvent({
       ...returnValue
     }
 
-    const x = payloads[pluginName] // || currentActionValue
-    if (shouldAbort(x, pluginName)) {
+    const scopedPayload = payloads[pluginName] // || currentActionValue
+    if (shouldAbort(scopedPayload, pluginName)) {
       // console.log(`>> HANDLE abort ${method} ${pluginName}`)
       abortDispatch({
-        data: x,
+        data: scopedPayload,
         method,
         instance,
         pluginName,
@@ -343,7 +340,7 @@ async function processEvent({
         !method.match(/^ready/)
       ) {
         instance.dispatch({
-          ...x,
+          ...scopedPayload,
           type: nameSpaceEvent,
           _: {
             called: nameSpaceEvent,
@@ -359,6 +356,8 @@ async function processEvent({
   // Dispatch End
   if (!method.match(/Start$/) &&
       !method.match(/^registerPlugin/) &&
+      // !method.match(/^disablePlugin/) &&
+      // !method.match(/^enablePlugin/) &&
       !method.match(/^ready/) &&
       !method.match(/^bootstrap/) &&
       !method.match(/^params/)
