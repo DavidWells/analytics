@@ -12,3 +12,40 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+button {
+  cursor: pointer;
+}
+
+.section-wrapper {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.section {
+  margin-left: 25px;
+}
+.section h3 {
+  margin-bottom: 10px;
+}
+.section button {
+  margin-left: 5px;
+}
+.section a {
+  margin-right: 15px;
+  text-decoration: none;
+  font-weight: 500;
+}
+.section button:first-of-type {
+  margin-left: 0px;
+}
+.section:first-of-type {
+  margin-left: 0px;
+}
+.kitchen-sink-title {
+  display: flex;
+  align-items: center;
+}
+.kitchen-sink-title button {
+  margin-left: 15px;
+}

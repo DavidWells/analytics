@@ -5,6 +5,7 @@ import About from './pages/About'
 import Listeners from './pages/Listeners'
 import State from './pages/State'
 import KitchenSink from './pages/KitchenSink'
+import Privacy from './pages/Privacy'
 import PageViewTracking from './components/PageViews'
 import { Router } from "@reach/router"
 import './index.css'
@@ -18,6 +19,7 @@ const App = (
     <Listeners path='/listeners' />
     <State path='/state' />
     <KitchenSink path='/kitchen-sink' />
+    <Privacy path='/privacy' />
   </Router>
   </>
 )

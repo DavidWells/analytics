@@ -166,66 +166,80 @@ export default class App extends Component {
     return (
       <div className="app">
         <Navigation />
-        <h2>Kitchen Sink</h2>
-        <div>
-          <button onClick={this.handleTrack}>
-            Track
+        <h2 className="kitchen-sink-title">Analytics Kitchen Sink
+          <button onClick={this.clearLog}>
+            Clear logs
           </button>
-          <button onClick={this.handleDisabledTrack}>
-            Track no gewg
-          </button>
-          <button onClick={this.handleTrackNoEvent}>
-            Track no event
-          </button>
+        </h2>
+        <div className='section-wrapper'>
+          <div className='section'>
+            <h3>Track</h3>
+            <button onClick={this.handleTrack} title='Fire analytics.track()'>
+              Track
+            </button>
+            <button onClick={this.handleDisabledTrack} title='Fire analytics.track() minus google plugin'>
+              Track no google
+            </button>
+            <button onClick={this.handleTrackNoEvent} title='Fire malformed event analytics.track()'>
+              Track no event
+            </button>
+          </div>
+          <div className='section'>
+            <h3>Identify</h3>
+            <button onClick={this.handleIdentify}>
+              Identify
+            </button>
+            <button onClick={this.handleAnonTraits}>
+              Identify anon traits
+            </button>
+            <button onClick={this.handleIdExcludeInt}>
+              Identify no vanilla
+            </button>
+            <button onClick={this.handleLargeIdentify}>
+              Identify large
+            </button>
+          </div>
+          <div className='section'>
+            <h3>Page</h3>
+            <button onClick={this.handlePage}>
+              Page
+            </button>
+            <button onClick={this.handlePageNoSegment}>
+              Page no seg
+            </button>
+            <button onClick={this.handlePageWithCallback}>
+              Page with callback
+            </button>
+          </div>
         </div>
-        <div>
-          <button onClick={this.handleIdentify}>
-            Identify
-          </button>
-          <button onClick={this.handleAnonTraits}>
-            Identify anon traits
-          </button>
-          <button onClick={this.handleIdExcludeInt}>
-            Identify no vanilla
-          </button>
-          <button onClick={this.handleLargeIdentify}>
-            Identify large
-          </button>
+
+        <div className='section-wrapper'>
+          <div className='section'>
+            <h3>Fire Events via URL parameters</h3>
+            <a href="/?an_uid=12345">Identify via param</a>
+            <a href="/?an_event=email-click">Track via param</a>
+            <a href="/?an_uid=12345&an_trait_color=blue&an_trait_accountLevel=pro">Identify via param w/ attributes</a>
+          </div>
+          <div className='section'>
+            <h3>Enable/Disable Plugins</h3>
+            <button onClick={this.handleDisable}>
+              Disable google-analytics integration
+            </button>
+            <button onClick={this.handleEnable}>
+              Enable google-analytics integration
+            </button>
+          </div>
         </div>
-        <div>
-          <button onClick={this.handlePage}>
-            Page
-          </button>
-          <button onClick={this.handlePageNoSegment}>
-            Page no seg
-          </button>
-          <button onClick={this.handlePageWithCallback}>
-            Page with callback
-          </button>
+
+        <div className='section-wrapper'>
+
         </div>
-        <button onClick={this.handleDisable}>
-          Disable google-analytics integration
-        </button>
-        <button onClick={this.handleEnable}>
-          Enable google-analytics integration
-        </button>
-        <button onClick={this.detachAllListener}>
-          Detach * Listener
-        </button>
-        <button onClick={this.detachTrackListener}>
-          Detach track Listener
-        </button>
+
+
         <button onClick={this.handleOptOut}>
           Opt out
         </button>
-        <button onClick={this.clearLog}>
-          Clear
-        </button>
-        <div>
-          <a href="/?an_uid=12345">Identify via param</a> |
-          <a href="/?an_event=email-click">Track via param</a> |
-          <a href="/?an_uid=12345&an_trait_color=blue&an_trait_accountLevel=pro">Identify via param w/ attributes</a>
-        </div>
+
         <Log items={history} />
       </div>
     )

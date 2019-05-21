@@ -33,6 +33,9 @@ export default class App extends Component {
       console.log('PAGE', payload)
     })
 
+    analytics.on('setOriginalSource', ({ payload }) => {
+      console.log('payload', payload)
+    })
     // analytics.on('reset', ({ payload }) => {
     //   alert('middle reset')
     // })
