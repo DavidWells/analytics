@@ -1,23 +1,33 @@
-/**
- * Segment analytics plugin
- * https://segment.com/docs/sources/website/analytics.js/
- */
 /* global analytics */
 
 const config = {
+  /* Your segment writeKey */
+  writeKey: null,
   /* Disable anonymous MTU */
   disableAnonymousTraffic: false
 }
 
-/* export the plugin */
-export default function SegmentPlugin(userConfig = {}) {
+/**
+ * Segment analytics plugin
+ * @link https://segment.com/docs/sources/website/analytics.js/
+ * @param {object} pluginConfig - Plugin settings
+ * @param {string} pluginConfig.writeKey - Your segment writeKey
+ * @param {boolean} pluginConfig.disableAnonymousTraffic - Disable loading segment for anonymous visitors
+ * @return {object} Analytics plugin
+ * @example
+ *
+ * segmentPlugin({
+ *   writeKey: '123-xyz'
+ * })
+ */
+export default function segmentPlugin(pluginConfig = {}) {
   return {
     NAMESPACE: 'segment',
     config: {
       // default config
       ...config,
       // user land config
-      ...userConfig
+      ...pluginConfig
     },
     bootstrap: ({ config, instance }) => {
       /* Load segment script after userId exists */
@@ -25,16 +35,12 @@ export default function SegmentPlugin(userConfig = {}) {
         instance.once('identifyStart', ({ payload, plugins }) => {
           const self = plugins['segment']
           if (!self.loaded()) {
-            self.initialize({ instance, payload, config: self.config })
-            // @Todo abstract into method
-            instance.dispatch({
-              type: `ready:segment`,
-              name: 'segment',
-            })
+            instance.loadPlugin('segment')
           }
         })
       }
     },
+    /* Load Segment analytics.js on page */
     initialize,
     /* Trigger Segment page view http://bit.ly/2LSPFr1 */
     page: ({ payload }) => {
@@ -59,20 +65,29 @@ export default function SegmentPlugin(userConfig = {}) {
         analytics.identify(traits)
       }
     },
+    /* Remove segment cookies on analytics.reset */
+    reset: ({ instance }) => {
+      const { storage } = instance
+      const cookies = ['ajs_user_id', 'ajs_anonymous_id', 'ajs_group_id']
+      cookies.forEach((key) => {
+        storage.removeItem(key, 'cookie')
+      })
+    },
+    /* Check if segment loaded */
     loaded: () => {
       return window.analytics && !!analytics.initialized
     }
   }
 }
 
-/* initialize Segment script */
-export const initialize = ({ config, instance, payload }) => {
-  const { disableAnonymousTraffic, writeKey, assumesPageview } = config
+/* Load Segment analytics.js on page */
+function initialize({ config, instance, payload }) {
+  const { disableAnonymousTraffic, writeKey } = config
   if (!writeKey) {
     throw new Error('No segment writeKey')
   }
+  /* Disable segment.com if user is not yet identified. Save on Monthly MTU bill $$$ */
   const userID = instance.user('userId')
-  // Disable segment.com if user is not yet identified. Save on Monthly MTU bill
   if (!userID && disableAnonymousTraffic) {
     return false
   }
@@ -119,4 +134,5 @@ export const initialize = ({ config, instance, payload }) => {
       }
     }
   }();
+  /* eslint-enable */
 }
