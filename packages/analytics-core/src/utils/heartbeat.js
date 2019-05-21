@@ -47,9 +47,6 @@ export default function heartBeat(store, getPlugins) {
             store.dispatch({
               ...processAction.payload,
               type: pluginEvent,
-              meta: {
-                called: true,
-              },
               /* Internal data for analytics engine */
               _: {
                 called: pluginEvent,
