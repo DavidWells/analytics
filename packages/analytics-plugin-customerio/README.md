@@ -12,7 +12,7 @@ Integration with [customer.io](https://customer.io/) for [analytics](https://www
 
 Install `analytics` and `analytics-plugin-customerio` packages
 
-```
+```bash
 npm install analytics analytics-plugin-customerio
 ```
 
@@ -29,6 +29,18 @@ const analytics = Analytics({
       siteId: '123-xyz'
     })
   ]
+})
+
+/* Track page views */
+analytics.page()
+
+/* Track custom events */
+analytics.track('buttonClicked')
+
+/* Identify visitors */
+analytics.identify('user-xzy-123', {
+  name: 'Bill Murray',
+  cool: true
 })
 
 ```
