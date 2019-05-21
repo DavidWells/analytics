@@ -13,7 +13,7 @@ Integration with google tag manager for [analytics](https://www.npmjs.com/packag
 
 Install `analytics` and `analytics-plugin-google-tag-manager` packages
 
-```
+```bash
 npm install analytics analytics-plugin-google-tag-manager
 ```
 
@@ -30,6 +30,18 @@ const analytics = Analytics({
       containerId: 'GTM-123xyz'
     })
   ]
+})
+
+/* Track page views */
+analytics.page()
+
+/* Track custom events */
+analytics.track('buttonClicked')
+
+/* Identify visitors */
+analytics.identify('user-xzy-123', {
+  name: 'Bill Murray',
+  cool: true
 })
 
 ```
