@@ -235,11 +235,6 @@ export default class App extends Component {
 
         </div>
 
-
-        <button onClick={this.handleOptOut}>
-          Opt out
-        </button>
-
         <Log items={history} />
       </div>
     )
