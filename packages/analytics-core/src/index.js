@@ -203,7 +203,7 @@ export default function analytics(config = {}) {
     track: (eventName, payload, options, callback) => {
       const name = (typeof eventName === 'object') ? eventName.event : eventName
       if (!name || typeof name !== 'string') {
-        throw new Error('No eventName not supplied')
+        throw new Error('EventName not supplied')
       }
       const data = (typeof eventName === 'object') ? eventName : (payload || {})
       const opts = (typeof options === 'object') ? options : {}
@@ -329,7 +329,7 @@ export default function analytics(config = {}) {
       return instance.on(EVENTS.ready, callback)
     },
     /**
-     * Attach an event handler function for one or more events to the selected elements.
+     * Attach an event handler function for analytics lifecycle events.
      * @param  {String}   name - Name of event to listen to
      * @param  {Function} callback - function to fire on event
      * @return {Function} - Function to detach listener
@@ -345,19 +345,21 @@ export default function analytics(config = {}) {
      * const removeListener = analytics.on('track', ({ payload }) => {
      *   console.log('This will never get called')
      * })
-     * removeListener() // cleanup .on listener
+     *
+     * // cleanup .on listener
+     * removeListener()
      */
     on: (name, callback) => {
       if (!name || !callback || typeof callback !== 'function') {
         return false
       }
       if (name === 'bootstrap') {
-        throw new Error('Not allowed to listen to bootstrap')
+        throw new Error(`Listeners not allowed for ${name}`)
       }
-
+      const startRegex = /Start$|Start:/
       if (name === '*') {
         const beforeHandler = store => next => action => {
-          if (action.type.match(/Start$|Start:/)) {
+          if (action.type.match(startRegex)) {
             callback({ // eslint-disable-line
               payload: action,
               instance,
@@ -367,7 +369,7 @@ export default function analytics(config = {}) {
           return next(action)
         }
         const afterHandler = store => next => action => {
-          if (!action.type.match(/Start$|Start:/)) {
+          if (!action.type.match(startRegex)) {
             callback({ // eslint-disable-line
               payload: action,
               instance,
@@ -384,7 +386,7 @@ export default function analytics(config = {}) {
         }
       }
 
-      const position = (name.match(/Start$|Start:/)) ? 'before' : 'after' // eslint-disable-line
+      const position = (name.match(startRegex)) ? 'before' : 'after' // eslint-disable-line
       const handler = store => next => action => {
         // Subscribe to EVERYTHING
         if (action.type === name) {
@@ -415,14 +417,16 @@ export default function analytics(config = {}) {
      *
      * // Fire function only once 'track'
      * analytics.once('track', ({ payload }) => {
-     *   console.log('This will only triggered once')
+     *   console.log('This will only triggered once when analytics.track() fires')
      * })
      *
      * // Remove listener before it is called
-     * const removeOnce = analytics.once('track', ({ payload }) => {
-     *   console.log('This will never get called')
+     * const listener = analytics.once('track', ({ payload }) => {
+     *   console.log('This will never get called b/c listener() is called')
      * })
-     * removeOnce() // cleanup once function
+     *
+     * // cleanup .once listener before it fires
+     * listener()
      */
     once: (name, callback) => {
       if (!name || !callback || typeof callback !== 'function') {
@@ -606,7 +610,7 @@ export default function analytics(config = {}) {
       all: allSystemEvents,
       core: coreEvents,
       plugins: allPluginEvents,
-      // byType: () => {} @Todo grab logic from engine and give inspectable events
+      // byType: (type) => {} @Todo grab logic from engine and give inspectable events
     },
     /* @TODO if it stays, state loaded needs to be set. Re PLUGIN_INIT above
     addPlugin: (newPlugin) => {
@@ -763,7 +767,20 @@ export default function analytics(config = {}) {
   return instance
 }
 
-export { analytics }
+/*
+ * analytics.init exported for standalone browser build
+ * CDN build exposes global _analytics variable
+ *
+ * Initialize instance with _analytics.init() or _analytics['default']()
+ */
+export { analytics as init }
+
+/*
+ * analytics.Analytics exported for node usage
+ *
+ * Initialize instance with _analytics.init() or _analytics['default']()
+ */
+export { analytics as Analytics }
 /*
  * Core Analytic events. These are exposed for third party plugins & listeners
  * Use these magic strings to attach functions to event names.

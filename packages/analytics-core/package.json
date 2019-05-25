@@ -11,8 +11,7 @@
   "license": "MIT",
   "main": "lib/analytics.cjs.js",
   "globalName": {
-    "name": "window",
-    "extend": true
+    "name": "_analytics"
   },
   "jsnext:main": "lib/analytics.es.js",
   "module": "lib/analytics.es.js",
