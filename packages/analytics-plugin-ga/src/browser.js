@@ -7,6 +7,8 @@ export const config = {
   trackingId: null,
 }
 
+const inBrowser = typeof window !== 'undefined'
+
 /**
  * Google analytics plugin
  * @link https://analytics.google.com/analytics/web/
@@ -29,7 +31,7 @@ export default function googleAnalytics(pluginConfig) {
       if (!config.trackingId) {
         throw new Error('No google tracking id defined')
       }
-      if (typeof ga === 'undefined') {
+      if (typeof ga === 'undefined' && inBrowser) {
         /* eslint-disable */
         (function(i, s, o, g, r, a, m) {
           i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function() {
@@ -131,7 +133,7 @@ export default function googleAnalytics(pluginConfig) {
       */
     },
     loaded: () => {
-      return !!window.gaplugins
+      return inBrowser && !!window.gaplugins
     }
   }
 }
