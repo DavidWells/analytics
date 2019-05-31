@@ -1,13 +1,9 @@
 <!doctype html>
-<html class="no-js" lang="">
+<html>
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Using Analytics in HTML</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--
-      Include from CDN
+    <!-- Include from CDN
+      <script src="https://unpkg.com/analytics/dist/analytics.min.js"></script>
       <script src="https://unpkg.com/analytics/dist/analytics.min.js"></script>
     -->
     <script type="text/javascript" src="node_modules/analytics/dist/analytics.js" charset="utf-8"></script>
@@ -19,6 +15,7 @@
         version: 100,
       })
 
+      /* Attaching a listener */
       Analytics.on('*', ({ payload }) => {
         console.log(`Event ${payload.type}`, payload)
       })
