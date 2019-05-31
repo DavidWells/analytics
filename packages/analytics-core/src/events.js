@@ -1,10 +1,12 @@
-/**
+/*!
  * Core Analytic Events
  */
 
 export const coreEvents = [
   /**
-   * `bootstrap` - Fires when analytics library starts up. This is the first event fired
+   * `bootstrap` - Fires when analytics library starts up.
+   * This is the first event fired. '.on/once' listeners are not allowed on bootstrap
+   * Plugins can attach logic to this event
    */
   'bootstrap',
   /**
@@ -16,20 +18,19 @@ export const coreEvents = [
    */
   'campaign',
   /**
-   * `initializeStart` - Fires before `initialize`, allows for plugins to cancel loading of other plugins
+   * `initializeStart` - Fires before 'initialize', allows for plugins to cancel loading of other plugins
    */
   'initializeStart',
   /**
-   * `initialize` - Fires when analytics bootstraps
+   * `initialize` - Fires when analytics loads plugins
    */
   'initialize',
   /**
-   * `initializeEnd` - Fires after `initialize`, allows for plugins to run logic after initialization methods run
+   * `initializeEnd` - Fires after initialize, allows for plugins to run logic after initialization methods run
    */
   'initializeEnd',
   /**
-   * `ready` - Fires when all analytic providers are fully loaded.
-   * This waits for `initialize` and `loaded` to return true
+   * `ready` - Fires when all analytic providers are fully loaded. This waits for 'initialize' and 'loaded' to return true
    */
   'ready',
   /**
@@ -122,15 +123,15 @@ export const coreEvents = [
    */
   'registerPlugins',
   /**
-   * `enablePlugin` - Fires when `analytics.enablePlugin()` is called
+   * `enablePlugin` - Fires when 'analytics.enablePlugin()' is called
    */
   'enablePlugin',
   /**
-   * `disablePlugin` - Fires when `analytics.disablePlugin()` is called
+   * `disablePlugin` - Fires when 'analytics.disablePlugin()' is called
    */
   'disablePlugin',
   /**
-   * `loadPlugin` - Fires when `analytics.loadPlugin()` is called
+   * `loadPlugin` - Fires when 'analytics.loadPlugin()' is called
    */
   'loadPlugin',
   /******************

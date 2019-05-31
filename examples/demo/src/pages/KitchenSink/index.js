@@ -137,6 +137,10 @@ export default class App extends Component {
     })
   }
 
+  resetVisitor = () => {
+    analytics.reset()
+  }
+
   detachAllListener = () => {
     // call the listner again to detach it
     this.allListener()
@@ -232,6 +236,9 @@ export default class App extends Component {
         </div>
 
         <div className='section-wrapper'>
+          <button onClick={this.resetVisitor}>
+            resetVisitor
+          </button>
 
         </div>
 

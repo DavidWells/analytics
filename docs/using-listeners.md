@@ -1,5 +1,5 @@
 ---
-title: Using listeners
+title: Using event listeners
 ---
 
 # Using Listeners

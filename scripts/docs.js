@@ -32,6 +32,32 @@ const config = {
         .join('\n')
       return packages
     },
+    EVENT_DOCS(content, options) {
+      const fileContents = fs.readFileSync(path.join(__dirname, '..', 'packages/analytics-core/src/events.js'), 'utf-8')
+      const docBlocs = dox.parseComments(fileContents, { raw: true, skipSingleStar: true })
+
+      const events = docBlocs.filter((d) => {
+        return !d.description.summary.match(/^\*\*/)
+      })
+      let md = '| Event | Description |\n'
+      md += '|:------|:-------|\n'
+      events.forEach((data) => {
+        const eventName = data.description.summary.match(/^`(.*)`/)
+        let desc = data.description.summary.replace(eventName[0], '')
+        /* remove prefixed “ - whatever" */
+        desc = desc.replace(/^[\s|-]-?\s/, '')
+        /* replace \n with <br> tags */
+        desc = desc.replace(/\n/g, '<br/>')
+        // console.log('data', data)
+        md += `| **\`${eventName[1]}\`** | ${desc} |\n`
+        // updatedContent += `### ${formatName(data.ctx.name)}\n\n`
+        // updatedContent += `${data.description.full}\n\n`
+        // updatedContent += `${formatArguments(data.tags)}`
+        // updatedContent += formatExample(data.tags).join('\n')
+        // updatedContent += `\n`
+      })
+      return md.replace(/^\s+|\s+$/g, '')
+    },
     API_DOCS(content, options) {
       const fileContents = fs.readFileSync(path.join(__dirname, '..', 'packages/analytics-core/src/index.js'), 'utf-8')
       const docBlocs = dox.parseComments(fileContents, { raw: true, skipSingleStar: true })
