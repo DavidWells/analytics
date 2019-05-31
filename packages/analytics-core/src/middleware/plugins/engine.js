@@ -15,7 +15,7 @@ export default async function (action, getPlugins, instance, store, eventsInfo) 
   // if (actionDepth > 2) {
   //   return action
   // }
-  
+
   const state = instance.getState()
   /* Remove plugins that are disabled by options or by settings */
   const activePlugins = fitlerDisabledPlugins(pluginObject, state.plugins, action.options)
@@ -146,7 +146,7 @@ async function processEvent({
   store,
   EVENTS
 }) {
-  const { plugins } = state
+  const { plugins, context } = state
   const method = action.type
 
   // console.log(`data ${method}`, data)
@@ -173,6 +173,12 @@ async function processEvent({
     // Queue actions if plugin not loaded except for initialize and reset
     if (!methodName.match(/^initialize/) && !methodName.match(/^reset/)) {
       addToQueue = !plugins[pluginName].loaded
+    }
+    /* If offline and its a core method. Add to queue */
+    if (context.offline &&
+       (methodName.match(/^page/) || methodName.match(/^track/) || methodName.match(/^identify/))
+    ) {
+      addToQueue = true
     }
     acc[`${pluginName}`] = addToQueue
     return acc
