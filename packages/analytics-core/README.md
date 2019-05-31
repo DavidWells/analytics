@@ -374,7 +374,7 @@ analytics.ready() => {
 
 ### analytics.on
 
-Attach an event handler function for one or more events to the selected elements.
+Attach an event handler function for analytics lifecycle events.
 
 **Arguments**
 
@@ -393,7 +393,9 @@ analytics.on('track', ({ payload }) => {
 const removeListener = analytics.on('track', ({ payload }) => {
   console.log('This will never get called')
 })
-removeListener() // cleanup .on listener
+
+// cleanup .on listener
+removeListener()
 ```
 
 ### analytics.once
@@ -410,14 +412,16 @@ Attach a handler function to an event and only trigger it only once.
 ```js
 // Fire function only once 'track'
 analytics.once('track', ({ payload }) => {
-  console.log('This will only triggered once')
+  console.log('This will only triggered once when analytics.track() fires')
 })
 
 // Remove listener before it is called
-const removeOnce = analytics.once('track', ({ payload }) => {
-  console.log('This will never get called')
+const listener = analytics.once('track', ({ payload }) => {
+  console.log('This will never get called b/c listener() is called')
 })
-removeOnce() // cleanup once function
+
+// cleanup .once listener before it fires
+listener()
 ```
 
 ### analytics.getState
@@ -558,44 +562,44 @@ Below is a list of the current available events
 
 <!-- AUTO-GENERATED-CONTENT:START (EVENT_DOCS) -->
 | Event | Description |
-|:-------|:------:|
-| **bootstrap** | Fires when analytics library starts up. This is the first event fired |
-| **params** | Fires when analytics parses URL parameters |
-| **campaign** | Fires if params contain "utm" parameters |
-| **initializeStart** | Fires before 'initialize', allows for plugins to cancel loading of other plugins |
-| **initialize** | Fires when analytics loads plugins |
-| **initializeEnd** | Fires after initialize, allows for plugins to run logic after initialization methods run |
-| **ready** | Fires when all analytic providers are fully loaded. This waits for 'initialize' and 'loaded' to return true |
-| **resetStart** | Fires if analytic.reset() is called.<br/>Use this event to cancel reset based on a specific condition |
-| **reset** | Fires if analytic.reset() is called.<br/>Use this event to run custom cleanup logic (if needed) |
-| **resetEnd** | Fires after analytic.reset() is called.<br/>Use this event to run a callback after user data is reset |
-| **pageStart** | Fires before 'page' events fire.<br/> This allows for dynamic page view cancellation based on current state of user or options passed in. |
-| **page** | Core analytics hook for page views.<br/> If your plugin or integration tracks page views, this is the event to fire on. |
-| **pageEnd** | Fires after all registered 'page' methods fire. |
-| **pageAborted** | Fires if 'page' call is cancelled by a plugin |
-| **trackStart** | Called before the 'track' events fires.<br/> This allows for dynamic page view cancellation based on current state of user or options passed in. |
-| **track** | Core analytics hook for event tracking.<br/> If your plugin or integration tracks custom events, this is the event to fire on. |
-| **trackEnd** | Fires after all registered 'track' events fire from plugins. |
-| **trackAborted** | Fires if 'track' call is cancelled by a plugin |
-| **identifyStart** | Called before the 'identify' events fires.<br/>This allows for dynamic page view cancellation based on current state of user or options passed in. |
-| **identify** | Core analytics hook for user identification.<br/> If your plugin or integration identifies users or user traits, this is the event to fire on. |
-| **identifyEnd** | Fires after all registered 'identify' events fire from plugins. |
-| **identifyAborted** | Fires if 'track' call is cancelled by a plugin |
-| **userIdChanged** | Fires when a user id is updated |
-| **registerPlugins** | Fires when analytics is registering plugins |
-| **enablePlugin** | Fires when 'analytics.enablePlugin()' is called |
-| **disablePlugin** | Fires when 'analytics.disablePlugin()' is called |
-| **loadPlugin** | Fires when 'analytics.loadPlugin()' is called |
-| **online** | Fires when browser network goes online.<br/>This fires only when coming back online from an offline state. |
-| **offline** | Fires when browser network goes offline. |
-| **setItemStart** | Fires when analytics.storage.setItem is initialized.<br/>This event gives plugins the ability to intercept keys & values and alter them before they are persisted. |
-| **setItem** | Fires when analytics.storage.setItem is called.<br/>This event gives plugins the ability to intercept keys & values and alter them before they are persisted. |
-| **setItemEnd** | Fires when setItem storage is complete. |
-| **setItemAborted** | Fires when setItem storage is cancelled by a plugin. |
-| **removeItemStart** | Fires when analytics.storage.removeItem is initialized.<br/>This event gives plugins the ability to intercept removeItem calls and abort / alter them. |
-| **removeItem** | Fires when analytics.storage.removeItem is called.<br/>This event gives plugins the ability to intercept removeItem calls and abort / alter them. |
-| **removeItemEnd** | Fires when removeItem storage is complete. |
-| **removeItemAborted** | Fires when removeItem storage is cancelled by a plugin. |
+|:------|:-------|
+| **`bootstrap`** | Fires when analytics library starts up.<br/>This is the first event fired. '.on/once' listeners are not allowed on bootstrap<br/>Plugins can attach logic to this event |
+| **`params`** | Fires when analytics parses URL parameters |
+| **`campaign`** | Fires if params contain "utm" parameters |
+| **`initializeStart`** | Fires before 'initialize', allows for plugins to cancel loading of other plugins |
+| **`initialize`** | Fires when analytics loads plugins |
+| **`initializeEnd`** | Fires after initialize, allows for plugins to run logic after initialization methods run |
+| **`ready`** | Fires when all analytic providers are fully loaded. This waits for 'initialize' and 'loaded' to return true |
+| **`resetStart`** | Fires if analytic.reset() is called.<br/>Use this event to cancel reset based on a specific condition |
+| **`reset`** | Fires if analytic.reset() is called.<br/>Use this event to run custom cleanup logic (if needed) |
+| **`resetEnd`** | Fires after analytic.reset() is called.<br/>Use this event to run a callback after user data is reset |
+| **`pageStart`** | Fires before 'page' events fire.<br/> This allows for dynamic page view cancellation based on current state of user or options passed in. |
+| **`page`** | Core analytics hook for page views.<br/> If your plugin or integration tracks page views, this is the event to fire on. |
+| **`pageEnd`** | Fires after all registered 'page' methods fire. |
+| **`pageAborted`** | Fires if 'page' call is cancelled by a plugin |
+| **`trackStart`** | Called before the 'track' events fires.<br/> This allows for dynamic page view cancellation based on current state of user or options passed in. |
+| **`track`** | Core analytics hook for event tracking.<br/> If your plugin or integration tracks custom events, this is the event to fire on. |
+| **`trackEnd`** | Fires after all registered 'track' events fire from plugins. |
+| **`trackAborted`** | Fires if 'track' call is cancelled by a plugin |
+| **`identifyStart`** | Called before the 'identify' events fires.<br/>This allows for dynamic page view cancellation based on current state of user or options passed in. |
+| **`identify`** | Core analytics hook for user identification.<br/> If your plugin or integration identifies users or user traits, this is the event to fire on. |
+| **`identifyEnd`** | Fires after all registered 'identify' events fire from plugins. |
+| **`identifyAborted`** | Fires if 'track' call is cancelled by a plugin |
+| **`userIdChanged`** | Fires when a user id is updated |
+| **`registerPlugins`** | Fires when analytics is registering plugins |
+| **`enablePlugin`** | Fires when 'analytics.enablePlugin()' is called |
+| **`disablePlugin`** | Fires when 'analytics.disablePlugin()' is called |
+| **`loadPlugin`** | Fires when 'analytics.loadPlugin()' is called |
+| **`online`** | Fires when browser network goes online.<br/>This fires only when coming back online from an offline state. |
+| **`offline`** | Fires when browser network goes offline. |
+| **`setItemStart`** | Fires when analytics.storage.setItem is initialized.<br/>This event gives plugins the ability to intercept keys & values and alter them before they are persisted. |
+| **`setItem`** | Fires when analytics.storage.setItem is called.<br/>This event gives plugins the ability to intercept keys & values and alter them before they are persisted. |
+| **`setItemEnd`** | Fires when setItem storage is complete. |
+| **`setItemAborted`** | Fires when setItem storage is cancelled by a plugin. |
+| **`removeItemStart`** | Fires when analytics.storage.removeItem is initialized.<br/>This event gives plugins the ability to intercept removeItem calls and abort / alter them. |
+| **`removeItem`** | Fires when analytics.storage.removeItem is called.<br/>This event gives plugins the ability to intercept removeItem calls and abort / alter them. |
+| **`removeItemEnd`** | Fires when removeItem storage is complete. |
+| **`removeItemAborted`** | Fires when removeItem storage is cancelled by a plugin. |
 <!-- AUTO-GENERATED-CONTENT:END (EVENT_DOCS) -->
 
 ## Analytic plugins
