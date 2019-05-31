@@ -1,6 +1,6 @@
 {
   "name": "analytics-utils",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "description": "Analytics utility functions",
   "author": "David Wells <hello@davidwells.io>",
   "license": "MIT",

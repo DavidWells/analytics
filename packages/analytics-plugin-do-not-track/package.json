@@ -1,6 +1,6 @@
 {
   "name": "analytics-plugin-do-not-track",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Disable tracking for opted out visitors",
   "keywords": [
     "analytics",

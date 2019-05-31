@@ -1,6 +1,6 @@
 {
   "name": "analytics-plugin-customerio",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Customer.io plugin for 'analytics'",
   "keywords": [
     "analytics",

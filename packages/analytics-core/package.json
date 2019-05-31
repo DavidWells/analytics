@@ -1,6 +1,6 @@
 {
   "name": "analytics",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Pluggable analytics library",
   "keywords": [
     "analytics",
@@ -49,7 +49,7 @@
     "README.md"
   ],
   "dependencies": {
-    "analytics-utils": "^0.0.20",
+    "analytics-utils": "^0.0.21",
     "redux": "^3.6.0"
   },
   "ava": {
