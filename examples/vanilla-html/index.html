@@ -1,0 +1,63 @@
+<!doctype html>
+<html class="no-js" lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Using Analytics in HTML</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script type="text/javascript" src="node_modules/analytics/dist/analytics.js" charset="utf-8"></script>
+    <script type="text/javascript">
+      /* initialize analytics */
+      var Analytics = _analytics.init({
+        app: 'my-app-name',
+        debug: true,
+        version: 100,
+      })
+
+      Analytics.on('*', ({ payload }) => {
+        console.log(`Event ${payload.type}`, payload)
+      })
+    </script>
+  </head>
+  <body>
+    <h1>Using Analytics with just HTML</h1>
+
+    <p>Open up the console to see events being fired</p>
+
+    <button id="track">
+      Track Click
+    </button>
+
+    <button id="page">
+      Fire page view
+    </button>
+
+    <button id="identify">
+      Identify visitor
+    </button>
+
+    <script type="text/javascript">
+      var trackButton = document.getElementById('track')
+      trackButton.addEventListener('click', () => {
+        /* track event */
+        Analytics.track('buttonClicked')
+      })
+
+      var pageButton = document.getElementById('page')
+      pageButton.addEventListener('click', () => {
+        /* track page view */
+        Analytics.page()
+      })
+
+      var identifyButton = document.getElementById('identify')
+      identifyButton.addEventListener('click', () => {
+        /* identify user */
+        Analytics.identify('user-123', {
+          pro: true,
+        })
+      })
+    </script>
+  </body>
+</html>

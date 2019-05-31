@@ -1,0 +1,14 @@
+{
+  "name": "vanilla-html",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "http-server"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "analytics": "file:../../packages/analytics-core"
+  }
+}
