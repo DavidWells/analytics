@@ -121,6 +121,13 @@ Build these formats
     "./lib/NAME.cjs.js": "./lib/NAME.browser.cjs.js",
     "./lib/NAME.es.js": "./lib/NAME.browser.es.js"
   },
+  "globalName": {
+    "name": "window" // extend window
+    "extends": true
+  },
+  "globalName": {
+    "name": "_analytics" <-- name of global
+  },
 */
 function getFormats(pkg) {
   const { name, globalName, browser, module: moduleName, main } = pkg
