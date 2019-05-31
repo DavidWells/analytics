@@ -6,6 +6,7 @@ module.exports = function shrink(filePath, destination) {
     const contents = await readFile(filePath)
     const result = UglifyJS.minify(contents)
     if (result.error) {
+      console.log('UglifyJS error', result.error)
       return reject(result.error)
     }
     await writeFile(destination, result.code)
@@ -34,3 +35,28 @@ function writeFile(file, contents) {
     })
   })
 }
+
+// module.exports = function shrink(filePath, destination) {
+//   console.log('SHRINK', filePath)
+//   return new Promise((resolve, reject) => {
+//     fs.readFile(filePath, 'utf8', (error, contents) => {
+//       if (error) {
+//         return reject(error)
+//       }
+//
+//       console.log('contents', contents)
+//
+//       const result = UglifyJS.minify(contents)
+//       if (result.error) {
+//         return reject(result.error)
+//       }
+//
+//       fs.writeFile(destination, result.code, (error) => {
+//         if (error) {
+//           return reject(error)
+//         }
+//         return resolve(result.code)
+//       })
+//     })
+//   })
+// }

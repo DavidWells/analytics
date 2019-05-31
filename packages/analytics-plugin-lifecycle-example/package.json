@@ -17,7 +17,7 @@
     "es": "../../node_modules/.bin/babel-node ./testBabel.js"
   },
   "main": "lib/analytics-plugin-lifecycle-example.cjs.js",
-  "globalName": "analyticsOriginalSource",
+  "globalName": "analyticsLifeCycle",
   "jsnext:main": "lib/analytics-plugin-lifecycle-example.es.js",
   "module": "lib/analytics-plugin-lifecycle-example.es.js",
   "browser": {

@@ -32,5 +32,13 @@
     "package.json",
     "package-lock.json",
     "README.md"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidWells/analytics.git"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5"
+  }
 }

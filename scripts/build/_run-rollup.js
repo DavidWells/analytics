@@ -5,7 +5,7 @@ module.exports = function runRollup(directory) {
   const configs = generateConfig(directory)
 
   const builds = configs.map((conf) => {
-    return rollup(conf).then((result) => {
+    return rollup(conf).then(async (result) => {
       const data = {
         file: conf.output.file,
         format: conf.output.format,
@@ -17,7 +17,7 @@ module.exports = function runRollup(directory) {
       if (conf.output.extend) {
         data.extend = true
       }
-      result.write(data)
+      await result.write(data)
       console.log(`End ${conf.output.format} build ${conf.output.file}`)
       return data
     })

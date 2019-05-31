@@ -16,19 +16,18 @@ async function runBuild(dir) {
     if (hasIife) {
       const filePath = path.join(dir, hasIife.file)
       const destination = path.join(dir, hasIife.file.replace(/\.js/, '.min.js'))
-      console.log('read', filePath)
-      console.log('write', destination)
-      // need to wait a sec for other build to finish
       const fileName = path.basename(destination)
 
       // 🔥🔥🔥 hack to fix main analytics build. Remove in future
       if (fileName !== 'analytics.min.js') {
+        console.log('Uglify file:', filePath)
+        console.log('Uglify output:', destination)
         await uglify(filePath, destination)
       }
     }
-
-    console.log('hasIife', hasIife)
-    console.log('data', data)
+    console.log(`Finished ${dir} build`)
+    // console.log('hasIife', hasIife)
+    // console.log('data', data)
   } catch (e) {
     console.log('Build error', e)
     process.exit(1)
