@@ -58,6 +58,16 @@ const config = {
       })
       return md.replace(/^\s+|\s+$/g, '')
     },
+    // https://flaviocopes.com/how-to-get-last-updated-date-file-node/
+    LAST_MODIFIED(content, options, instance) {
+      const getFileUpdatedDate = (path) => {
+        const stats = fs.statSync(path)
+        return stats.mtime
+      }
+      console.log('instance', instance)
+      // const date = getFileUpdatedDate()
+      return 'lol'
+    },
     API_DOCS(content, options) {
       const fileContents = fs.readFileSync(path.join(__dirname, '..', 'packages/analytics-core/src/index.js'), 'utf-8')
       const docBlocs = dox.parseComments(fileContents, { raw: true, skipSingleStar: true })
