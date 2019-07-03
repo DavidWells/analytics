@@ -432,9 +432,9 @@ export default function analytics(config = {}) {
       if (!name || !callback || typeof callback !== 'function') {
         return false
       }
-      const listener = instance.on(name, (action) => {
+      const listener = instance.on(name, ({ payload }) => {
         callback({ // eslint-disable-line
-          payload: action,
+          payload: payload,
           instance: instance,
           plugins: customPlugins,
           abort: nonAbortable
@@ -750,7 +750,7 @@ export default function analytics(config = {}) {
     })
 
     /* Tick heartbeat for queued events */
-    heartBeat(store, getPlugins)
+    heartBeat(store, getPlugins, instance)
   }
 
   /* Optionally expose redux to instance */
