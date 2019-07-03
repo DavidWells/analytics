@@ -31,9 +31,13 @@ export default function segmentPlugin(pluginConfig = {}) {
     },
     bootstrap: ({ config, instance }) => {
       /* Load segment script after userId exists */
-      if (config.disableAnonymousTraffic) {
-        instance.once('identifyStart', ({ payload, plugins }) => {
+      if (config.disableAnonymousTraffic && !instance.user('userId')) {
+        instance.once('identifyStart', ({ plugins, payload }) => {
+          const { userId } = payload
           const self = plugins['segment']
+          // Set userId for .page calls
+          // Fixes race condition where analytic.js doesnt know ID read from localStorage
+          localStorage.setItem('ajs_user_id', userId)
           if (!self.loaded()) {
             instance.loadPlugin('segment')
           }
@@ -67,10 +71,9 @@ export default function segmentPlugin(pluginConfig = {}) {
     },
     /* Remove segment cookies on analytics.reset */
     reset: ({ instance }) => {
-      const { storage } = instance
       const cookies = ['ajs_user_id', 'ajs_anonymous_id', 'ajs_group_id']
       cookies.forEach((key) => {
-        storage.removeItem(key, 'cookie')
+        instance.storage.removeItem(key, 'cookie')
       })
     },
     /* Check if segment loaded */
@@ -78,6 +81,13 @@ export default function segmentPlugin(pluginConfig = {}) {
       return window.analytics && !!analytics.initialized
     }
   }
+}
+
+function isDisabled(instance, config) {
+  if (!instance.user('userId') && config.disableAnonymousTraffic) {
+    return true
+  }
+  return false
 }
 
 /* Load Segment analytics.js on page */
