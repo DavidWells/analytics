@@ -1,11 +1,11 @@
 /*
   Heartbeat retries queued events
 */
-export default function heartBeat(store, getPlugins) {
+export default function heartBeat(store, getPlugins, instance) {
   const timer = setInterval(() => {
     // console.log('____heartbeat_____')
     const pluginMethods = getPlugins()
-    const { plugins, context, queue } = store.getState()
+    const { plugins, context, queue, user } = store.getState()
     // console.log('CURRENT Q', queue)
     const isOnline = !context.offline
 
@@ -37,15 +37,19 @@ export default function heartBeat(store, getPlugins) {
           const currentMethod = processAction.payload.type
           const method = pluginMethods[currentPlugin][currentMethod]
           if (method && typeof method === 'function') {
+            /* enrich queued payload with userId / anon id if missing */
+            /* TODO hoist enrich into where action queued? */
+            const enrichedPayload = enrich(processAction.payload, user)
             method({
-              payload: processAction.payload,
-              config: plugins[currentPlugin].config
+              payload: enrichedPayload,
+              config: plugins[currentPlugin].config,
+              instance,
             })
 
             /* Then redispatch for .on listeners / other middleware */
             const pluginEvent = `${currentMethod}:${currentPlugin}`
             store.dispatch({
-              ...processAction.payload,
+              ...enrichedPayload,
               type: pluginEvent,
               /* Internal data for analytics engine */
               _: {
@@ -67,4 +71,24 @@ export default function heartBeat(store, getPlugins) {
     }
   }, 3000)
   return timer
+}
+
+function fixEmptyValues(obj, objTwo, key) {
+  if (obj.hasOwnProperty(key) && !obj[key] && objTwo[key]) {
+    // console.log('enrich', key)
+    return Object.assign({}, obj, {
+      [`${key}`]: objTwo[key]
+    })
+  }
+  return obj
+}
+
+// Assign userId && anonymousId values if present in payload but null
+function enrich(payload, user = {}) {
+  const keys = ['userId', 'anonymousId']
+  return keys.reduce((acc, key) => {
+    const updated = fixEmptyValues(acc, user, key)
+    // console.log('updated', updated)
+    return updated
+  }, payload)
 }
