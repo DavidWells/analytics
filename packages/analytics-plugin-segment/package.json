@@ -1,6 +1,6 @@
 {
   "name": "analytics-plugin-segment",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Segment integration for 'analytics' module for browser & node",
   "keywords": [
     "analytics",
