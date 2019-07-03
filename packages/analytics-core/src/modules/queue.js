@@ -14,13 +14,20 @@ const initialState = {
 }
 
 export default function queueReducer(state = initialState, action) {
-  const { type, data, timestamp } = action
+  const { type, data, timestamp, payload } = action
 
   switch (type) {
     case 'queue':
+      let actionChain
+      /* prioritize identify in event queue */
+      if (payload && payload.type && payload.type === 'identify') {
+        actionChain = [action].concat(state.actions)
+      } else {
+        actionChain = state.actions.concat(action)
+      }
       return {
         ...state,
-        actions: state.actions.concat(action)
+        actions: actionChain
       }
     case 'dequeue':
       return []
