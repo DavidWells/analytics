@@ -3,6 +3,7 @@ import waitForReady from '../../utils/waitForReady'
 import runPlugins from './engine'
 
 export default function pluginMiddleware(instance, getPlugins, systemEvents) {
+  const called = {}
   return store => next => async action => {
     const { type, name, callback } = action
     let updatedAction = action
@@ -49,14 +50,18 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
       const allCalls = allInitialized.map((plugin) => {
         const { loaded, NAMESPACE } = plugin
         return waitForReady(plugin, loaded, 10000).then((d) => {
-          store.dispatch({
-            type: EVENTS.pluginReadyType(NAMESPACE), // `ready:${NAMESPACE}`
-            name: NAMESPACE,
-            events: Object.keys(plugin).filter((name) => {
-              const remove = ['NAMESPACE', 'config', 'loaded']
-              return !remove.includes(name)
+          if (!called[NAMESPACE]) {
+            // only dispatch namespaced rdy once
+            store.dispatch({
+              type: EVENTS.pluginReadyType(NAMESPACE), // `ready:${NAMESPACE}`
+              name: NAMESPACE,
+              events: Object.keys(plugin).filter((name) => {
+                const remove = ['NAMESPACE', 'EVENTS', 'config', 'loaded']
+                return !remove.includes(name)
+              })
             })
-          })
+            called[NAMESPACE] = true
+          }
           completed = completed.concat(NAMESPACE)
           // It's loaded! run the command
         }).catch((e) => {
