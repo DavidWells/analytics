@@ -24,20 +24,14 @@ export default function segmentPlugin(pluginConfig = {}) {
   return {
     NAMESPACE: 'segment',
     config: {
-      // default config
       ...config,
-      // user land config
       ...pluginConfig
     },
     bootstrap: ({ config, instance }) => {
       /* Load segment script after userId exists */
       if (config.disableAnonymousTraffic && !instance.user('userId')) {
-        instance.once('identifyStart', ({ plugins, payload }) => {
-          const { userId } = payload
+        instance.once('identifyStart', ({ plugins }) => {
           const self = plugins['segment']
-          // Set userId for .page calls
-          // Fixes race condition where analytic.js doesnt know ID read from localStorage
-          localStorage.setItem('ajs_user_id', userId)
           if (!self.loaded()) {
             instance.loadPlugin('segment')
           }
