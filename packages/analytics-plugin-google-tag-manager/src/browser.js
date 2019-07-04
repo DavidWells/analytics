@@ -31,7 +31,7 @@ export default function googleTagManager(pluginConfig = {}) {
       if (!containerId) {
         throw new Error('No google tag manager containerId defined')
       }
-      if (typeof dataLayer === 'undefined') {
+      if (!scriptLoaded()) {
         /* eslint-disable */
         (function(w, d, s, l, i) {
           w[l] = w[l] || [];
@@ -75,7 +75,16 @@ export default function googleTagManager(pluginConfig = {}) {
       }
     },
     loaded: () => {
-      return !!(window.dataLayer && Array.prototype.push !== window.dataLayer.push)
+      const hasDataLayer = !!(window.dataLayer && Array.prototype.push !== window.dataLayer.push)
+      return scriptLoaded() && hasDataLayer
     },
   }
+}
+
+function scriptLoaded() {
+  const scripts = document.getElementsByTagName('script')
+  return !!Object.keys(scripts).filter((key) => {
+    const { src } = scripts[key]
+    return src.match(/googletagmanager\.com\/gtm\.js/)
+  }).length
 }
