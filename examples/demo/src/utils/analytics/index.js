@@ -5,6 +5,8 @@ import doNotTrack from 'analytics-plugin-do-not-track'
 import tabEvents from 'analytics-plugin-tab-events'
 import windowEvents from 'analytics-plugin-window-events'
 import customerIoPlugin from 'analytics-plugin-customerio'
+import gtagManager from 'analytics-plugin-google-tag-manager'
+
 import originalSourcePlugin from 'analytics-plugin-original-source'
 import exampleProviderPlugin from './plugins/provider-example'
 import visualizeLifecycle from './plugins/visualize-analytics'
@@ -68,6 +70,9 @@ const analytics = Analytics({
     exampleProviderPlugin({
       settingOne: 'xyz'
     }),
+    // gtagManager({
+    //   containerId: 'GTM-N5P4NK5'
+    // }),
     googleAnalytics({
       trackingId: process.env.REACT_APP_GOOGLE_ANALYTICS_ID
     }),
