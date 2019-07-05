@@ -13,7 +13,7 @@ import timestamp from './utils/timestamp'
 import { watch } from './utils/handleNetworkEvents'
 import getCallback from './utils/getCallback'
 import { Debug, composeWithDebug } from './utils/debug'
-import EVENTS, { coreEvents, isReservedAction } from './events'
+import EVENTS, { coreEvents, nonEvents, isReservedAction } from './events'
 import * as CONSTANTS from './constants'
 import globalContext from './utils/global'
 import heartBeat from './utils/heartbeat'
@@ -84,7 +84,6 @@ export default function analytics(config = {}) {
   let customPlugins = parsedOptions.plugins
 
   /* Grab all registered events from plugins loaded */
-  const nonEvents = ['NAMESPACE', 'EVENTS', 'config', 'loaded']
   const pluginEvents = parsedOptions.events.filter((name) => {
     return !nonEvents.includes(name)
   })

@@ -1,4 +1,4 @@
-import EVENTS from '../../events'
+import EVENTS, { nonEvents } from '../../events'
 import waitForReady from '../../utils/waitForReady'
 import runPlugins from './engine'
 
@@ -56,8 +56,7 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
               type: EVENTS.pluginReadyType(NAMESPACE), // `ready:${NAMESPACE}`
               name: NAMESPACE,
               events: Object.keys(plugin).filter((name) => {
-                const remove = ['NAMESPACE', 'EVENTS', 'config', 'loaded']
-                return !remove.includes(name)
+                return !nonEvents.includes(name)
               })
             })
             called[NAMESPACE] = true
