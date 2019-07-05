@@ -27,13 +27,19 @@ export default function crazyEgg(pluginConfig) {
       if (!accountNumber) {
         throw new Error('No crazy egg accoint defined')
       }
+      const { location } = document
+
+      const https = location.protocol === 'https:' || location.protocol === 'chrome-extension:'
       const path = `${accountNumber.slice(0, 4)}/${accountNumber.slice(4)}`
       const bustCache = Math.floor(new Date().getTime() / 3600000)
+      const prefix = (https) ? 'https:' : 'http:'
+      const src = `${prefix}//script.crazyegg.com/pages/scripts/${path}.js?${bustCache}`
+
       // Create script & append to DOM
       let script = document.createElement('script')
       script.type = 'text/javascript'
       script.async = true
-      script.src = `//script.crazyegg.com/pages/scripts/${path}.js?${bustCache}`
+      script.src = src
 
       // On next tick, inject the script
       setTimeout(() => {
