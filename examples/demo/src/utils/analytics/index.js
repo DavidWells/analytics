@@ -10,6 +10,7 @@ import gtagManager from 'analytics-plugin-google-tag-manager'
 import originalSourcePlugin from 'analytics-plugin-original-source'
 import exampleProviderPlugin from './plugins/provider-example'
 import visualizeLifecycle from './plugins/visualize-analytics'
+import crazyEgg from 'analytics-plugin-crazy-egg'
 
 const reduxPlugin = store => next => action => {
   if (action.type === 'page:segment') {
@@ -54,6 +55,9 @@ const analytics = Analytics({
       },
     },
     visualizeLifecycle(),
+    // crazyEgg({
+    //   accountNumber: '00840000'
+    // }),
     tabEvents(),
     // windowEvents(),
     // doNotTrack({

@@ -18,6 +18,7 @@
     "analytics-plugin-lifecycle-example": "file:../../packages/analytics-plugin-lifecycle-example",
     "analytics-plugin-original-source": "file:../../packages/analytics-plugin-original-source",
     "analytics-plugin-segment": "file:../../packages/analytics-plugin-segment",
+    "analytics-plugin-crazy-egg": "file:../../packages/analytics-plugin-crazy-egg",
     "analytics-plugin-tab-events": "file:../../packages/analytics-plugin-tab-events",
     "analytics-plugin-window-events": "file:../../packages/analytics-plugin-window-events",
     "analytics-utils": "file:../../packages/analytics-utils",
