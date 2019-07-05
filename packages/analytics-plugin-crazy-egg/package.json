@@ -1,6 +1,6 @@
 {
   "name": "analytics-plugin-crazy-egg",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Crazy Egg integration for 'analytics' pkg",
   "keywords": [
     "analytics",
