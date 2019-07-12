@@ -1,11 +1,14 @@
 {
   "name": "analytics",
   "version": "0.1.11",
-  "description": "Pluggable analytics library",
+  "description": "Lightweight analytics library for tracking events, page views, & identifying users. Works with any third party analytics provider via an extendable plugin system.",
   "keywords": [
     "analytics",
     "metrics",
-    "telemetry"
+    "telemetry",
+    "tracking",
+    "page-views",
+    "user-tracking"
   ],
   "author": "David Wells <hello@davidwells.io>",
   "license": "MIT",
