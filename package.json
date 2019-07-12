@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "bootstrap": "npm install && lerna bootstrap",
+    "commitmsg": "commitlint -e $GIT_PARAMS",
     "clean": "rimraf packages/*/dist",
     "reset": "npm run clean && lerna clean --yes",
     "test": "ava packages/**/*.js",
@@ -13,8 +14,14 @@
     "build:dev": "npm run clean && lerna run build:dev",
     "docs": "node ./scripts/docs.js && lerna run docs"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DavidWells/analytics"
+  },
   "devDependencies": {
     "@ampproject/rollup-plugin-closure-compiler": "^0.8.5",
+    "@commitlint/cli": "^8.0.0",
+    "@commitlint/config-conventional": "^8.0.0",
     "ava": "^0.20.0",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",
@@ -26,6 +33,7 @@
     "babel-preset-es2016": "^6.24.1",
     "babel-preset-es2017": "^6.24.1",
     "dox": "^0.9.0",
+    "husky": "^3.0.0",
     "lerna": "^3.4.3",
     "markdown-magic": "^0.1.25",
     "minimist": "^1.2.0",
@@ -48,6 +56,11 @@
   "ava": {
     "files": [
       "packages/**/*.js"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
     ]
   },
   "babel": {
