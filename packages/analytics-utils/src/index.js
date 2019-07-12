@@ -1,6 +1,7 @@
 
 export { default as cookie } from './cookie.js'
 export { default as decodeUri } from './decodeUri.js'
+export { default as detectAdBlock } from './detectAdBlock.js'
 export { default as getBrowserLocale } from './getBrowserLocale.js'
 export { default as getTimeZone } from './getTimeZone.js'
 export { default as inBrowser } from './inBrowser.js'
