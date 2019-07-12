@@ -19,6 +19,8 @@ const reduxPlugin = store => next => action => {
   return next(action)
 }
 
+// window.doNotTrack = '1'
+
 var tabInterval
 
 /* initialize analytics and load plugins */
@@ -47,6 +49,7 @@ const analytics = Analytics({
         }
       }
     },
+
     originalSourcePlugin(),
     {
       NAMESPACE: 'react-to-original-src',
@@ -60,9 +63,7 @@ const analytics = Analytics({
     // }),
     tabEvents(),
     // windowEvents(),
-    // doNotTrack({
-    //   enabled: true
-    // }),
+    // doNotTrack(),
     customerIoPlugin({
       siteId: '4dfdba9c7f1a6d60f779',
       disableAnonymousTraffic: true,

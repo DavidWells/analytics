@@ -7,7 +7,7 @@ const dir = process.cwd()
 const watcher = sane(dir, { glob: ['src/**/*.js'], watchman: true })
 console.log(`Start ${dir} watcher`)
 
-watcher.on('ready', function () { console.log('ready') });
+watcher.on('ready', function () { console.log('ready') })
 
 watcher.on('change', async function (filepath, root, stat) {
   console.log('file changed', path.join(dir, filepath))
