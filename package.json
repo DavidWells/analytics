@@ -3,7 +3,6 @@
   "private": true,
   "scripts": {
     "bootstrap": "npm install && lerna bootstrap",
-    "commitmsg": "commitlint -e $GIT_PARAMS",
     "clean": "rimraf packages/*/dist",
     "reset": "npm run clean && lerna clean --yes",
     "test": "ava packages/**/*.js",
@@ -56,11 +55,6 @@
   "ava": {
     "files": [
       "packages/**/*.js"
-    ]
-  },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
     ]
   },
   "babel": {
