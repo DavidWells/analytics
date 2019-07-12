@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/DavidWells/analytics/tree/master/packages/gatsby-plugin-analytics/compare/gatsby-plugin-analytics@0.1.1...gatsby-plugin-analytics@0.2.0) (2019-07-12)
+
+
+### Features
+
+* **gatbsy:** see if scoped feature in changelog last test ([efde0d6](https://github.com/DavidWells/analytics/tree/master/packages/gatsby-plugin-analytics/commit/efde0d6))
+
+
+
+
+
 ## [0.1.1](https://github.com/DavidWells/analytics/tree/master/packages/gatsby-plugin-analytics/compare/gatsby-plugin-analytics@0.1.0...gatsby-plugin-analytics@0.1.1) (2019-07-12)
 
 **Note:** Version bump only for package gatsby-plugin-analytics
