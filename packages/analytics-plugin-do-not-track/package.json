@@ -4,7 +4,9 @@
   "description": "Disable tracking for opted out visitors",
   "keywords": [
     "analytics",
-    "analytics-plugin"
+    "analytics-plugin",
+    "do-not-track",
+    "privacy"
   ],
   "author": "David Wells",
   "license": "MIT",
