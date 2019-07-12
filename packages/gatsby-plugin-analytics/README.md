@@ -1,8 +1,8 @@
 # gatsby-plugin-analytics
 
-Easily add the [`analytics`](https://analytics-demo.netlify.com/) npm package to your Gatsby site.
+Add the [`analytics`](https://analytics-demo.netlify.com/) package to your Gatsby site.
 
-[`analytics`](https://www.npmjs.com/package/analytics) is a lightweight pluggable analytics library designed to work with any third party analytics tool.
+[`analytics`](https://www.npmjs.com/package/analytics) is a lightweight analytics library for tracking events, page views, & identifying users. Works with any third party analytics provider via an extendable plugin system.
 
 ## Install
 
