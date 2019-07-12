@@ -7,7 +7,7 @@ exports.onRouteUpdate = ({ location }, options) => {
     if (options && options.debug) {
       console.log('analytics.page() called')
     }
-    // On every route change fire this code.
+    // On every route change fire this code!
     Analytics.page()
   }
 }
