@@ -187,7 +187,7 @@ export const coreEvents = [
   'removeItemAborted',
 ]
 
-/**
+/*!
  * Keys on a plugin that are not considered events
  */
 export const nonEvents = ['NAMESPACE', 'EVENTS', 'config', 'loaded']
