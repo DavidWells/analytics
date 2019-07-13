@@ -51,7 +51,6 @@
   "scripts": {
     "postpack": "rm -f oclif.manifest.json npm-shrinkwrap.json",
     "prepack": "oclif-dev manifest && oclif-dev readme && npm shrinkwrap",
-    "test": "echo NO TESTS",
     "version": "oclif-dev readme && git add README.md"
   }
 }
