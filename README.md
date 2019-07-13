@@ -608,6 +608,7 @@ The `analytics` has a robust plugin system. Here is a list of currently availabl
 
 <!-- AUTO-GENERATED-CONTENT:START (PLUGINS) -->
 - [analytics-cli](https://github.com/DavidWells/analytics/tree/master/packages/analytics-cli) CLI for `analytics` pkg [npm link](https://www.npmjs.com/package/analytics-cli).
+- [analytics-plugin-crazy-egg](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-crazy-egg) Crazy Egg integration for 'analytics' pkg [npm link](https://www.npmjs.com/package/analytics-plugin-crazy-egg).
 - [analytics-plugin-customerio](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-customerio) Customer.io plugin for 'analytics' [npm link](https://www.npmjs.com/package/analytics-plugin-customerio).
 - [analytics-plugin-do-not-track](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-do-not-track) Disable tracking for opted out visitors [npm link](https://www.npmjs.com/package/analytics-plugin-do-not-track).
 - [analytics-plugin-ga](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-ga) Google analytics integration for 'analytics' pkg [npm link](https://www.npmjs.com/package/analytics-plugin-ga).
@@ -823,7 +824,7 @@ Then submit to the [list above](#analytic-plugins)
 
 During development you can turn on `debug` mode. This will connect redux dev tools for you to visually see the analytics events passing through your application.
 
-[GIF]
+![analytics-debug-tools](https://user-images.githubusercontent.com/532272/61163639-21da2300-a4c4-11e9-8743-b45d3a570271.gif)
 
 ```js
 import Analytics from 'analytics'
