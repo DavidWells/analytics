@@ -830,7 +830,7 @@ During development you can turn on `debug` mode. This will connect redux dev too
 import Analytics from 'analytics'
 
 const analytics = Analytics({
-  app: 'my-app-name',
+  app: 'my-app',
   debug: true
 })
 ```
