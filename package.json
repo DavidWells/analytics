@@ -5,13 +5,17 @@
     "bootstrap": "npm install && lerna bootstrap",
     "clean": "rimraf packages/*/dist",
     "reset": "npm run clean && lerna clean --yes",
-    "test": "ava packages/**/*.js",
+    "test": "lerna run test",
     "watch": "lerna run watch --parallel --stream",
     "watch:core": "lerna run watch --stream --scope analytics",
     "develop": "lerna run develop --parallel",
     "build": "npm run clean && lerna run build",
     "build:dev": "npm run clean && lerna run build:dev",
-    "docs": "node ./scripts/docs.js && lerna run docs"
+    "docs": "node ./scripts/docs.js && lerna run docs",
+    "verifyOrigin": "git remote get-url origin",
+    "prerelease": "npm run verifyOrigin",
+    "releaseUsageNotes": "run 'npm run release --key=npmtoken'",
+    "release": "NPM_CONFIG_OTP=$npm_config_key lerna publish"
   },
   "repository": {
     "type": "git",
@@ -19,7 +23,7 @@
   },
   "devDependencies": {
     "@ampproject/rollup-plugin-closure-compiler": "^0.8.5",
-    "ava": "^0.20.0",
+    "ava": "^2.2.0",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",
     "babel-loader": "^7.0.0",
@@ -46,7 +50,7 @@
   },
   "ava": {
     "files": [
-      "packages/**/*.js"
+      "packages/**/*.test.js"
     ]
   },
   "babel": {
