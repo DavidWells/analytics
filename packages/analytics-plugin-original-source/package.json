@@ -1,10 +1,13 @@
 {
   "name": "analytics-plugin-original-source",
   "version": "0.1.6",
-  "description": "Save original referral source of visitor",
+  "description": "Save original referral source of visitor plugin for 'analytics' module",
   "keywords": [
     "analytics",
-    "analytics-plugin"
+    "analytics-project",
+    "analytics-plugin",
+    "referral",
+    "traffic source"
   ],
   "author": "David Wells",
   "license": "MIT",

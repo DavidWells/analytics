@@ -1,13 +1,16 @@
 {
   "name": "analytics-plugin-tab-events",
   "version": "0.0.6",
-  "description": "Expose tab visibility events for analytics",
+  "description": "Expose tab visibility events plugin for 'analytics' module",
   "author": "David Wells",
   "license": "MIT",
   "homepage": "https://github.com/DavidWells/analytics#readme",
   "keywords": [
     "analytics",
-    "analytics-plugin"
+    "analytics-project",
+    "analytics-plugin",
+    "tab-visibility",
+    "tab-listener"
   ],
   "main": "lib/analytics-plugin-tab-events.cjs.js",
   "globalName": "analyticsTabEvents",

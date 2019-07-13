@@ -15,7 +15,11 @@
     "build": "node ../../scripts/build/index.js",
     "watch": "node ../../scripts/build/_watch.js"
   },
-  "keywords": [],
+  "keywords": [
+    "analytics",
+    "analytics-project",
+    "analytics-plugin"
+  ],
   "author": "",
   "license": "MIT",
   "devDependencies": {

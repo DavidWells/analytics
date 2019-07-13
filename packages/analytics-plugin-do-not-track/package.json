@@ -1,12 +1,15 @@
 {
   "name": "analytics-plugin-do-not-track",
   "version": "0.1.3",
-  "description": "Disable tracking for opted out visitors",
+  "description": "Disable tracking for opted out visitors plugin for 'analytics' module",
   "keywords": [
     "analytics",
+    "analytics-project",
     "analytics-plugin",
     "do-not-track",
-    "privacy"
+    "gdpr",
+    "privacy",
+    "consent"
   ],
   "author": "David Wells",
   "license": "MIT",

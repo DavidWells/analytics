@@ -1,10 +1,14 @@
 {
   "name": "analytics-plugin-google-tag-manager",
   "version": "0.1.4",
-  "description": "Google tag manager plugin for 'analytics' pkg",
+  "description": "Google tag manager plugin for 'analytics' module",
   "keywords": [
     "analytics",
-    "analytics-plugin"
+    "analytics-project",
+    "analytics-plugin",
+    "Gtm",
+    "Google tag manager",
+    "google-tag-manager",
   ],
   "author": "David Wells",
   "license": "MIT",

@@ -1,7 +1,7 @@
 {
   "name": "analytics-utils",
   "version": "0.0.22",
-  "description": "Analytics utility functions",
+  "description": "Analytics utility functions used by 'analytics' module",
   "author": "David Wells <hello@davidwells.io>",
   "license": "MIT",
   "main": "lib/analytics-utils.cjs.js",
@@ -26,7 +26,9 @@
     "release:major": "npm version major && npm publish"
   },
   "keywords": [
-    "analytics"
+    "analytics",
+    "analytics-project",
+    "analytics-utilities"
   ],
   "files": [
     "dist",

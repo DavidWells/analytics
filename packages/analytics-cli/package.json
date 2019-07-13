@@ -32,7 +32,8 @@
   ],
   "homepage": "https://github.com/DavidWells/aws-profile-utils",
   "keywords": [
-    "oclif"
+    "analytics",
+    "analytics-project"
   ],
   "main": "src/index.js",
   "oclif": {

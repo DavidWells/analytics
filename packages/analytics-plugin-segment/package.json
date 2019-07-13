@@ -4,7 +4,10 @@
   "description": "Segment integration for 'analytics' module for browser & node",
   "keywords": [
     "analytics",
-    "analytics-plugin"
+    "analytics-project",
+    "analytics-plugin",
+    "segment",
+    "segmentio"
   ],
   "author": "David Wells",
   "license": "MIT",

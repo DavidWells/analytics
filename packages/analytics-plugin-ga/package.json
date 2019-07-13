@@ -1,10 +1,14 @@
 {
   "name": "analytics-plugin-ga",
   "version": "0.1.4",
-  "description": "Google analytics integration for 'analytics' pkg",
+  "description": "Google analytics integration for 'analytics' module",
   "keywords": [
     "analytics",
-    "analytics-plugin"
+    "analytics-project",
+    "analytics-plugin",
+    "GA",
+    "google-analytics",
+    "Google Analytics",
   ],
   "author": "David Wells",
   "license": "MIT",

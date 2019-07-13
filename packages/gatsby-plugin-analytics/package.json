@@ -1,7 +1,7 @@
 {
   "name": "gatsby-plugin-analytics",
   "version": "0.2.0",
-  "description": "Easily add analytics to your Gatsby site.",
+  "description": "Easily add analytics to your Gatsby site",
   "main": "index.js",
   "homepage": "https://github.com/DavidWells/analytics/tree/master/packages/gatsby-plugin-analytics#readme",
   "repository": "https://github.com/DavidWells/analytics/tree/master/packages/gatsby-plugin-analytics",
@@ -10,6 +10,7 @@
   },
   "keywords": [
     "analytics",
+    "analytics-project",
     "analytics-plugin",
     "gatbsy",
     "gatsby-plugin"

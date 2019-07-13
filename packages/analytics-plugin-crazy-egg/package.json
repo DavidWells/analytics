@@ -1,11 +1,12 @@
 {
   "name": "analytics-plugin-crazy-egg",
   "version": "0.0.2",
-  "description": "Crazy Egg integration for 'analytics' pkg",
+  "description": "Crazy Egg integration for 'analytics' module",
   "keywords": [
     "analytics",
-    "crazy-egg",
+    "analytics-project",
     "analytics-plugin"
+    "crazy-egg",
   ],
   "author": "David Wells",
   "license": "MIT",
