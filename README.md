@@ -17,7 +17,6 @@ The `analytics` library allows users to:
 
 - [Features](#features)
 - [Why](#why)
-- [Philosophy](#philosophy)
 - [Install](#install)
 - [Usage](#usage)
 - [Demo](#demo)
@@ -58,17 +57,20 @@ The `analytics` library allows users to:
 - [x] Add functionality/modify tracking calls with baked in lifecycle hooks
 - [x] Isomorphic. Works in browser & on server
 - [x] Queues events to send when analytic libraries are loaded
-- [ ] (WIP) works offline
+- [x] Works offline
 
 ##  Why
 
-Companies frequently change analytics & collection requirements. This results in adding & removing analytic services a painful time consuming process.
+Companies frequently change analytics requirements based on evolving needs. This results in a lot of complexity, maintenance, & extra code when adding/removing analytic services to a site or application.
 
 This library aims to solves that with a simple pluggable abstraction layer.
 
-##  Philosophy
+**Driving philosophy:**
 
-> You should never be locked into a tool
+- You should never be locked into a analytics tool
+- DX is paramount. Adding & removing analytic tools from your application should be easy
+- Respecting visitor privacy settings & allowing for opt out mechanisms is crucial
+- A pluggable API makes adding new business requests easy
 
 To add or remove an analytics provider adjust the `plugins` you load into `analytics`.
 
@@ -608,18 +610,18 @@ The `analytics` has a robust plugin system. Here is a list of currently availabl
 
 <!-- AUTO-GENERATED-CONTENT:START (PLUGINS) -->
 - [analytics-cli](https://github.com/DavidWells/analytics/tree/master/packages/analytics-cli) CLI for `analytics` pkg [npm link](https://www.npmjs.com/package/analytics-cli).
-- [analytics-plugin-crazy-egg](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-crazy-egg) Crazy Egg integration for 'analytics' pkg [npm link](https://www.npmjs.com/package/analytics-plugin-crazy-egg).
-- [analytics-plugin-customerio](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-customerio) Customer.io plugin for 'analytics' [npm link](https://www.npmjs.com/package/analytics-plugin-customerio).
-- [analytics-plugin-do-not-track](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-do-not-track) Disable tracking for opted out visitors [npm link](https://www.npmjs.com/package/analytics-plugin-do-not-track).
-- [analytics-plugin-ga](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-ga) Google analytics integration for 'analytics' pkg [npm link](https://www.npmjs.com/package/analytics-plugin-ga).
-- [analytics-plugin-google-tag-manager](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-google-tag-manager) Google tag manager plugin for 'analytics' pkg [npm link](https://www.npmjs.com/package/analytics-plugin-google-tag-manager).
-- [analytics-plugin-lifecycle-example](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-lifecycle-example) Example plugin with lifecycle methods [npm link](https://www.npmjs.com/package/analytics-plugin-lifecycle-example).
-- [analytics-plugin-original-source](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-original-source) Save original referral source of visitor [npm link](https://www.npmjs.com/package/analytics-plugin-original-source).
+- [analytics-plugin-crazy-egg](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-crazy-egg) Crazy Egg integration for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-crazy-egg).
+- [analytics-plugin-customerio](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-customerio) Customer.io integration for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-customerio).
+- [analytics-plugin-do-not-track](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-do-not-track) Disable tracking for opted out visitors plugin for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-do-not-track).
+- [analytics-plugin-ga](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-ga) Google analytics integration for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-ga).
+- [analytics-plugin-google-tag-manager](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-google-tag-manager) Google tag manager plugin for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-google-tag-manager).
+- [analytics-plugin-lifecycle-example](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-lifecycle-example) Example plugin with lifecycle methods for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-lifecycle-example).
+- [analytics-plugin-original-source](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-original-source) Save original referral source of visitor plugin for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-original-source).
 - [analytics-plugin-segment](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-segment) Segment integration for 'analytics' module for browser & node [npm link](https://www.npmjs.com/package/analytics-plugin-segment).
-- [analytics-plugin-tab-events](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-tab-events) Expose tab visibility events for analytics [npm link](https://www.npmjs.com/package/analytics-plugin-tab-events).
-- [analytics-plugin-window-events](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-window-events) Expose window events for analytics [npm link](https://www.npmjs.com/package/analytics-plugin-window-events).
-- [analytics-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-utils) Analytics utility functions [npm link](https://www.npmjs.com/package/analytics-utils).
-- [gatsby-plugin-analytics](https://github.com/DavidWells/analytics/tree/master/packages/gatsby-plugin-analytics) Easily add analytics to your Gatsby site. [npm link](https://www.npmjs.com/package/gatsby-plugin-analytics).
+- [analytics-plugin-tab-events](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-tab-events) Expose tab visibility events plugin for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-tab-events).
+- [analytics-plugin-window-events](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-window-events) Expose window events plugin for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-window-events).
+- [analytics-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-utils) Analytics utility functions used by 'analytics' module [npm link](https://www.npmjs.com/package/analytics-utils).
+- [gatsby-plugin-analytics](https://github.com/DavidWells/analytics/tree/master/packages/gatsby-plugin-analytics) Easily add analytics to your Gatsby site [npm link](https://www.npmjs.com/package/gatsby-plugin-analytics).
 - [analytics-plugin-template](https://github.com/DavidWells/analytics/tree/master/packages/plugin-template) Example plugin with browser + node module build with treeshaking [npm link](https://www.npmjs.com/package/analytics-plugin-template).
 - Add yours! 👇
 <!-- AUTO-GENERATED-CONTENT:END -->
@@ -830,7 +832,7 @@ During development you can turn on `debug` mode. This will connect redux dev too
 import Analytics from 'analytics'
 
 const analytics = Analytics({
-  app: 'my-app-name',
+  app: 'my-app',
   debug: true
 })
 ```
