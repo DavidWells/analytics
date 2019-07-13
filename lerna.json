@@ -5,8 +5,20 @@
   "version": "independent",
   "command": {
     "publish": {
+      "allowBranch": [
+        "master",
+        "next"
+      ],
       "conventionalCommits": true,
-      "message": "chore(release): publish"
+      "message": "chore(release): :tada: :rocket: [skip ci]"
     }
-  }
+  },
+  "ignoreChanges": [
+    "**/CHANGELOG.md",
+    "**/package-lock.json",
+    "**/test/**",
+    "lerna.json",
+    "package.json",
+    "README.md"
+  ]
 }

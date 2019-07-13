@@ -30,7 +30,7 @@
     "babel-preset-es2016": "^6.24.1",
     "babel-preset-es2017": "^6.24.1",
     "dox": "^0.9.0",
-    "lerna": "^3.4.3",
+    "lerna": "^3.10.7",
     "markdown-magic": "^0.1.25",
     "minimist": "^1.2.0",
     "rimraf": "^2.6.2",
