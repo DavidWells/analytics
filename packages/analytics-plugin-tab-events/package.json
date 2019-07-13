@@ -21,7 +21,6 @@
     "./lib/analytics-plugin-tab-events.es.js": "./lib/analytics-plugin-tab-events.browser.es.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "node ../../scripts/build/index.js",
     "watch": "node ../../scripts/build/_watch.js",
     "release:patch": "npm version patch && npm publish",
