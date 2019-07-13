@@ -12,5 +12,13 @@
       "conventionalCommits": true,
       "message": "chore(release): :tada: :rocket: [skip ci]"
     }
-  }
+  },
+  "ignoreChanges": [
+    "**/CHANGELOG.md",
+    "**/package-lock.json",
+    "**/test/**",
+    "lerna.json",
+    "package.json",
+    "README.md"
+  ]
 }
