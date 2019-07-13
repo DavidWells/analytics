@@ -21,7 +21,10 @@ import heartBeat from './utils/heartbeat'
 const { setItem, removeItem, getItem } = middleware
 
 /**
-  * Analytics library
+  * Analytics library configuration.
+  *
+  * After the library is initialized with config, the core API is exposed and ready for use in the application.
+  *
   * @param {object} config - analytics core config
   * @param {string} [config.app] - Name of site / app
   * @param {string} [config.version] - Version of your app
@@ -30,12 +33,15 @@ const { setItem, removeItem, getItem } = middleware
   * @example
   *
   * import Analytics from 'analytics'
+  * import pluginABC from 'analytics-plugin-abc'
+  * import pluginXYZ from 'analytics-plugin-xyz'
   *
   * // initialize analytics
   * const analytics = Analytics({
   *   app: 'my-awesome-app',
   *   plugins: [
-  *     ...importedPlugins
+  *     pluginABC,
+  *     pluginXYZ
   *   ]
   * })
   *

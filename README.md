@@ -183,12 +183,21 @@ See [Analytics Demo](https://analytics-demo.netlify.com/) for a site example.
 
 ## API
 
-Below is the core API analytics expose once initialized.
+The core `analytics` API is exposed once the library is initialized with [configuration](#configuration).
+
+Typical usage:
+
+1. Initialize with [configuration](#configuration)
+2. Export the analytics instance with third party providers (Google Analytics, HubSpot, etc)
+3. Use [`page`](#analyticspage), [`identify`](#analyticsidentify), [`track`](#analyticstrack) in your app
+4. [Plugin custom business logic](#creating-analytics-plugins)
 
 <!-- AUTO-GENERATED-CONTENT:START (API_DOCS) -->
 ### Configuration
 
-Analytics library
+Analytics library configuration.
+
+After the library is initialized with config, the core API is exposed and ready for use in the application.
 
 **Arguments**
 
@@ -201,12 +210,15 @@ Analytics library
 
 ```js
 import Analytics from 'analytics'
+import pluginABC from 'analytics-plugin-abc'
+import pluginXYZ from 'analytics-plugin-xyz'
 
 // initialize analytics
 const analytics = Analytics({
   app: 'my-awesome-app',
   plugins: [
-    ...importedPlugins
+    pluginABC,
+    pluginXYZ
   ]
 })
 ```
