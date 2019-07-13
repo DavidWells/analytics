@@ -1,3 +1,16 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+## [0.1.13](https://github.com/DavidWells/analytics/compare/analytics@0.1.12...analytics@0.1.13) (2019-07-13)
+
+**Note:** Version bump only for package analytics
+
+
+
+
+
 ## [0.1.12](https://github.com/DavidWells/analytics/compare/analytics@0.1.12...analytics@0.1.12) (2019-07-13)
 
 
@@ -40,6 +53,3 @@
 * **core:** queue track, page, & identify calls if browser offline ([41f7f78](https://github.com/DavidWells/analytics/commit/41f7f78))
 * **plugin-system:** add new core plugin engine ([e122572](https://github.com/DavidWells/analytics/commit/e122572))
 * **plugins:** refactor plugins to allow for hooking into plugin specific events/methods ([c1c5379](https://github.com/DavidWells/analytics/commit/c1c5379))
-
-
-

@@ -1,3 +1,19 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+# [0.1.0](https://github.com/DavidWells/analytics/compare/analytics-utils@0.0.22...analytics-utils@0.1.0) (2019-07-13)
+
+
+### Features
+
+* add onRouteChange utility ([bf8701b](https://github.com/DavidWells/analytics/commit/bf8701b))
+
+
+
+
+
 ## [0.0.22](https://github.com/DavidWells/analytics/compare/analytics-utils@0.0.22...analytics-utils@0.0.22) (2019-07-13)
 
 
@@ -22,6 +38,3 @@
 * **utils:** add ParseReferrer Util ([75cff90](https://github.com/DavidWells/analytics/commit/75cff90))
 * **utils:** add storage util ([ad8f6c6](https://github.com/DavidWells/analytics/commit/ad8f6c6))
 * **utils:** update storage and allow for setting/getting values from specific locations ([7b730d4](https://github.com/DavidWells/analytics/commit/7b730d4))
-
-
-
