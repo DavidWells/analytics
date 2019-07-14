@@ -10,7 +10,7 @@ Typical usage:
 1. Initialize with [configuration](#configuration)
 2. Export the analytics instance with third party providers (Google Analytics, HubSpot, etc)
 3. Use [`page`](#analyticspage), [`identify`](#analyticsidentify), [`track`](#analyticstrack) in your app
-4. [Plugin custom business logic](#creating-analytics-plugins)
+4. Plugin custom business logic
 
 <!-- AUTO-GENERATED-CONTENT:START (API_DOCS) -->
 ## Configuration
