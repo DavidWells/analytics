@@ -1,0 +1,67 @@
+import {
+  ExpansionPanel,
+  ExpansionPanelList,
+  ExpansionPanelListItem
+} from '../src/components/expansion-panel';
+
+<ExpansionPanel title="How to configure an Apollo project">
+
+Follow these three steps to set up an Apollo project:
+
+<ExpansionPanelList>
+<ExpansionPanelListItem number="1">
+
+<h4>Install the Apollo CLI</h4>
+
+To install the [`apollo` CLI](https://npm.im/apollo), ensure that `node` and `npm` are both installed, then run:
+
+```bash
+npm install --global apollo
+```
+
+**Note:** This guide will utilize the global installation method, but the `apollo` command can also be installed in a project's `devDependencies` and used via [`npm-scripts`](https://docs.npmjs.com/misc/scripts) or [`npx`](https://npm.im/npx).
+
+</ExpansionPanelListItem>
+<ExpansionPanelListItem number="2">
+
+<h4>Get your Engine API key</h4>
+
+To get an API key, you will need to [log in to Engine](https://engine.apollographql.com) and create a new service by clicking the "Add Service" button. If you already have a service, get your API key by visiting your service's settings page. Once you have your API key, add it to your `.env` file like so:
+
+```
+ENGINE_API_KEY=service:foobar:d1rzyrmanmrZXxTTQLxghX
+```
+
+The Apollo CLI will be looking for your `.env` file because it uses your Engine API key to authenticate with the schema registry when it pushes your schema.
+
+**Note:** Make sure your `.env` file is in the root of your project so the Apollo CLI knows where to find it. You can also export `ENGINE_API_KEY` as an environment variable.
+
+</ExpansionPanelListItem>
+<ExpansionPanelListItem number="3">
+
+<h4>Create an apollo.config.js file</h4>
+
+The commands executed through the Apollo CLI will be looking for your Apollo config to inform their behavior. To set up schema registration, you'll need to configure a source that the CLI can fetch your schema from like so:
+
+```js
+// apollo.config.js
+module.exports = {
+  service: {
+    endpoint: {
+      url: "http://localhost:4000"
+    }
+    // OR
+    localSchemaFile: './path/to/schema.graphql'
+  }
+};
+```
+
+The [Apollo config documentation](/references/apollo-config/#clientservice) has more details and advanced configuration options for the `apollo.config.js` format.
+
+</ExpansionPanelListItem>
+<ExpansionPanelListItem number="check">
+  You're done!
+</ExpansionPanelListItem>
+</ExpansionPanelList>
+
+</ExpansionPanel>

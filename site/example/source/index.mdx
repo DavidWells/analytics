@@ -1,0 +1,87 @@
+---
+title: Analytics Documentation
+description: Start here to learn about the analytics module
+---
+
+A lightweight, extendable analytics library designed to work with **any** third party analytics provider to track page views, custom events, & identify users.
+
+The `analytics` library allows users to:
+
+- Connect with your favorite analytics providers
+- Trigger custom logic based on user activity
+- Extend with functionality via [plugins](#analytic-plugins)
+- Easily allow visitors to opt out of tracking
+
+## Features
+
+- [x] [Extendable](#analytic-plugins) - Bring your own third party tool & plugins
+- [x] Test & debug analytics integrations with time travel & offline mode
+- [x] Add functionality/modify tracking calls with baked in lifecycle hooks
+- [x] Isomorphic. Works in browser & on server
+- [x] Queues events to send when analytic libraries are loaded
+- [x] Works offline
+
+##  Why
+
+Companies frequently change analytics requirements based on evolving needs. This results in a lot of complexity, maintenance, & extra code when adding/removing analytic services to a site or application.
+
+This library aims to solves that with a simple pluggable abstraction layer.
+
+**Driving philosophy:**
+
+- You should never be locked into a analytics tool
+- DX is paramount. Adding & removing analytic tools from your application should be easy
+- Respecting visitor privacy settings & allowing for opt out mechanisms is crucial
+- A pluggable API makes adding new business requests easy
+
+To add or remove an analytics provider adjust the `plugins` you load into `analytics`.
+
+## Install
+
+```bash
+npm install analytics --save
+```
+
+Or as a script tag:
+
+```html
+<script src="https://unpkg.com/analytics/dist/analytics.min.js"></script>
+```
+
+## Usage
+
+```js
+import Analytics from 'analytics'
+import googleAnalyticsPlugin from 'analytics-plugin-ga'
+import customerIOPlugin from 'analytics-plugin-customerio'
+
+/* Initialize analytics */
+const analytics = Analytics({
+  app: 'my-app-name',
+  version: 100,
+  plugins: [
+    googleAnalyticsPlugin({
+      trackingId: 'UA-121991291',
+    }),
+    customerIOPlugin({
+      siteId: '123-xyz'
+    })
+  ]
+})
+
+/* Track a page view */
+analytics.page()
+
+/* Track a custom event */
+analytics.track('userPurchase', {
+  price: 20
+  item: 'pink socks'
+})
+
+/* Identify a visitor */
+analytics.identify('user-id-xyz', {
+  firstName: 'bill',
+  lastName: 'murray',
+  email: 'da-coolest@aol.com'
+})
+```
