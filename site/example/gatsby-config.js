@@ -17,9 +17,19 @@ module.exports = {
           ],
           Docs: [
             'api',
+            'using-plugins',
+            'using-listeners',
           ],
           Plugins: [
             'plugins/google-analytics',
+            'plugins/google-tag-manager',
+            'plugins/segment',
+            'plugins/customerio',
+            'plugins/crazyegg',
+            'plugins/do-not-track',
+            'plugins/tab-events',
+            'plugins/window-events',
+            'plugins/original-source',
           ],
           Tutorial: [
             'tutorial/introduction',

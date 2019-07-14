@@ -1,5 +1,5 @@
 ---
-title: Google analytics
+title: Google Analytics
 description: Using the google analytics plugin
 ---
 
@@ -8,7 +8,7 @@ Integration with google analytics for [analytics](https://www.npmjs.com/package/
 ## Install
 
 ```bash
-npm install analytics-plugin-ga --save
+npm install analytics-plugin-ga
 ```
 
 ## Usage

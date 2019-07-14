@@ -1,5 +1,5 @@
 ---
-title: API docs
+title: API Docs
 description: Core analytics API
 ---
 
