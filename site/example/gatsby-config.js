@@ -16,7 +16,7 @@ module.exports = {
             'intro/installation',
           ],
           Docs: [
-            'api',
+            'docs/api',
           ],
           Plugins: [
             'plugins/google-analytics',
