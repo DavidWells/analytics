@@ -5,16 +5,16 @@
 ## Usage
 
 ```bash
-npm i analytics
-npm i analytics-plugin-original-source
+npm install analytics
+npm install analytics-plugin-original-source
 ```
 
 ```js
-import analyticsLib from 'analytics'
+import Analytics from 'analytics'
 import originalSrc from 'analytics-plugin-original-source'
 
-const analytics = analyticsLib({
-  app: 'doggieDating',
+const analytics = Analytics({
+  app: 'my-app',
   version: 100,
   debug: true,
   plugins: [
