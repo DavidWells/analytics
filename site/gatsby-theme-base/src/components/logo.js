@@ -8,9 +8,9 @@ const Logo = (props) => {
         <rect x="-306.469" y="-232.764" display="inline" fill="#000000" width="787" height="375.042"></rect>
       </g>
       <g display="none">
-        <polyline display="inline" fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" points="64,63 1,63 1,0  "></polyline>
+        <polyline display="inline" fill="none" stroke="#000000" strokeWidth="2" strokeMiterlimit="10" points="64,63 1,63 1,0  "></polyline>
         <g display="inline">
-          <polyline fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" points="14.122,49.629 24.448,32.076     36.717,37.362 41.408,16.278 60.123,6.612   "></polyline>
+          <polyline fill="none" stroke="#000000" strokeWidth="2" strokeMiterlimit="10" points="14.122,49.629 24.448,32.076     36.717,37.362 41.408,16.278 60.123,6.612   "></polyline>
           <circle fill="#000000" cx="24.448" cy="32.076" r="3.877"></circle>
           <circle fill="#000000" cx="36.691" cy="37.37" r="3.877"></circle>
           <circle fill="#000000" cx="14.122" cy="49.629" r="3.877"></circle>
