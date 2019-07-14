@@ -3,7 +3,7 @@ module.exports = {
   pathPrefix: '/',
   __experimentalThemes: [
     {
-      resolve: 'gatsby-theme-apollo-docs',
+      resolve: 'gatsby-theme-oss-docs',
       options: {
         root: __dirname,
         subtitle: 'npm install analytics',

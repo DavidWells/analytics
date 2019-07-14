@@ -1,0 +1,25 @@
+{
+  "name": "gatsby-theme-base",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "@apollo/space-kit": "0.0.8",
+    "@emotion/core": "^10.0.7",
+    "@emotion/styled": "^10.0.7",
+    "@svgr/webpack": "^4.2.0",
+    "gatsby": "^2.4.2",
+    "gatsby-plugin-emotion": "^4.0.3",
+    "gatsby-plugin-less": "^2.0.13",
+    "gatsby-plugin-react-helmet": "^3.0.2",
+    "gatsby-plugin-svgr": "^2.0.1",
+    "less": "^3.9.0",
+    "lodash": "^4.17.11",
+    "polished": "^2.3.3",
+    "prop-types": "^15.6.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-helmet": "^5.2.0",
+    "react-icons": "^3.3.0",
+    "store": "^2.0.12"
+  }
+}

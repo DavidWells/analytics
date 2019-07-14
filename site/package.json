@@ -9,8 +9,8 @@
     "build": "yarn workspace example build"
   },
   "workspaces": [
-    "gatsby-theme-apollo",
-    "gatsby-theme-apollo-docs",
+    "gatsby-theme-base",
+    "gatsby-theme-oss-docs",
     "example"
   ],
   "dependencies": {
