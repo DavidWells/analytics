@@ -18,7 +18,10 @@ const Header = styled.div({
   display: 'flex',
   alignItems: 'center',
   padding: 10,
-  borderBottom: `1px solid ${colors.divider}`
+  borderBottom: `1px solid ${colors.divider}`,
+  [breakpoints.sm]: {
+    padding: 5
+  }
 })
 
 const Filename = styled.code({
