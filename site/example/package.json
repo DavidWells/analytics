@@ -7,7 +7,8 @@
   "scripts": {
     "start": "gatsby develop",
     "develop": "gatsby develop",
-    "build": "gatsby build"
+    "build": "gatsby build",
+    "deploy": "netlify deploy -p --dir public"
   },
   "dependencies": {
     "gatsby": "^2.13.20",

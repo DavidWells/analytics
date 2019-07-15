@@ -3,7 +3,7 @@ import React, {createContext, useRef} from 'react'
 import styled from '@emotion/styled'
 import useCopyToClipboard from 'react-use/lib/useCopyToClipboard'
 import { Button } from './buttons'
-import { GA_EVENT_CATEGORY_CODE_BLOCK, trackEvent } from '../utils'
+import { GA_EVENT_CATEGORY_CODE_BLOCK, trackEvent, breakpoints } from '../utils'
 import { MultiCodeBlockContext } from './multi-code-block'
 import { Select } from './select'
 import { colors } from 'gatsby-theme-base'
@@ -35,7 +35,10 @@ const StyledSelect = styled(Select)({
 const InnerContainer = styled.div({
   padding: 15,
   backgroundColor: colors.background,
-  overflow: 'auto'
+  overflow: 'auto',
+  [breakpoints.sm]: {
+    padding: 5
+  }
 })
 
 export const CodeBlockContext = createContext({

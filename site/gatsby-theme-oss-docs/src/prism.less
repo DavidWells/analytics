@@ -1,5 +1,12 @@
 /* from https://www.gatsbyjs.org/packages/gatsby-remark-prismjs/#include-css */
 
+.align-left {
+  //margin-bottom: 0 !important;
+}
+.align-left img {
+  margin: 0 !important;
+}
+
 .gatsby-highlight-code-line {
   background-color: @color-background2;
   display: block;
@@ -174,4 +181,10 @@ pre[data-line] {
 }
 pre[class*="language-"] > code[class*="language-"] {
   position: relative;
+}
+
+@media (max-width: 768px) {
+  pre[class*="language-"], code[class*="language-"] {
+    font-size: 13px;
+  }
 }

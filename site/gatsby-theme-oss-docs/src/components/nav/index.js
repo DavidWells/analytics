@@ -15,10 +15,9 @@ const Container = styled.nav({
 })
 
 const navConfig = {
-  // '/docs': {
-  //   text: 'Platform',
-  //   matchRegex: /^\/docs\/(intro|platform|resources|references|$)/
-  // },
+  '/docs': {
+    text: 'Docs',
+  },
   // '/docs/tutorial/introduction': {
   //   text: 'Tutorial',
   //   matchRegex: /^\/docs\/tutorial/
@@ -60,7 +59,7 @@ const navConfig = {
 }
 
 function formatValue(value) {
-  return value.startsWith('/') ? `https://www.apollographql.com${value}` : value
+  return value.startsWith('/') ? `https://www.analytics-lib.netlify.com${value}` : value
 }
 
 function generateSubpage([value, text]) {
