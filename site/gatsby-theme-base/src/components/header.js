@@ -13,7 +13,7 @@ const Header = styled.header({
   backgroundColor: 'white',
   position: 'sticky',
   top: 0,
-  zIndex: 2
+  zIndex: 1
 })
 
 export default Header
