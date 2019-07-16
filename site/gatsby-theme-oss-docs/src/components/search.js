@@ -44,7 +44,6 @@ const Container = styled.div(responsiveStyles, {
   marginLeft: 40,
   color: colors.text2,
   position: 'relative',
-  display: 'none',
   zIndex: 1,
   '.algolia-autocomplete': {
     width: '100%',
@@ -66,7 +65,7 @@ const Container = styled.div(responsiveStyles, {
         marginTop: 0
       },
       '.ds-suggestion': {
-        padding: '20px 32px',
+        padding: '15px 32px',
         borderBottom: `1px solid ${colors.divider}`,
         '&.ds-cursor': {
           backgroundColor: transparentize(0.5, colors.divider)
@@ -101,7 +100,7 @@ const Container = styled.div(responsiveStyles, {
       },
       '&--subcategory-column': {
         marginBottom: 4,
-        fontSize: 22,
+        fontSize: 18,
         color: colors.text1,
         textAlign: 'initial'
       },
@@ -110,7 +109,7 @@ const Container = styled.div(responsiveStyles, {
       },
       '&--title': {
         marginBottom: 0,
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: 'normal',
         color: 'inherit'
       },
@@ -194,15 +193,14 @@ export default class Search extends Component {
   componentDidMount() {
     window.addEventListener('keydown', this.onKeyDown, true)
 
-    // const docsearchApiKey = '768e823959d35bbd51e4b2439be13fb7'
-    let docsearchApiKey
-    let indexName = 'apollodata'
+    const docsearchApiKey = 'f9a442665bffc5e4e4b548b7eb7aa1a3'
+    const indexName = 'getanalytics'
     if (typeof docsearch !== 'undefined' && docsearchApiKey) {
       this.search = docsearch({
         apiKey: docsearchApiKey,
         indexName: indexName,
         inputSelector: '#input',
-        // debug: true, // keeps the results list open
+        debug: true, // keeps the results list open
         autocompleteOptions: {
           openOnFocus: true
         }

@@ -9,7 +9,7 @@ This guide will walk through installing & using plugins
 
 ## Installation & Usage
 
-1. **Install `analytics` & plugins**
+1. **Install analytics & plugins**
 
     Here we are installing `analytics` & the google tag manager plugin.
 
@@ -18,7 +18,7 @@ This guide will walk through installing & using plugins
     npm install analytics-plugin-google-tag-manager
     ```
 
-2. **Include `analytics` in your project**
+2. **Include analytics in your project**
 
     Import `analytics` and any plugins you wish to use in the `plugins` array.
 

@@ -59,7 +59,7 @@ const navConfig = {
 }
 
 function formatValue(value) {
-  return value.startsWith('/') ? `https://www.analytics-lib.netlify.com${value}` : value
+  return value.startsWith('/') ? `https://getanalytics.io${value}` : value
 }
 
 function generateSubpage([value, text]) {
