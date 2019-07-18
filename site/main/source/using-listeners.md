@@ -1,6 +1,6 @@
 ---
 title: Using Listeners
-description: Listen to analytic events
+description: Listen & reacting to analytic lifecycle events
 ---
 
 The `analytics` library comes with a large variety of event listeners.

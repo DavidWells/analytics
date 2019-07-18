@@ -13,12 +13,14 @@ module.exports = {
         sidebarCategories: {
           null: [
             'index',
-            'intro/installation',
+            'tutorial/getting-started',
           ],
           Docs: [
             'api',
-            'using-plugins',
+            'plugins/index',
             'using-listeners',
+            'debugging',
+            'plugins/writing-plugins',
           ],
           Plugins: [
             'plugins/google-analytics',
@@ -32,7 +34,7 @@ module.exports = {
             'plugins/original-source',
           ],
           Tutorial: [
-            'tutorial/introduction',
+            'tutorial/getting-started',
             // 'tutorial/whats-next'
           ],
           Resources: [

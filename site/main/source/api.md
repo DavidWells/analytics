@@ -1,16 +1,19 @@
 ---
-title: API Docs
+title: API Reference
 description: Core analytics API
 ---
 
 The core `analytics` API is exposed once the library is initialized with [configuration](#configuration).
 
-Typical usage:
+> TLDR; read the [getting started guide](http://getanalytics.io/tutorial/getting-started/)
 
-1. Initialize with [configuration](#configuration)
+**Using analytics**
+
+1. Initialize analytics with [configuration](#configuration)
 2. Export the analytics instance with third party providers (Google Analytics, HubSpot, etc)
 3. Use [`page`](#analyticspage), [`identify`](#analyticsidentify), [`track`](#analyticstrack) in your app
-4. Plugin custom business logic
+4. [Add a analytics provider](http://getanalytics.io/tutorial/getting-started/#3-connect-plugins)
+5. [Write your own custom plugin](http://getanalytics.io/plugins/writing-plugins)
 
 <!-- AUTO-GENERATED-CONTENT:START (API_DOCS) -->
 ## Configuration
@@ -28,7 +31,7 @@ After the library is initialized with config, the core API is exposed and ready 
 
 **Example**
 
-```js{8-9}
+```js{8-11}
 import Analytics from 'analytics'
 import pluginABC from 'analytics-plugin-abc'
 import pluginXYZ from 'analytics-plugin-xyz'
