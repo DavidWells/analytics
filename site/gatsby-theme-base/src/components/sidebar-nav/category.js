@@ -1,13 +1,13 @@
-import PropTypes from 'prop-types';
-import React, {Component, Fragment} from 'react';
-import styled from '@emotion/styled';
-import {Link} from 'gatsby';
-import {MdExpandLess, MdExpandMore} from 'react-icons/md';
-import {colors} from '../../utils/colors';
-import {smallCaps} from '../../utils/typography';
+import PropTypes from 'prop-types'
+import React, {Component, Fragment} from 'react'
+import styled from '@emotion/styled'
+import {Link} from 'gatsby'
+import {MdExpandLess, MdExpandMore} from 'react-icons/md'
+import {colors} from '../../utils/colors'
+import {smallCaps} from '../../utils/typography'
 
-const iconSize = 20;
-const headingPadding = 16;
+const iconSize = 20
+const headingPadding = 16
 const headingStyles = {
   display: 'flex',
   alignItems: 'center',
@@ -35,12 +35,12 @@ const headingStyles = {
   '&.active': {
     color: colors.primary
   }
-};
+}
 
 const Container = styled.div(props => ({
   borderTop: !props.first && `1px solid ${colors.divider}`,
   marginTop: props.first && headingPadding / -2
-}));
+}))
 
 const StyledButton = styled.button(headingStyles, {
   ':not([disabled])': {
@@ -49,11 +49,11 @@ const StyledButton = styled.button(headingStyles, {
       opacity: colors.hoverOpacity
     }
   }
-});
+})
 
 const StyledLink = styled(Link)(headingStyles, {
   textDecoration: 'none'
-});
+})
 
 export default class Category extends Component {
   static propTypes = {
@@ -68,12 +68,12 @@ export default class Category extends Component {
 
   onClick = () => {
     if (this.props.onClick) {
-      this.props.onClick(this.props.title);
+      this.props.onClick(this.props.title)
     }
   };
 
   renderContents() {
-    const Icon = this.props.expanded ? MdExpandLess : MdExpandMore;
+    const Icon = this.props.expanded ? MdExpandLess : MdExpandMore
     return (
       <Fragment>
         <h6>{this.props.title}</h6>
@@ -83,12 +83,12 @@ export default class Category extends Component {
           }}
         />
       </Fragment>
-    );
+    )
   }
 
   render() {
-    const contents = this.renderContents();
-    const className = this.props.active && 'active';
+    const contents = this.renderContents()
+    const className = this.props.active && 'active'
     return (
       <Container first={this.props.isFirst}>
         {!this.props.onClick && this.props.path ? (
@@ -102,6 +102,6 @@ export default class Category extends Component {
         )}
         {this.props.expanded && this.props.children}
       </Container>
-    );
+    )
   }
 }

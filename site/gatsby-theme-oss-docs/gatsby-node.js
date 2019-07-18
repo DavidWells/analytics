@@ -122,7 +122,7 @@ exports.createPages = async ({actions, graphql}, options) => {
   `)
 
   const {
-    contentDir = 'docs/source',
+    contentDir = 'site/main/source', /* change base URL */
     githubRepo,
     sidebarCategories,
     spectrumPath,

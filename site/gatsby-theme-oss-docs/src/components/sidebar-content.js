@@ -51,26 +51,27 @@ function handleToggleCategory(title, expanded) {
   })
 }
 
+const customSideBarTitles = {
+  'Analytics Documentation': 'About',
+  'Analytics Plugins': '- Using Plugins'
+}
+
 export default function SidebarContent(props) {
   const sideBarContents = props.contents.reduce((acc, curr) => {
-    if (!curr.title) {
-      // Modify sidebar text
-      const mod = curr.pages.map((x) => {
-        if (x.title === 'Analytics Documentation') {
-          return {
-            title: 'About',
-            path: x.path
-          }
-        }
-        return x
-      })
-      acc = acc.concat({
-        title: null,
-        pages: mod
-      })
-    } else {
-      acc = acc.concat(curr)
-    }
+    const newPages = curr.pages.map((x) => {
+      // check if top level nav for prefix
+      const prefix = (!curr.title) ? '' : '- '
+      // map custom names
+      const newTitle = customSideBarTitles[x.title] || `${prefix}${x.title}`
+      return {
+        title: newTitle,
+        path: x.path
+      }
+    })
+    acc = acc.concat({
+      ...curr,
+      ...{ pages: newPages }
+    })
     return acc
   }, [])
   return (

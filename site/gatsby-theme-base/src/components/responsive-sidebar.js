@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types';
-import {Component, createRef} from 'react';
-import {findDOMNode} from 'react-dom';
+import PropTypes from 'prop-types'
+import { Component, createRef } from 'react'
+import { findDOMNode } from 'react-dom'
 
 export default class ResponsiveSidebar extends Component {
   static propTypes = {
@@ -14,17 +14,17 @@ export default class ResponsiveSidebar extends Component {
   sidebar = createRef();
 
   componentDidMount() {
-    window.addEventListener('keydown', this.onKeyDown);
+    window.addEventListener('keydown', this.onKeyDown)
   }
 
   componentWillUnmount() {
-    window.removeEventListener('keydown', this.onKeyDown);
+    window.removeEventListener('keydown', this.onKeyDown)
   }
 
   onKeyDown = event => {
     // close the sidebar when esc key is pressed
     if (this.state.sidebarOpen && event.keyCode === 27) {
-      this.closeSidebar();
+      this.closeSidebar()
     }
   };
 
@@ -34,7 +34,7 @@ export default class ResponsiveSidebar extends Component {
       // eslint-disable-next-line react/no-find-dom-node
       !findDOMNode(this.sidebar.current).contains(event.target)
     ) {
-      this.closeSidebar();
+      this.closeSidebar()
     }
   };
 
@@ -48,6 +48,6 @@ export default class ResponsiveSidebar extends Component {
       openSidebar: this.openSidebar,
       onWrapperClick: this.onWrapperClick,
       sidebarRef: this.sidebar
-    });
+    })
   }
 }

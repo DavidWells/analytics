@@ -1,12 +1,12 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import breakpoints from '../utils/breakpoints';
-import styled from '@emotion/styled';
-import {Link} from 'gatsby';
-import {MdChevronLeft, MdChevronRight} from 'react-icons/md';
-import {colors} from '../utils/colors';
-import {size} from 'polished';
-import {smallCaps} from '../utils/typography';
+import PropTypes from 'prop-types'
+import React from 'react'
+import breakpoints from '../utils/breakpoints'
+import styled from '@emotion/styled'
+import {Link} from 'gatsby'
+import {MdChevronLeft, MdChevronRight} from 'react-icons/md'
+import {colors} from '../utils/colors'
+import {size} from 'polished'
+import {smallCaps} from '../utils/typography'
 
 const Container = styled.nav({
   display: 'flex',
@@ -14,7 +14,7 @@ const Container = styled.nav({
   [breakpoints.md]: {
     padding: '32px 0'
   }
-});
+})
 
 const StyledLink = styled(Link)({
   display: 'flex',
@@ -25,27 +25,27 @@ const StyledLink = styled(Link)({
   ':hover': {
     opacity: colors.hoverOpacity
   }
-});
+})
 
 const LinkText = styled.div(({align = 'left'}) => {
   const marginProperty = `margin${align.charAt(0).toUpperCase() +
-    align.slice(1)}`;
+    align.slice(1)}`
   return {
     [marginProperty]: 24,
     textAlign: align,
     [breakpoints.md]: {
       [marginProperty]: 16
     }
-  };
-});
+  }
+})
 
 const LinkHeading = styled.div(smallCaps, {
   fontSize: 12
-});
+})
 
 const LinkTitle = styled.div({
   color: colors.text1
-});
+})
 
 export default function PageNav(props) {
   return (
@@ -69,10 +69,10 @@ export default function PageNav(props) {
         </StyledLink>
       )}
     </Container>
-  );
+  )
 }
 
 PageNav.propTypes = {
   prevPage: PropTypes.object,
   nextPage: PropTypes.object
-};
+}
