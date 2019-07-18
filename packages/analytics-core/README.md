@@ -1,4 +1,6 @@
-# Analytics 📊
+<a href="https://getanalytics.io">
+  <img src="https://user-images.githubusercontent.com/532272/61419845-ab1e9a80-a8b4-11e9-8fd1-18b9e743bb6f.png" width="450" />
+</a>
 
 A lightweight, extendable analytics library designed to work with **any** third party analytics provider to track page views, custom events, & identify users.
 
