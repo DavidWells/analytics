@@ -91,6 +91,10 @@ Checkout the [demo example](https://github.com/DavidWells/analytics/tree/master/
 
 Using analytics with [HTML](https://github.com/DavidWells/analytics/tree/master/examples/vanilla-html).
 
+## Usage in Preact
+
+Using analytics with [Preact](https://github.com/DavidWells/analytics/tree/master/examples/preact).
+
 ## Usage in Vue
 
 Demo coming soon ([contributions welcome](https://github.com/DavidWells/analytics/tree/master/examples) 😃).
