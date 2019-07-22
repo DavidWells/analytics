@@ -21,7 +21,7 @@ import heartBeat from './utils/heartbeat'
 const { setItem, removeItem, getItem } = middleware
 
 /**
-  * Analytics library configuration.
+  * Analytics library configuration
   *
   * After the library is initialized with config, the core API is exposed and ready for use in the application.
   *
