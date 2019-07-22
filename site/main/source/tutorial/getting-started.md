@@ -99,7 +99,7 @@ Using analytics with [Preact](https://github.com/DavidWells/analytics/tree/maste
 
 Demo coming soon ([contributions welcome](https://github.com/DavidWells/analytics/tree/master/examples) 😃).
 
-The above steps will work for vue apps.
+The above steps will work for Vue apps.
 
 ## Usage in Angular
 

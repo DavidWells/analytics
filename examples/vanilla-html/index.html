@@ -2,18 +2,25 @@
 <html>
   <head>
     <title>Using Analytics in HTML</title>
-    <!-- Include from CDN
-      <script src="https://unpkg.com/analytics/dist/analytics.min.js"></script>
-      <script src="https://unpkg.com/analytics/dist/analytics.min.js"></script>
-    -->
-    <script type="text/javascript" src="node_modules/analytics/dist/analytics.js" charset="utf-8"></script>
+    <!-- Include from CDN -->
+    <script src="https://unpkg.com/analytics/dist/analytics.min.js"></script>
+    <script src="https://unpkg.com/analytics-plugin-ga/dist/analytics-plugin-ga.min.js"></script>
     <script type="text/javascript">
-      /* initialize analytics */
+      /* Initialize analytics */
       var Analytics = _analytics.init({
-        app: 'my-app-name',
+        app: 'analytics-html-demo',
         debug: true,
         version: 100,
+        plugins: [
+          analyticsGA({
+            trackingId: 'UA-126647663-3'
+          })
+          // ... other plugins
+        ]
       })
+
+      /* Fire page view */
+      Analytics.page()
 
       /* Attaching a listener */
       Analytics.on('*', ({ payload }) => {

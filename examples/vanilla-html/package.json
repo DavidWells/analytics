@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "http-server"
+    "start": "http-server",
+    "predeploy": "cp index.html build",
+    "deploy": "netlify deploy --dir build --prod"
   },
   "author": "",
   "license": "ISC",
