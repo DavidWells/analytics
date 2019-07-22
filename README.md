@@ -2,7 +2,7 @@
   <img src="https://user-images.githubusercontent.com/532272/61419845-ab1e9a80-a8b4-11e9-8fd1-18b9e743bb6f.png" width="450" />
 </a>
 
-A lightweight, extendable analytics library designed to work with **any** third party analytics provider to track page views, custom events, & identify users.
+A lightweight, extendable analytics library designed to work with **any** third-party analytics provider to track page views, custom events, & identify users.
 
 The `analytics` library allows users to:
 
@@ -54,7 +54,7 @@ The `analytics` library allows users to:
 
 ## Features
 
-- [x] [Extendable](#analytic-plugins) - Bring your own third party tool & plugins
+- [x] [Extendable](#analytic-plugins) - Bring your own third-party tool & plugins
 - [x] Test & debug analytics integrations with time travel & offline mode
 - [x] Add functionality/modify tracking calls with baked in lifecycle hooks
 - [x] Isomorphic. Works in browser & on server
@@ -190,7 +190,7 @@ The core `analytics` API is exposed once the library is initialized with [config
 Typical usage:
 
 1. Initialize with [configuration](#configuration)
-2. Export the analytics instance with third party providers (Google Analytics, HubSpot, etc)
+2. Export the analytics instance with third-party providers (Google Analytics, HubSpot, etc)
 3. Use [`page`](#analyticspage), [`identify`](#analyticsidentify), [`track`](#analyticstrack) in your app
 4. [Plugin custom business logic](#creating-analytics-plugins)
 
@@ -642,7 +642,7 @@ The `analytics` has a robust plugin system. Here is a list of currently availabl
 
 ## Creating analytics plugins
 
-The library is designed to work with any third party analytics tool.
+The library is designed to work with any third-party analytics tool.
 
 Plugins are just plain javascript objects that expose methods for `analytics` to register and call.
 
@@ -673,7 +673,7 @@ export default function pluginExample(userConfig) {
       // call provider specific user identify method
     },
     loaded: () => {
-      // return boolean so analytics knows when it can send data to third party
+      // return boolean so analytics knows when it can send data to third-party
       return !!window.myPluginLoaded
     }
   }
