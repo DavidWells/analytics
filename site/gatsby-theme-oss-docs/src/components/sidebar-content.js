@@ -7,7 +7,7 @@ import {
   getVersionBasePath,
   trackEvent
 } from '../utils'
-import {SidebarNav, colors, headerHeight} from 'gatsby-theme-base'
+import { SidebarNav, colors, headerHeight } from 'gatsby-theme-base'
 
 const headerPadding = 4
 const ContentHeader = styled.h4({
@@ -53,7 +53,8 @@ function handleToggleCategory(title, expanded) {
 
 const customSideBarTitles = {
   'Analytics Documentation': 'About',
-  'Analytics Plugins': '- Using Plugins'
+  'Analytics Plugins': '- Using Plugins',
+  'Request a plugin': <b>{'👋'} Request a plugin</b>,
 }
 
 export default function SidebarContent(props) {

@@ -32,14 +32,15 @@ module.exports = {
             'plugins/tab-events',
             'plugins/window-events',
             'plugins/original-source',
+            '[Request a plugin](https://github.com/DavidWells/analytics/issues/new)',
           ],
           Tutorial: [
             'tutorial/getting-started',
             // 'tutorial/whats-next'
           ],
           Resources: [
+            'resources/faq',
             '[Github Repo](https://github.com/davidwells/analytics)',
-            'resources/faq'
           ],
         }
       }

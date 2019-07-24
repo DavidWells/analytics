@@ -52,8 +52,8 @@ const navConfig = {
   'https://github.com/davidwells/analytics': {
     text: 'Github',
     subpages: {
-      'https://github.com/davidwells/analytics/issues': 'Issues',
-      'https://github.com/DavidWells/analytics/tree/master/packages': 'Packages',
+      'https://github.com/davidwells/analytics/issues': 'Open Issues',
+      'https://github.com/DavidWells/analytics/tree/master/packages': 'All Packages',
     }
   },
 }

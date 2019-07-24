@@ -3,10 +3,10 @@ import PropTypes from 'prop-types'
 import React, {Component, Fragment} from 'react'
 import store from 'store'
 import styled from '@emotion/styled'
-import {Link, withPrefix} from 'gatsby'
-import {MdUnfoldLess, MdUnfoldMore} from 'react-icons/md'
-import {colors} from '../../utils/colors'
-import {smallCaps} from '../../utils/typography'
+import { Link, withPrefix } from 'gatsby'
+import { MdUnfoldLess, MdUnfoldMore } from 'react-icons/md'
+import { colors } from '../../utils/colors'
+import { smallCaps } from '../../utils/typography'
 
 const StyledList = styled.ul({
   marginLeft: 0,
@@ -142,24 +142,42 @@ export default class SidebarNav extends Component {
   };
 
   renderPages(pages) {
+    const links = pages.map(page => {
+      let link
+      if (page.anchor) {
+        link = (
+          <a href={page.path}>
+            {page.title}
+          </a>
+        )
+      } else {
+        // external link
+        if (page.path.match(/^https/)) {
+          link = (
+            <a href={page.path} target='_blank' rel='noopener noreferrer'>
+              {page.title}
+            </a>
+          )
+        } else {
+          link = (
+            <Link
+              className={this.isPageSelected(page) ? 'active' : null}
+              to={page.path}
+            >
+              {page.title}
+            </Link>
+          )
+        }
+      }
+      return (
+        <StyledListItem key={page.path}>
+          {link}
+        </StyledListItem>
+      )
+    })
     return (
       <StyledList>
-        {pages.map(page => (
-          <StyledListItem key={page.path}>
-            {page.anchor ? (
-              <a href={page.path}>
-                {page.title}
-              </a>
-            ) : (
-              <Link
-                className={this.isPageSelected(page) ? 'active' : null}
-                to={page.path}
-              >
-                {page.title}
-              </Link>
-            )}
-          </StyledListItem>
-        ))}
+        {links}
       </StyledList>
     )
   }

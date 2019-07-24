@@ -24,9 +24,9 @@ import {
   ResponsiveSidebar,
   Sidebar
 } from 'gatsby-theme-base'
-import {MDXProvider} from '@mdx-js/react'
-import {TypescriptApiBoxContext} from './typescript-api-box'
-import {graphql} from 'gatsby'
+import { MDXProvider } from '@mdx-js/react'
+import { TypescriptApiBoxContext } from './typescript-api-box'
+import { graphql } from 'gatsby'
 
 const StyledLogoTitle = styled(LogoTitle)({
   marginRight: 'auto'

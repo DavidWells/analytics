@@ -8,6 +8,7 @@
     "start": "gatsby develop",
     "develop": "gatsby develop",
     "build": "gatsby build",
+    "serve": "http-server public",
     "deploy": "netlify deploy -p --dir public"
   },
   "dependencies": {

@@ -7,6 +7,7 @@
   "scripts": {
     "start": "yarn workspace main develop",
     "build": "yarn workspace main build",
+    "serve": "yarn workspace main serve",
     "deploy": "yarn workspace main deploy"
   },
   "workspaces": [
