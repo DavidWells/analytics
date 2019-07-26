@@ -1,0 +1,33 @@
+{
+  "name": "analytics-plugin-simple-analytics",
+  "version": "0.0.1",
+  "description": "Simple analytics plugin for 'analytics' module for browser",
+  "main": "lib/analytics-plugin-simple-analytics.cjs.js",
+  "globalName": "simpleAnalytics",
+  "jsnext:main": "lib/analytics-plugin-simple-analytics.es.js",
+  "module": "lib/analytics-plugin-simple-analytics.es.js",
+  "browser": {
+    "./lib/analytics-plugin-simple-analytics.cjs.js": "./lib/analytics-plugin-simple-analytics.browser.cjs.js",
+    "./lib/analytics-plugin-simple-analytics.es.js": "./lib/analytics-plugin-simple-analytics.browser.es.js"
+  },
+  "scripts": {
+    "docs": "node ../analytics-cli/bin/run docs",
+    "build": "node ../../scripts/build/index.js",
+    "watch": "node ../../scripts/build/_watch.js",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish"
+  },
+  "keywords": [
+    "analytics",
+    "analytics-project",
+    "analytics-plugin",
+    "simple-analytics-plugin"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1"
+  }
+}
