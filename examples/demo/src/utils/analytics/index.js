@@ -7,6 +7,7 @@ import windowEvents from 'analytics-plugin-window-events'
 import customerIoPlugin from 'analytics-plugin-customerio'
 import gtagManager from 'analytics-plugin-google-tag-manager'
 
+import simpleAnalyticsPlugin from 'analytics-plugin-simple-analytics'
 import originalSourcePlugin from 'analytics-plugin-original-source'
 import exampleProviderPlugin from './plugins/provider-example'
 import visualizeLifecycle from './plugins/visualize-analytics'
@@ -64,6 +65,7 @@ const analytics = Analytics({
     tabEvents(),
     // windowEvents(),
     // doNotTrack(),
+    simpleAnalyticsPlugin(),
     customerIoPlugin({
       siteId: '4dfdba9c7f1a6d60f779',
       disableAnonymousTraffic: true,

@@ -11,6 +11,7 @@
   "dependencies": {
     "@reach/router": "^1.2.1",
     "analytics": "file:../../packages/analytics-core",
+    "analytics-plugin-simple-analytics": "file:../../packages/analytics-plugin-simple-analytics",
     "analytics-plugin-customerio": "file:../../packages/analytics-plugin-customerio",
     "analytics-plugin-do-not-track": "file:../../packages/analytics-plugin-do-not-track",
     "analytics-plugin-ga": "file:../../packages/analytics-plugin-ga",
