@@ -1,6 +1,6 @@
 {
   "name": "analytics-plugin-simple-analytics",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Simple analytics plugin for 'analytics' module for browser",
   "main": "lib/analytics-plugin-simple-analytics.cjs.js",
   "globalName": "simpleAnalytics",
