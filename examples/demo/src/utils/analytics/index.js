@@ -71,7 +71,7 @@ const analytics = Analytics({
       disableAnonymousTraffic: true,
     }),
     segmentPlugin({
-      writeKey: 'f3W8BZ0iCGrk1STIsMZV7JXfMGB7aMiW',
+      writeKey: 'TpKoFHqy1g98bXjd3wdVp3JvkHJRl5Q5',
       disableAnonymousTraffic: true,
     }),
     exampleProviderPlugin({
