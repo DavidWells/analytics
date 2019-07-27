@@ -1,0 +1,30 @@
+.log-wrapper {
+
+}
+.log {
+  font-size: 12px;
+}
+.log-header, .log-item {
+  display: flex;
+}
+.log-header div {
+  padding: 10px;
+  padding-left: 0px;
+}
+.log-header-event, .log-event {
+  min-width: 220px;
+}
+
+.log-item:nth-child(odd) {
+  background-color: #13deff38;
+}
+.event-core {
+  color: red;
+}
+.log-event {
+  font-weight: bold;
+  display: inline-block;
+  min-width: 220px;
+  padding: 1px 5px;
+  padding-right: 0px;
+}

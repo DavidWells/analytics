@@ -1,0 +1,25 @@
+.App h2 a {
+  text-decoration: none;
+}
+.App h2 {
+  display: flex;
+  align-items: center;
+}
+.install {
+  font-size: 14px;
+  font-family: monospace;
+  margin-left: 20px;
+  color: grey;
+}
+
+.navigation {
+  display: flex;
+  align-items: center;
+}
+.navigation a {
+  display: flex;
+  margin-left: 10px;
+}
+.navigation a:first-of-type {
+  margin-left: 0px;
+}
