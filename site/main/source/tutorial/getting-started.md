@@ -85,15 +85,21 @@ analytics.track('buttonClicked', {
 
 ## Usage in React
 
-Checkout the [demo example](https://github.com/DavidWells/analytics/tree/master/examples/demo) for how to include and use analytics in a react project.
+Checkout the [kitchen sink example](https://github.com/DavidWells/analytics/tree/master/examples/demo) or the [react demo](https://github.com/DavidWells/analytics/tree/master/examples/react) for how to include and use analytics in a react project.
+
+[Live react demo](https://analytics-react-example.netlify.com/)
 
 ## Usage in HTML
 
 Using analytics with [HTML](https://github.com/DavidWells/analytics/tree/master/examples/vanilla-html).
 
+[Live HTML demo](https://analytics-html-example.netlify.com/)
+
 ## Usage in Preact
 
 Using analytics with [Preact](https://github.com/DavidWells/analytics/tree/master/examples/preact).
+
+[Live Preact demo](https://analytics-preact-example.netlify.com/)
 
 ## Usage in Vue
 
