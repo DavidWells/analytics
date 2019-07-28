@@ -46,7 +46,7 @@ const analytics = Analytics({
 })
 ```
 
-## analytics.identify
+## `analytics.identify`
 
 Identify a user. This will trigger `identify` calls in any installed plugins and will set user data in localStorage
 
@@ -83,7 +83,7 @@ analytics.identify('xyz-123', () => {
 })
 ```
 
-## analytics.track
+## `analytics.track`
 
 Track an analytics event. This will trigger `track` calls in any installed plugins
 
@@ -122,7 +122,7 @@ analytics.track('newsletterSubscribed', () => {
 })
 ```
 
-## analytics.page
+## `analytics.page`
 
 Trigger page view. This will trigger `page` calls in any installed plugins
 
@@ -157,7 +157,7 @@ analytics.page(() => {
 })
 ```
 
-## analytics.user
+## `analytics.user`
 
 Get user data
 
@@ -178,7 +178,7 @@ const userId = analytics.user('userId')
 const companyName = analytics.user('traits.company.name')
 ```
 
-## analytics.reset
+## `analytics.reset`
 
 Clear all information about the visitor & reset analytic state.
 
@@ -193,7 +193,7 @@ Clear all information about the visitor & reset analytic state.
 analytics.reset()
 ```
 
-## analytics.ready
+## `analytics.ready`
 
 Fire callback on analytics ready event
 
@@ -209,7 +209,7 @@ analytics.ready() => {
 })
 ```
 
-## analytics.on
+## `analytics.on`
 
 Attach an event handler function for analytics lifecycle events.
 
@@ -235,7 +235,7 @@ const removeListener = analytics.on('track', ({ payload }) => {
 removeListener()
 ```
 
-## analytics.once
+## `analytics.once`
 
 Attach a handler function to an event and only trigger it only once.
 
@@ -261,7 +261,7 @@ const listener = analytics.once('track', ({ payload }) => {
 listener()
 ```
 
-## analytics.getState
+## `analytics.getState`
 
 Get data about user, activity, or context. Access sub-keys of state with `dot.prop` syntax.
 
@@ -279,7 +279,7 @@ analytics.getState()
 analytics.getState('context.offline')
 ```
 
-## analytics.enablePlugin
+## `analytics.enablePlugin`
 
 Enable analytics plugin
 
@@ -297,7 +297,7 @@ analytics.enablePlugin('google')
 analytics.enablePlugin(['google', 'segment'])
 ```
 
-## analytics.disablePlugin
+## `analytics.disablePlugin`
 
 Disable analytics plugin
 
@@ -314,7 +314,7 @@ analytics.disablePlugin('google')
 analytics.disablePlugin(['google', 'segment'])
 ```
 
-## analytics.storage
+## `analytics.storage`
 
 Storage utilities for persisting data.
 These methods will allow you to save data in localStorage, cookies, or to the window.
@@ -335,7 +335,7 @@ storage.setItem('storage_key', 'value')
 storage.removeItem('storage_key')
 ```
 
-## analytics.storage.getItem
+## `analytics.storage.getItem`
 
 Get value from storage
 
@@ -350,7 +350,7 @@ Get value from storage
 analytics.storage.getItem('storage_key')
 ```
 
-## analytics.storage.setItem
+## `analytics.storage.setItem`
 
 Set storage value
 
@@ -366,7 +366,7 @@ Set storage value
 analytics.storage.setItem('storage_key', 'value')
 ```
 
-## analytics.storage.removeItem
+## `analytics.storage.removeItem`
 
 Remove storage value
 
