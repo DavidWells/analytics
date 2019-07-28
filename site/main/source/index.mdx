@@ -21,9 +21,11 @@ The `analytics` library allows users to:
 - [x] Queues events to send when analytic libraries are loaded
 - [x] Works offline
 
-##  Why
+##  About the library
 
-Companies frequently change analytics requirements based on evolving needs. This results in a lot of complexity, maintenance, & extra code when adding/removing analytic services to a site or application.
+Companies frequently change analytics requirements based on evolving business needs.
+
+This results in a lot of complexity, maintenance, and extra code when adding/removing analytic services to a site or application.
 
 This library aims to solves that with a simple pluggable abstraction layer.
 
@@ -36,19 +38,25 @@ This library aims to solves that with a simple pluggable abstraction layer.
 
 To add or remove an analytics provider adjust the `plugins` you load into `analytics`.
 
-## Install
+## How to Install
+
+Install the `analytics` package from [npm](https://npmjs.com/package/analytics)
 
 ```bash
 npm install analytics --save
 ```
 
-Or as a script tag:
+Or from a CDN as a script tag:
 
 ```html
 <script src="https://unpkg.com/analytics/dist/analytics.min.js"></script>
 ```
 
-## Usage
+## Using analytics in your app
+
+Initialize analytics, include your analytic tools, & start tracking events.
+
+See the [getting started section](https://getanalytics.io/tutorial/getting-started/) for more details.
 
 ```js
 import Analytics from 'analytics'
@@ -85,3 +93,5 @@ analytics.identify('user-id-xyz', {
   email: 'da-coolest@aol.com'
 })
 ```
+
+[View the full api docs](https://getanalytics.io/api/)
