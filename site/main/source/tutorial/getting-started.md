@@ -85,33 +85,33 @@ analytics.track('buttonClicked', {
 
 ## Usage in React
 
-Checkout the [kitchen sink example](https://github.com/DavidWells/analytics/tree/master/examples/demo) or the [react demo](https://github.com/DavidWells/analytics/tree/master/examples/react) for how to include and use analytics in a react project.
+Checkout the [using analytics with react demo](https://analytics-react-example.netlify.com/) & the [source code](https://github.com/DavidWells/analytics/tree/master/examples/react)
 
-[Live react demo](https://analytics-react-example.netlify.com/)
+For a larger example see the [kitchen sink example](https://analytics-demo.netlify.com) & it's [source code](https://github.com/DavidWells/analytics/tree/master/examples/demo).
 
 ## Usage in HTML
 
-Using analytics with [HTML](https://github.com/DavidWells/analytics/tree/master/examples/vanilla-html).
+Analytics works in vanilla HTML pages and can be [imported from a CDN](#cdn-browser-usage).
 
-[Live HTML demo](https://analytics-html-example.netlify.com/)
+[Live demo](https://analytics-html-example.netlify.com/) & the [source code](https://github.com/DavidWells/analytics/tree/master/examples/vanilla-html).
 
 ## Usage in Preact
 
-Using analytics with [Preact](https://github.com/DavidWells/analytics/tree/master/examples/preact).
+Preact is a fast 3kB alternative to React with the same modern API.
 
-[Live Preact demo](https://analytics-preact-example.netlify.com/)
+[Using analytics with preact demo](https://analytics-preact-example.netlify.com/) & the [source code](https://github.com/DavidWells/analytics/tree/master/examples/preact).
 
 ## Usage in Vue
 
-Demo coming soon ([contributions welcome](https://github.com/DavidWells/analytics/tree/master/examples) 😃).
+Demo coming soon. The above steps will work for Vue apps.
 
-The above steps will work for Vue apps.
+([contributions to the docs welcome](https://github.com/DavidWells/analytics/tree/master/examples) 😃).
 
 ## Usage in Angular
 
-Demo coming soon ([contributions welcome](https://github.com/DavidWells/analytics/tree/master/examples) 😃).
+Demo coming soon. The above steps will work for Vue apps.
 
-The above steps will work for angular apps.
+([contributions to the docs welcome](https://github.com/DavidWells/analytics/tree/master/examples) 😃).
 
 ## ES6 Usage
 
