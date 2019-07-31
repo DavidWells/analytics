@@ -8,7 +8,8 @@ description: Using the tab events plugin
 ## Usage
 
 ```bash
-npm install analytics analytics-plugin-tab-events
+npm install analytics
+npm install analytics-plugin-tab-events
 ```
 
 ```js

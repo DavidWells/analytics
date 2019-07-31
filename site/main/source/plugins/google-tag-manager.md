@@ -17,7 +17,8 @@ Integration with google tag manager for [analytics](https://www.npmjs.com/packag
 Install `analytics` and `analytics-plugin-google-tag-manager` packages
 
 ```bash
-npm install analytics analytics-plugin-google-tag-manager
+npm install analytics
+npm install analytics-plugin-google-tag-manager
 ```
 
 Import and initialize in project

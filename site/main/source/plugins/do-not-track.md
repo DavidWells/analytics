@@ -19,7 +19,8 @@ Usage with the [analytics](https://www.npmjs.com/package/analytics) library.
 **Install**
 
 ```bash
-npm install analytics analytics-plugin-do-not-track
+npm install analytics
+npm install analytics-plugin-do-not-track
 ```
 
 **Usage**

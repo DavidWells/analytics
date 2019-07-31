@@ -16,7 +16,8 @@ Integration with [segment](https://segment.com/) for [analytics](https://www.npm
 Install `analytics` and `analytics-plugin-segment` packages
 
 ```bash
-npm install analytics analytics-plugin-segment
+npm install analytics
+npm install analytics-plugin-segment
 ```
 
 Import and initialize in project

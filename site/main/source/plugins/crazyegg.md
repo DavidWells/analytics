@@ -8,10 +8,13 @@ Integration with [crazy egg](https://www.crazyegg.com/) for [analytics](https://
 ## Install
 
 ```bash
+npm install analytics
 npm install analytics-plugin-crazy-egg
 ```
 
 ## Usage
+
+Once installed and initialized this plugin will load crazy egg onto every page of your site.
 
 ```js
 import Analytics from 'analytics'

@@ -16,7 +16,8 @@ Integration with [customer.io](https://customer.io/) for [analytics](https://www
 Install `analytics` and `analytics-plugin-customerio` packages
 
 ```bash
-npm install analytics analytics-plugin-customerio
+npm install analytics
+npm install analytics-plugin-customerio
 ```
 
 Import and initialize in project

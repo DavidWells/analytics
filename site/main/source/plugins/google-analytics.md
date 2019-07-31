@@ -8,6 +8,7 @@ Integration with google analytics for [analytics](https://www.npmjs.com/package/
 ## Install
 
 ```bash
+npm install analytics
 npm install analytics-plugin-ga
 ```
 

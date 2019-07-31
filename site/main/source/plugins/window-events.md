@@ -8,7 +8,8 @@ description: Using the window events plugin
 ## Usage
 
 ```bash
-npm install analytics analytics-plugin-window-events
+npm install analytics
+npm install analytics-plugin-window-events
 ```
 
 ```js
