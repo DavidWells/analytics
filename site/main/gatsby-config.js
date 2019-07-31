@@ -28,6 +28,7 @@ module.exports = {
             'plugins/segment',
             'plugins/customerio',
             'plugins/crazyegg',
+            'plugins/simple-analytics',
             'plugins/do-not-track',
             'plugins/tab-events',
             'plugins/window-events',
