@@ -18,6 +18,13 @@ $ cd analytics
 $ npm run bootstrap
 ```
 
+Because analytics has a large number of packages, we need to also [install watchmen](https://facebook.github.io/watchman/docs/install.html) for better watching.
+
+```sh
+brew update
+brew install watchman
+```
+
 ### Run locally
 
 ```sh
@@ -38,7 +45,7 @@ $ npm run bootstrap
 
 ### `watch`
 
-Watches all `analytics` packages and transpiles them on change.
+Watches all `analytics` packages and builds them on change.
 
 #### Usage
 
