@@ -4,7 +4,9 @@ const config = {
   /* Your segment writeKey */
   writeKey: null,
   /* Disable anonymous MTU */
-  disableAnonymousTraffic: false
+  disableAnonymousTraffic: false,
+  /* Sync segment Anonymous id with `analytics` Anon id */
+  syncAnonymousId: false
 }
 
 /**
@@ -70,18 +72,25 @@ export default function segmentPlugin(pluginConfig = {}) {
         instance.storage.removeItem(key, 'cookie')
       })
     },
+    /* Sync id when ready */
+    ready: ({ instance, config }) => {
+      if (!config.syncAnonymousId || typeof analytics === 'undefined') return
+      console.log('do it')
+      const segmentUser = analytics.user()
+      if (segmentUser) {
+        const segmentAnonId = segmentUser.anonymousId()
+        const analyticsAnonId = instance.user('anonymousId')
+        // If has segment anonymous ID && doesnt match analytics anon id, update
+        if (segmentAnonId && segmentAnonId !== analyticsAnonId) {
+          instance.setAnonymousId(segmentAnonId)
+        }
+      }
+    },
     /* Check if segment loaded */
     loaded: () => {
       return window.analytics && !!analytics.initialized
     }
   }
-}
-
-function isDisabled(instance, config) {
-  if (!instance.user('userId') && config.disableAnonymousTraffic) {
-    return true
-  }
-  return false
 }
 
 /* Load Segment analytics.js on page */
