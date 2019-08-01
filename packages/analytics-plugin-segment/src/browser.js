@@ -4,7 +4,9 @@ const config = {
   /* Your segment writeKey */
   writeKey: null,
   /* Disable anonymous MTU */
-  disableAnonymousTraffic: false
+  disableAnonymousTraffic: false,
+  /* Sync segment Anonymous id with `analytics` Anon id */
+  syncAnonymousId: false
 }
 
 /**
@@ -71,8 +73,9 @@ export default function segmentPlugin(pluginConfig = {}) {
       })
     },
     /* Sync id when ready */
-    ready: ({ instance }) => {
-      if (typeof analytics === 'undefined') return
+    ready: ({ instance, config }) => {
+      if (!config.syncAnonymousId || typeof analytics === 'undefined') return
+      console.log('do it')
       const segmentUser = analytics.user()
       if (segmentUser) {
         const segmentAnonId = segmentUser.anonymousId()
