@@ -4,3 +4,4 @@
 - [React example](./react)
 - [HTML example](./vanilla-html)
 - [Preact example](./preact)
+- [Vue example](./vue)

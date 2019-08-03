@@ -103,9 +103,8 @@ Preact is a fast 3kB alternative to React with the same modern API.
 
 ## Usage in Vue
 
-Demo coming soon. The above steps will work for Vue apps.
-
-([contributions to the docs welcome](https://github.com/DavidWells/analytics/tree/master/examples) 😃).
+[Using analytics with vue demo](https://analytics-vue-example.netlify.com/) & the [source code](
+https://github.com/DavidWells/analytics/tree/master/examples/vue).
 
 ## Usage in Angular
 
