@@ -7,8 +7,6 @@ export const config = {
   trackingId: null,
 }
 
-const inBrowser = typeof window !== 'undefined'
-
 /**
  * Google analytics plugin
  * @link https://analytics.google.com/analytics/web/
@@ -31,7 +29,7 @@ export default function googleAnalytics(pluginConfig) {
       if (!config.trackingId) {
         throw new Error('No google tracking id defined')
       }
-      if (typeof ga === 'undefined' && inBrowser) {
+      if (typeof ga === 'undefined') {
         /* eslint-disable */
         (function(i, s, o, g, r, a, m) {
           i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function() {
@@ -57,18 +55,19 @@ export default function googleAnalytics(pluginConfig) {
     },
     // Google Analytics page view
     page: ({ payload, config }) => {
+      if (typeof ga === 'undefined') return
       const { properties } = payload
       if (config.debug) {
         console.log(`google analytics pageview > [payload: ${JSON.stringify(payload, null, 2)}]`)
       }
-      if (typeof ga !== 'undefined') {
-        ga('set', 'page', properties.path) // eslint-disable-line
-        ga('send', 'pageview') // eslint-disable-line
-      }
+      ga('set', 'page', properties.path)
+      ga('send', 'pageview')
     },
     // Google Analytics track event
     track: ({ payload, config }) => {
-      const { event, label, value, category, nonInteraction } = payload
+      if (typeof ga === 'undefined') return
+      const { properties, event } = payload
+      const { label, value, category, nonInteraction } = properties
       const gaData = {
         // hitType https://bit.ly/2Jab9L1
         hitType: 'event', // 'pageview', 'screenview', 'event', 'transaction', 'item', 'social', 'exception', 'timing'
@@ -77,54 +76,54 @@ export default function googleAnalytics(pluginConfig) {
         // eventCategory http://bit.ly/2EAy9UP
         eventCategory: category || 'All',
         // nonInteraction https://bit.ly/2CUzeoz
-        nonInteraction: (payload.nonInteraction !== undefined) ? !!payload.nonInteraction : false
+        nonInteraction: (nonInteraction !== undefined) ? !!nonInteraction : false
       }
 
       if (config.debug) {
-        console.log(`GOOGLE Event > [${event}] [payload: ${JSON.stringify(payload, null, 2)}]`)
+        console.log(`GOOGLE Event > [${event}] [payload: ${JSON.stringify(properties, null, 2)}]`)
         const debugLabel = (label) ? ` [Label: ${label}]` : ''
         const debugValue = (value) ? ` [Value: ${value}]` : ''
-        const debugInteraction = (payload.nonInteraction) ? ` [nonInteraction: ${nonInteraction}]` : ''
+        const debugInteraction = (nonInteraction) ? ` [nonInteraction: ${nonInteraction}]` : ''
         const debugCat = (gaData.eventCategory) ? ` [Category: ${gaData.eventCategory}]` : ''
         let debugGA = `GA Event > ${debugCat} [Action: ${event}]${debugLabel}${debugValue}${debugInteraction}`
         console.log(debugGA)
       }
 
-      if (typeof ga !== 'undefined') {
-        if (label) {
-          // what form is this? If this is part of an A/B test, what variation?
-          gaData.eventLabel = payload.label
-        }
-        if (value) {
-          // how much is this action worth?
-          gaData.eventValue = payload.value
-        }
-        /* Todo attach campaign data from context
-        if (campaign.name) payload.campaignName = campaign.name;
-        if (campaign.source) payload.campaignSource = campaign.source;
-        if (campaign.medium) payload.campaignMedium = campaign.medium;
-        if (campaign.content) payload.campaignContent = campaign.content;
-        if (campaign.term) payload.campaignKeyword = campaign.term;
-
-        const payload = {
-          eventAction: track.event(),
-          eventCategory: track.category() || this._category || 'All',
-          eventLabel: props.label,
-          eventValue: formatValue(props.value || track.revenue()),
-          // Allow users to override their nonInteraction integration setting for any single particluar event.
-          nonInteraction: props.nonInteraction !== undefined ? !!props.nonInteraction : !!opts.nonInteraction
-        }
-        */
-        // console.log(`GA Payload Event > [${JSON.stringify(gaData, null, 2)}]`)
-        ga('send', 'event', gaData)
+      if (label) {
+        // what form is this? If this is part of an A/B test, what variation?
+        gaData.eventLabel = label
       }
+      if (value) {
+        // how much is this action worth?
+        gaData.eventValue = value
+      }
+
+      /* Todo attach campaign data from context
+      if (campaign.name) payload.campaignName = campaign.name;
+      if (campaign.source) payload.campaignSource = campaign.source;
+      if (campaign.medium) payload.campaignMedium = campaign.medium;
+      if (campaign.content) payload.campaignContent = campaign.content;
+      if (campaign.term) payload.campaignKeyword = campaign.term;
+
+      const payload = {
+        eventAction: track.event(),
+        eventCategory: track.category() || this._category || 'All',
+        eventLabel: props.label,
+        eventValue: formatValue(props.value || track.revenue()),
+        // Allow users to override their nonInteraction integration setting for any single particluar event.
+        nonInteraction: props.nonInteraction !== undefined ? !!props.nonInteraction : !!opts.nonInteraction
+      }
+      */
+      // console.log(`GA Payload Event > [${JSON.stringify(gaData, null, 2)}]`)
+      ga('send', 'event', gaData)
     },
     identify: ({ payload }) => {
+      if (typeof ga === 'undefined') return
       const { userId } = payload
       if (config.debug) {
         console.log(`google analytics identify > [payload: ${JSON.stringify(payload, null, 2)}]`)
       }
-      if (typeof ga !== 'undefined' && userId) {
+      if (userId) {
         ga('set', 'userId', userId)
       }
       /* Todo implement custom dimensions http://bit.ly/2yULdOO & http://bit.ly/2NS5nOE
@@ -133,7 +132,7 @@ export default function googleAnalytics(pluginConfig) {
       */
     },
     loaded: () => {
-      return inBrowser && !!window.gaplugins
+      return !!window.gaplugins
     }
   }
 }
