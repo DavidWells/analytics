@@ -7,6 +7,12 @@
       <p>
         Click the nav to route to pages & it will trigger page views. Open the console to see it in action
       </p>
+
+      <p>View the source code for this demo at
+        <a href="https://github.com/DavidWells/analytics/tree/master/examples/vue">
+        github.com/DavidWells/analytics/examples/vue
+        </a>
+      </p>
     </div>
 </template>
 <script>
