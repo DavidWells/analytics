@@ -77,11 +77,13 @@ const analytics = Analytics({
     exampleProviderPlugin({
       settingOne: 'xyz'
     }),
-    // gtagManager({
-    //   containerId: 'GTM-N5P4NK5'
-    // }),
+    /*
+    gtagManager({
+      containerId: 'GTM-N5P4NK5'
+    }),
+    */
     googleAnalytics({
-      trackingId: process.env.REACT_APP_GOOGLE_ANALYTICS_ID
+      trackingId: process.env.REACT_APP_GOOGLE_ANALYTICS_ID,
     }),
     reduxPlugin,
     {

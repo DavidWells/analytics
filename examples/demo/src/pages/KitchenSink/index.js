@@ -133,7 +133,15 @@ export default class App extends Component {
     // Malformatted event
     analytics.track({
       eventName: 'wowza',
-      other: 'shit'
+      other: 'cool'
+    })
+  }
+
+  sendGoogleAnalyticsTrack = () => {
+    analytics.track('play', {
+      category: 'Videos',
+      label: 'Fall Campaign',
+      value: 42
     })
   }
 
@@ -239,7 +247,9 @@ export default class App extends Component {
           <button onClick={this.resetVisitor}>
             resetVisitor
           </button>
-
+          <button onClick={this.sendGoogleAnalyticsTrack}>
+            track with label
+          </button>
         </div>
 
         <Log items={history} />

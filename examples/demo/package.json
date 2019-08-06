@@ -6,6 +6,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "serve": "cd build && http-server",
     "deploy": "netlify deploy --dir build --prod"
   },
   "dependencies": {
