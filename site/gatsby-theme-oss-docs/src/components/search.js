@@ -1,5 +1,5 @@
 /* global docsearch */
-import React, {Component, Fragment, createRef} from 'react'
+import React, { Component, Fragment, createRef } from 'react'
 import styled from '@emotion/styled'
 import {MdClose} from 'react-icons/md'
 import {
@@ -8,8 +8,9 @@ import {
   headerHeight,
   smallCaps
 } from 'gatsby-theme-base'
-import {css} from '@emotion/core'
-import {position, size, transparentize} from 'polished'
+import { css } from '@emotion/core'
+import { position, size, transparentize } from 'polished'
+import analytics from '../analytics' // eslint-disable-line
 
 const borderRadius = 5
 const border = `1px solid ${colors.text3}`

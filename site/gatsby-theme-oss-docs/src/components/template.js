@@ -27,6 +27,7 @@ import {
 import { MDXProvider } from '@mdx-js/react'
 import { TypescriptApiBoxContext } from './typescript-api-box'
 import { graphql } from 'gatsby'
+import analytics from '../analytics' // eslint-disable-line
 
 const StyledLogoTitle = styled(LogoTitle)({
   marginRight: 'auto'
