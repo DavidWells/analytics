@@ -95,6 +95,28 @@ Analytics works in vanilla HTML pages and can be [imported from a CDN](#cdn-brow
 
 [Live demo](https://analytics-html-example.netlify.com/) & the [source code](https://github.com/DavidWells/analytics/tree/master/examples/vanilla-html).
 
+## Usage in Gatsby
+
+To use analytics with Gatsby install the [gatsby-plugin-analytics](https://www.gatsbyjs.org/packages/gatsby-plugin-analytics/) plugin.
+
+[Live demo](https://getanalytics.io/) (this site) & the [source code](https://github.com/DavidWells/analytics/blob/09a720fdd89b5bb418e349cf24e0b4658f2bee95/site/gatsby-theme-oss-docs/src/analytics.js).
+
+```
+npm install gatsby-plugin-analytics
+```
+
+And add to your `gatsby.config.js` file. This will enable automate page tracking.
+
+```
+{
+  resolve: 'gatsby-plugin-analytics'
+}
+```
+
+See the [gatsby-plugin-analytics docs](https://www.gatsbyjs.org/packages/gatsby-plugin-analytics/) for more details.
+
+You can also reference the various [react examples](http://localhost:8000/tutorial/getting-started/#usage-in-react) above and directly integrate with a `pushState` listener in your site.
+
 ## Usage in Preact
 
 Preact is a fast 3kB alternative to React with the same modern API.
