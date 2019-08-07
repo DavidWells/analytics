@@ -95,3 +95,9 @@ You can enable plugins with the `analytics.enablePlugin` method
 // Turn on google-analytics calls
 analytics.enablePlugin(['google-analytics'])
 ```
+
+## Adding Custom plugins
+
+See the [writing custom plugins section](http://getanalytics.io/plugins/writing-plugins/) for building plugins to fit your use case.
+
+Custom plugins can be added inline or via `npm` packages.
