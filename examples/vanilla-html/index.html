@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Using Analytics in HTML</title>
-    <!-- Include from CDN -->
+    <!-- Include `analytics` from CDN -->
     <script src="https://unpkg.com/analytics/dist/analytics.min.js"></script>
     <script src="https://unpkg.com/analytics-plugin-ga/dist/analytics-plugin-ga.min.js"></script>
     <script type="text/javascript">
@@ -10,18 +10,16 @@
       var Analytics = _analytics.init({
         app: 'analytics-html-demo',
         debug: true,
-        version: 100,
         plugins: [
+          // attach google analytics plugin
           analyticsGA({
             trackingId: 'UA-126647663-3'
           })
-          // ... other plugins
+          // ... add any other third party analytics plugins
         ]
       })
-
       /* Fire page view */
       Analytics.page()
-
       /* Attaching a listener */
       Analytics.on('*', ({ payload }) => {
         console.log(`Event ${payload.type}`, payload)
@@ -29,42 +27,30 @@
     </script>
   </head>
   <body>
-    <h1>Using Analytics with just HTML</h1>
-
-    <p>Open up the console to see events being fired</p>
-
-    <button id="track">
+    <button onClick="trackEvent()">
       Track Click
     </button>
 
-    <button id="page">
+    <button onClick="pageView()">
       Fire page view
     </button>
 
-    <button id="identify">
+    <button onClick="identifyVisitor()">
       Identify visitor
     </button>
 
     <script type="text/javascript">
-      var trackButton = document.getElementById('track')
-      trackButton.addEventListener('click', () => {
-        /* track event */
-        Analytics.track('buttonClicked')
-      })
-
-      var pageButton = document.getElementById('page')
-      pageButton.addEventListener('click', () => {
-        /* track page view */
-        Analytics.page()
-      })
-
-      var identifyButton = document.getElementById('identify')
-      identifyButton.addEventListener('click', () => {
-        /* identify user */
-        Analytics.identify('user-123', {
+      function trackEvent() {
+      	Analytics.track('buttonClicked')
+      }
+      function pageView() {
+      	Analytics.page()
+      }
+      function identifyVisitor() {
+      	Analytics.identify('user-123', {
           pro: true,
         })
-      })
+      }
     </script>
   </body>
 </html>
