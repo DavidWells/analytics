@@ -50,7 +50,7 @@ analytics.identify('user-xzy-123', {
 
 If your identify call does not contain `email` HubSpot will not be notified of the new user.
 
-Also, when sending properties with `identify` calls, all `camelCase` traits are automatically converted to `snake_case`.
+When sending properties with `identify` calls, all `camelCase` traits are automatically converted to `snake_case`. There is one exception to this for `firstName` & `lastName` which are sent as `firstname` & `lastname`.
 
 **Example:**
 

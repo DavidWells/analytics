@@ -68,7 +68,9 @@ export default class App extends Component {
      traitOne: 'blue',
      traitTwo: 'red',
      companyName: 'lol corp',
-     testing_value: 'hi'
+     testing_value: 'hi',
+     // first_name: 'steve',
+     // lastName: 'john'
    }, () => {
      console.log('identify callback')
    })
