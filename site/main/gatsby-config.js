@@ -27,6 +27,7 @@ module.exports = {
             'plugins/google-tag-manager',
             'plugins/segment',
             'plugins/customerio',
+            'plugins/hubspot',
             'plugins/crazyegg',
             'plugins/simple-analytics',
             'plugins/do-not-track',
