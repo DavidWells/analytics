@@ -12,6 +12,8 @@ The `analytics` library allows users to:
 - Easily allow visitors to opt out of tracking
 - [... and lots more](#features)
 
+[View the docs](https://getanalytics.io/)
+
 ## Table of Contents
 <!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
 <details>
@@ -197,7 +199,7 @@ Typical usage:
 <!-- AUTO-GENERATED-CONTENT:START (API_DOCS) -->
 ### Configuration
 
-Analytics library configuration.
+Analytics library configuration
 
 After the library is initialized with config, the core API is exposed and ready for use in the application.
 
@@ -629,9 +631,11 @@ The `analytics` has a robust plugin system. Here is a list of currently availabl
 - [analytics-plugin-do-not-track](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-do-not-track) Disable tracking for opted out visitors plugin for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-do-not-track).
 - [analytics-plugin-ga](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-ga) Google analytics integration for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-ga).
 - [analytics-plugin-google-tag-manager](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-google-tag-manager) Google tag manager plugin for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-google-tag-manager).
+- [analytics-plugin-hubspot](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-hubspot) Hubspot plugin for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-hubspot).
 - [analytics-plugin-lifecycle-example](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-lifecycle-example) Example plugin with lifecycle methods for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-lifecycle-example).
 - [analytics-plugin-original-source](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-original-source) Save original referral source of visitor plugin for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-original-source).
 - [analytics-plugin-segment](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-segment) Segment integration for 'analytics' module for browser & node [npm link](https://www.npmjs.com/package/analytics-plugin-segment).
+- [analytics-plugin-simple-analytics](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-simple-analytics) Simple analytics plugin for 'analytics' module for browser [npm link](https://www.npmjs.com/package/analytics-plugin-simple-analytics).
 - [analytics-plugin-tab-events](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-tab-events) Expose tab visibility events plugin for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-tab-events).
 - [analytics-plugin-window-events](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-window-events) Expose window events plugin for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-window-events).
 - [analytics-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-utils) Analytics utility functions used by 'analytics' module [npm link](https://www.npmjs.com/package/analytics-utils).
