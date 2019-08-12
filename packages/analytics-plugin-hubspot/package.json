@@ -1,0 +1,45 @@
+{
+  "name": "analytics-plugin-hubspot",
+  "version": "0.0.1",
+  "description": "HubSpot plugin for 'analytics' module",
+  "keywords": [
+    "analytics",
+    "analytics-project",
+    "analytics-plugin",
+    "hubspot",
+    "inbound-marketing"
+  ],
+  "author": "David Wells",
+  "license": "MIT",
+  "scripts": {
+    "docs": "node ../analytics-cli/bin/run docs",
+    "build": "node ../../scripts/build/index.js",
+    "watch": "node ../../scripts/build/_watch.js",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish",
+    "es": "../../node_modules/.bin/babel-node ./testBabel.js"
+  },
+  "main": "lib/analytics-plugin-hubspot.cjs.js",
+  "globalName": "analyticsHubspot",
+  "jsnext:main": "lib/analytics-plugin-hubspot.es.js",
+  "module": "lib/analytics-plugin-hubspot.es.js",
+  "browser": {
+    "./lib/analytics-plugin-hubspot.cjs.js": "./lib/analytics-plugin-hubspot.browser.cjs.js",
+    "./lib/analytics-plugin-hubspot.es.js": "./lib/analytics-plugin-hubspot.browser.es.js"
+  },
+  "files": [
+    "dist",
+    "lib",
+    "README.md"
+  ],
+  "homepage": "https://github.com/DavidWells/analytics#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidWells/analytics.git"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1"
+  }
+}
