@@ -1,6 +1,6 @@
 {
   "name": "analytics-plugin-hubspot",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "HubSpot plugin for 'analytics' module",
   "keywords": [
     "analytics",
