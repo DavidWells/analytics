@@ -67,6 +67,8 @@ export default class App extends Component {
     analytics.identify('xyz-777', {
      traitOne: 'blue',
      traitTwo: 'red',
+     companyName: 'lol corp',
+     testing_value: 'hi'
    }, () => {
      console.log('identify callback')
    })

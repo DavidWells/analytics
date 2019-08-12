@@ -16,6 +16,7 @@
     "analytics-plugin-customerio": "file:../../packages/analytics-plugin-customerio",
     "analytics-plugin-do-not-track": "file:../../packages/analytics-plugin-do-not-track",
     "analytics-plugin-ga": "file:../../packages/analytics-plugin-ga",
+    "analytics-plugin-hubspot": "file:../../packages/analytics-plugin-hubspot",
     "analytics-plugin-google-tag-manager": "file:../../packages/analytics-plugin-google-tag-manager",
     "analytics-plugin-lifecycle-example": "file:../../packages/analytics-plugin-lifecycle-example",
     "analytics-plugin-original-source": "file:../../packages/analytics-plugin-original-source",
