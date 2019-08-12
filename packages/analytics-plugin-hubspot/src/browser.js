@@ -97,6 +97,10 @@ function defaultFormatter(key, value) {
   const validKey = replaceInvalid(key)
   // snake_case values
   const formattedKey = snakeCase(validKey)
+  // special case for firstName & lastName
+  if (formattedKey === 'first_name' || formattedKey === 'last_name') {
+    return [ formattedKey.replace(/_/, ''), value ]
+  }
   return [ formattedKey, value ]
 }
 
