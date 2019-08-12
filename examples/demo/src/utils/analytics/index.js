@@ -6,7 +6,7 @@ import tabEvents from 'analytics-plugin-tab-events'
 import windowEvents from 'analytics-plugin-window-events'
 import customerIoPlugin from 'analytics-plugin-customerio'
 import gtagManager from 'analytics-plugin-google-tag-manager'
-
+import hubspotPlugin from 'analytics-plugin-hubspot'
 import simpleAnalyticsPlugin from 'analytics-plugin-simple-analytics'
 import originalSourcePlugin from 'analytics-plugin-original-source'
 import exampleProviderPlugin from './plugins/provider-example'
@@ -77,6 +77,9 @@ const analytics = Analytics({
     exampleProviderPlugin({
       settingOne: 'xyz'
     }),
+    // hubspotPlugin({
+    //   portalId: '24787'
+    // }),
     /*
     gtagManager({
       containerId: 'GTM-N5P4NK5'
