@@ -1,6 +1,6 @@
 {
   "name": "analytics-plugin-original-source",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Save original referral source of visitor plugin for 'analytics' module",
   "keywords": [
     "analytics",
@@ -38,7 +38,7 @@
     "url": "git+https://github.com/DavidWells/analytics.git"
   },
   "dependencies": {
-    "analytics-utils": "^0.1.0"
+    "analytics-utils": "^0.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",

@@ -1,6 +1,6 @@
 {
   "name": "analytics-util-cookie",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Cookie helper functions",
   "author": "David Wells",
   "license": "MIT",

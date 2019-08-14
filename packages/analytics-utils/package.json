@@ -1,6 +1,6 @@
 {
   "name": "analytics-utils",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Analytics utility functions used by 'analytics' module",
   "author": "David Wells <hello@davidwells.io>",
   "license": "MIT",

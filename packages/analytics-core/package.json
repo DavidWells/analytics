@@ -1,6 +1,6 @@
 {
   "name": "analytics",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "description": "Lightweight analytics library for tracking events, page views, & identifying users. Works with any third party analytics provider via an extendable plugin system.",
   "keywords": [
     "analytics",
@@ -51,7 +51,7 @@
     "README.md"
   ],
   "dependencies": {
-    "analytics-utils": "^0.1.0",
+    "analytics-utils": "^0.1.1",
     "redux": "^3.6.0"
   },
   "ava": {
