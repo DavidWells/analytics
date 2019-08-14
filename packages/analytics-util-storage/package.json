@@ -1,0 +1,48 @@
+{
+  "name": "analytics-util-storage",
+  "version": "0.0.1",
+  "description": "Storage utilities for saving values in browser",
+  "author": "David Wells",
+  "license": "MIT",
+  "homepage": "https://github.com/DavidWells/analytics#readme",
+  "keywords": [
+    "analytics",
+    "analytics-project",
+    "analytics-util",
+    "storage"
+  ],
+  "main": "lib/analytics-util-storage.cjs.js",
+  "globalName": "analyticsUtilStorage",
+  "jsnext:main": "lib/analytics-util-storage.es.js",
+  "module": "lib/analytics-util-storage.es.js",
+  "browser": {
+    "./lib/analytics-util-storage.cjs.js": "./lib/analytics-util-storage.browser.cjs.js",
+    "./lib/analytics-util-storage.es.js": "./lib/analytics-util-storage.browser.es.js"
+  },
+  "scripts": {
+    "build": "node ../../scripts/build/index.js",
+    "watch": "node ../../scripts/build/_watch.js",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish",
+    "es": "../../node_modules/.bin/babel-node ./testBabel.js"
+  },
+  "files": [
+    "lib",
+    "dist",
+    "package.json",
+    "package-lock.json",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidWells/analytics.git"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5"
+  },
+  "dependencies": {
+    "analytics-util-cookie": "^0.0.1"
+  }
+}
