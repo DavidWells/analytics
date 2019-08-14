@@ -1,7 +1,8 @@
 // Context Reducer.  Follows ducks pattern http://bit.ly/2DnERMc
 /* global BUILD_WEB BUILD_NODE */
-import { inBrowser, parseReferrer, getBrowserLocale, getTimeZone, uuid } from 'analytics-utils'
+import { parseReferrer, getBrowserLocale, getTimeZone, uuid } from 'analytics-utils'
 import EVENTS from '../events'
+import inBrowser from '../utils/inBrowser'
 import getOSNameNode from '../utils/getOSName/node'
 import getOSNameBrowser from '../utils/getOSName/browser'
 

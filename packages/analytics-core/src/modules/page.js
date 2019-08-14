@@ -1,5 +1,5 @@
 // Page View Reducer. Follows ducks pattern http://bit.ly/2DnERMc
-import { inBrowser } from 'analytics-utils'
+import inBrowser from '../utils/inBrowser'
 import EVENTS from '../events'
 
 function canonicalUrl() {

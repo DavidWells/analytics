@@ -1,4 +1,4 @@
-import { inBrowser } from 'analytics-utils'
+import inBrowser from './inBrowser'
 
 function listen(events, func, toAdd) {
   if (!inBrowser) return false
