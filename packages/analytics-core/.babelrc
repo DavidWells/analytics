@@ -10,7 +10,9 @@
     "@babel/plugin-proposal-class-properties",
     ["@babel/plugin-transform-runtime",
       {
-        "regenerator": true
+        "helpers": true,
+        "regenerator": true,
+        "version": "7.5.5"
       }
     ]
   ]
