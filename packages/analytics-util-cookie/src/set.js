@@ -1,4 +1,4 @@
-import noOp from './noOp'
+import inBrowser from './inBrowser'
 
 /**
  * Set a cookie value
@@ -6,7 +6,8 @@ import noOp from './noOp'
  * @param {string} value - value of cookie
  * @param {string} days  - days to keep cookie
  */
-function setCookie(name, value, days) {
+export default function setCookie(name, value, days) {
+  if (!inBrowser) return false
   let expires = ''
   if (days) {
     const date = new Date()
@@ -15,5 +16,3 @@ function setCookie(name, value, days) {
   }
   document.cookie = `${name}=${value}${expires}; path=/`
 }
-
-export default process.browser ? setCookie : noOp

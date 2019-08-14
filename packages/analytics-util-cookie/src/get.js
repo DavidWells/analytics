@@ -1,11 +1,12 @@
-import noOp from './noOp'
+import inBrowser from './inBrowser'
 
 /**
  * Get a cookie value
  * @param  {string} name - key of cookie
  * @return {string} value of cookie
  */
-function getCookie(name) {
+export default function getCookie(name) {
+  if (!inBrowser) return false
   const find = `${name}=`
   const allCookies = document.cookie.split(';')
   for (let i = 0; i < allCookies.length; i++) {
@@ -19,5 +20,3 @@ function getCookie(name) {
   }
   return null
 }
-
-export default process.browser ? getCookie : noOp

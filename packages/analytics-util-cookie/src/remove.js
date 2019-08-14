@@ -1,8 +1,7 @@
 import setCookie from './set'
-import noOp from './noOp'
+import inBrowser from './inBrowser'
 
-function removeCookie(name) {
+export default function removeCookie(name) {
+  if (!inBrowser) return false
   setCookie(name, '', -1)
 }
-
-export default process.browser ? removeCookie : noOp
