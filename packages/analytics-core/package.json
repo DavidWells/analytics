@@ -29,7 +29,7 @@
     "clean": "rimraf lib dist && mkdirp lib dist",
     "prebuild": "npm run clean",
     "build": "node ../../scripts/build/index.js",
-    "postbuild": "npm run minify-dist",
+    "postbuild": "npm run minify-dist && node ./scripts/postbuild.js",
     "watch": "node ../../scripts/build/_watch.js",
     "rollup-cjs": "rollup -c scripts/build/rollup.config.cjs.js && rollup -c scripts/build/rollup.config.browser.cjs.js",
     "rollup-es": "rollup -c scripts/build/rollup.config.es.js && rollup -c scripts/build/rollup.config.browser.es.js",
