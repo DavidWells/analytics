@@ -29,10 +29,18 @@ module.exports = function generateConfig(directory) {
     console.log(`Building ${format} to ${file}`)
     const isESModule = (config.output.format === 'esm')
     const isIIFE = (config.output.format === 'iife')
+
+    let externs = config.externals || externals
+
+    if (isIIFE && pkg.name.match(/-util-/)) {
+      console.log(`NO EXTERNS FOR ${pkg.name} dist build`)
+      // externs = []
+    }
+
     return {
       input: inputPath,
       cache: false,
-      external: config.externals || externals,
+      external: externs,
       output: config.output,
       plugins: [
         stripBanner({
