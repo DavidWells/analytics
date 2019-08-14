@@ -75,7 +75,6 @@ export default function segmentPlugin(pluginConfig = {}) {
     /* Sync id when ready */
     ready: ({ instance, config }) => {
       if (!config.syncAnonymousId || typeof analytics === 'undefined') return
-      console.log('do it')
       const segmentUser = analytics.user()
       if (segmentUser) {
         const segmentAnonId = segmentUser.anonymousId()
