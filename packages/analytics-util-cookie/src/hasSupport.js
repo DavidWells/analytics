@@ -1,5 +1,7 @@
+import inBrowser from './inBrowser'
 
-function hasCookieSupport() {
+export default function hasCookieSupport() {
+  if (!inBrowser) return false
   try {
     const key = 'cookietest='
     // Try to set cookie
@@ -12,5 +14,3 @@ function hasCookieSupport() {
     return false
   }
 }
-
-export default process.browser ? hasCookieSupport() : false
