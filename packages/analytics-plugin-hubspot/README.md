@@ -4,6 +4,7 @@ Integration with HubSpot for [analytics](https://www.npmjs.com/package/analytics
 
 <!-- ANALYTICS_DOCS:START (TOC) -->
 - [Usage](#usage)
+- [Using identify](#using-identify)
 - [Configuration](#configuration)
 - [Plugin Options](#plugin-options)
 <!-- ANALYTICS_DOCS:END (TOC) -->
@@ -69,7 +70,7 @@ analytics.identify('user-xzy-123', {
 **Arguments**
 
 - **pluginConfig** <code>object</code> - Plugin settings
-- **pluginConfig.portalId** <code>string</code> - The Hubspot Portal (or Hub) Id of your hubspot account
+- **pluginConfig.portalId** <code>string</code> - The HubSpot Portal (or Hub) Id of your HubSpot account
 
 **Example**
 
