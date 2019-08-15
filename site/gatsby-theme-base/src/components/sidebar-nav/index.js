@@ -26,6 +26,7 @@ const StyledListItem = styled.li({
     ...listItemStyles,
     textDecoration: 'none',
     display: 'block',
+    // paddingLeft: '5px',
     width: '80%',
     '&.active': {
       color: colors.primary,

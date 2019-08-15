@@ -13,15 +13,14 @@ You can attach your own data collection method via an inline plugin
 {
   NAMESPACE: 'custom-analytics-plugin',
   page: ({ payload }) => {
-    const { properties, meta, anonymousId, userId } = payload
     // Send data to custom collection endpoint
     fetch('https://your-custom-collection-endpoint.com', {
       method: 'POST',
       body: JSON.stringify({
-        date: meta.timestamp
-        title: properties.title
-        anonymousId: anonymousId,
-        userId: userId,
+        date: payload.meta.timestamp
+        title: payload.properties.title
+        anonymousId: payload.anonymousId,
+        userId: payload.userId,
       })
     })
   }
@@ -40,4 +39,4 @@ Yes, analytics was designed to work in both browsers and servers.
 
 ## Other questions
 
-Tweet Questions [@DavidWells](https://twitter.com/davidwells)
+Tweet Questions [@DavidWells](https://twitter.com/davidwells) or leave them on [spectrum chat](https://spectrum.chat/analytics)
