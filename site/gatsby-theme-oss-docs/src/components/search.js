@@ -2,6 +2,7 @@
 import React, { Component, Fragment, createRef } from 'react'
 import styled from '@emotion/styled'
 import {MdClose} from 'react-icons/md'
+import { navigate } from 'gatsby'
 import {
   breakpoints,
   colors,
@@ -204,6 +205,11 @@ export default class Search extends Component {
         debug: true, // keeps the results list open
         autocompleteOptions: {
           openOnFocus: true
+        },
+        handleSelected: (input, event, suggestion, datasetNumber, context) => {
+          input.setVal('')
+          // TODO track search selection
+          navigate(suggestion.url.replace('https://getanalytics.io', ''))
         }
       })
     }
