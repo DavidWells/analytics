@@ -14,7 +14,30 @@ code {
 }
 
 button {
+  background: transparent;
+  color: #000;
+  transition: color 0.2s ease, background 0s ease;
+}
+button {
   cursor: pointer;
+  position: relative;
+  box-sizing: border-box;
+  display: inline-block;
+  overflow: hidden;
+  padding: 8px 20px;
+  margin: 0 3px 6px 3px;
+  text-align: center;
+  border: solid 2px #000;
+  text-decoration: none;
+  color: #000;
+  white-space: nowrap;
+  z-index: 0;
+  transition: color 0.2s ease, background 0s ease;
+}
+button:hover {
+  color: #ffffff;
+  background: #000;
+  transition: color 0.2s ease, background 0.2s ease;
 }
 
 .section-wrapper {

@@ -12,8 +12,10 @@ export default class App extends Component {
   }
   componentDidMount() {
     this.listener = analytics.on('*', ({ payload }) => {
+      const state = Object.assign({}, analytics.getState())
+      delete state.queue
       this.setState({
-        currentState: analytics.getState()
+        currentState: state
       })
     })
   }
@@ -26,6 +28,8 @@ export default class App extends Component {
       <div className="App">
         <Navigation />
         <h2>Analytics State</h2>
+        <p>State contains information about the user, the browser context, & analytic plugins installed</p>
+        <p>It can be used inside your application via <code>analytics.getState()</code> or within referenced inside <a href="https://getanalytics.io/plugins/writing-plugins/">plugins</a></p>
         <div className='state'>
           <pre>
             {JSON.stringify(currentState, null, 2)}

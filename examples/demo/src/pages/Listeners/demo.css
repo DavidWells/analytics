@@ -17,3 +17,11 @@
   padding: 10px 20px;
   width: 30%;
 }
+
+:not(pre)>code {
+  padding: .1em .3em;
+  border-radius: .3em;
+  font-size: .9em;
+  color: #f25cc1;
+  background: #ebeef0;
+}

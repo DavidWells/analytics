@@ -5,7 +5,14 @@
 }
 .navigation a {
   display: flex;
-  margin-left: 10px;
+  margin-left: 15px;
+  text-decoration: none;
+  font-weight: 500;
+  letter-spacing: -.5px;
+
+}
+.navigation a:hover {
+  color: #000;
 }
 .navigation a:first-of-type {
   margin-left: 0px;

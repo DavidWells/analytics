@@ -84,16 +84,18 @@ export default class App extends Component {
           <a href='https://github.com/DavidWells/analytics'>Analytics</a>
           <span className="install">npm install analytics</span>
         </h2>
-        <p>
-          Lightweight extendable analytics library. <a href='https://github.com/DavidWells/analytics#usage'>Read the docs</a>
-        </p>
-        <button onClick={this.doPage}>
+        <div className="about">
+          <p>
+            Lightweight extendable analytics library designed to work with any third party analytics provider to <b>track page views</b>, <b>custom events</b>, & <b>identify users</b>.
+          </p>
+        </div>
+        <button onClick={this.doPage} title='Fire a page view'>
           {`analytics.page()`}
         </button>
-        <button onClick={this.doTrack}>
+        <button onClick={this.doTrack} title='Track an event'>
           {`analytics.track()`}
         </button>
-        <button onClick={this.doIdentify}>
+        <button onClick={this.doIdentify} title='Identify a visitor'>
           {`analytics.identify()`}
         </button>
         <h3>Lifecycle</h3>

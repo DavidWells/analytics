@@ -178,10 +178,8 @@ export default class App extends Component {
     return (
       <div className="app">
         <Navigation />
-        <h2 className="kitchen-sink-title">Analytics Kitchen Sink
-          <button onClick={this.clearLog}>
-            Clear logs
-          </button>
+        <h2 className="kitchen-sink-title">
+          Analytics Kitchen Sink Demo
         </h2>
         <div className='section-wrapper'>
           <div className='section'>
@@ -244,12 +242,14 @@ export default class App extends Component {
         </div>
 
         <div className='section-wrapper'>
-          <button onClick={this.resetVisitor}>
-            resetVisitor
-          </button>
-          <button onClick={this.sendGoogleAnalyticsTrack}>
-            track with label
-          </button>
+          <h2 className="kitchen-sink-title">Lifecycle
+            <button onClick={this.clearLog}>
+              Clear logs
+            </button>
+            <button onClick={this.resetVisitor}>
+              resetVisitor
+            </button>
+          </h2>
         </div>
 
         <Log items={history} />

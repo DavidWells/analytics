@@ -14,15 +14,7 @@
   background: #eaeaea;
   border-radius: 3px;
 }
-
-.navigation {
-  display: flex;
-  align-items: center;
-}
-.navigation a {
-  display: flex;
-  margin-left: 10px;
-}
-.navigation a:first-of-type {
-  margin-left: 0px;
+.about {
+  max-width: 660px;
+  line-height: 1.6;
 }

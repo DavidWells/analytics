@@ -69,7 +69,13 @@ export default class Listeners extends Component {
       <div className="App">
         <Navigation />
         <h2>Listeners</h2>
-        <p>You can listen to analytic events with the <code>analytics.on('event')</code></p>
+        <p>You can listen to events happening within analytics with <code>analytics.on('event')</code>, <code>analytics.once('event')</code></p>
+        <p>
+          Read more about <a href="https://getanalytics.io/using-listeners/">using listeners in the docs</a>.
+        </p>
+        <p>
+          Below are some examples of using listeners to fire custom callbacks when events happen.
+        </p>
         <Demo
           title='Listen to everything via *'
           events={listenerHistory['*']}
@@ -82,7 +88,7 @@ export default class Listeners extends Component {
 
         <Demo
           title='Track listener'
-          action={<button onClick={this.doTrack}>Track</button>}
+          action={<button onClick={this.doTrack}>Track Event</button>}
           events={listenerHistory['trackStart']}
           code={outdent`
             analytics.on('trackStart', ({ payload }) => {
@@ -93,7 +99,7 @@ export default class Listeners extends Component {
 
         <Demo
           title='Page listener'
-          action={<button onClick={this.doPage}>Page</button>}
+          action={<button onClick={this.doPage}>Track Page View</button>}
           events={listenerHistory['page']}
           code={outdent`
             analytics.on('page', ({ payload }) => {
@@ -104,7 +110,7 @@ export default class Listeners extends Component {
 
         <Demo
           title='customEvent listener'
-          action={<button onClick={this.doCustomEvent}>CustomEvent</button>}
+          action={<button onClick={this.doCustomEvent}>Dispatch CustomEvent</button>}
           events={listenerHistory['customEvent']}
           code={outdent`
             analytics.on('customEvent', ({ payload }) => {
