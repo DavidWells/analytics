@@ -28,7 +28,7 @@ var tabInterval
 const analytics = Analytics({
   debug: true,
   plugins: [
-    {
+    /*{
       // If already has anonymousId use it
       NAMESPACE: 'set-anon-id',
       setItemStart: (data) => {
@@ -49,15 +49,15 @@ const analytics = Analytics({
           }
         }
       }
-    },
+    },*/
 
     originalSourcePlugin(),
-    {
-      NAMESPACE: 'react-to-original-src',
-      setOriginalSource: ({ payload }) => {
-        console.log('original action set', payload)
-      },
-    },
+    // {
+    //   NAMESPACE: 'react-to-original-src',
+    //   setOriginalSource: ({ payload }) => {
+    //     console.log('original action set', payload)
+    //   },
+    // },
     visualizeLifecycle(),
     // crazyEgg({
     //   accountNumber: '00840000'
@@ -65,15 +65,15 @@ const analytics = Analytics({
     tabEvents(),
     // windowEvents(),
     // doNotTrack(),
-    simpleAnalyticsPlugin(),
-    customerIoPlugin({
-      siteId: '4dfdba9c7f1a6d60f779',
-      disableAnonymousTraffic: true,
-    }),
-    segmentPlugin({
-      writeKey: 'TpKoFHqy1g98bXjd3wdVp3JvkHJRl5Q5',
-      disableAnonymousTraffic: true,
-    }),
+    // simpleAnalyticsPlugin(),
+    // customerIoPlugin({
+    //   siteId: '4dfdba9c7f1a6d60f779',
+    //   disableAnonymousTraffic: true,
+    // }),
+    // segmentPlugin({
+    //   writeKey: 'TpKoFHqy1g98bXjd3wdVp3JvkHJRl5Q5',
+    //   disableAnonymousTraffic: true,
+    // }),
     exampleProviderPlugin({
       settingOne: 'xyz'
     }),
@@ -89,7 +89,7 @@ const analytics = Analytics({
       trackingId: process.env.REACT_APP_GOOGLE_ANALYTICS_ID,
     }),
     reduxPlugin,
-    {
+    /*{
       NAMESPACE: 'custom',
       tabHidden: () => {
         console.log('TAB HIDDEN')
@@ -114,7 +114,7 @@ const analytics = Analytics({
       tabHiddenEnd: () => {
         console.log('TAB HIDDEN Last 2')
       }
-    }
+    }*/
   ]
 })
 

@@ -25,3 +25,16 @@
   color: #f25cc1;
   background: #ebeef0;
 }
+
+@media (max-width: 768px) {
+  .demo-split {
+    flex-direction: column;
+    margin-bottom: 45px;
+  }
+  .demo-log, .demo-code {
+    width: 90%;
+  }
+  .demo-code {
+    font-size: 12px;
+  }
+}

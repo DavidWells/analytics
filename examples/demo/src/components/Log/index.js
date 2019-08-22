@@ -5,7 +5,7 @@ export default class Log extends Component {
   renderLogItems = (items) => {
     return items.map((item, i) => {
       const event = Object.keys(item).reduce((acc, key) => {
-        //if (key === 'type' || key === '_') return acc
+         if (key === 'type' || key === '_') return acc
          if (key === 'type') return acc
         acc[key] = item[key]
         return acc

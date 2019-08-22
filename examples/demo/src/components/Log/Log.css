@@ -1,7 +1,6 @@
 .log-wrapper {
-
 }
-.log {
+.log, .log-data, .log-event {
   font-size: 12px;
 }
 .log-header, .log-item {
@@ -24,4 +23,13 @@
   min-width: 220px;
   padding: 1px 5px;
   padding-right: 0px;
+}
+
+@media (max-width: 768px) {
+  .log-wrapper {
+    max-width: 100%;
+  }
+  .log-data, .log-header-data {
+    display: none;
+  }
 }

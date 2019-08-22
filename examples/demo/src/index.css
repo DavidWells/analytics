@@ -6,8 +6,11 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  max-width: 100%;
 }
-
+#root {
+  max-width: 100%;
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
@@ -80,4 +83,9 @@ a:hover {
 }
 .kitchen-sink-title button {
   margin-left: 15px;
+}
+@media (max-width: 768px) {
+  button {
+    padding: 8px 5px;
+  }
 }

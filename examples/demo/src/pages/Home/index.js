@@ -6,6 +6,7 @@ import Navigation from '../../fragments/Nav'
 import Log from '../../components/Log'
 import './Home.css'
 
+let hasCleared = false
 export default class App extends Component {
   constructor (props, context) {
     super(props, context)
@@ -24,6 +25,10 @@ export default class App extends Component {
         history: window.__ANALYTICS_HISTORY__
       })
     }, 1000);
+
+    analytics.ready(() => {
+      console.log('analytics.ready fired')
+    })
 
     analytics.on('page:segment', ({ payload }) => {
       console.log('analytics.on page:segment')
@@ -51,12 +56,21 @@ export default class App extends Component {
   componentWillUnmount() {
     this.listener()
   }
+  // Clear logs for demo buttons
+  clearLogs() {
+    if (!hasCleared) {
+      window.__ANALYTICS_HISTORY__ = []
+      hasCleared = true
+    }
+  }
   doPage = () => {
+    this.clearLogs()
     analytics.page(() => {
       console.log('page callback')
     })
   }
   doTrack = () => {
+    this.clearLogs()
     analytics.track('buttonClicked', {
       foo: 'bar'
     }, () => {
@@ -64,6 +78,7 @@ export default class App extends Component {
     })
   }
   doIdentify = () => {
+    this.clearLogs()
     analytics.identify('xyz-777', {
      traitOne: 'blue',
      traitTwo: 'red',
@@ -89,7 +104,7 @@ export default class App extends Component {
           <p>
             Lightweight, extendable, framework agnostic, analytics library designed to work with any third party analytics provider to <b>track page views</b>, <b>custom events</b>, & <b>identify users</b>.
           </p>
-          <div class='example-buttons'>
+          <div className='example-buttons'>
             <div className='try-it'>Try it &nbsp;&nbsp;👉</div>
             <button onClick={this.doPage} title='Fire a page view'>
               {`analytics.page()`}

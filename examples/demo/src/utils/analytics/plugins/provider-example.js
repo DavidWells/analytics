@@ -8,7 +8,7 @@ const defaultConfig = {
 
 export default function exampleProviderPlugin(userConfig = {}) {
   return {
-    NAMESPACE: 'provider-example',
+    NAMESPACE: 'analytics-tool-xyz',
     config: {
       ...defaultConfig,
       ...userConfig
