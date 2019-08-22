@@ -7,23 +7,16 @@ description: Using the do not track plugin
 
 This [analytics](https://www.npmjs.com/package/analytics) plugin will disable `page`, `track`, & `identify` calls for visitors using [Do Not Track](https://caniuse.com/#feat=do-not-track).
 
-<!-- AUTO-GENERATED-CONTENT:START (TOC) -->
-- [Usage](#usage)
-- [Standalone usage](#standalone-usage)
-<!-- AUTO-GENERATED-CONTENT:END -->
+## How to use
 
-## Usage
-
-Usage with the [analytics](https://www.npmjs.com/package/analytics) library.
-
-**Install**
+First install the packages from npm.
 
 ```bash
 npm install analytics
 npm install analytics-plugin-do-not-track
 ```
 
-**Usage**
+Then initialize `analytics` with the `analytics-plugin-do-not-track` plugin.
 
 ```js
 import Analytics from 'analytics'
