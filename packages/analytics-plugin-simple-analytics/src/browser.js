@@ -1,6 +1,4 @@
-/**
- * Browser implementation
- */
+/* global sa */
 
 const config = {}
 
@@ -15,6 +13,7 @@ export default function simpleAnalyticsPlugin(userConfig) {
       ...config,
       ...userConfig
     },
+    // https://docs.simpleanalytics.com/script
     initialize: ({ config }) => {
       const src = 'https://cdn.simpleanalytics.io/hello.js'
       const script = document.createElement('script')
@@ -35,7 +34,15 @@ export default function simpleAnalyticsPlugin(userConfig) {
       script.addEventListener('error', () => {
         throw new Error(`${src} failed to load.`)
       })
+
+      // Todo load analytics script via users subdomain for custom event tracking
     },
+    /* https://docs.simpleanalytics.com/events
+    track: ({ payload }) => {
+      if (typeof sa === 'undefined') return false
+      sa(payload.event)
+    },
+    */
     /* Verify script loaded */
     loaded: () => {
       return !!isLoaded
