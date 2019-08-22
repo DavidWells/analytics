@@ -5,22 +5,22 @@ const EVENTS = {
    */
   windowLeft: 'windowLeft',
   /**
-   * `windowEntered` - Fires when visitor enters the window.
+   * `windowEnter` - Fires when visitor enters the window.
    * This fires only when coming back into the window after leaving it.
    */
-  windowEntered: 'windowEntered'
+  windowEnter: 'windowEnter'
 }
 
 export default function windowEventsPlugin(userConfig = {}) {
   return {
     NAMESPACE: 'window-events',
     EVENTS: EVENTS,
-    config: Object.assign({}, userConfig),
+    config: userConfig,
     bootstrap: ({ instance }) => {
       // Dispatch events when visitor leaves window
       mouseOut(leftWindow => {
         instance.dispatch({
-          type: (leftWindow) ? EVENTS.windowLeft : EVENTS.windowEntered,
+          type: (leftWindow) ? EVENTS.windowLeft : EVENTS.windowEnter,
         })
       })
     }
