@@ -40,6 +40,15 @@ button:hover {
   transition: color 0.2s ease, background 0.2s ease;
 }
 
+a {
+  color: #2da5f7;
+  text-decoration: none;
+  font-weight: 500;
+}
+a:hover {
+  color: #000;
+}
+
 .section-wrapper {
   display: flex;
   margin-bottom: 20px;

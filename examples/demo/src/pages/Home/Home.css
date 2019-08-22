@@ -18,3 +18,21 @@
   max-width: 660px;
   line-height: 1.6;
 }
+.example-buttons {
+  display: flex;
+  align-items: center;
+}
+.example-buttons button {
+  margin-right: 10px;
+}
+.try-it {
+  font-size: 18px;
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .try-it {
+    display: none;
+  }
+}

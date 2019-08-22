@@ -84,21 +84,33 @@ export default class App extends Component {
           <a href='https://github.com/DavidWells/analytics'>Analytics</a>
           <span className="install">npm install analytics</span>
         </h2>
+
         <div className="about">
           <p>
-            Lightweight extendable analytics library designed to work with any third party analytics provider to <b>track page views</b>, <b>custom events</b>, & <b>identify users</b>.
+            Lightweight, extendable, framework agnostic, analytics library designed to work with any third party analytics provider to <b>track page views</b>, <b>custom events</b>, & <b>identify users</b>.
+          </p>
+          <div class='example-buttons'>
+            <div className='try-it'>Try it &nbsp;&nbsp;👉</div>
+            <button onClick={this.doPage} title='Fire a page view'>
+              {`analytics.page()`}
+            </button>
+            <button onClick={this.doTrack} title='Track an event'>
+              {`analytics.track()`}
+            </button>
+            <button onClick={this.doIdentify} title='Identify a visitor'>
+              {`analytics.identify()`}
+            </button>
+          </div>
+        </div>
+        <div className="about">
+          <p>
+            Analytics acts as an abstraction layer on top of third party analytic tools making it easy to add or remove tools as business requirements change.
+          </p>
+          <p>It runs off a lifecycle of events that can be hooked into via <a href='https://getanalytics.io/plugins/writing-plugins/' target='_blank' rel='noopener noreferrer'>
+            plugins
+          </a> & listeners. This makes calls to third party analytic tools completely customizable & cancellable.
           </p>
         </div>
-        <button onClick={this.doPage} title='Fire a page view'>
-          {`analytics.page()`}
-        </button>
-        <button onClick={this.doTrack} title='Track an event'>
-          {`analytics.track()`}
-        </button>
-        <button onClick={this.doIdentify} title='Identify a visitor'>
-          {`analytics.identify()`}
-        </button>
-        <h3>Lifecycle</h3>
         <Log items={history} />
       </div>
     )

@@ -7,13 +7,17 @@
   display: flex;
   margin-left: 15px;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: -.5px;
-
 }
 .navigation a:hover {
   color: #000;
 }
 .navigation a:first-of-type {
   margin-left: 0px;
+}
+@media (max-width: 768px) {
+  .doc-link {
+    display: none !important;
+  }
 }
