@@ -629,6 +629,7 @@ The `analytics` has a robust plugin system. Here is a list of currently availabl
 - [analytics-plugin-crazy-egg](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-crazy-egg) Crazy Egg integration for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-crazy-egg).
 - [analytics-plugin-customerio](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-customerio) Customer.io integration for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-customerio).
 - [analytics-plugin-do-not-track](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-do-not-track) Disable tracking for opted out visitors plugin for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-do-not-track).
+- [analytics-plugin-event-validation](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-event-validation) Event validation plugin for analytics [npm link](https://www.npmjs.com/package/analytics-plugin-event-validation).
 - [analytics-plugin-ga](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-ga) Google analytics integration for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-ga).
 - [analytics-plugin-google-tag-manager](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-google-tag-manager) Google tag manager plugin for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-google-tag-manager).
 - [analytics-plugin-hubspot](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-hubspot) HubSpot plugin for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-hubspot).
@@ -643,7 +644,6 @@ The `analytics` has a robust plugin system. Here is a list of currently availabl
 - [analytics-util-storage](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-storage) Storage utilities for saving values in browser [npm link](https://www.npmjs.com/package/analytics-util-storage).
 - [analytics-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-utils) Analytics utility functions used by 'analytics' module [npm link](https://www.npmjs.com/package/analytics-utils).
 - [gatsby-plugin-analytics](https://github.com/DavidWells/analytics/tree/master/packages/gatsby-plugin-analytics) Easily add analytics to your Gatsby site [npm link](https://www.npmjs.com/package/gatsby-plugin-analytics).
-- [analytics-plugin-template](https://github.com/DavidWells/analytics/tree/master/packages/plugin-template) Example plugin with browser + node module build with treeshaking [npm link](https://www.npmjs.com/package/analytics-plugin-template).
 - Add yours! 👇
 <!-- AUTO-GENERATED-CONTENT:END -->
 

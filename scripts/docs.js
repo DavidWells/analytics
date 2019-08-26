@@ -11,8 +11,11 @@ const config = {
       const packages = fs.readdirSync(path.resolve('packages'))
         .filter(pkg => !/^\./.test(pkg))
         .map(pkg => ([pkg, fs.readFileSync(path.join(base, pkg, 'package.json'), 'utf8')]))
+        .filter(([pkg, json]) => {
+          const parsed = JSON.parse(json)
+          return parsed.private !== true
+        })
         .map(([pkg, json]) => {
-          console.log('json', json)
           const { name, description } = JSON.parse(json)
           return `- [${name}](./packages/${pkg}) ${description} [npm link](https://www.npmjs.com/package/${name}).`
         })
@@ -25,6 +28,10 @@ const config = {
         .filter(pkg => !/^\./.test(pkg))
         .filter(pkg => pkg !== 'analytics-core')
         .map(pkg => ([pkg, fs.readFileSync(path.join(base, pkg, 'package.json'), 'utf8')]))
+        .filter(([pkg, json]) => {
+          const parsed = JSON.parse(json)
+          return parsed.private !== true
+        })
         .map(([pkg, json]) => {
           const { name, description } = JSON.parse(json)
           return `- [${name}](https://github.com/DavidWells/analytics/tree/master/packages/${pkg}) ${description} [npm link](https://www.npmjs.com/package/${name}).`

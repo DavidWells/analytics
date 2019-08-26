@@ -11,6 +11,7 @@ import simpleAnalyticsPlugin from 'analytics-plugin-simple-analytics'
 import originalSourcePlugin from 'analytics-plugin-original-source'
 import exampleProviderPlugin from './plugins/provider-example'
 import visualizeLifecycle from './plugins/visualize-analytics'
+import eventValidation from 'analytics-plugin-event-validation'
 import crazyEgg from 'analytics-plugin-crazy-egg'
 
 const reduxPlugin = store => next => action => {
@@ -50,7 +51,16 @@ const analytics = Analytics({
         }
       }
     },*/
-
+    eventValidation({
+      // Namespace of current application
+      projectName: 'app',
+      // Allowed objects
+      objects: [
+        'sites', // example app:sites_cdConfigured
+        'user', // example app:user_signup
+        'subscription' // example app:subscription_created
+      ],
+    }),
     originalSourcePlugin(),
     // {
     //   NAMESPACE: 'react-to-original-src',
