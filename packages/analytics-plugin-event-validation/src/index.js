@@ -7,14 +7,14 @@ const defaultConfig = {
  * Event validation plugin
  * @link https://getanalytics.io/plugins/event-validation/
  * @param {object}  pluginConfig - Plugin settings
- * @param {string}  pluginConfig.projectName - Name of app event is in. Example 'api'
+ * @param {string}  pluginConfig.context - Name of app event is in. Example 'api', 'app', 'site', 'cli'
  * @param {boolean} pluginConfig.objects - Objects events can effect
- * @param {boolean} pluginConfig.throwOnInvalid - Objects events can effect
+ * @param {boolean} [pluginConfig.throwOnInvalid] - Objects events can effect
  * @return {object} Analytics plugin
  * @example
  *
  * eventValidation({
- *   projectName: 'app',
+ *   context: 'app',
  *   objects: ['sites', 'user', 'subscription']
  * })
  */
@@ -38,7 +38,7 @@ export default function eventValidationPlugin(pluginConfig = {}) {
 }
 
 function isValidEventName(event, config) {
-  const validProject = [config.projectName] || []
+  const validProject = [config.context] || []
   const validObjects = config.objects || []
   const invalid = formatError(event)
   const underscoreCount = contains(event, '_')
@@ -54,14 +54,14 @@ function isValidEventName(event, config) {
   if (!matches) {
     return invalid('Event malformed')
   }
-  const [ , project, object, action ] = matches
+  const [ , context, object, action ] = matches
   // if missing any parts of event, exit;
-  if (!project || !object || !action) {
-    return invalid('Missing project, object, or action')
+  if (!context || !object || !action) {
+    return invalid('Missing context, object, or action')
   }
   /* Validate project name */
-  if (validProject.indexOf(project) === -1) {
-    return invalid(`Invalid project "${project}". Must be 1 of ${JSON.stringify(validProject)}`)
+  if (validProject.indexOf(context) === -1) {
+    return invalid(`Invalid context "${context}". Must be 1 of ${JSON.stringify(validProject)}`)
   }
   /* Validate object */
   if (validObjects.indexOf(object) === -1) {
@@ -80,7 +80,7 @@ function formatError(event) {
     console.log(`> Invalid event "${event}"`)
     if (msg) console.log(msg)
     console.log(`> Formatting information:`)
-    console.log(`Event must match pattern "product:objectName_actionName"`)
+    console.log(`Event must match pattern "context:objectName_actionName"`)
     console.log(`Event must be camelCased "camelCase:camelCase_camelCase"`)
     console.log(`Example: app:sites_deploySucceeded`)
     return false

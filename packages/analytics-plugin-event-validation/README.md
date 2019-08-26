@@ -11,14 +11,14 @@ This ensures events passing through to third party analytic tools are valid and 
 This library ensures tracking events for [analytics](https://npmjs.com/package/analytics) match this opinionated pattern:
 
 ```
-productName:objectName_actionName
+context:objectName_actionName
 ```
 
 This is customizable via custom plugins for analytics.
 
 ## Pattern
 
-`Product => Object => Action`
+`Product (or context) => Object => Action`
 
 The format answers these questions:
 
@@ -38,7 +38,7 @@ The format answers these questions:
 ### Format/Syntax
 
 ```
-productName:objectName_actionName
+contextName:objectName_actionName
 ```
 
 Here are some examples:
@@ -60,12 +60,12 @@ const analytics = Analytics({
   plugins: [
     eventValidation({
       // Namespace of current application
-      projectName: 'app',
+      context: 'app',
       // Allowed objects
       objects: [
         'sites', // example app:sites_cdConfigured
         'user',  // example app:user_signup
-        'widget' // example app:subscription_created
+        'widget' // example app:widget_created
       ]
     }),
     customerIOPlugin({

@@ -53,7 +53,7 @@ const analytics = Analytics({
     },*/
     // eventValidation({
     //   // Namespace of current application
-    //   projectName: 'app',
+    //   context: 'app',
     //   // Allowed objects
     //   objects: [
     //     'sites', // example app:sites_cdConfigured
