@@ -51,16 +51,16 @@ const analytics = Analytics({
         }
       }
     },*/
-    eventValidation({
-      // Namespace of current application
-      projectName: 'app',
-      // Allowed objects
-      objects: [
-        'sites', // example app:sites_cdConfigured
-        'user', // example app:user_signup
-        'subscription' // example app:subscription_created
-      ],
-    }),
+    // eventValidation({
+    //   // Namespace of current application
+    //   projectName: 'app',
+    //   // Allowed objects
+    //   objects: [
+    //     'sites', // example app:sites_cdConfigured
+    //     'user', // example app:user_signup
+    //     'subscription' // example app:subscription_created
+    //   ],
+    // }),
     originalSourcePlugin(),
     // {
     //   NAMESPACE: 'react-to-original-src',
