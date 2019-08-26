@@ -34,6 +34,7 @@ module.exports = {
             'plugins/tab-events',
             'plugins/window-events',
             'plugins/original-source',
+            'plugins/event-validation',
             '[Request a plugin](https://github.com/DavidWells/analytics/issues/new)',
           ],
           Tutorial: [
