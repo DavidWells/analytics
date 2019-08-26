@@ -1,0 +1,44 @@
+{
+  "name": "analytics-plugin-event-validation",
+  "version": "0.0.1",
+  "description": "Event validation plugin for analytics",
+  "keywords": [
+    "analytics",
+    "analytics-project",
+    "analytics-plugin",
+    "validation"
+  ],
+  "author": "David Wells",
+  "license": "MIT",
+  "scripts": {
+    "docs": "node ../analytics-cli/bin/run docs",
+    "build": "node ../../scripts/build/index.js",
+    "watch": "node ../../scripts/build/_watch.js",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish",
+    "es": "../../node_modules/.bin/babel-node ./testBabel.js"
+  },
+  "main": "lib/analytics-plugin-event-validation.cjs.js",
+  "globalName": "analyticsEventValidation",
+  "jsnext:main": "lib/analytics-plugin-event-validation.es.js",
+  "module": "lib/analytics-plugin-event-validation.es.js",
+  "browser": {
+    "./lib/analytics-plugin-event-validation.cjs.js": "./lib/analytics-plugin-event-validation.browser.cjs.js",
+    "./lib/analytics-plugin-event-validation.es.js": "./lib/analytics-plugin-event-validation.browser.es.js"
+  },
+  "files": [
+    "dist",
+    "lib",
+    "README.md"
+  ],
+  "homepage": "https://github.com/DavidWells/analytics#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidWells/analytics.git"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1"
+  }
+}
