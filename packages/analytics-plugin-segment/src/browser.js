@@ -12,9 +12,9 @@ const config = {
 /**
  * Segment analytics plugin
  * @link https://segment.com/docs/sources/website/analytics.js/
- * @param {object} pluginConfig - Plugin settings
- * @param {string} pluginConfig.writeKey - Your segment writeKey
- * @param {boolean} pluginConfig.disableAnonymousTraffic - Disable loading segment for anonymous visitors
+ * @param {object}  pluginConfig - Plugin settings
+ * @param {string}  pluginConfig.writeKey - Your segment writeKey
+ * @param {boolean} [pluginConfig.disableAnonymousTraffic] - Disable loading segment for anonymous visitors
  * @return {object} Analytics plugin
  * @example
  *

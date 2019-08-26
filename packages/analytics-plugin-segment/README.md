@@ -53,7 +53,7 @@ analytics.identify('user-xzy-123', {
 
 - **pluginConfig** <code>object</code> - Plugin settings
 - **pluginConfig.writeKey** <code>string</code> - Your segment writeKey
-- **pluginConfig.disableAnonymousTraffic** <code>boolean</code> - Disable loading segment for anonymous visitors
+- **[pluginConfig.disableAnonymousTraffic]** (optional) <code>boolean</code> - Disable loading segment for anonymous visitors
 
 **Example**
 
