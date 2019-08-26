@@ -11,11 +11,6 @@ export default async function (action, getPlugins, instance, store, eventsInfo) 
     return action
   }
 
-  // const actionDepth = (originalType.match(/:/g) || []).length
-  // if (actionDepth > 2) {
-  //   return action
-  // }
-
   const state = instance.getState()
   /* Remove plugins that are disabled by options or by settings */
   const activePlugins = fitlerDisabledPlugins(pluginObject, state.plugins, action.options)
@@ -52,10 +47,10 @@ export default async function (action, getPlugins, instance, store, eventsInfo) 
   }
 
   /* Filter over the plugin method calls and remove aborted plugin by name */
-  const activeAndNonAbortedCalls = activePlugins.filter((plugin) => {
-    if (shouldAbort(actionBefore, plugin.NAMESPACE)) return false
-    return true
-  })
+  // const activeAndNonAbortedCalls = activePlugins.filter((plugin) => {
+  //   if (shouldAbort(actionBefore, plugin.NAMESPACE)) return false
+  //   return true
+  // })
   // console.log(`activeAndNonAbortedCalls ${action.type}`, activeAndNonAbortedCalls)
 
   let actionDuring
@@ -341,10 +336,7 @@ async function processEvent({
     } else {
       const nameSpaceEvent = `${method}:${pluginName}`
       const actionDepth = (nameSpaceEvent.match(/:/g) || []).length
-      if (actionDepth < 2 &&
-        !method.match(/^bootstrap/) &&
-        !method.match(/^ready/)
-      ) {
+      if (actionDepth < 2 && !method.match(/^bootstrap/) && !method.match(/^ready/)) {
         instance.dispatch({
           ...scopedPayload,
           type: nameSpaceEvent,
@@ -381,7 +373,8 @@ async function processEvent({
       // console.log(`Dont dispatch for ${method}`, resolvedAction)
       return resolvedAction
     }
-    store.dispatch({
+
+    let endAction = {
       ...resolvedAction,
       ...{
         _: {
@@ -390,7 +383,19 @@ async function processEvent({
           from: 'engineEnd'
         }
       }
-    })
+    }
+
+    /* If all plugins are aborted, dispatch xAborted */
+    if (shouldAbortAll(resolvedAction, data.exact.length) && !method.match(/End$/)) {
+      endAction = {
+        ...endAction,
+        ...{
+          type: `${resolvedAction.type}Aborted`,
+        }
+      }
+    }
+
+    store.dispatch(endAction)
   }
 
   return resolvedAction
@@ -564,7 +569,7 @@ function abortFunction(pluginName, method, abortablePlugins, otherPlugin, action
 
 function notAbortableError(action, method) {
   return () => {
-    throw new Error(`Action "${action.type}" is not cancellable. Remove abort call from plugin ${method}`)
+    throw new Error(`Action "${action.type}" is not cancellable. Remove abort from plugin ${method}`)
   }
 }
 
