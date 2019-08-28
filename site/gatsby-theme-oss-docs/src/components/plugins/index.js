@@ -1,4 +1,48 @@
-export default [
+import React from 'react'
+import { Link } from 'gatsby'
+import styles from './plugins.css'
+
+const cdnRoot = 'https://d36ubspakw5kl4.cloudfront.net'
+
+const makeTweet = (name) => {
+  return `https://twitter.com/intent/tweet?url=https%3A%2F%2Fgetanalytics.io%2Fplugins%2Frequest%2F&text=Hey%20@davidwells%0ACan%20analytics%20support%20${name}%20please%3F`
+}
+
+export const SupportedPlugins = () => {
+  const supportedTools = tools.filter((tool) => {
+    return tool.url
+  }).map((tool) => {
+    return (
+      <Link to={`/plugins/${tool.name}/`} className='provider'>
+        <img alt={tool.name} src={`${cdnRoot}/${tool.image}`} />
+      </Link>
+    )
+  })
+  return (
+    <div className='provider-wrapper'>
+      {supportedTools}
+    </div>
+  )
+}
+
+export const RequestPlugins = () => {
+  const requestTools = tools.filter((tool) => {
+    return !tool.url
+  }).map((tool) => {
+    return (
+      <a className='provider' href={makeTweet(tool.name)} target='_blank' rel='noopener noreferrer'>
+        <img alt={tool.name} src={`${cdnRoot}/${tool.image}`} />
+      </a>
+    )
+  })
+  return (
+    <div className='provider-wrapper'>
+      {requestTools}
+    </div>
+  )
+}
+
+var tools = [
   {
     'name': 'adlearn-open-platform',
     'image': 'adlearn-open-platform.svg'
@@ -77,7 +121,7 @@ export default [
     'image': 'custify.svg'
   },
   {
-    name: 'customer-io',
+    name: 'customerio',
     image: 'customer-io.svg',
     url: 'https://getanalytics.io/plugins/customerio/'
   },
@@ -148,7 +192,7 @@ export default [
   },
   {
     'name': 'google-tag-manager',
-    'image': 'google-TODO.svg',
+    'image': 'google-tag-manager.svg',
     url: 'https://getanalytics.io/plugins/google-tag-manager/'
   },
   {
@@ -287,7 +331,7 @@ export default [
   },
   {
     name: 'simple-analytics',
-    image: 'simple-analytics.svg',
+    image: 'simple-analytics.jpg',
     url: 'https://getanalytics.io/plugins/simple-analytics/'
   },
   {

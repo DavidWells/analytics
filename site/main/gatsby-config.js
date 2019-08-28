@@ -35,7 +35,7 @@ module.exports = {
             'plugins/window-events',
             'plugins/original-source',
             'plugins/event-validation',
-            '[Request a plugin](https://github.com/DavidWells/analytics/issues/new)',
+            'plugins/request',
           ],
           Tutorial: [
             'tutorial/getting-started',

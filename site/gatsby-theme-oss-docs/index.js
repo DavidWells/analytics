@@ -10,3 +10,4 @@ export {
   ExpansionPanelList,
   ExpansionPanelListItem
 } from './src/components/expansion-panel'
+export { RequestPlugins, SupportedPlugins } from './src/components/plugins'

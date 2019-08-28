@@ -54,7 +54,7 @@ function handleToggleCategory(title, expanded) {
 const customSideBarTitles = {
   'Analytics Documentation': 'About',
   'Analytics Plugins': '- Using Plugins',
-  'Request a plugin': <b>{'👋'} Request a plugin</b>,
+  'Request an analytics integration': <b>{'👋'} Request a plugin</b>,
 }
 
 export default function SidebarContent(props) {
