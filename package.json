@@ -27,7 +27,7 @@
     "@babel/core": "^7.5.5",
     "@babel/plugin-transform-runtime": "^7.5.5",
     "@babel/preset-env": "7.5.5",
-    "ava": "^2.2.0",
+    "ava": "^2.3.0",
     "dox": "^0.9.0",
     "lerna": "^3.10.7",
     "markdown-magic": "^0.1.25",
