@@ -1,6 +1,7 @@
 {
   "name": "main",
   "version": "1.0.0",
+  "homepage": "https://getanalytics.io",
   "main": "index.js",
   "author": "David Wells <hello@davidwells.io> (@davidwells)",
   "license": "MIT",
@@ -8,6 +9,7 @@
     "start": "gatsby develop",
     "develop": "gatsby develop",
     "build": "gatsby build",
+    "postbuild": "node scripts/sitemap.js",
     "serve": "http-server public",
     "deploy": "netlify deploy -p --dir public"
   },
@@ -15,5 +17,8 @@
     "gatsby": "^2.13.20",
     "react": "^16.8.6",
     "react-dom": "^16.8.6"
+  },
+  "devDependencies": {
+    "sitemap": "^4.1.1"
   }
 }

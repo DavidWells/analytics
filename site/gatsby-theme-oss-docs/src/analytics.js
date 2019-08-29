@@ -5,9 +5,9 @@ import googleAnalytics from 'analytics-plugin-ga'
 const analytics = Analytics({
   debug: true,
   plugins: [
-    // fullStoryPlugin({
-    //   org: 'NRVKK'
-    // }),
+    fullStoryPlugin({
+      org: 'NRVKK'
+    }),
     googleAnalytics({
       trackingId: 'UA-126647663-4'
     }),
