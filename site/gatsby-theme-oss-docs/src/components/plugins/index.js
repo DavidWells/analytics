@@ -170,6 +170,11 @@ var tools = [
     'image': 'funnelfox.svg'
   },
   {
+    name: 'fullstory',
+    image: 'fullstory.svg',
+    url: 'https://getanalytics.io/plugins/fullstory/'
+  },
+  {
     'name': 'gainsight-px',
     'image': 'gainsight-px.svg'
   },

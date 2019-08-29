@@ -18,6 +18,9 @@ const navConfig = {
   '/docs': {
     text: 'Docs',
   },
+  '/plugins': {
+    text: 'Plugins',
+  },
   // '/docs/tutorial/introduction': {
   //   text: 'Tutorial',
   //   matchRegex: /^\/docs\/tutorial/

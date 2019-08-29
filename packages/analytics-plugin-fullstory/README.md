@@ -91,7 +91,7 @@ First, find your FullStory account's `org` ID by clicking on **Settings > FullSt
 **Arguments**
 
 - **pluginConfig** <code>object</code> - Plugin settings
-- **pluginConfig.org** <code>string</code> - The HubSpot Portal (or Hub) Id of your HubSpot account
+- **pluginConfig.org** <code>string</code> - FullStory account's `org` ID. The `_fs_org` value in settings.
 
 **Example**
 

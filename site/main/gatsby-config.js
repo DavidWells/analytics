@@ -28,6 +28,7 @@ module.exports = {
             'plugins/segment',
             'plugins/customerio',
             'plugins/hubspot',
+            'plugins/fullstory',
             'plugins/crazyegg',
             'plugins/simple-analytics',
             'plugins/do-not-track',
