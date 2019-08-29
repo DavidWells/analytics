@@ -1,0 +1,64 @@
+{
+  "name": "analytics-plugin-fullstory",
+  "version": "0.0.1",
+  "description": "FullStory plugin for 'analytics' module",
+  "keywords": [
+    "analytics",
+    "analytics-project",
+    "analytics-plugin",
+    "fullstory"
+  ],
+  "author": "David Wells",
+  "license": "MIT",
+  "scripts": {
+    "test": "ava -v",
+    "test:watch": "ava -v --watch",
+    "docs": "node ../analytics-cli/bin/run docs",
+    "build": "node ../../scripts/build/index.js",
+    "watch": "node ../../scripts/build/_watch.js",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish",
+    "es": "../../node_modules/.bin/babel-node ./testBabel.js"
+  },
+  "main": "lib/analytics-plugin-fullstory.cjs.js",
+  "globalName": "analyticsFullStory",
+  "jsnext:main": "lib/analytics-plugin-fullstory.es.js",
+  "module": "lib/analytics-plugin-fullstory.es.js",
+  "browser": {
+    "./lib/analytics-plugin-fullstory.cjs.js": "./lib/analytics-plugin-fullstory.browser.cjs.js",
+    "./lib/analytics-plugin-fullstory.es.js": "./lib/analytics-plugin-fullstory.browser.es.js"
+  },
+  "ava": {
+    "files": [
+      "**/**/*.test.js"
+    ],
+    "require": [
+      "esm",
+      "@babel/register"
+    ],
+    "verbose": true,
+    "failFast": true,
+    "sources": [
+      "**/*.{js,jsx}"
+    ]
+  },
+  "files": [
+    "dist",
+    "lib",
+    "README.md"
+  ],
+  "homepage": "https://github.com/DavidWells/analytics#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidWells/analytics.git"
+  },
+  "devDependencies": {
+    "@babel/core": "7.5.5",
+		"@babel/preset-env": "7.5.5",
+		"@babel/runtime": "7.5.5"
+  },
+  "dependencies": {
+    "camelcase": "^5.3.1"
+  }
+}
