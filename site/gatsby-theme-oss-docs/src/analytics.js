@@ -1,8 +1,13 @@
 import Analytics from 'analytics'
+import fullStoryPlugin from 'analytics-plugin-fullstory'
 import googleAnalytics from 'analytics-plugin-ga'
 
 const analytics = Analytics({
+  debug: true,
   plugins: [
+    // fullStoryPlugin({
+    //   org: 'NRVKK'
+    // }),
     googleAnalytics({
       trackingId: 'UA-126647663-4'
     }),
