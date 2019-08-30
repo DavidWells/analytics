@@ -6,7 +6,7 @@ import socialImage from '../assets/images/social.jpg'
 export default function SEO({ title, description, siteName, pathname }) {
   // TODO clean up logic
   let image = socialImage
-  let twitterImage = `https://getanalaytics.io${socialImage}`
+  let twitterImage = `https://getanalytics.io${socialImage}`
   if (pathname.match(/^\/plugins\//)) {
     const cleanName = pathname.replace(/^\/plugins\//, '').replace(/\/$/, '')
     const ignore = ['request', 'event-validation', 'do-not-track', 'tab-events', 'original-source', 'window-events']
