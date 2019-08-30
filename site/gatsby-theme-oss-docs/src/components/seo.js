@@ -3,21 +3,33 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import socialImage from '../assets/images/social.jpg'
 
-export default function SEO({ title, description, siteName }) {
+export default function SEO({ title, description, siteName, pathname }) {
+  // TODO clean up logic
+  let image = socialImage
+  let twitterImage = `https://getanalaytics.io${socialImage}`
+  if (pathname.match(/^\/plugins\//)) {
+    const cleanName = pathname.replace(/^\/plugins\//, '').replace(/\/$/, '')
+    const ignore = ['request', 'event-validation', 'do-not-track', 'tab-events', 'original-source', 'window-events']
+    if (!ignore.includes(cleanName)) {
+      image = `https://d36ubspakw5kl4.cloudfront.net/${cleanName}.png`
+      twitterImage = image
+    }
+  }
+
   return (
     <Helmet>
       <title>{title}</title>
       <meta property="og:title" content={title} />
       <meta property="og:site_name" content={siteName} />
       <meta property="og:description" content={description} />
-      <meta property="og:image" content={socialImage} />
+      <meta property="og:image" content={image} />
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:site" content="@apollographql" />
+      <meta name="twitter:site" content="@analytics" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta
         name="twitter:image"
-        content={'https://getanalytics.com' + socialImage}
+        content={twitterImage}
       />
       <link
         rel="stylesheet"

@@ -83,6 +83,7 @@ export default function Template(props) {
         title={frontmatter.title}
         description={frontmatter.description || description}
         siteName={title}
+        pathname={pathname}
       />
       <ResponsiveSidebar>
         {({sidebarRef, onWrapperClick, openSidebar, sidebarOpen}) => (
