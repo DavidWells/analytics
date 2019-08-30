@@ -1,31 +1,31 @@
-import PropTypes from 'prop-types';
-import React, {createContext, useState} from 'react';
-import styled from '@emotion/styled';
-import {GA_EVENT_CATEGORY_CODE_BLOCK, trackEvent} from '../utils';
+import PropTypes from 'prop-types'
+import React, {createContext, useState} from 'react'
+import styled from '@emotion/styled'
+import {GA_EVENT_CATEGORY_CODE_BLOCK, trackEvent} from '../utils'
 
 const Container = styled.div({
   position: 'relative'
-});
+})
 
-export const MultiCodeBlockContext = createContext({});
+export const MultiCodeBlockContext = createContext({})
 
 export function MultiCodeBlock(props) {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0)
 
   if (!Array.isArray(props.children)) {
-    return props.children;
+    return props.children
   }
 
   function handleLanguageChange(event) {
-    setActiveIndex(event.target.value);
+    setActiveIndex(event.target.value)
     trackEvent({
       eventCategory: GA_EVENT_CATEGORY_CODE_BLOCK,
       eventAction: 'change language',
       eventLabel: languages[event.target.value]
-    });
+    })
   }
 
-  const languages = props.children.map(child => child.props['data-language']);
+  const languages = props.children.map(child => child.props['data-language'])
 
   return (
     <Container>
@@ -37,17 +37,17 @@ export function MultiCodeBlock(props) {
               case 'javascript':
               case 'js':
               case 'jsx':
-                return 'JavaScript';
+                return 'JavaScript'
               case 'typescript':
               case 'ts':
               case 'tsx':
-                return 'TypeScript';
+                return 'TypeScript'
               case 'hooks-js':
-                return 'Hooks (JS)';
+                return 'Hooks (JS)'
               case 'hooks-ts':
-                return 'Hooks (TS)';
+                return 'Hooks (TS)'
               default:
-                return language;
+                return language
             }
           }),
           onLanguageChange: handleLanguageChange
@@ -56,9 +56,9 @@ export function MultiCodeBlock(props) {
         {props.children[activeIndex]}
       </MultiCodeBlockContext.Provider>
     </Container>
-  );
+  )
 }
 
 MultiCodeBlock.propTypes = {
   children: PropTypes.node.isRequired
-};
+}
