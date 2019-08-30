@@ -19,6 +19,7 @@ export default function SEO({ title, description, siteName, pathname }) {
   return (
     <Helmet>
       <title>{title}</title>
+      <meta name="description" content={description} />
       <meta property="og:title" content={title} />
       <meta property="og:site_name" content={siteName} />
       <meta property="og:description" content={description} />

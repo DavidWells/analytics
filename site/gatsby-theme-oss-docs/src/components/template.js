@@ -176,6 +176,7 @@ export const pageQuery = graphql`
       childMdx {
         frontmatter {
           title
+          subTitle
           description
         }
         headings(depth: h2) {

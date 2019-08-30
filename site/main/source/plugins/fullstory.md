@@ -1,6 +1,7 @@
 ---
 title: FullStory
-description: Using the FullStory plugin
+subTitle: Using the FullStory plugin
+description: Integrate FullStory visitor tracking with the open source analytics module
 ---
 
 FullStory enables pixel perfect replays of what your visitor is doing on your website or app. It can give you deep insight into user flows & potential bottlenecks of your applications.
