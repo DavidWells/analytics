@@ -81,6 +81,7 @@ export default function Template(props) {
     <Layout>
       <SEO
         title={frontmatter.title}
+        subTitle={frontmatter.subTitle}
         description={frontmatter.description || description}
         siteName={title}
         pathname={pathname}
@@ -164,6 +165,7 @@ export const pageQuery = graphql`
       childMarkdownRemark {
         frontmatter {
           title
+          subTitle
           description
         }
         headings(depth: h2) {

@@ -14,10 +14,16 @@ const Subheading = styled.h3({
 })
 
 export default function PageHeader(props) {
+  let subTitle
+  const subTitleContent = props.subTitle || props.description
+  if (subTitleContent) {
+    subTitle = <Subheading>{subTitleContent}</Subheading>
+  }
+
   return (
     <div className="header-wrapper">
       <Heading>{props.title}</Heading>
-      {props.description && <Subheading>{props.description}</Subheading>}
+      {subTitle}
     </div>
   )
 }

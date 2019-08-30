@@ -13,7 +13,7 @@ export const SupportedPlugins = () => {
     return tool.url
   }).map((tool) => {
     return (
-      <Link to={`/plugins/${tool.name}/`} className='provider'>
+      <Link key={tool.name} to={`/plugins/${tool.name}/`} className='provider'>
         <img alt={tool.name} src={`${cdnRoot}/${tool.image}`} />
       </Link>
     )
@@ -30,7 +30,7 @@ export const RequestPlugins = () => {
     return !tool.url
   }).map((tool) => {
     return (
-      <a className='provider' href={makeTweet(tool.name)} target='_blank' rel='noopener noreferrer'>
+      <a key={tool.name} className='provider' href={makeTweet(tool.name)} target='_blank' rel='noopener noreferrer'>
         <img alt={tool.name} src={`${cdnRoot}/${tool.image}`} />
       </a>
     )

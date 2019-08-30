@@ -92,6 +92,7 @@ const BodyContent = styled.div({
   },
   [['h2', 'h3', 'h4']]: {
     ':not(:first-child)': {
+    // ':not(:first-of-type)': {
       marginTop: 56
     }
   },

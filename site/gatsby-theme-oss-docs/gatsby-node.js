@@ -94,6 +94,20 @@ const pageFragment = `
   }
   frontmatter {
     title
+    subTitle
+  }
+  fields {
+    slug
+    version
+  }
+`
+
+const pageChildMdxFragment = `
+  internal {
+    type
+  }
+  frontmatter {
+    title
   }
   fields {
     slug
@@ -113,7 +127,7 @@ exports.createPages = async ({actions, graphql}, options) => {
               ${pageFragment}
             }
             childMdx {
-              ${pageFragment}
+              ${pageChildMdxFragment}
             }
           }
         }
