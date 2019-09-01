@@ -60,10 +60,12 @@ const customSideBarTitles = {
 export default function SidebarContent(props) {
   const sideBarContents = props.contents.reduce((acc, curr) => {
     const newPages = curr.pages.map((x) => {
+      // console.log('x', x)
+      const theTitle = x.pageTitle || x.title
       // check if top level nav for prefix
       const prefix = (!curr.title) ? '' : '- '
       // map custom names
-      const newTitle = customSideBarTitles[x.title] || `${prefix}${x.title}`
+      const newTitle = customSideBarTitles[theTitle] || `${prefix}${theTitle}`
       return {
         title: newTitle,
         path: x.path

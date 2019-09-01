@@ -5,14 +5,13 @@ import socialImage from '../assets/images/social.jpg'
 
 export default function SEO({ title, description, siteName, pathname }) {
   // TODO clean up logic
-  let image = socialImage
-  let twitterImage = `https://getanalytics.io${socialImage}`
+
+  let image = `https://getanalytics.io${socialImage}`
   if (pathname.match(/^\/plugins\//)) {
     const cleanName = pathname.replace(/^\/plugins\//, '').replace(/\/$/, '')
     const ignore = ['request', 'event-validation', 'do-not-track', 'tab-events', 'original-source', 'window-events']
     if (!ignore.includes(cleanName)) {
       image = `https://d36ubspakw5kl4.cloudfront.net/${cleanName}.png`
-      twitterImage = image
     }
   }
 
@@ -30,7 +29,7 @@ export default function SEO({ title, description, siteName, pathname }) {
       <meta name="twitter:description" content={description} />
       <meta
         name="twitter:image"
-        content={twitterImage}
+        content={image}
       />
       <link
         rel="stylesheet"

@@ -15,7 +15,7 @@ const Container = styled.nav({
 })
 
 const navConfig = {
-  '/docs': {
+  '/api': {
     text: 'Docs',
   },
   '/plugins': {

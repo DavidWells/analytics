@@ -93,7 +93,7 @@ const BodyContent = styled.div({
   [['h2', 'h3', 'h4']]: {
     ':not(:first-child)': {
     // ':not(:first-of-type)': {
-      marginTop: 56
+      marginTop: 36
     }
   },
   img: {
@@ -204,7 +204,9 @@ export default function PageContent(props) {
         />
       </MainContent>
       <Aside>
-        <AsideHeading>{props.title}</AsideHeading>
+        <AsideHeading>
+          {props.title}
+        </AsideHeading>
         {props.headings.length > 0 && (
           <SectionNav
             headings={props.headings}

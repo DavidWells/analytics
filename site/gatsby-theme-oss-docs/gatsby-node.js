@@ -79,8 +79,9 @@ function getSidebarContents(sidebarCategories, edges, version) {
         }
 
         const {frontmatter, fields} = getPageFromEdge(edge)
+        // console.log('frontmatter', frontmatter)
         return {
-          title: frontmatter.title,
+          title: frontmatter.pageTitle || frontmatter.title,
           path: fields.slug
         }
       })
@@ -94,6 +95,22 @@ const pageFragment = `
   }
   frontmatter {
     title
+    pageTitle
+    subTitle
+  }
+  fields {
+    slug
+    version
+  }
+`
+
+const pageFragmentTwo = `
+  internal {
+    type
+  }
+  frontmatter {
+    title
+    pageTitle
     subTitle
   }
   fields {
@@ -111,7 +128,7 @@ exports.createPages = async ({actions, graphql}, options) => {
             id
             relativePath
             childMarkdownRemark {
-              ${pageFragment}
+              ${pageFragmentTwo}
             }
             childMdx {
               ${pageFragment}

@@ -63,6 +63,7 @@ export default function Template(props) {
   const {hash, pathname} = props.location
   const {file, site} = props.data
   const {frontmatter, headings} = file.childMarkdownRemark || file.childMdx
+  // console.log('frontmatter', frontmatter)
   const {title, description, subtitle} = site.siteMetadata
   const {
     sidebarContents,
@@ -118,7 +119,7 @@ export default function Template(props) {
                 <PageHeader {...frontmatter} />
                 <hr />
                 <PageContent
-                  title={frontmatter.title}
+                  title={frontmatter.pageTitle || frontmatter.title}
                   pathname={pathname}
                   pages={pages}
                   headings={headings}
@@ -166,6 +167,7 @@ export const pageQuery = graphql`
         frontmatter {
           title
           subTitle
+          pageTitle
           description
         }
         headings(depth: h2) {
@@ -176,6 +178,7 @@ export const pageQuery = graphql`
       childMdx {
         frontmatter {
           title
+          pageTitle
           subTitle
           description
         }
