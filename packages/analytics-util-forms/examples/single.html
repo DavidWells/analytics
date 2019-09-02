@@ -1,0 +1,168 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Form utils</title>
+    <script type="text/javascript" src="../dist/analytics-util-forms.js" charset="utf-8"></script>
+    <style media="screen">
+      html {
+        padding: 20px;
+      }
+      body {
+        display: flex;
+      }
+      body > div {
+        width: 30%;
+      }
+      label {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <h2 class="form-title">Form 1</h2>
+      <form id="content-form" name="content-ebook-form" action="/content-thank-you/" method="POST">
+        <input type="hidden" name="event" value="site:formConversion" />
+        <input type="hidden" name="event_form_name" value="content-ebook-form" />
+        <label>
+          <span class="label">Email address</span>
+          <input maxlength="80" name="email" size="20" type="email" required value='email@email.com' />
+        </label>
+        <label>
+          <span class="label">CVC code</span>
+          <input maxlength="80" name="cvc" size="20" type="num" required value='11221' />
+        </label>
+        <label>
+          <span class="label">Credit card</span>
+          <input maxlength="80" name="credit-card" size="20" type="num" required value='222' />
+        </label>
+        <label>
+          <span class="label">secure</span>
+          <input maxlength="80" name="secure code" size="20" type="num" required value='xyz' />
+        </label>
+
+        <div class="form-checkbox">
+          <input type="checkbox" name="interested-in-sales"/>
+          <label for="content-Form__talk-to-us">
+            I’m interested in being contacted by sales
+          </label>
+        </div>
+
+        <label>
+          <span class="label">Your name</span>
+          <input maxlength="40" name="attr_name" size="20" type="text" />
+        </label>
+
+        <label>
+          <span class="label">Job Title</span>
+          <input maxlength="40" name="attr_job" size="20" type="text" />
+        </label>
+
+        <label>
+          <span class="label">Lol</span>
+          <input maxlength="40" name="lolx" size="20" type="text" value='yolo'/>
+        </label>
+
+        <label>
+          <span class="label">Organization</span>
+          <input maxlength="40" name="attr_org" size="20" type="text" />
+        </label>
+        <button type="submit" name="submit" class="button">
+          Submit Form
+        </button>
+      </form>
+    </div>
+    <div>
+      <h2 class="form-title">Form 2</h2>
+      <form id="content-form-two" name="two" action="/content-thank-you/" method="POST">
+
+        <label>
+          <span class="label">NAME</span>
+          <input maxlength="40" name="name" size="20" type="text" />
+        </label>
+
+        <label>
+          <span class="label">Title</span>
+          <input maxlength="40" name="job" size="20" type="text" />
+        </label>
+
+        <label>
+          <span class="label">hello</span>
+          <input maxlength="40" name="hello" size="20" type="text" value='yolo'/>
+        </label>
+
+        <label>
+          <span class="label">Organization</span>
+          <input maxlength="40" name="org" size="20" type="text" />
+        </label>
+        <button type="submit" name="submit" class="button">
+          Submit Form
+        </button>
+      </form>
+    </div>
+    <div>
+      <h2 class="form-title">Form 3</h2>
+      <form id="content-form-three" name="three" action="/content-thank-you/" method="POST">
+        <label>
+          <span class="label">Private</span>
+          <input maxlength="40" name="private" size="20" type="text" />
+        </label>
+        <label>
+          <span class="label">Organization</span>
+          <input maxlength="40" name="org" size="20" type="text" />
+        </label>
+        <table cellpadding="0" cellspacing="2">
+        	<tr>
+        		<td><input type="checkbox" name="how_hear[]" id="how_hear1" value="Website"  /></td>
+        		<td style="padding-left:3px"><label for="how_hear1">Website</label></td>
+        	</tr>
+        	<tr>
+        		<td><input type="checkbox" name="how_hear[]" id="how_hear2" value="TV Commercial" /></td>
+        		<td style="padding-left:3px"><label for="how_hear2">TV Commercial</label></td>
+        	</tr>
+        	<tr>
+        		<td><input type="checkbox" name="how_hear[]" id="how_hear3" value="Magazine Ad" /></td>
+        		<td style="padding-left:3px"><label for="how_hear3">Magazine Ad</label></td>
+        	</tr>
+        	<tr>
+        		<td><input type="checkbox" name="how_hear[]" id="how_hear4" value="Billboard" /></td>
+        		<td style="padding-left:3px"><label for="how_hear4">Billboard</label></td>
+        	</tr>
+        	<tr>
+        		<td><input type="checkbox" name="how_hear[]" id="how_hear5" value="Other" /></td>
+        		<td style="padding-left:3px"><label for="how_hear5">Other</label></td>
+        	</tr>
+        </table>
+
+        <button type="submit" name="submit" class="button">
+          Submit Form 3
+        </button>
+      </form>
+    </div>
+    <script type="text/javascript">
+      console.log('Exposed methods', analyticsUtilForms)
+      var formThree = window.document.forms[2]
+      const opts = {
+        excludeFields: [
+          /private/,
+        ],
+      }
+
+      analyticsUtilForms.onSubmit(formThree, opts, (event, data) => {
+        console.log('submit form', event.target)
+        console.log('submit form data', JSON.stringify(data, null, 2))
+      })
+
+      analyticsUtilForms.onChange(formThree, opts, (event, data) => {
+        console.log('change form', event.target)
+        console.log('change form data', JSON.stringify(data, null, 2))
+      })
+
+      var formTwo = window.document.forms[1]
+      analyticsUtilForms.listen(formTwo, {debug: true}, (event, data) => {
+        console.log('listen form', event.target)
+        console.log('listen form data', JSON.stringify(data, null, 2))
+      })
+    </script>
+  </body>
+</html>
