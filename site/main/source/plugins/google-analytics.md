@@ -1,6 +1,7 @@
 ---
-title: Google Analytics
+title: Adding Google Analytics to your app using Open source analytics
 description: Using the google analytics plugin
+pageTitle: Google Analytics
 ---
 
 Integration with google analytics for [analytics](https://www.npmjs.com/package/analytics)

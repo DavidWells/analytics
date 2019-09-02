@@ -6,8 +6,8 @@
   "author": "David Wells <hello@davidwells.io> (@davidwells)",
   "license": "MIT",
   "scripts": {
-    "start": "gatsby develop",
-    "develop": "gatsby develop",
+    "start": "rm -rf .cache && gatsby develop",
+    "develop": "rm -rf .cache && gatsby develop",
     "build": "gatsby build",
     "postbuild": "node scripts/sitemap.js",
     "serve": "http-server public",

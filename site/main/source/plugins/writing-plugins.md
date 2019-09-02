@@ -1,5 +1,6 @@
 ---
-title: Writing Custom Plugins
+title: How to write custom analytic plugins
+pageTitle: Writing Custom Plugins
 description: How to create an analytics plugin
 ---
 
@@ -22,7 +23,7 @@ They can be broken down into 2 types:
 
 Both have the same signature, as illustrated below.
 
-## 1. Provider plugins
+## **1. Provider plugins**
 
 A provider plugin typically integrates with a third party analytics tool.
 
@@ -67,7 +68,7 @@ export default function providerPluginExample(userConfig) {
 }
 ```
 
-## 2. Custom plugins
+## **2. Custom plugins**
 
 Non provider specific plugins or "custom plugins" can react to different lifecycle events, modify payloads to third party tools, or add additional functionality to the core `analytics` library.
 
@@ -186,3 +187,7 @@ E.g. An analytics plugin that does `awesome-stuff` should be named
 ```bash
 npm install analytics-plugin-awesome-stuff
 ```
+
+## Need help?
+
+If you have questions about what plugins can do, or how to build one feel free to reach out to [@DavidWells](https://twitter.com/davidwells) on twitter.

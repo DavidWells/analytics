@@ -1,5 +1,6 @@
 ---
-title: Using Listeners
+title: Listen & React to analytic events in your application with custom listeners
+pageTitle: Using Listeners
 description: Listen & reacting to analytic lifecycle events
 ---
 

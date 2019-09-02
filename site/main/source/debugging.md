@@ -1,11 +1,13 @@
 ---
-title: Debug mode
-description: Debug in local development mode
+title: Time travel debugging for Analytics
+description: Developer tools for debugging analytic instrumentation
+pageTitle: Debug mode
+subTitle: Debug in local development mode
 ---
 
 A huge focus of the `analytics` project is an improved developer experience.
 
-The library comes with a powerful suite of debug tools (thanks to [redux dev tools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en)).
+The library comes with a powerful suite of [debug tools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en) for local development.
 
 This includes **time travel debugging** so devs can walk through call chains & debug how different plugins are making remote calls & effecting the lifecycle.
 

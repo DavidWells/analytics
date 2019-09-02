@@ -1,18 +1,28 @@
 ---
-title: Getting started
-description: Start here to learn how to build apps with analytics
+title: Getting started with Analytics
+description: Start here to learn how to build apps with the analytics npm module
+pageTitle: Getting Started
+subTitle: Start here to learn how to build apps with the analytics
 ---
 
-This guide will walk you though installing and hooking up analytics in your application.
+This guide will walk you though installing & wiring up **analytics** in your application.
 
-Analytics is designed to work with any frontend framework or with static HTML.
+Analytics is designed to work with any frontend javascript framework and it works in plain static HTML. For framework specific implementation examples checkout the main [repo](https://github.com/DavidWells/analytics/tree/master/examples).
 
-## 1. Installation
+**Let's jump into it 👇**
 
-**Install the analytics module from [npm](https://www.npmjs.com/package/analytics)**
+## 1. Install the package
+
+Install the analytics module into your project via [npm](https://www.npmjs.com/package/analytics)
 
 ```bash
-npm install analytics --save
+npm install analytics
+```
+
+Or install via `yarn`
+
+```bash
+yarn add analytics
 ```
 
 ## 2. Include in project
@@ -20,7 +30,7 @@ npm install analytics --save
 Import `analytics` and initialize the library with the analytics plugins of your choice.
 
 ```js{2}
-/* src/analytics.js */
+/* example file src/analytics.js */
 import Analytics from 'analytics'
 
 const analytics = Analytics({
@@ -30,18 +40,23 @@ const analytics = Analytics({
   ]
 })
 
+/* export the instance for usage in your app */
 export default analytics
 ```
+
+See the [configuration docs](https://getanalytics.io/api/#configuration) for more details.
 
 ## 3. Connect plugins
 
 **Connect analytics with a third party analytics tool**
 
-Install a plugin or [create a plugin](http://getanalytics.io/plugins/writing-plugins) to connect to your third party analytics tool (example Google analytics or HubSpot).
+To connect `analytics` to your third party tools (e.g. Google analytics), install the [provider plugin](https://getanalytics.io/plugins).
 
-The example below is showing how to connect google analytics.
+If there is no plugin for your provider, you can [create your own plugin](http://getanalytics.io/plugins/writing-plugins) or send us a [request](https://getanalytics.io/plugins/request/).
 
-The plugin will load google analytics tracking script on the page & handle page tracking.
+The example below is showing how to connect google analytics using the [google analytics plugin](https://getanalytics.io/plugins/google-analytics/).
+
+This plugin will load the google analytics tracking script onto the page and handle page + custom event tracking.
 
 ```js{7-11}
 /* src/analytics.js */
@@ -62,10 +77,16 @@ export default analytics
 
 ## 4. Use in your app
 
-Use the analytics instance in your code base.
+After we've initialized `analytics`, we need to call the [core methods](https://getanalytics.io/api/) in our application code.
+
+Import the `analytics` instance created in the previous step and call a method:
+
+- `analytics.page()` to send page view data.
+- `analytics.track()` to send tracking events to your analytic providers
+- `analytics.identify` to identify a website visitor
 
 ```js
-// your instance loaded with plugins
+// Import analytics instance into your app and call it's methods
 import analytics from './analytics'
 
 /* Track page views */
@@ -82,6 +103,12 @@ analytics.track('buttonClicked', {
   value: 100
 })
 ```
+
+See the api docs for further details:
+
+- [Page](https://getanalytics.io/api/#analyticspage)
+- [Track](https://getanalytics.io/api/#analyticstrack)
+- [Identify](https://getanalytics.io/api/#analyticsidentify)
 
 ## Usage in React
 

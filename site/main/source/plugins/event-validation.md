@@ -1,6 +1,8 @@
 ---
-title: Event Validation
-description: Validating events before sending to third parties
+title: Add Event Validation to tracking events in analytics
+description: How to validating tracking events before sending to third party analytic tools & keep data clean
+pageTitle: Event Validation
+subTitle: Validating events before sending to third parties
 ---
 
 Validation for tracking events with [analytics](https://npmjs.com/package/analytics).

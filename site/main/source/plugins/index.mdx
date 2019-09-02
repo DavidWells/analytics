@@ -1,9 +1,19 @@
 ---
-title: Analytics Plugins
+title: Using analytic plugins to enhance, augment, & customize analytic implementations
+pageTitle: Analytics Plugins
 description: How to install & use analytics plugins
 ---
 
 The `analytics` library is extendable via plugins.
+
+Analytics is an event driven system driven by a lifecycle. This lifecycle exposes hooks for plugins to react & alter default library behavior. Plugins can do a number of things like:
+
+- Add a new analytics provider destination for tracking, page views, & identifying visitors
+- Enhance / enrich data flowing to third party tools
+- Allow visitors to opt out of tracking & manage preferences
+- Add custom functionality to your app based on user behavior
+- Enforce analytic naming conventions & keep data clean
+- ... etc.
 
 This guide will walk through installing & using plugins.
 

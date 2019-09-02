@@ -1,6 +1,8 @@
 ---
-title: API Reference
-description: Core analytics API
+title: Analytics API Reference Documentation
+description: The core analytics API docs for the open source analytics module
+pageTitle: API Reference
+subTitle: Core analytics API
 ---
 
 The core `analytics` API is exposed once the library is initialized with [configuration](#configuration).
