@@ -2,10 +2,11 @@
 
 Form utilities for [analytics](https://www.npmjs.com/package/analytics)
 
-<!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
-
+<!-- AUTO-GENERATED-CONTENT:START (TOC) -->
+- [`onSubmit`](#onsubmit)
+- [`onChange`](#onchange)
+- [`listen`](#listen)
 <!-- AUTO-GENERATED-CONTENT:END -->
-
 
 ## `onSubmit`
 
