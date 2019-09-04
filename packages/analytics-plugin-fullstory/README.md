@@ -97,7 +97,7 @@ First, find your FullStory account's `org` ID by clicking on **Settings > FullSt
 
 ```js
 fullStoryPlugin({
-  org: 'NRVXW' // org name from Full Story settings
+  org: 'your-org-name'
 })
 ```
 <!-- ANALYTICS_DOCS:END -->
