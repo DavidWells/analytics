@@ -1,69 +1,30 @@
+import changeHandler from './handler'
 import inBrowser from '../utils/inBrowser'
-import { getForm, getForms } from '../utils/getForms'
 import toArray from '../utils/toArray'
-import getCallback from '../utils/getCallback'
-import filterValues from '../utils/filter'
-import getFormData from '../utils/getFormValues'
+import args from '../utils/args'
 
 /**
- * Attach submission listener to single form
- * @param  {string|DOMNode} formElement - Form selector or form element
- * @param  {object} opts        [description]
- * @return {null}
+ * Attach onChange listener to form inputs
+ * @param  {string|array} formElement - Selectors or DOM Elements to attach listeners to
+ * @param  {Object} [options={}] -
+ * @param  {Function} callback - Change handler
+ * @return {Function} unsubscribe listeners
  */
-export function onChange(formElement, options, callback) {
+export function onChange(formElement, options = {}, callback) {
   if (!inBrowser) return false
-  const form = getForm(formElement)
-  const cb = getCallback(options, callback) || options.onChange
-  if (!cb) throw new Error('No callback supplied')
-  const opts = Object.assign({}, options, {
-    onChange: cb
-  })
-  const changeHandler = processChanges(opts, form)
-  const inputs = toArray(form.elements)
-  inputs.forEach((input) => {
-    input.addEventListener('change', changeHandler, false)
-  })
-
-  // Detach event listeners
-  return () => {
-    inputs.forEach((input) => {
-      input.removeEventListener('change', changeHandler, false)
-    })
-  }
-}
-
-/**
- * Attach submission listeners to forms
- * @param  {Object} [opts={}] [description]
- * @return {[type]}           [description]
- */
-export function addChangeListeners(opts = {}) {
-  if (!inBrowser) return false
-  const formsToProcess = getForms(opts)
-  const listeners = formsToProcess.map((f) => {
-    return onChange(f, opts)
-  })
-  return () => {
-    listeners.forEach((unsub) => unsub())
-  }
-}
-
-function processChanges(opts, form) {
-  const { onChange } = opts
-  return (event) => {
-    const input = event.target
-    const allValues = getFormData(form)
-
-    const name = input.name || input.id
-    const values = filterValues({
-      [`${name}`]: allValues[name]
-    }, opts)
-
-    if (Object.keys(values).length && onChange && typeof onChange === 'function') {
-      onChange(event, {
-        [`${name}`]: allValues[name]
-      })
+  const type = 'change'
+  const [settings, forms] = args(formElement, options, callback, type)
+  // Attach Listeners
+  const listeners = forms.map((form) => {
+    const handler = changeHandler(settings, form)
+    const inputs = (form.nodeName === 'INPUT') ? [form] : toArray(form.elements)
+    // Attach listeners
+    inputs.forEach((i) => i.addEventListener(type, handler, false))
+    // Unsubscribe event listeners
+    return () => {
+      inputs.forEach((i) => i.removeEventListener(type, handler, false))
     }
-  }
+  })
+  // Detach event listeners
+  return () => listeners.forEach((unsub) => unsub())
 }

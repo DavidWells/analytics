@@ -1,5 +1,5 @@
 /**
- * Convert node list to array
+ * Convert DOM node list to array
  * @param  {nodeList} obj - DOM node list
  * @return {array} array of nodes
  */

@@ -1,6 +1,6 @@
 import toArray from './toArray'
 
-export function getForms(opts) {
+export function getForms(forms, opts) {
   const { excludeForms, includeForms } = opts
   /* eslint-disable no-mixed-operators */
   if (
@@ -11,45 +11,46 @@ export function getForms(opts) {
   /* eslint-enable */
   let excludeNodes = []
   if (excludeForms) {
-    excludeNodes = getNodes(excludeForms)
+    excludeNodes = getSelectors(excludeForms, opts.debug)
   }
-
-  const forms = getNodes(includeForms || toArray(window.document.forms))
-
-  const formsToProcess = forms.filter((f) => {
+  const find = (Array.isArray(forms)) ? forms : [forms]
+  const formsToProcess = getSelectors(find, opts.debug).filter((f) => {
     if (excludeNodes.includes(f)) return false
     return true
   })
-
+  // console.log('formsToProcess', formsToProcess)
   return formsToProcess
 }
 
-export function getForm(formElement) {
-  const form = getNode(formElement)
-  if (!form) throw new Error('Form not found')
-  if (form.nodeName !== 'FORM') throw new Error('Selector passed in not a valid Form')
-  return form
+function getSelectors(array, debug) {
+  return array.reduce((acc, selector) => {
+    const elements = getSelector(selector)
+    if (!elements.length) {
+      if (debug) console.log(`${selector} not found`)
+      return acc
+    }
+    const formNodes = elements.filter((n) => {
+      if (!n || (n.nodeName !== 'FORM' && n.nodeName !== 'INPUT')) {
+        console.log('Selector passed in not a valid Form')
+        return false
+      }
+      return true
+    })
+    acc = acc.concat(formNodes)
+    return acc
+  }, [])
 }
 
-/**
- * Return list of DOM nodes
- * @param  {[type]} array [description]
- * @return {[type]}       [description]
- */
-function getNodes(array) {
-  return array.map((selector) => getNode(selector))
-}
-
-function getNode(selector) {
+function getSelector(selector) {
   if (isElement(selector)) {
-    return selector
+    return [selector]
   }
   if (typeof selector !== 'string') {
     throw new Error('Selector must be string')
   }
-  return document.querySelector(selector)
+  return toArray(document.querySelectorAll(selector))
 }
 
-function isElement(element) {
+export function isElement(element) {
   return element instanceof Element || element instanceof HTMLDocument
 }

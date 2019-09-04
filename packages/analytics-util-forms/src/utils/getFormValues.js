@@ -118,6 +118,13 @@ export function getFieldData(form, fieldName, options = {trim: false}) {
   return (data.length > 0 ? data : null)
 }
 
+export function getValue(element, name) {
+  const val = (element.nodeName === 'FORM') ? getFormData(element)[name] : getFormElementValue(element)
+  return {
+    [`${name}`]: val
+  }
+}
+
 /**
  * @param {HTMLElement} element a form element.
  * @param {booleam} trim should values for text entry inputs be trimmed?

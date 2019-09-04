@@ -1,7 +1,6 @@
-import interceptForm from './intercept'
 import inBrowser from '../utils/inBrowser'
-import getCallback from '../utils/getCallback'
-import { getForm, getForms } from '../utils/getForms'
+import formatArgs from '../utils/args'
+import submitHandler from './handler'
 
 /**
  * Attach submission listener to single form
@@ -11,30 +10,16 @@ import { getForm, getForms } from '../utils/getForms'
  */
 export function onSubmit(formElement, options = {}, callback) {
   if (!inBrowser) return false
-  const form = getForm(formElement)
-  const cb = getCallback(options, callback) || options.onSubmit
-  if (!cb) throw new Error('No callback supplied')
-  const opts = Object.assign({}, options, {
-    onSubmit: cb
-  })
-  const processingFunc = interceptForm(opts)
-  form.addEventListener('submit', processingFunc, false)
-  // Detach event listeners
-  return () => {
-    form.removeEventListener('submit', processingFunc, false)
-  }
-}
-
-/**
- * Attach submission listeners to forms
- * @param  {Object} [options={}] [description]
- * @return {Function} detach onSubmit listeners
- */
-export function addSubmitListeners(options = {}) {
-  if (!inBrowser) return false
-  const formsToProcess = getForms(options)
-  const listeners = formsToProcess.map((form) => {
-    return onSubmit(form, options)
+  const type = 'submit'
+  const [settings, forms] = formatArgs(formElement, options, callback, type)
+  const handler = submitHandler(settings)
+  // Attach Listeners
+  const listeners = forms.map((form) => {
+    form.addEventListener(type, handler, false)
+    // Detach event listeners
+    return () => {
+      form.removeEventListener(type, handler, false)
+    }
   })
   return () => {
     listeners.forEach((unsub) => unsub())

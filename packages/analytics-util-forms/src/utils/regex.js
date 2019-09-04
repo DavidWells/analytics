@@ -119,4 +119,9 @@ const ignorePatterns = [
   */
 ]
 
+/*
+  Reserved values
+  /^\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}$/
+*/
+
 export default ignorePatterns

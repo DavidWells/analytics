@@ -92,6 +92,11 @@
         </label>
 
         <label>
+          <span class="label">Filter this</span>
+          <input maxlength="40" name="testing-filter" size="20" type="text" value='1111-2222-2222-1111'/>
+        </label>
+        
+        <label>
           <span class="label">Organization</span>
           <input maxlength="40" name="org" size="20" type="text" />
         </label>
@@ -151,10 +156,10 @@
         console.log('submit form', event.target)
         console.log('submit data', JSON.stringify(data, null, 2))
       },
-      // onChange: (event, data) => {
-      //   console.log('change form', event.target)
-      //   console.log('change data', JSON.stringify(data, null, 2))
-      // },
+      onChange: (event, data) => {
+        console.log('change form', event.target)
+        console.log('change data', JSON.stringify(data, null, 2))
+      },
       /* // Include only specific forms. Omit for all
       includeForms: [
         'form[id=content-form]',
@@ -176,6 +181,10 @@
       //* // Custom filter function
       filter: (fieldName, value) => {
         if (fieldName === 'hello') {
+          return false
+        }
+        // credit card number
+        if (value.match(/^\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}$/)) {
           return false
         }
         return true

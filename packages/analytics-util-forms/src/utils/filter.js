@@ -22,11 +22,11 @@ export default function filter(values, opts) {
       return false
     }
     if (filter && typeof filter === 'function') {
-      const shouldFilter = filter(key, values[key])
-      if (debug && shouldFilter) {
-        console.log(`Filter ${key} field via filterFunction`)
+      const shouldKeep = filter(key, values[key])
+      if (debug && !shouldKeep) {
+        console.log(`Filtering '${key}' out field`)
       }
-      return shouldFilter
+      return shouldKeep
     }
     return true
   }).reduce((acc, key) => {

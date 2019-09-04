@@ -1,27 +1,17 @@
-import { onSubmit, addSubmitListeners } from './onSubmit'
-import { onChange, addChangeListeners } from './onChange'
+import { onSubmit } from './onSubmit'
+import { onChange } from './onChange'
 
-export function listen(form, opts, cb) {
+/**
+ * Listen to onChange & onSubmit for forms
+ * @param  {string|array} forms - Selectors or DOM Elements to attach listeners to
+ * @param  {object} options
+ * @param  {function} callback - Submission handler
+ * @return {function} detach listeners
+ */
+export function listen(forms, options, callback) {
   const listeners = [
-    onSubmit(form, opts, cb),
-    onChange(form, opts, cb)
+    onSubmit(forms, options, callback),
+    onChange(forms, options, callback)
   ]
-  return () => {
-    listeners.forEach((unsub) => {
-      unsub()
-    })
-  }
-}
-
-export function listenAll(opts) {
-  const doIt = [
-    addChangeListeners(opts),
-    addSubmitListeners(opts)
-  ]
-
-  return () => {
-    doIt.forEach((unsub) => {
-      unsub()
-    })
-  }
+  return () => listeners.forEach((unsub) => unsub())
 }

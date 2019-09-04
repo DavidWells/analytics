@@ -1,23 +1,17 @@
-import { onSubmit, addSubmitListeners } from './onSubmit'
-import { onChange, addChangeListeners } from './onChange'
-import { listen, listenAll } from './listen'
+import { onSubmit } from './onSubmit'
+import { onChange } from './onChange'
+import { listen } from './listen'
 import submitForm from './onSubmit/submit'
 import ignorePatterns from './utils/regex'
 
 export {
-  /* single target form submission listener */
+  /* Listen to onSubmit events on 1 or more forms */
   onSubmit,
-  /* single target form on change listener */
+  /* Listen to onChange events on 1 or more forms */
   onChange,
-  /* Single target listen to onSubmit & onChange */
+  /* Listen to onChange & onSubmit events on 1 or more forms */
   listen,
-  /* attach form submission listener to all forms */
-  addSubmitListeners,
-  /* attach form change listener to all forms */
-  addChangeListeners,
-  /* Listen to onSubmit & onChange on all forms */
-  listenAll,
-  /* Submit form */
+  /* Submit form via JS */
   submitForm,
   /* Regex ignore patterns */
   ignorePatterns
