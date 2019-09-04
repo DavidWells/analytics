@@ -194,7 +194,8 @@
 
       const formOne = document.querySelector("form[id=content-form-three]")
       const x = ['form[id=content-form-three]', 'input[id=xxx]']
-      analyticsUtilForms.listen(formOne, {debug: true}, (event, data) => {
+      analyticsUtilForms.listen(formOne, {debug: true}, (event, data, type) => {
+        console.log('listen type', type)
         console.log('listen form', event.target)
         console.log('listen form data', JSON.stringify(data, null, 2))
       })

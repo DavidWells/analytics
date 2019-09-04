@@ -16,7 +16,7 @@ export function onChange(formElement, options = {}, callback) {
   const [settings, forms] = args(formElement, options, callback, type)
   // Attach Listeners
   const listeners = forms.map((form) => {
-    const handler = changeHandler(settings, form)
+    const handler = changeHandler(settings, form, type)
     const inputs = (form.nodeName === 'INPUT') ? [form] : toArray(form.elements)
     // Attach listeners
     inputs.forEach((i) => i.addEventListener(type, handler, false))

@@ -6,13 +6,14 @@ import submitHandler from './handler'
  * Attach submission listener to single form
  * @param  {string|DOMNode} formElement - Form selector or form element
  * @param  {object} options -
+ * @param  {Function} callback - Submission handler
  * @return {function} detach onSubmit listener
  */
 export function onSubmit(formElement, options = {}, callback) {
   if (!inBrowser) return false
   const type = 'submit'
   const [settings, forms] = formatArgs(formElement, options, callback, type)
-  const handler = submitHandler(settings)
+  const handler = submitHandler(settings, type)
   // Attach Listeners
   const listeners = forms.map((form) => {
     form.addEventListener(type, handler, false)

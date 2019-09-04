@@ -1,7 +1,7 @@
 import filterValues from '../utils/filter'
 import { getValue } from '../utils/getFormValues'
 
-export default function processChanges(opts, element) {
+export default function processChanges(opts, element, type) {
   const { onChange } = opts
   return (event) => {
     const input = event.target
@@ -11,7 +11,7 @@ export default function processChanges(opts, element) {
     const values = filterValues(val, opts)
 
     if (Object.keys(values).length && onChange && typeof onChange === 'function') {
-      onChange(event, val)
+      onChange(event, val, type)
     }
   }
 }
