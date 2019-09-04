@@ -13,7 +13,7 @@ export default function formatArgs(elem, opts, cb, type) {
   if (!callback) throw new Error(`No handler. Add '${eventType}' option or trailing function arg`)
   // Get Form elements
   let find = elem
-  if (firstArgOpts) {
+  if (find === 'all' || firstArgOpts) {
     find = options.includeForms || toArray(window.document.forms)
   }
   const forms = getForms(find, options)

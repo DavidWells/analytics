@@ -1,6 +1,6 @@
-# Analytics Form Utilities
+# Form Utilities
 
-Form utilities for [analytics](https://www.npmjs.com/package/analytics)
+Form utilities functions for [analytics](https://www.npmjs.com/package/analytics)
 
 <!-- AUTO-GENERATED-CONTENT:START (TOC) -->
 - [`onSubmit`](#onsubmit)
@@ -15,17 +15,17 @@ Listen to form submissions & do stuff with inputs.
 This will incept form submissions & fire a custom callback before submitting the form normally
 
 ```js
-import forms from 'analytic-util-forms'
+import { onSubmit } from 'analytic-util-forms'
 
 // Add to single form
 const formOne = document.querySelector("form[id=one]")
-forms.onSubmit(formOne, (event, data) => {
+onSubmit(formOne, (event, data) => {
   console.log('form', event.target)
   console.log('form data', JSON.stringify(data, null, 2))
 })
 
 // Add to single form with options
-forms.onSubmit('form[id=two]', {
+onSubmit('form[id=two]', {
   /* Turn on debug to disable submissions and see values */
   debug: true,
   /* Turn off sensitive values filter */
@@ -52,7 +52,7 @@ forms.onSubmit('form[id=two]', {
 })
 
 // Remove onSubmit listener
-const cleanUpFuntion = forms.onSubmit('form[id=three]', (event, data) => {
+const cleanUpFuntion = onSubmit('form[id=three]', (event, data) => {
   console.log('form', event.target)
   console.log('form data', JSON.stringify(data, null, 2))
 })
@@ -60,7 +60,7 @@ cleanUpFuntion() // <-- call function to clean up listener
 
 
 // Listen to all forms on page
-forms.onSubmit('all', (event, data) => {
+onSubmit('all', (event, data) => {
   console.log('form', event.target)
   console.log('form data', JSON.stringify(data, null, 2))
 })
@@ -71,17 +71,17 @@ forms.onSubmit('all', (event, data) => {
 Listen to form changes & do stuff with inputs.
 
 ```js
-import forms from 'analytic-util-forms'
+import { onChange } from 'analytic-util-forms'
 
 // Add to single form with no options
 const formOne = document.querySelector("form[id=one]")
-forms.onChange(formOne, (event, data) => {
+onChange(formOne, (event, data) => {
   console.log('form', event.target)
   console.log('form data', JSON.stringify(data, null, 2))
 })
 
 // Add to single form with options
-forms.onChange('form[id=two]', {
+onChange('form[id=two]', {
   /* Turn on debug to disable submissions and see values */
   debug: true,
   /* Turn off sensitive values filter */
@@ -108,14 +108,14 @@ forms.onChange('form[id=two]', {
 })
 
 // Remove onChange listener
-const cleanUpFuntion = forms.onChange('form[id=three]', (event, data) => {
+const cleanUpFuntion = onChange('form[id=three]', (event, data) => {
   console.log('form', event.target)
   console.log('change data', JSON.stringify(data, null, 2))
 })
 cleanUpFuntion() // <-- call function to clean up listener
 
 // Listen to all forms on page
-forms.onChange('all', (event, data) => {
+onChange('all', (event, data) => {
   console.log('form', event.target)
   console.log('form data', JSON.stringify(data, null, 2))
 })
@@ -126,18 +126,18 @@ forms.onChange('all', (event, data) => {
 Listen will attach `onChange` & `onSubmit` listeners to forms
 
 ```js
-import forms from 'analytic-util-forms'
+import { listen } from 'analytic-util-forms'
 
 // Add to single form with no options
 const formOne = document.querySelector("form[id=one]")
-forms.listen(formOne, (event, data, type) => {
+listen(formOne, (event, data, type) => {
   console.log('listen type', type)
   console.log('listen form', event.target)
   console.log('listen form data', JSON.stringify(data, null, 2))
 })
 
 // Listen to all forms with options
-forms.listen({
+listen({
   /* Turn on debug to disable submissions and see values */
   debug: true,
   /* Turn off sensitive values filter */

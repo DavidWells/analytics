@@ -95,7 +95,7 @@
           <span class="label">Filter this</span>
           <input maxlength="40" name="testing-filter" size="20" type="text" value='1111-2222-2222-1111'/>
         </label>
-        
+
         <label>
           <span class="label">Organization</span>
           <input maxlength="40" name="org" size="20" type="text" />
@@ -146,7 +146,7 @@
       // window.location.href = 'https://google.com'
     }, false)
 
-    analyticsUtilForms.listen({
+    analyticsUtilForms.listen('all', {
       /* Turn on debug to disable submissions and see values */
       debug: true,
       /* Turn off sensitive values filter */
@@ -180,17 +180,27 @@
       /**/
       //* // Custom filter function
       filter: (fieldName, value) => {
+        if (!value) return true
+        // Exclude fieldName hello
         if (fieldName === 'hello') {
           return false
         }
+        if (Array.isArray(value)) {
+          return !value.some((v) => isCC(v))
+        }
+        console.log('value', value)
         // credit card number
-        if (value.match(/^\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}$/)) {
+        if (isCC(value)) {
           return false
         }
         return true
       }
       /**/
     })
+
+    function isCC(value) {
+      return value.match(/^\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}$/)
+    }
     </script>
   </body>
 </html>
