@@ -137,36 +137,43 @@
     <script type="text/javascript">
     console.log('Exposed methods', analyticsUtilForms)
 
-    // window.document.forms[0].addEventListener('submit', () => {
-    //   alert('hi')
-    // }, false)
+    window.document.forms[0].addEventListener('submit', () => {
+      // window.location.href = 'https://google.com'
+    }, false)
 
-    analyticsUtilForms.addSubmitListeners({
+    analyticsUtilForms.listen({
       /* Turn on debug to disable submissions and see values */
       debug: true,
+      /* Turn off sensitive values filter */
+      disableFilter: false,
       /* Custom functionality handler for onSubmit */
       onSubmit: (event, data) => {
-        console.log('data')
-        console.log(JSON.stringify(data, null, 2))
-        console.log('form', event.target)
+        console.log('submit form', event.target)
+        console.log('submit data', JSON.stringify(data, null, 2))
       },
-      /* Include only specific forms. Omit for all */
-      // includeForms: [
-      //   'form[id=content-form]',
-      //   window.document.forms[1]
-      // ],
-      // /* Exclude forms by selectors  */
+      // onChange: (event, data) => {
+      //   console.log('change form', event.target)
+      //   console.log('change data', JSON.stringify(data, null, 2))
+      // },
+      /* // Include only specific forms. Omit for all
+      includeForms: [
+        'form[id=content-form]',
+        //  window.document.forms[1]
+      ],
+      /**/
+      /* // Exclude forms by selectors
       excludeForms: [
-        'form[name=two]',
+        // 'form[name=two]',
         // window.document.forms[2]
       ],
+      /**/
       //* // Exclude field by name or regex pattern of name attribute
       excludeFields: [
         /private/,
         'lol'
       ],
       /**/
-      /*
+      //* // Custom filter function
       filter: (fieldName, value) => {
         if (fieldName === 'hello') {
           return false

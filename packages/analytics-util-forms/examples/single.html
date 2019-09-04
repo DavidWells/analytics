@@ -7,10 +7,10 @@
       html {
         padding: 20px;
       }
-      body {
+      body .forms {
         display: flex;
       }
-      body > div {
+      body .forms > div {
         width: 30%;
       }
       label {
@@ -19,7 +19,10 @@
     </style>
   </head>
   <body>
-    <div>
+    <input id="search" type='text' />
+    <button id="hi">hi</button>
+  <div class='forms'>
+    <div >
       <h2 class="form-title">Form 1</h2>
       <form id="content-form" name="content-ebook-form" action="/content-thank-you/" method="POST">
         <input type="hidden" name="event" value="site:formConversion" />
@@ -101,6 +104,18 @@
       </form>
     </div>
     <div>
+      <h2 class="form-title">Form 2 clone</h2>
+      <form id="content-form-two" name="two" action="/content-thank-you/" method="POST">
+        <label>
+          <span class="label">NAME</span>
+          <input maxlength="40" name="name" size="20" type="text" />
+        </label>
+        <button type="submit" name="submit" class="button">
+          Submit Form
+        </button>
+      </form>
+    </div>
+    <div>
       <h2 class="form-title">Form 3</h2>
       <form id="content-form-three" name="three" action="/content-thank-you/" method="POST">
         <label>
@@ -139,27 +154,47 @@
         </button>
       </form>
     </div>
+  </div>
     <script type="text/javascript">
       console.log('Exposed methods', analyticsUtilForms)
-      var formThree = window.document.forms[2]
+      var formThree = document.getElementById('content-form-three')
       const opts = {
+        debug: true,
         excludeFields: [
           /private/,
         ],
       }
+      //*
+      const forms = [
+        window.document.forms[1],
+        window.document.forms[2]
+      ]
+      /**/
 
-      analyticsUtilForms.onSubmit(formThree, opts, (event, data) => {
+      /*
+      analyticsUtilForms.onChange('all', (event, data) => {
+        console.log('event', event)
+        console.log('data', data)
+      })
+      /**/
+
+      /*
+      analyticsUtilForms.onSubmit('input[id=search]', opts, (event, data) => {
         console.log('submit form', event.target)
         console.log('submit form data', JSON.stringify(data, null, 2))
       })
+      /**/
 
-      analyticsUtilForms.onChange(formThree, opts, (event, data) => {
+      /*
+      analyticsUtilForms.onChange('input[id=search]', opts, (event, data) => {
         console.log('change form', event.target)
         console.log('change form data', JSON.stringify(data, null, 2))
       })
+      /**/
 
-      var formTwo = window.document.forms[1]
-      analyticsUtilForms.listen(formTwo, {debug: true}, (event, data) => {
+      const formOne = document.querySelector("form[id=content-form-three]")
+      const x = ['form[id=content-form-three]', 'input[id=xxx]']
+      analyticsUtilForms.listen(formOne, {debug: true}, (event, data) => {
         console.log('listen form', event.target)
         console.log('listen form data', JSON.stringify(data, null, 2))
       })
