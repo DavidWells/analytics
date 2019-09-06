@@ -32,7 +32,7 @@ const formErr = `Invalid form`
  *   submittable value(s) held in the form's .elements collection, with
  *   properties named as per element names or ids.
  */
-export default function getFormData(form, options = {trim: false}) {
+export function getFormData(form, options = {trim: false}) {
   if (!form || !form.elements) {
     throw new Error(formErr)
   }
@@ -59,7 +59,7 @@ export default function getFormData(form, options = {trim: false}) {
   // around elements which contain multiple inputs.
   for (let i = 0, l = elementNames.length; i < l; i++) {
     elementName = elementNames[i]
-    let value = getFieldData(form, elementName, options)
+    let value = getInputData(form, elementName, options)
     if (value != null) {
       data[elementName] = value
     }
@@ -76,12 +76,12 @@ export default function getFormData(form, options = {trim: false}) {
  *   named element from its .elements collection, or null if there was no
  *   element with that name or the element had no submittable value(s).
  */
-export function getFieldData(form, fieldName, options = {trim: false}) {
+export function getInputData(form, fieldName, options = {trim: false}) {
   if (!form) {
     throw new Error(formErr)
   }
   if (!fieldName && toString.call(fieldName) !== '[object String]') {
-    throw new Error(`Field name is required by getFieldData`)
+    throw new Error(`Field name is required by getInputData`)
   }
 
   let element = form.elements[fieldName]
@@ -90,7 +90,7 @@ export function getFieldData(form, fieldName, options = {trim: false}) {
   }
 
   if (!NODE_LIST_CLASSES[toString.call(element)]) {
-    return getFormElementValue(element, options.trim)
+    return getValue(element, options.trim)
   }
 
   // Deal with multiple form controls which have the same name
@@ -103,7 +103,7 @@ export function getFieldData(form, fieldName, options = {trim: false}) {
     if (allRadios && element[i].type !== 'radio') {
       allRadios = false
     }
-    let value = getFormElementValue(element[i], options.trim)
+    let value = getValue(element[i], options.trim)
     if (value != null) {
       data = data.concat(value)
     }
@@ -118,20 +118,13 @@ export function getFieldData(form, fieldName, options = {trim: false}) {
   return (data.length > 0 ? data : null)
 }
 
-export function getValue(element, name) {
-  const val = (element.nodeName === 'FORM') ? getFormData(element)[name] : getFormElementValue(element)
-  return {
-    [`${name}`]: val
-  }
-}
-
 /**
  * @param {HTMLElement} element a form element.
  * @param {booleam} trim should values for text entry inputs be trimmed?
  * @return {(string|Array.<string>|File|Array.<File>)} the element's submittable
  *   value(s), or null if it had none.
  */
-export function getFormElementValue(element, trim) {
+export function getValue(element, trim) {
   let value = null
   let {type} = element
 
@@ -173,6 +166,7 @@ export function getFormElementValue(element, trim) {
   if (!CHECKED_INPUT_TYPES[type]) {
     value = (trim ? element.value.replace(TRIM_RE, '') : element.value)
   } else if (element.checked) {
+    console.log('element.value', element.value)
     value = element.value
   }
 

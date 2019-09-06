@@ -1,8 +1,9 @@
+import isForm from '../utils/isForm'
 import submitForm from './submit'
 import filterValues from '../utils/filter'
-import getFormData from '../utils/getFormValues'
+import { getFormData } from '../utils/getFormValues'
 
-export default function interceptForm(opts = {}, type) {
+export default function interceptForm(opts = {}, element, type) {
   const { onSubmit, disableFilter, debug } = opts
 
   const intercept = function (event) {
@@ -11,9 +12,12 @@ export default function interceptForm(opts = {}, type) {
     const form = event.target
     const rawValues = getFormData(form)
     /* Filter sensitive values */
-    const values = (disableFilter) ? rawValues : filterValues(rawValues, opts)
+    const values = (disableFilter) ? rawValues : filterValues(rawValues, opts, type)
     if (onSubmit && typeof onSubmit === 'function') {
-      onSubmit(event, values, type)
+      onSubmit(event, values, {
+        type: type,
+        form: isForm(element) ? element : null
+      })
     }
     if (!debug) {
       /* Release form */

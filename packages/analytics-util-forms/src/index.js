@@ -1,7 +1,9 @@
 import { onSubmit } from './onSubmit'
 import { onChange } from './onChange'
 import { listen } from './listen'
+import { getFormData, getInputData } from './utils/getFormValues'
 import submitForm from './onSubmit/submit'
+import filterData from './utils/filter'
 import ignorePatterns from './utils/regex'
 
 export {
@@ -13,6 +15,12 @@ export {
   listen,
   /* Submit form via JS */
   submitForm,
+  /* Get values from form inputs */
+  getFormData,
+  /* Get value from single form input */
+  getInputData,
+  /* Filter out & omit sensitive fields */
+  filterData,
   /* Regex ignore patterns */
-  ignorePatterns
+  ignorePatterns,
 }

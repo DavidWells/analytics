@@ -13,9 +13,9 @@ export function onSubmit(formElement, options = {}, callback) {
   if (!inBrowser) return false
   const type = 'submit'
   const [settings, forms] = formatArgs(formElement, options, callback, type)
-  const handler = submitHandler(settings, type)
   // Attach Listeners
   const listeners = forms.map((form) => {
+    const handler = submitHandler(settings, form, type)
     form.addEventListener(type, handler, false)
     // Detach event listeners
     return () => {

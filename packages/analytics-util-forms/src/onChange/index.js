@@ -1,4 +1,5 @@
 import changeHandler from './handler'
+import isForm from '../utils/isForm'
 import inBrowser from '../utils/inBrowser'
 import toArray from '../utils/toArray'
 import args from '../utils/args'
@@ -17,7 +18,7 @@ export function onChange(formElement, options = {}, callback) {
   // Attach Listeners
   const listeners = forms.map((form) => {
     const handler = changeHandler(settings, form, type)
-    const inputs = (form.nodeName === 'INPUT') ? [form] : toArray(form.elements)
+    const inputs = (isForm(form)) ? toArray(form.elements) : [form]
     // Attach listeners
     inputs.forEach((i) => i.addEventListener(type, handler, false))
     // Unsubscribe event listeners

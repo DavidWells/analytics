@@ -6,6 +6,10 @@ Form utilities functions for [analytics](https://www.npmjs.com/package/analytics
 - [`onSubmit`](#onsubmit)
 - [`onChange`](#onchange)
 - [`listen`](#listen)
+- [`submitForm`](#submitform)
+- [`getFormData`](#getformdata)
+- [`getInputData`](#getinputdata)
+- [`filterData`](#filterdata)
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 ## `onSubmit`
@@ -60,7 +64,7 @@ cleanUpFuntion() // <-- call function to clean up listener
 
 
 // Listen to all forms on page
-onSubmit('all', (event, data) => {
+onSubmit('all', (event, data, meta) => {
   console.log('form', event.target)
   console.log('form data', JSON.stringify(data, null, 2))
 })
@@ -182,4 +186,71 @@ listen({
   }
   /**/
 })
+```
+
+## `submitForm`
+
+Submit form via JS
+
+```js
+import { listen } from 'analytic-util-forms'
+
+```
+
+## `getFormData`
+
+Get values from form inputs
+
+```js
+import { getFormData } from 'analytic-util-forms'
+
+const form = document.querySelector("form[id=one]")
+const data = getFormData(form)
+console.log('data', JSON.stringify(data, null, 2))
+```
+
+## `getInputData`
+
+Get value from single form input
+
+```js
+import { getInputData } from 'analytic-util-forms'
+
+const form = document.querySelector("form[id=one]")
+const inputName = 'email'
+const inputData = getInputData(form, inputName)
+console.log('inputData', JSON.stringify(inputData, null, 2))
+```
+
+## `filterData`
+
+Filter out & omit sensitive fields
+
+```js
+import { getFormData, getInputData, filterData } from 'analytic-util-forms'
+
+const form = document.querySelector("form[id=one]")
+const inputName = 'email'
+const rawData = getFormData(form, inputName)
+console.log('rawData', JSON.stringify(rawData, null, 2))
+
+const redactedData = filterData(rawData, {
+  /* Exclude field by name or regex pattern of name attribute */
+  excludeFields: [
+    /regex/,
+    'name-attribute'
+  ],
+  /* Custom filter function */
+  filter: (fieldName, value) => {
+    if (fieldName === 'hello') {
+      return false
+    }
+    // credit card number
+    if (value.match(/^\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}$/)) {
+      return false
+    }
+    return true
+  }
+})
+console.log('redactedData', JSON.stringify(redactedData, null, 2))
 ```

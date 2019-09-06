@@ -1,6 +1,6 @@
 import ignorePatterns from './regex'
 
-export default function filter(values, opts) {
+export default function filter(values, opts = {}, type) {
   const { filter, excludeFields, debug } = opts
   let excludedInputs = ignorePatterns
   if (excludeFields) {
@@ -18,7 +18,10 @@ export default function filter(values, opts) {
       return pattern.test(key.toLowerCase())
     })
     if (omit) {
-      if (debug) console.log(`Omit ${omission[0]} field via ${omission[1]}`)
+      if (debug) {
+        const msg = (type) ? `${type} handler for ` : ''
+        console.log(`Omit ${msg}${omission[0]} field via ${omission[1]}`)
+      }
       return false
     }
     if (filter && typeof filter === 'function') {
