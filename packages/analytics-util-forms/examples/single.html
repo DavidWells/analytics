@@ -19,7 +19,7 @@
     </style>
   </head>
   <body>
-    <input id="search" type='text' />
+    <input id="search" name='search' type='text' />
     <button id="hi">hi</button>
   <div class='forms'>
     <div >
@@ -107,8 +107,26 @@
       <h2 class="form-title">Form 2 clone</h2>
       <form id="content-form-two" name="two" action="/content-thank-you/" method="POST">
         <label>
+          <span class="label">cars</span>
+          <select name="cars">
+            <option value="volvo">Volvo</option>
+            <option value="saab">Saab</option>
+            <option value="mercedes">Mercedes</option>
+            <option value="audi">Audi</option>
+          </select>
+        </label>
+        <label>
           <span class="label">NAME</span>
           <input maxlength="40" name="name" size="20" type="text" />
+        </label>
+        <label>
+          <span class="label">colors</span>
+          <select name="colors" multiple>
+            <option value="Blue">Blue</option>
+            <option value="Red">Red</option>
+            <option value="Purple">Purple</option>
+            <option value="green">green</option>
+          </select>
         </label>
         <button type="submit" name="submit" class="button">
           Submit Form
@@ -172,9 +190,18 @@
       /**/
 
       //*
-      analyticsUtilForms.onChange('all', (event, data) => {
+      analyticsUtilForms.onChange('all', {
+        debug: true,
+        // excludeForms: [
+        //   'input[name=search]',
+        // ],
+        // excludeFields: [
+        //   /search/,
+        // ],
+      }, (event, data, meta) => {
         console.log('event', event)
         console.log('data', data)
+        console.log('meta', meta)
       })
       /**/
 
