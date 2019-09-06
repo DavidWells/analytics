@@ -6,14 +6,17 @@ export default function changeHandler(opts, element, type) {
   const { onChange, disableFilter } = opts
   return (event) => {
     const input = event.target
-    const name = input.name || input.id
+    const name = input.name || input.id // || lookupParentNodeText()
+    if (!name) {
+      throw new Error(`Invalid input ${input}. Missing name & id`)
+    }
     const value = grabVal(name, input, element)
     /* Filter sensitive values */
     const filtered = (disableFilter) ? value : filterValues(value, opts, type)
     if (Object.keys(filtered).length && onChange && typeof onChange === 'function') {
       onChange(event, filtered, {
         type: type,
-        form: isForm(element) ? element : null
+        form: element
       })
     }
   }
