@@ -156,9 +156,13 @@
         console.log('submit form', event.target)
         console.log('submit data', JSON.stringify(data, null, 2))
       },
-      onChange: (event, data) => {
+      onChange: (event, data, meta) => {
         console.log('change form', event.target)
         console.log('change data', JSON.stringify(data, null, 2))
+        const allFormData = analyticsUtilForms.getFormData(meta.form)
+        console.log('allFormData', JSON.stringify(allFormData, null, 2))
+        const filtered = analyticsUtilForms.filterData(allFormData)
+        console.log('filtered data', JSON.stringify(filtered, null, 2))
       },
       /* // Include only specific forms. Omit for all
       includeForms: [
