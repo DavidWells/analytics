@@ -3,10 +3,6 @@ import EVENTS from '../events'
 
 const initialState = {}
 
-const checkIfLoaded = (loaded) => {
-  return Boolean(loaded())
-}
-
 export default function createReducer(getPlugins) {
   return function plugins(state = initialState, action) {
     let newState = {}
