@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.2.0 (2019-09-10)
+
+
+### Features
+
+* **cookies:** add cookie util ([7b0ecfa](https://github.com/DavidWells/analytics/commit/7b0ecfa))
+
+
+
+
+
 ## [0.1.4](https://github.com/DavidWells/analytics/compare/analytics-util-cookie@0.1.3...analytics-util-cookie@0.1.4) (2019-09-10)
 
 **Note:** Version bump only for package analytics-util-cookie
