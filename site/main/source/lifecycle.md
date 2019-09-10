@@ -4,11 +4,11 @@ pageTitle: Lifecycle Events
 description: Using lifecycle events to add custom functionality
 ---
 
-The `analytics` is library is driven by a series of **lifecycle events**. Theses events makes analytics easy to extend & customize based on your analytic applications requirements.
+The `analytics` is library is driven by a series of **lifecycle events**. These events allow developers to extend & customize the library to fit any kind of tracking requirements.
 
-These events can be hooked into by [listeners](https://getanalytics.io/using-listeners/) in your app code or by [plugins](https://getanalytics.io/plugins/)
+Events can be hooked into by [listeners](https://getanalytics.io/using-listeners/) in your app code or by [plugins](https://getanalytics.io/plugins/) included at library [initialization](https://getanalytics.io/api/#configuration).
 
-The lifecycle flows like so, and continues depending on which events are triggering by your tracking.
+The lifecycle flows like so 👇, and continues depending on which [methods](https://getanalytics.io/api/) are called by your application.
 
 ![Analytics Lifecycle](https://user-images.githubusercontent.com/532272/64586657-db813300-d351-11e9-83d8-0d81c6973e49.png)
 
