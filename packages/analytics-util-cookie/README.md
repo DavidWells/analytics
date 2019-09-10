@@ -16,7 +16,7 @@ Exports `getCookie`, `setCookie`, `removeCookie`, & `hasCookieSupport`
 Get a cookie
 
 ```js
-import { getCookie } from '@analytics/'
+import { getCookie } from '@analytics/cookie-utils'
 
 const value = getCookie('cookie-key')
 ```
@@ -26,7 +26,7 @@ const value = getCookie('cookie-key')
 Set a cookie
 
 ```js
-import { setCookie } from '@analytics/'
+import { setCookie } from '@analytics/cookie-utils'
 
 /* simple set */
 setCookie('test', 'a')
@@ -40,7 +40,7 @@ setCookie('test', 'a', 60*60*24, '/api', '*.example.com', true)
 Delete a cookie
 
 ```js
-import { deleteCookie } from '@analytics/'
+import { deleteCookie } from '@analytics/cookie-utils'
 
 deleteCookie('cookie-key')
 ```
@@ -50,7 +50,7 @@ deleteCookie('cookie-key')
 Check if cookies are supported. Will verify browser will accept cookies
 
 ```js
-import { hasCookieSupport } from '@analytics/'
+import { hasCookieSupport } from '@analytics/cookie-utils'
 
 if (hasCookieSupport()) {
   // Use them 🍪
