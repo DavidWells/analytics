@@ -17,6 +17,7 @@ module.exports = {
           ],
           Docs: [
             'api',
+            'lifecycle',
             'plugins/index',
             'using-listeners',
             'debugging',
