@@ -8,7 +8,7 @@
 */
 
 /*
-// simple set
+// set
 cookie('test', 'a')
 
 // complex set - cookie(name, value, ttl, path, domain, secure)
