@@ -1,6 +1,5 @@
 // Context Reducer.  Follows ducks pattern http://bit.ly/2DnERMc
-/* global BUILD_WEB BUILD_NODE */
-import { parseReferrer, getBrowserLocale, getTimeZone, uuid } from 'analytics-utils'
+import { getBrowserLocale, getTimeZone, uuid } from 'analytics-utils'
 import EVENTS from '../events'
 import inBrowser from '../utils/inBrowser'
 import getOSNameNode from '../utils/getOSName/node'
@@ -12,7 +11,7 @@ let locale
 let timeZone
 if (process.browser) {
   osName = getOSNameBrowser()
-  referrer = parseReferrer()
+  referrer = document.referrer
   locale = getBrowserLocale()
   timeZone = getTimeZone()
 } else {

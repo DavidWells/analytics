@@ -52,6 +52,7 @@ export default function analytics(config = {}) {
   /* Parse plugins array */
   const parsedOptions = (config.plugins || []).reduce((acc, p) => {
     if (typeof p !== 'function' && p.NAMESPACE) {
+      const { NAMESPACE } = p
       // if plugin exposes EVENTS capture available events
       const definedEvents = (p.EVENTS) ? Object.keys(p.EVENTS).map((k) => {
         return p.EVENTS[k]
@@ -66,13 +67,13 @@ export default function analytics(config = {}) {
 
       acc.pluginsArray = acc.pluginsArray.concat(p)
 
-      if (acc.plugins[p.NAMESPACE]) {
-        throw new Error(`Analytics "${p.NAMESPACE}" loaded twice!`)
+      if (acc.plugins[NAMESPACE]) {
+        throw new Error(`"${NAMESPACE}" plugin loaded twice!`)
       }
-      acc.plugins[p.NAMESPACE] = p
-      if (!acc.plugins[p.NAMESPACE].loaded) {
+      acc.plugins[NAMESPACE] = p
+      if (!acc.plugins[NAMESPACE].loaded) {
         // set default loaded func
-        acc.plugins[p.NAMESPACE].loaded = () => { return true }
+        acc.plugins[NAMESPACE].loaded = () => { return true }
       }
       return acc
     }
@@ -383,15 +384,15 @@ export default function analytics(config = {}) {
           }
           return next(action)
         }
-        addMiddleware(beforeHandler, 'before')
-        addMiddleware(afterHandler, 'after')
+        addMiddleware(beforeHandler, before)
+        addMiddleware(afterHandler, after)
         return () => {
-          removeMiddleware(beforeHandler, 'before')
-          removeMiddleware(afterHandler, 'after')
+          removeMiddleware(beforeHandler, before)
+          removeMiddleware(afterHandler, after)
         }
       }
 
-      const position = (name.match(startRegex)) ? 'before' : 'after' // eslint-disable-line
+      const position = (name.match(startRegex)) ? before : after // eslint-disable-line
       const handler = store => next => action => {
         // Subscribe to EVERYTHING
         if (action.type === name) {
@@ -474,7 +475,7 @@ export default function analytics(config = {}) {
     dispatch: (action) => {
       const actionData = (typeof action === 'string') ? { type: action } : action
       if (isReservedAction(actionData.type)) {
-        throw new Error(`Trying to dispatch analytics reservedAction "${actionData.type}"`)
+        throw new Error(`Trying to dispatch reservedAction "${actionData.type}"`)
       }
       const meta = actionData.meta || {}
       const _private = action._ || {}
@@ -638,7 +639,7 @@ export default function analytics(config = {}) {
 
   const middlewares = parsedOptions.middlewares.concat([
     /* Core analytics middleware */
-    dynamicMiddlewares('before'), // Before dynamic middleware <-- fixed pageStart .on listener
+    dynamicMiddlewares(before), // Before dynamic middleware <-- fixed pageStart .on listener
     /* Plugin engine */
     middleware.plugins(instance, getPlugins, {
       all: allSystemEvents,
@@ -648,7 +649,7 @@ export default function analytics(config = {}) {
     middleware.initialize(instance),
     middleware.identify(instance),
     /* after dynamic middleware */
-    dynamicMiddlewares('after')
+    dynamicMiddlewares(after)
   ])
 
   /* Initial analytics state keys */
@@ -771,6 +772,11 @@ export default function analytics(config = {}) {
 
   return instance
 }
+
+// Duplicated strings
+const before = 'before'
+const after = 'after'
+// const uId = 'userId'
 
 /*
  * analytics.init exported for standalone browser build
