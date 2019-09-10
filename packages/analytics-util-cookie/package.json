@@ -1,5 +1,5 @@
 {
-  "name": "analytics-util-cookie",
+  "name": "@analytics/cookie-utils",
   "version": "0.1.3",
   "description": "Cookie helper functions",
   "author": "David Wells",
