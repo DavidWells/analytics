@@ -17,7 +17,7 @@ const getCookie = cookie
 const setCookie = cookie
 
 /**
- * Remove a cookie value
+ * Remove a cookie value.
  * @param {string} name  - key of cookie
  */
 function removeCookie(name) {
