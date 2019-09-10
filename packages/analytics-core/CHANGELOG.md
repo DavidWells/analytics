@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/DavidWells/analytics/compare/analytics@0.1.20...analytics@0.2.0) (2019-09-10)
+
+
+### Features
+
+* **fullstory:** add fullstory plugin ([255ce77](https://github.com/DavidWells/analytics/commit/255ce77))
+
+
+
+
+
 ## [0.1.20](https://github.com/DavidWells/analytics/compare/analytics@0.1.19...analytics@0.1.20) (2019-08-26)
 
 **Note:** Version bump only for package analytics
