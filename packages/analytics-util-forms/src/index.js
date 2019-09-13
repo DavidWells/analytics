@@ -13,7 +13,7 @@ export {
   onChange,
   /* Listen to onChange & onSubmit events on 1 or more forms */
   listen,
-  /* Submit form via JS */
+  /* Submit form via Javascript */
   submitForm,
   /* Get values from form inputs */
   getFormData,
