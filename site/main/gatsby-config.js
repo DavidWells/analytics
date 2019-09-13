@@ -39,6 +39,10 @@ module.exports = {
             'plugins/event-validation',
             'plugins/request',
           ],
+          Utilities: [
+            'utils/cookies',
+            'utils/forms',
+          ],
           Tutorial: [
             'tutorial/getting-started',
             // 'tutorial/whats-next'

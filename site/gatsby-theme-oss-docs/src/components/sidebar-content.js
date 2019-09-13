@@ -9,30 +9,12 @@ import {
 } from '../utils'
 import { SidebarNav, colors, headerHeight } from 'gatsby-theme-base'
 
-const headerPadding = 4
 const ContentHeader = styled.h4({
   color: colors.primary,
   backgroundColor: 'rgba(255, 255, 255, 0.85)',
   position: 'sticky',
   top: headerHeight
 })
-
-const HeaderInner = styled.span({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  margin: `-${headerPadding}px 0`,
-  padding: `${headerPadding}px 0`,
-  paddingRight: 10
-})
-
-const HeaderText = styled.span({
-  lineHeight: 1.5
-})
-
-function getVersionLabel(version) {
-  return `Version ${version}`
-}
 
 function handleToggleAll(expanded) {
   trackEvent({

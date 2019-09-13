@@ -1,16 +1,16 @@
 ---
 title: Listen & react to tab visibility events in analytics
 pageTitle: Tab Events
-description: Using the tab events plugin
+description: Reacting to browser tab visibility events
 ---
 
-This plugin will expose tab events for listeners and other plugins to react to when tab visibility changes.
+This [analytics](https://www.npmjs.com/package/analytics) plugin fire events on tab visibility changes. When visitors switch between browser tabs callbacks are fired.
 
-Tab visibility changes can be useful for session information, pausing videos/carousels, and diplaying calls to action when a visitor returns to a tab.
+Tab visibility changes can be useful for session information, pausing videos/carousels, and displaying calls to action when a visitor returns to a tab.
 
-After installing & activating the plugin, the `tabHidden` and `tabVisible` events will fire.
+The plugin exposes tab events (`tabHidden` and `tabVisible`) that listeners & other plugins can react to.
 
-You can listen to these events via additional plugins or with `.on` & `.once` listeners.
+This package comes with a standalone `onTabChange` function for usage anywhere in your app.
 
 ## How to use
 
@@ -42,20 +42,18 @@ export default analytics
 
 ## Reacting from listeners
 
-You can listen to the `tabHidden` and `tabVisible` events with `.on` & `.once` listeners directly in your application code.
+You can listen to the `tabHidden` & `tabVisible` events with `.on` & `.once` listeners directly in your app code.
 
 ```js
 /* import analytic instance in your app code */
 import analytics from '/src/analytics'
 
-/*
-  Somewhere in your app
-*/
+// Somewhere in your app
 
+/* Or fire .on listeners */
 analytics.on('tabHidden', () => {
   // do stuff when tab hidden
 })
-
 analytics.on('tabVisible', () => {
   // do stuff when tab visible
 })
@@ -67,6 +65,11 @@ analytics.once('tabHidden', () => {
 analytics.once('tabVisible', () => {
   // do stuff ONCE when tab visible
 })
+
+/* Clean up events */
+const remove = analytics.on('tabHidden', () => {/* logic */})
+// Call remove() to detach listener
+remove()
 ```
 
 ## Reacting from a plugin
@@ -107,4 +110,23 @@ const analytics = Analytics({
     customPluginExample,
   ]
 })
+```
+
+## Using `onTabChange`
+
+This standalone `onTabChange` function can imported and used by itself, without the plugin being attached to `analytics`, anywhere in your application logic.
+
+```js
+import { onTabChange } from 'analytics-plugin-tab-events'
+
+const myListener = onTabChange((isHidden) => {
+  if (isHidden) {
+    console.log('Tab is not visible')
+  } else {
+    console.log('Welcome back tab is visible')
+  }
+})
+
+// Optionally remove the listener
+myListener()
 ```
