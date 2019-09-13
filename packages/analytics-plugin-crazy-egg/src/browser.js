@@ -1,10 +1,5 @@
 /* global CE2 */
 
-export const config = {
-  /* Crazy egg account number */
-  accountNumber: null,
-}
-
 /**
  * Crazy egg plugin
  * @link https://help.crazyegg.com/article/43-crazy-egg-manual-installation
@@ -17,11 +12,11 @@ export const config = {
  *   accountNumber: '1234578'
  * })
  */
-export default function crazyEgg(pluginConfig) {
+export default function crazyEgg(pluginConfig = {}) {
   // Allow for userland overides of base methods
   return {
     NAMESPACE: 'crazy-egg',
-    config: Object.assign({}, config, pluginConfig),
+    config: pluginConfig,
     initialize: ({ config }) => {
       const { accountNumber } = config
       if (!accountNumber) {
