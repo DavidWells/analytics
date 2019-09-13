@@ -1,7 +1,7 @@
 {
-  "name": "analytics-util-forms",
-  "version": "0.2.0",
-  "description": "Form helper functions",
+  "name": "@analytics/form-utils",
+  "version": "0.2.1",
+  "description": "Form utility library for managing HTML form submissions & values",
   "author": "David Wells",
   "license": "MIT",
   "homepage": "https://github.com/DavidWells/analytics#readme",
