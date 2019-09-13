@@ -1,44 +1,53 @@
 /**
  * Expose Tab visbility events to analtyics
  * Trigger analytics actions when tab is hidden or visible
+ * @param  {Object} [pluginConfig={}] - config
+ * @return {Object} Analytics plugin
  */
-
-const EVENTS = {
-  /**
-   * `tabHidden` - Fires when visitor goes to another browser tab.
-   */
-  tabHidden: 'tabHidden',
-  /**
-   * `tabVisible` - Fires when visitor comes back to window from another browser tab.
-   */
-  tabVisible: 'tabVisible'
-}
-
-export default function tabEventsPlugin(userConfig = {}) {
+export default function tabEventsPlugin(pluginConfig = {}) {
+  const events = {
+    /**
+     * `tabHidden` - Fires when visitor goes to another browser tab.
+     */
+    tabHidden: 'tabHidden',
+    /**
+     * `tabVisible` - Fires when visitor comes back to window from another browser tab.
+     */
+    tabVisible: 'tabVisible'
+  }
   return {
     NAMESPACE: 'tab-events',
-    EVENTS: EVENTS,
-    config: Object.assign({}, userConfig),
+    EVENTS: events,
+    config: pluginConfig,
     bootstrap: ({ instance }) => {
       /* Dispatch event when tab visiblity changes */
       onTabChange(isHidden => {
         instance.dispatch({
-          type: (isHidden) ? EVENTS.tabHidden : EVENTS.tabVisible,
+          type: (isHidden) ? events.tabHidden : events.tabVisible,
         })
       })
     }
   }
 }
 
-export function onTabChange(cb) {
+/**
+ * Fire a callback on tab visibility changes
+ * @param  {function} callback - function to run on visibility change
+ * @return {function} detach onTabChange listener
+ */
+export function onTabChange(callback) {
   if (typeof window === 'undefined') return false
   const prop = getHiddenProp()
   if (!prop) return false
   const event = `${prop.replace(/[H|h]idden/, '')}visibilitychange`
-  document.addEventListener(event, () => {
-    if (document[prop]) return cb(true) // eslint-disable-line
-    return cb(false) // eslint-disable-line
-  })
+  const handler = () => {
+    /* eslint-disable standard/no-callback-literal */
+    if (document[prop]) return callback(true)
+    return callback(false)
+    /* eslint-enable */
+  }
+  document.addEventListener(event, handler)
+  return () => document.removeEventListener(event, handler)
 }
 
 function getHiddenProp() {
