@@ -1,16 +1,16 @@
-import {
-  getCookie,
-  setCookie,
-  removeCookie,
-  hasCookieSupport
-} from 'analytics-util-cookie'
-import hasLocalStorage from './hasLocalStorage'
+import { getCookie, setCookie, removeCookie, hasCookieSupport } from '@analytics/cookie-utils'
+import hasLocalStorageSupport from './hasLocalStorage'
 import parse from './utils/parse'
 import globalContext from './utils/globalContext'
 
 // Constants
 const LOCAL_STORAGE = 'localStorage'
 const COOKIE = 'cookie'
+const GLOBAL = 'global'
+
+// Verify support
+const hasStorage = hasLocalStorageSupport()
+const hasCookies = hasCookieSupport()
 
 /**
  * Get storage item from localStorage, cookie, or window
@@ -22,6 +22,8 @@ const COOKIE = 'cookie'
 export function getItem(key, options = {}) {
   if (!key) return null
   const storage = getStorageType(options)
+  // Get value from all locations
+  if (storage === 'all') return getAll(key)
   /* 1. Try localStorage */
   if (useLocal(storage)) {
     const value = localStorage.getItem(key)
@@ -32,8 +34,16 @@ export function getItem(key, options = {}) {
     const value = getCookie(key)
     if (value || storage === COOKIE) return parse(value)
   }
-  /* 3. Fallback to window/global. TODO verify AWS lambda & check for conflicts */
+  /* 3. Fallback to window/global. */
   return globalContext[key] || null
+}
+
+function getAll(key) {
+  return {
+    cookie: parse(getCookie(key)),
+    localStorage: parse(localStorage.getItem(key)),
+    global: globalContext[key] || null
+  }
 }
 
 /**
@@ -46,29 +56,26 @@ export function getItem(key, options = {}) {
  */
 export function setItem(key, value, options = {}) {
   if (!key || !value) return false
-
   const storage = getStorageType(options)
   const saveValue = JSON.stringify(value)
-
   /* 1. Try localStorage */
   if (useLocal(storage)) {
     // console.log('SET as localstorage', saveValue)
     const oldValue = parse(localStorage.getItem(key))
     localStorage.setItem(key, saveValue)
-    return { value, oldValue, type: LOCAL_STORAGE }
+    return { value, oldValue, location: LOCAL_STORAGE }
   }
   /* 2. Fallback to cookie */
   if (useCookie(storage)) {
     // console.log('SET as cookie', saveValue)
     const oldValue = parse(getCookie(key))
     setCookie(key, saveValue)
-    return { value, oldValue, type: COOKIE }
+    return { value, oldValue, location: COOKIE }
   }
   /* 3. Fallback to window/global */
   const oldValue = globalContext[key]
-  // console.log('SET as window', value)
   globalContext[key] = value
-  return { value, oldValue, type: 'window' }
+  return { value, oldValue, location: GLOBAL }
 }
 
 /**
@@ -79,21 +86,19 @@ export function setItem(key, value, options = {}) {
  */
 export function removeItem(key, options = {}) {
   if (!key) return false
-
   const storage = getStorageType(options)
-  /* 1. Try localStorage */
   if (useLocal(storage)) {
+    /* 1. Try localStorage */
     localStorage.removeItem(key)
-    return null
-  }
-  /* 2. Fallback to cookie */
-  if (useCookie(storage)) {
+    return LOCAL_STORAGE
+  } else if (useCookie(storage)) {
+    /* 2. Fallback to cookie */
     removeCookie(key)
-    return null
+    return COOKIE
   }
   /* 3. Fallback to window/global */
   globalContext[key] = null
-  return null
+  return GLOBAL
 }
 
 function getStorageType(options) {
@@ -101,15 +106,20 @@ function getStorageType(options) {
 }
 
 function useLocal(storage) {
-  return hasLocalStorage && (!storage || storage === LOCAL_STORAGE)
+  return hasStorage && (!storage || storage === LOCAL_STORAGE)
 }
 
 function useCookie(storage) {
-  return hasCookieSupport && (!storage || storage === COOKIE)
+  return hasCookies && (!storage || storage === COOKIE)
 }
 
 export default {
   getItem,
   setItem,
-  removeItem
+  removeItem,
+  hasLocalStorageSupport,
+  getCookie,
+  setCookie,
+  removeCookie,
+  hasCookieSupport
 }
