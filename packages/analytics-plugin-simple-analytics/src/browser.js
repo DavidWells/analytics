@@ -1,18 +1,19 @@
 /* global sa */
 
-const config = {}
-
-/* Export the integration */
-
-export default function simpleAnalyticsPlugin(userConfig) {
+/**
+ * Simple Analytics plugin
+ * @link https://simpleanalytics.com/
+ * @return {object} Analytics plugin
+ * @example
+ *
+ * simpleAnalyticsPlugin()
+ */
+export default function simpleAnalyticsPlugin(pluginConfig = {}) {
   let isLoaded = false
   // Allow for userland overides of base methods
   return {
     NAMESPACE: 'simple-analytics',
-    config: {
-      ...config,
-      ...userConfig
-    },
+    config: pluginConfig,
     // https://docs.simpleanalytics.com/script
     initialize: ({ config }) => {
       const src = 'https://cdn.simpleanalytics.io/hello.js'
@@ -34,7 +35,6 @@ export default function simpleAnalyticsPlugin(userConfig) {
       script.addEventListener('error', () => {
         throw new Error(`${src} failed to load.`)
       })
-
       // Todo load analytics script via users subdomain for custom event tracking
     },
     /* https://docs.simpleanalytics.com/events
