@@ -3,19 +3,17 @@
  *
  * @returns {Boolean}
  */
-function hasLocalStorage() {
+export default function hasLocalStorage() {
   if (!process.browser) return false
   try {
     if (typeof localStorage === 'undefined' || typeof JSON === 'undefined') {
       return false
     }
     // test for safari private
-    localStorage.setItem('_test_', '1')
-    localStorage.removeItem('_test_')
+    localStorage.setItem('__test', '1')
+    localStorage.removeItem('__test')
   } catch (err) {
     return false
   }
   return true
 }
-
-export default process.browser ? hasLocalStorage() : false
