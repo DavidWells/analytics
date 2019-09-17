@@ -1,8 +1,13 @@
 import test from 'ava'
-import paramsParse from '../src/parse'
+import paramsParse from '../src/new-parse'
+import { inspect } from 'util'
+
+function deepLog(x) {
+  console.log(inspect(x, {showHidden: false, depth: null, colors: true}))
+}
 
 function format(niceStr) {
-  return niceStr.split('\n').map((x) => x.trim()).join('')
+  return niceStr.split('\n').map((x) => x.replace(/\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/g, '').trim()).join('')
 }
 
 test('lib', t => {
@@ -15,17 +20,17 @@ test('(decode) simple []', t => {
   t.deepEqual(out, { foo: 'foo', bar: ['bar1', 'bar2'] }, '~> is expected value')
 })
 
-test.only('parses a simple string', (t) => {
+test('parses a simple string', (t) => {
   t.deepEqual(paramsParse('?0=foo'), { 0: 'foo' })
   t.deepEqual(paramsParse('?foo=c++'), { foo: 'c  ' })
   t.deepEqual(paramsParse('?foo'), { foo: true })
-  t.deepEqual(paramsParse('?foo'), { foo: true })
-  t.deepEqual(paramsParse('?foo='), { foo: true })
+  t.deepEqual(paramsParse('?foo='), { foo: null })
   t.deepEqual(paramsParse('?foo=bar'), { foo: 'bar' })
+  t.deepEqual(paramsParse('?foo&bar=foo'), { foo: true, bar: 'foo' })
   t.deepEqual(paramsParse('? foo = bar = baz '), { ' foo ': ' bar = baz ' })
 
   t.deepEqual(paramsParse('?foo=bar&bar=baz'), { foo: 'bar', bar: 'baz' })
-  t.deepEqual(paramsParse('?foo2=bar2&baz2='), { foo2: 'bar2', baz2: true })
+  t.deepEqual(paramsParse('?foo2=bar2&baz2='), { foo2: 'bar2', baz2: null })
   t.deepEqual(paramsParse('?foo=bar&baz'), { foo: 'bar', baz: true })
   t.deepEqual(paramsParse('?cht=p3&chd=t:60,40&chs=250x100&chl=Hello|World'), {
     cht: 'p3',
@@ -40,7 +45,7 @@ test.only('parses a simple string', (t) => {
   // t.deepEqual(paramsParse('?foo=bar=baz'), { foo: 'bar=baz' })
 })
 
-test.skip('(decode) simple', t => {
+test('(decode) simple', t => {
   let str = '?foo=foo&bar=bar1&bar=bar2'
   let out = paramsParse(str)
   t.deepEqual(out, { foo: 'foo', bar: ['bar1', 'bar2'] }, '~> is expected value')
@@ -67,7 +72,7 @@ test('(decode) booleans', t => {
 test('(decode) empty', t => {
   let str1 = '?foo=&bar='
   let out1 = paramsParse(str1)
-  t.deepEqual(out1, { foo: true, bar: true })
+  t.deepEqual(out1, { foo: null, bar: null })
 
   let str2 = '?foo&bar'
   let out2 = paramsParse(str2)
@@ -76,9 +81,17 @@ test('(decode) empty', t => {
 
 test('does not overide prototypes', t => {
   let obj = paramsParse('?toString&__proto__=lol')
+  console.log('obj', obj)
   // let obj = { hi: 'hi'}
   t.is(typeof obj, 'object')
   t.is(typeof obj.toString, 'function')
+  t.not(obj.__proto__, 'lol') // eslint-disable-line
+
+  let objTwo = paramsParse('?toString=lol&__proto__=lol')
+  console.log('obj', obj)
+  // let obj = { hi: 'hi'}
+  t.is(typeof objTwo, 'object')
+  t.is(typeof objTwo.toString, 'function')
   t.not(obj.__proto__, 'lol') // eslint-disable-line
 })
 
@@ -95,7 +108,7 @@ test('decodes plus signs', t => {
 
   t.is(typeof objTwo, 'object')
   t.deepEqual(objTwo, {
-    'foo bar': 'baz qux',
+    'foo bar': 'baz+qux',
   })
 })
 
@@ -105,11 +118,13 @@ test('decode keys and values', t => {
   // t.deepEqual(paramsParse('?foo=%7B%ab%%7C%de%%7D+%%7Bst%C3%A5le%7D%'), {foo: '{%ab%|%de%} %{ståle}%'});
 })
 
-test('does not throw on invalid input', t => {
-  const obj = paramsParse('?%&')
-  // let obj = { hi: 'hi'}
-  t.is(typeof obj, 'object')
-  t.deepEqual(obj, {})
+test('handles strings with query string that contain =', t => {
+  t.deepEqual(paramsParse('https://foo.bar?foo[]=baz=bar&foo[]=baz#top'), {
+    foo: ['baz=bar', 'baz']
+  })
+  t.deepEqual(paramsParse('https://foo.bar?foo[]=bar=&foo[]=baz='), {
+    foo: ['bar=', 'baz=']
+  })
 })
 
 test('does not throw on invalid input & does not include invalid output', t => {
@@ -188,7 +203,7 @@ test('open api', t => {
   const encodedUrl = encodeURI(format(url))
   console.log('encoded url', encodedUrl)
   const obj = paramsParse(encodedUrl)
-
+  deepLog(obj)
   t.deepEqual(obj, {
     utm: 'hi',
     q: {
@@ -203,25 +218,25 @@ test('open api', t => {
         shoes: ['x', 'y', 'z']
       },
       hello: 'world',
-      snarg: [{
-        value: ['blerg', 'blah', 'zoo']
-      }, {
-        lit: ['yyy']
-      }],
+      snarg:
+      [ { value: 'blerg' },
+        { value: 'blah' },
+        { value: 'zoo' },
+        { lit: 'yyy' } ],
       foo: [{
         value: {
           la: ['foo', 'baz']
         },
         boom: {
-          fizz: ['leet'],
+          fizz: 'leet',
           cool: {
-            a: ['rad'],
-            b: ['tworad']
+            a: 'rad',
+            b: 'tworad'
           }
         },
         awesome: {
           z: {
-            w: [123]
+            w: 123
           }
         }
       }]
@@ -246,6 +261,56 @@ test('open api', t => {
   })
 })
 
+test('Object in array', (t) => {
+  const url = `https://random.url.com
+  ?groups[]=Stat.offer_id
+  &groups[]=Stat.date
+  &groups[][test]=objectinarray
+  &groups[][arb]=thing
+  &groups[][wow][]=x
+  &groups[][wow][]=y
+  `
+  const encodedUrl = encodeURI(format(url))
+  console.log('encoded url', encodedUrl)
+  const obj = paramsParse(encodedUrl)
+  deepLog(obj)
+  t.is(typeof obj, 'object')
+  t.deepEqual(obj, {
+    groups: [
+      'Stat.offer_id',
+      'Stat.date',
+      { test: 'objectinarray' },
+      { arb: 'thing' },
+      { wow: ['x', 'y'] }
+    ],
+  })
+})
+
+test('Object with nested array of objects', (t) => {
+  const url = `https://random.url.com
+  ?Target=Report
+  &q[snarg][1][value]=blerg
+  &q[snarg][2][value]=blah
+  &groups[]=Stat.offer_id
+  &groups[]=Stat.date
+  &groups[][test]=objectinarray
+`
+  const encodedUrl = encodeURI(format(url))
+  console.log('encoded url', encodedUrl)
+  const obj = paramsParse(encodedUrl)
+  t.is(typeof obj, 'object')
+  t.deepEqual(obj, {
+    Target: 'Report',
+    q: {
+      snarg: [
+        { value: 'blerg' },
+        { value: 'blah' }
+      ]
+    },
+    groups: [ 'Stat.offer_id', 'Stat.date', { test: 'objectinarray' } ]
+  })
+})
+
 test('Parse complex params', (t) => {
   const url = `https://random.url.com
   ?Target=Report
@@ -260,6 +325,7 @@ test('Parse complex params', (t) => {
   &utm_campaign=400kpromo
   &booleanTwo=true
   &Method=getStats
+  &limit=9999
   &person[address][city]=London
   &person[address][street]=12+High+Street
   &q[bar][0]=1
@@ -276,7 +342,7 @@ test('Parse complex params', (t) => {
   &fields[]=Affiliate.company
   &groups[]=Stat.offer_id
   &groups[]=Stat.date
-  &groups[test]=objectinarray
+  &groups[][test]=objectinarray
   &filters[Stat.affiliate_id][conditional]=EQUAL_TO
   &filters[Stat.affiliate_id][value]=44
   &filters[Stat.affiliate_id][values][]=44
@@ -285,17 +351,25 @@ test('Parse complex params', (t) => {
   &filters[neato][values]=1831
   &filters[neato][wow]=lol
   &filters[birth-date][qte]=1970-01-01
-  &limit=9999`
-  const encodedUrl = encodeURI(format(url))
+  &json={"what":{"hello":{"wow":{"cool":true}}}}
+  &eJson=%7B%22what%22%3A%7B%22hello%22%3A%7B%22wow%22%3A%7B%22cool%22%3Atrue%7D%7D%7D%7D
+  &brokenjson={"what":{"hello":{"wow":{"coox:true}}}}
+  `
+  const encodedUrl = format(url)
   console.log('encoded url', encodedUrl)
   const obj = paramsParse(encodedUrl)
-
-  console.log('obj', obj)
   t.is(typeof obj, 'object')
 
   t.deepEqual(obj, {
     Target: 'Report',
     boolean: false,
+    q: {
+      bar: [ 1, 2, 3 ],
+      snarg: [
+        { value: 'blerg' },
+        { value: 'blah' }
+      ]
+    },
     utm_source: 'the_source',
     utm_medium: 'camp med',
     utm_term: 'Bought keyword',
@@ -315,7 +389,8 @@ test('Parse complex params', (t) => {
       'Affiliate.company'
     ],
     groups: [
-      'Stat.offer_id', 'Stat.date',
+      'Stat.offer_id',
+      'Stat.date',
       { test: 'objectinarray' }
     ],
     yolo: {
@@ -349,7 +424,10 @@ test('Parse complex params', (t) => {
       'birth-date': {
         qte: '1970-01-01'
       }
-    }
+    },
+    json: {"what":{"hello":{"wow":{"cool":true}}}},
+    eJson: {"what":{"hello":{"wow":{"cool":true}}}},
+    brokenjson: '{"what":{"hello":{"wow":{"coox:true}}}}'
   })
 })
 
