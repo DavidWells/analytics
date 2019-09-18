@@ -4,6 +4,18 @@ URI utilities for [analytics](https://www.npmjs.com/package/analytics)
 
 `paramsClean`, `paramsReplace`, `paramsParse`, `paramsGet`
 
+## Params Parse benchmark
+
+```
+Decode:
+@analytics/param-utils x 189,959 ops/sec ±0.91% (91 runs sampled)
+qs                     x 152,998 ops/sec ±1.41% (90 runs sampled)
+querystringify         x 240,017 ops/sec ±1.32% (90 runs sampled)
+query-string           x 172,217 ops/sec ±0.67% (91 runs sampled)
+native                 x 179,175 ops/sec ±0.88% (88 runs sampled)
+qss                    x 391,393 ops/sec ±0.99% (91 runs sampled)
+```
+
 ## Details
 
 [Open API Query Params](https://github.com/OAI/OpenAPI-Specification/issues/1706)
