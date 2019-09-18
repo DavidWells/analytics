@@ -6,9 +6,7 @@ import getSearchFromBrowser from './fromBrowser'
  * @return {string} url search string
  */
 export default function getSearch(url) {
-  if (!url) {
-    return getSearchFromBrowser()
-  }
+  if (!url) return getSearchFromBrowser()
   const p = url.match(/\?(.*)/)
   return (p && p[1]) ? p[1].split('#')[0] : ''
 }

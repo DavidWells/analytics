@@ -1,15 +1,15 @@
 import noOp from './utils/noOp'
-import paramsClean from './clean'
+import stripParams from './paramsClean'
 
 /**
  * Removes params from URL in browser
  * @param  {string} param - param key to remove from current URL
  * @return {promise}
  */
-function paramsRemove(param) {
+function paramsReplace(param) {
   if (window.history && window.history.replaceState) {
     const url = window.location.href
-    const cleanUrl = paramsClean(url, param)
+    const cleanUrl = stripParams(url, param)
     if (url !== cleanUrl) {
       /* replace URL with history API */
       // eslint-disable-next-line no-restricted-globals
@@ -18,4 +18,4 @@ function paramsRemove(param) {
   }
 }
 
-export default (process.browser) ? paramsRemove : noOp
+export default (process.browser) ? paramsReplace : noOp

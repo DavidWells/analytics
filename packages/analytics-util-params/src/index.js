@@ -1,11 +1,11 @@
-import paramsClean from './clean'
-import paramsRemove from './remove'
-import paramsParse from './parse'
-import paramsGet from './get'
+import paramsClean from './paramsClean'
+import paramsReplace from './paramsReplace'
+import paramsParse from './paramsParse'
+import paramsGet from './paramsGet'
 
 export {
   paramsClean,
-  paramsRemove,
+  paramsReplace,
   paramsParse,
   paramsGet
 }

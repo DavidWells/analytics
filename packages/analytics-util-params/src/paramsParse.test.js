@@ -1,10 +1,5 @@
 import test from 'ava'
-import paramsParse from '../src/new-parse'
-import { inspect } from 'util'
-
-function deepLog(x) {
-  console.log(inspect(x, {showHidden: false, depth: null, colors: true}))
-}
+import paramsParse from './paramsParse'
 
 function format(niceStr) {
   return niceStr.split('\n').map((x) => x.replace(/\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/g, '').trim()).join('')
@@ -17,6 +12,7 @@ test('lib', t => {
 test('(decode) simple []', t => {
   let str = '?foo=foo&bar[]=bar1&bar[]=bar2'
   let out = paramsParse(str)
+  console.log('out', out)
   t.deepEqual(out, { foo: 'foo', bar: ['bar1', 'bar2'] }, '~> is expected value')
 })
 
@@ -48,7 +44,7 @@ test('parses a simple string', (t) => {
 test('(decode) simple', t => {
   let str = '?foo=foo&bar=bar1&bar=bar2'
   let out = paramsParse(str)
-  t.deepEqual(out, { foo: 'foo', bar: ['bar1', 'bar2'] }, '~> is expected value')
+  t.deepEqual(out, { foo: 'foo', bar: 'bar1' }, '~> is expected value')
 })
 
 test('(decode) numbers', t => {
@@ -152,6 +148,35 @@ test('Parse utm params', (t) => {
   t.is(obj.utm_campaign, '400kpromo')
 })
 
+test('Parse other complex params', (t) => {
+  const url = `https://random.url.com
+  ?Target=Offer
+  &Method=findAll
+  &filters[has_setting_off]=false
+  &filters[has_goals_enabled][TRUE]=1
+  &filters[status]=active
+  &fields[]=id
+  &fields[]=name
+  &fields[]=default_goal_name
+  `
+  const encodedUrl = encodeURI(format(url))
+  const obj = paramsParse(encodedUrl)
+  t.is(typeof obj, 'object')
+  t.deepEqual(obj, {
+    Target: 'Offer',
+    Method: 'findAll',
+    fields: ['id', 'name', 'default_goal_name'],
+    filters: {
+      has_setting_off: false,
+      has_goals_enabled: {
+        TRUE: 1
+      },
+      status: 'active'
+    }
+  })
+})
+
+/*
 test('open api', t => {
   const url = `https://random.url.com
   ?what[hello][wow][cool]=true
@@ -200,6 +225,7 @@ test('open api', t => {
   &filters[Stat.affiliate_id][values][]=44
   &filters[Stat.affiliate_id][values][]=55
    */
+/*
   const encodedUrl = encodeURI(format(url))
   console.log('encoded url', encodedUrl)
   const obj = paramsParse(encodedUrl)
@@ -430,63 +456,4 @@ test('Parse complex params', (t) => {
     brokenjson: '{"what":{"hello":{"wow":{"coox:true}}}}'
   })
 })
-
-test('Parse other complex params', (t) => {
-  const url = `https://random.url.com
-  ?Target=Offer
-  &Method=findAll
-  &filters[has_setting_off]=false
-  &filters[has_goals_enabled][TRUE]=1
-  &filters[status]=active
-  &fields[]=id
-  &fields[]=name
-  &fields[]=default_goal_name
-  `
-  const encodedUrl = encodeURI(format(url))
-  console.log('encoded url', encodedUrl)
-  const obj = paramsParse(encodedUrl)
-
-  console.log('obj', obj)
-  t.is(typeof obj, 'object')
-})
-
-test('Parse third complex params', (t) => {
-  const url = `http://localhost:3000/
-  ?Target=Offer
-  &Method=findAll
-  &filters[has_goals_enabled][TRUE]=1
-  &filters[status]=active
-  &filters[wow][]=yaz
-  &filters[wow][]=naz
-  &fields[]=id
-  &fields[]=name
-  &fields[]=default_goal_name
-`
-  const encodedUrl = encodeURI(format(url))
-  console.log('encoded url', encodedUrl)
-  const obj = paramsParse(encodedUrl)
-
-  console.log(require('util').inspect(obj, {showHidden: false, depth: null, colors: true}))
-
-  Object.keys(obj.filters).map((x) => {
-    if (Array.isArray(obj.filters[x])) {
-      console.log(obj.filters[x].length)
-      obj.filters[x].forEach((y, i) => {
-        console.log(`y ${i}`, y)
-      })
-    }
-  })
-  // console.log('obj', obj)
-  t.is(typeof obj, 'object')
-
-  // t.deepEqual(obj, {
-  //   Target: 'Offer',
-  //   Method: 'findAll',
-  //   fields: [ 'id', 'name', 'default_goal_name' ],
-  //   filters: {
-  //     has_goals_enabled: { TRUE: 1 },
-  //     status: 'active',
-  //     wow: [ 'yaz', 'naz' ]
-  //   }
-  // })
-})
+*/
