@@ -10,7 +10,7 @@ import { queryRegex } from './utils/regex'
 export default function paramsGet(param, url) {
   var e
   const map = {}
-  while (e = queryRegex.exec(url)) { // eslint-disable-lin
+  while (e = queryRegex.exec(url)) { // eslint-disable-line
     let KEY = decode(e[1])
     const VALUE = format(decode(e[3]))
     if (KEY.substring(KEY.length - 2) === '[]') {

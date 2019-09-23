@@ -1,6 +1,12 @@
 import test from 'ava'
 import getParam from './paramsGet'
 
+test('Get single param no value', t => {
+  let url = '?foo&bar[]=bar1&bar[]=bar2'
+  let out = getParam('foo', url)
+  t.is(out, '')
+})
+
 test('Get single param value', t => {
   let url = '?foo=zoo&bar[]=bar1&bar[]=bar2'
   let out = getParam('foo', url)

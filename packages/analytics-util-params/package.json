@@ -9,7 +9,7 @@
     "analytics",
     "analytics-project",
     "analytics-util",
-    "cookies"
+    "parameters"
   ],
   "main": "lib/analytics-util-params.cjs.js",
   "globalName": "analyticsUtilParams",

@@ -8,7 +8,7 @@ export default function parseParams(url) {
   return (searchString) ? mapParams(searchString) : {}
 }
 
-function mapParams(query, opts = {}) {
+function mapParams(query) {
   /* Map the key value pairs */
   const params = {}
   let e

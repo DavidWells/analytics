@@ -1,8 +1,36 @@
-# URL utilities
+# Param utilities
 
-URI utilities for [analytics](https://www.npmjs.com/package/analytics)
+URI param utilities for [analytics](https://www.npmjs.com/package/analytics)
 
-`paramsClean`, `paramsReplace`, `paramsParse`, `paramsGet`
+`getParams`, `removeParams`, `replaceParams`
+
+## `getParams`
+
+```js
+import { getParams } from '@analytics/param-utils'
+
+/* Get url params */
+const params = getParams()
+```
+
+## `removeParams`
+
+```js
+import { removeParams } from '@analytics/param-utils'
+
+/* Get url params */
+removeParams('foo')
+```
+
+## `replaceParams`
+
+```js
+import { replaceParams } from '@analytics/param-utils'
+
+// Replace
+replaceParams('foo')
+```
+
 
 ## Params Parse benchmark
 

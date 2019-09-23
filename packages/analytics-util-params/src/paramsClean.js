@@ -2,7 +2,7 @@ import { escapeRegexString, isArrayParam } from './utils/regex'
 /**
  * Strip a query parameter from a url string
  * @param  {string} url   - url with query parameters
- * @param  {string\RegExp} param - parameter to strip
+ * @param  {string|RegExp} param - parameter to strip. String or regex
  * @return {string} cleaned url
  */
 export default function paramsClean(param, url) {
