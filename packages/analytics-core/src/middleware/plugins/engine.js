@@ -442,7 +442,7 @@ function formatMethod(type) {
  * Return array of event names
  * @param  {String} eventType - original event type
  * @param  {String} namespace - optional namespace postfix
- * @return {[type]}           [description]
+ * @return {array} - type, method, end
  */
 function getEventNames(eventType, namespace) {
   const method = formatMethod(eventType)
@@ -518,8 +518,8 @@ function includes(arr, name) {
 /**
  * Generate arguments to pass to plugin methods
  * @param  {Object} instance - analytics instance
- * @param  {[type]} allPlugins [description]
- * @return {[type]}            [description]
+ * @param  {array} abortablePlugins - plugins that can be cancelled by caller
+ * @return {*} function to inject plugin params
  */
 function argumentFactory(instance, abortablePlugins) {
   // console.log('abortablePlugins', abortablePlugins)

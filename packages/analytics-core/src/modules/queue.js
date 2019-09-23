@@ -1,13 +1,11 @@
 // Follows ducks pattern http://bit.ly/2DnERMc
 import EVENTS from '../events'
 
-/**
- * TODO figure out if this should live in state...
- *
- * Queue could be in mermory as well.
- *
- * But also needs to be persisted to storage
- */
+/*
+TODO figure out if this should live in state...
+Queue could be in mermory as well.
+But also needs to be persisted to storage
+*/
 
 const initialState = {
   actions: [],

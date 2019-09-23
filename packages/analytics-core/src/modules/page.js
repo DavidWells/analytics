@@ -30,6 +30,23 @@ function currentUrl(search) {
   return canonical.match(/\?/) ? canonical : `${canonical}${search}`
 }
 
+/**
+ * Page data for overides
+ * @typedef {object} PageData
+ * @property {string} [title] - Page title
+ * @property {string} [url] - Page url
+ * @property {string} [path] - Page path
+ * @property {string} [search] - Page search
+ * @property {string} [width] - Page width
+ * @property {string} [height] - Page height
+*/
+
+/**
+ * Get information about current page
+ * @typedef {Function} getPageData
+ * @param  {PageData} [pageData = {}] - Page data overides
+ * @return {PageData} resolved page data
+ */
 export const getPageData = (pageData = {}) => {
   if (!inBrowser) return pageData
   const { title, referrer } = document
@@ -56,7 +73,6 @@ export const getPageData = (pageData = {}) => {
   }
 }
 
-// initialState Page Data
 const initialState = getPageData()
 
 // page reducer

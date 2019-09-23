@@ -21,32 +21,32 @@ import heartBeat from './utils/heartbeat'
 const { setItem, removeItem, getItem } = middleware
 
 /**
-  * Analytics library configuration
-  *
-  * After the library is initialized with config, the core API is exposed and ready for use in the application.
-  *
-  * @param {object} config - analytics core config
-  * @param {string} [config.app] - Name of site / app
-  * @param {string} [config.version] - Version of your app
-  * @param {array}  [config.plugins] - Array of analytics plugins
-  * @return {object} Analytics Instance
-  * @example
-  *
-  * import Analytics from 'analytics'
-  * import pluginABC from 'analytics-plugin-abc'
-  * import pluginXYZ from 'analytics-plugin-xyz'
-  *
-  * // initialize analytics
-  * const analytics = Analytics({
-  *   app: 'my-awesome-app',
-  *   plugins: [
-  *     pluginABC,
-  *     pluginXYZ
-  *   ]
-  * })
-  *
-  */
-export default function analytics(config = {}) {
+ * Analytics library configuration
+ *
+ * After the library is initialized with config, the core API is exposed and ready for use in the application.
+ *
+ * @param {object} config - analytics core config
+ * @param {string} [config.app] - Name of site / app
+ * @param {string} [config.version] - Version of your app
+ * @param {array}  [config.plugins] - Array of analytics plugins
+ * @return {AnalyticsInstance} Analytics Instance
+ * @example
+ *
+ * import Analytics from 'analytics'
+ * import pluginABC from 'analytics-plugin-abc'
+ * import pluginXYZ from 'analytics-plugin-xyz'
+ *
+ * // initialize analytics
+ * const analytics = Analytics({
+ *   app: 'my-awesome-app',
+ *   plugins: [
+ *     pluginABC,
+ *     pluginXYZ
+ *   ]
+ * })
+ *
+ */
+function analytics(config = {}) {
   const customReducers = config.reducers || {}
 
   /* Parse plugins array */
@@ -114,9 +114,26 @@ export default function analytics(config = {}) {
 
   const nonAbortable = () => { throw new Error('Abort not allowed from listener') }
 
+  /**
+   * Analytic instance returned from initialization
+   * @typedef {Object} AnalyticsInstance
+   * @property {Identify} identify - Identify a user
+   * @property {Track} track - Track an analytics event
+   * @property {Page} page - Trigger page view
+   * @property {User} user - Get user data
+   * @property {Reset} reset - Clear information about user & reset analytics
+   * @property {Ready} ready - Fire callback on analytics ready event
+   * @property {On} on - Fire callback on analytics lifecycle events.
+   * @property {Once} once - Fire callback on analytics lifecycle events once.
+   * @property {GetState} getState - Get data about user, activity, or context.
+   * @property {Storage} storage - storage methods
+   * @property {EnablePlugin} enablePlugin - Enable plugin
+   * @property {DisablePlugin} disablePlugin - Disable plugin
+   */
   const instance = {
     /**
     * Identify a user. This will trigger `identify` calls in any installed plugins and will set user data in localStorage
+    * @typedef {Function} Identify
     * @param  {String}   userId  - Unique ID of user
     * @param  {Object}   [traits]  - Object of user traits
     * @param  {Object}   [options] - Options to pass to identify call
@@ -174,6 +191,7 @@ export default function analytics(config = {}) {
     },
     /**
      * Track an analytics event. This will trigger `track` calls in any installed plugins
+     * @typedef {Function} Track
      * @param  {String}   eventName - Event name
      * @param  {Object}   [payload]   - Event payload
      * @param  {Object}   [options]   - Event options
@@ -233,7 +251,8 @@ export default function analytics(config = {}) {
     },
     /**
      * Trigger page view. This will trigger `page` calls in any installed plugins
-     * @param  {String}   [data] - Page data overrides.
+     * @typedef {Function} Page
+     * @param  {PageData} [data] - Page data overrides.
      * @param  {Object}   [options] - Page tracking options
      * @param  {Function} [callback] - Callback to fire after page view call completes
      * @api public
@@ -283,8 +302,9 @@ export default function analytics(config = {}) {
     },
     /**
      * Get user data
-     * @param {String} [key] - dot.prop.path of user data. Example: 'traits.company.name'
-     * @returns {any} value of user data or null
+     * @typedef {Function} User
+     * @param {string} [key] - dot.prop.path of user data. Example: 'traits.company.name'
+     * @returns {string|object} value of user data or null
      *
      * @example
      *
@@ -310,6 +330,7 @@ export default function analytics(config = {}) {
     },
     /**
      * Clear all information about the visitor & reset analytic state.
+     * @typedef {Function} Reset
      * @param {Function} [callback] - Handler to run after reset
      *
      * @example
@@ -322,8 +343,9 @@ export default function analytics(config = {}) {
     },
     /**
      * Fire callback on analytics ready event
+     * @typedef {Function} Ready
      * @param  {Function} callback - function to trigger when all providers have loaded
-     * @returns {Function} - Function to detach listener
+     * @returns {DetachListeners} - Function to detach listener
      *
      * @example
      *
@@ -336,9 +358,10 @@ export default function analytics(config = {}) {
     },
     /**
      * Attach an event handler function for analytics lifecycle events.
+     * @typedef {Function} On
      * @param  {String}   name - Name of event to listen to
      * @param  {Function} callback - function to fire on event
-     * @return {Function} - Function to detach listener
+     * @return {DetachListeners} - Function to detach listener
      *
      * @example
      *
@@ -386,6 +409,10 @@ export default function analytics(config = {}) {
         }
         addMiddleware(beforeHandler, before)
         addMiddleware(afterHandler, after)
+        /**
+         * Detach listeners
+         * @typedef {Function} DetachListeners
+         */
         return () => {
           removeMiddleware(beforeHandler, before)
           removeMiddleware(afterHandler, after)
@@ -415,9 +442,10 @@ export default function analytics(config = {}) {
     },
     /**
      * Attach a handler function to an event and only trigger it only once.
+     * @typedef {Function} Once
      * @param  {String} name - Name of event to listen to
      * @param  {Function} callback - function to fire on event
-     * @return {Function} - Function to detach listener
+     * @return {DetachListeners} - Function to detach listener
      *
      * @example
      *
@@ -452,6 +480,7 @@ export default function analytics(config = {}) {
     },
     /**
      * Get data about user, activity, or context. Access sub-keys of state with `dot.prop` syntax.
+     * @typedef {Function} GetState
      * @param  {string} [key] - dot.prop.path value of state
      * @return {any}
      *
@@ -499,6 +528,7 @@ export default function analytics(config = {}) {
     },
     /**
      * Enable analytics plugin
+     * @typedef {Function} EnablePlugin
      * @param  {String|Array} plugins - name of plugins(s) to disable
      * @param  {Function} [callback] - callback after enable runs
      * @example
@@ -513,6 +543,7 @@ export default function analytics(config = {}) {
     },
     /**
      * Disable analytics plugin
+     * @typedef {Function} DisablePlugin
      * @param  {String|Array} name - name of integration(s) to disable
      * @param  {Function} callback - callback after disable runs
      * @example
@@ -541,7 +572,10 @@ export default function analytics(config = {}) {
     /**
      * Storage utilities for persisting data.
      * These methods will allow you to save data in localStorage, cookies, or to the window.
-     * @type {Object}
+     * @typedef {Object} Storage
+     * @property {GetItem} getItem - Get value from storage
+     * @property {SetItem} setItem - Set storage value
+     * @property {RemoveItem} removeItem - Remove storage value
      *
      * @example
      *
@@ -560,6 +594,7 @@ export default function analytics(config = {}) {
     storage: {
       /**
        * Get value from storage
+       * @typedef {Function} GetItem
        * @param {String} key - storage key
        * @param {Object} [options] - storage options
        * @return {Any}
@@ -571,6 +606,7 @@ export default function analytics(config = {}) {
       getItem: getItem,
       /**
        * Set storage value
+       * @typedef {Function} SetItem
        * @param {String} key - storage key
        * @param {any} value - storage value
        * @param {Object} [options] - storage options
@@ -584,6 +620,7 @@ export default function analytics(config = {}) {
       },
       /**
        * Remove storage value
+       * @typedef {Function} RemoveItem
        * @param {String} key - storage key
        * @param {Object} [options] - storage options
        *
@@ -778,6 +815,8 @@ const before = 'before'
 const after = 'after'
 // const uId = 'userId'
 
+export default analytics
+
 /*
  * analytics.init exported for standalone browser build
  * CDN build exposes global _analytics variable
@@ -799,8 +838,4 @@ export { analytics as Analytics }
  */
 export { EVENTS }
 
-/*
- * Core Analytic constants. These are exposed for third party plugins & listeners
- * @type {Object}
- */
 export { CONSTANTS }
