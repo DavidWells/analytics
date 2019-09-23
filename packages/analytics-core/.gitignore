@@ -1,5 +1,6 @@
 # node / npm
 node_modules
+temp-types
 package-lock.json
 
 *.log
