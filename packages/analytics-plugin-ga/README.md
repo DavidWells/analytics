@@ -113,6 +113,6 @@ browser and node
 `page`, `track`, `identify`
 
 ## Platform node
-`page`, `track`
+`page`, `track`, `identify`
 
 <!-- AUTO-GENERATED-CONTENT:END (PLUGIN_DOCS) -->

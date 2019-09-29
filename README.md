@@ -208,7 +208,7 @@ After the library is initialized with config, the core API is exposed and ready 
 - **config** <code>object</code> - analytics core config
 - **[config.app]** (optional) <code>string</code> - Name of site / app
 - **[config.version]** (optional) <code>string</code> - Version of your app
-- **[config.plugins]** (optional) <code>array</code> - Array of analytics plugins
+- **[config.plugins]** (optional) <code>Array</code>.&lt;<code>Object</code>&gt; - Array of analytics plugins
 
 **Example**
 
@@ -309,7 +309,7 @@ Trigger page view. This will trigger `page` calls in any installed plugins
 
 **Arguments**
 
-- **[data]** (optional) <code>String</code> - Page data overrides.
+- **[data]** (optional) <a href="https://github.com/DavidWells/analytics/blob/master/packages/analytics-core/src/modules/page.js#L33">PageData</a> - Page data overrides.
 - **[options]** (optional) <code>Object</code> - Page tracking options
 - **[callback]** (optional) <code>Function</code> - Callback to fire after page view call completes
 
@@ -344,7 +344,7 @@ Get user data
 
 **Arguments**
 
-- **[key]** (optional) <code>String</code> - dot.prop.path of user data. Example: 'traits.company.name'
+- **[key]** (optional) <code>string</code> - dot.prop.path of user data. Example: 'traits.company.name'
 
 **Example**
 
@@ -641,7 +641,7 @@ The `analytics` has a robust plugin system. Here is a list of currently availabl
 - [analytics-plugin-tab-events](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-tab-events) Expose tab visibility events plugin for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-tab-events).
 - [analytics-plugin-window-events](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-window-events) Expose window events plugin for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-window-events).
 - [@analytics/cookie-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-cookie) Cookie helper functions [npm link](https://www.npmjs.com/package/@analytics/cookie-utils).
-- [analytics-util-forms](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-forms) Form helper functions [npm link](https://www.npmjs.com/package/analytics-util-forms).
+- [@analytics/form-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-forms) Form utility library for managing HTML form submissions & values [npm link](https://www.npmjs.com/package/@analytics/form-utils).
 - [analytics-util-params](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-params) Url Parameter helper functions [npm link](https://www.npmjs.com/package/analytics-util-params).
 - [analytics-util-storage](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-storage) Storage utilities for saving values in browser [npm link](https://www.npmjs.com/package/analytics-util-storage).
 - [analytics-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-utils) Analytics utility functions used by 'analytics' module [npm link](https://www.npmjs.com/package/analytics-utils).

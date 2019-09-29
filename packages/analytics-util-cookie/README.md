@@ -7,6 +7,8 @@ Exposes `getCookie`, `setCookie`, `removeCookie`, & `hasCookieSupport` functions
 This will work with [analytics](https://getanalytics.io) or as a standalone import in your code.
 
 <!-- AUTO-GENERATED-CONTENT:START (TOC) -->
+- [How to install](#how-to-install)
+- [API](#api)
 - [`getCookie`](#getcookie)
 - [`setCookie`](#setcookie)
 - [`deleteCookie`](#deletecookie)
