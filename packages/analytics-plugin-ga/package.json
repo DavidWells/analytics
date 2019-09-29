@@ -13,6 +13,7 @@
   "author": "David Wells",
   "license": "MIT",
   "scripts": {
+    "types": "../../node_modules/.bin/jsdoc -t ../../node_modules/tsd-jsdoc/dist -r ./src/ -d temp-types",
     "build": "node ../../scripts/build/index.js",
     "watch": "node ../../scripts/build/_watch.js",
     "release:patch": "npm version patch && npm publish",
@@ -27,6 +28,12 @@
   "browser": {
     "./lib/analytics-plugin-ga.cjs.js": "./lib/analytics-plugin-ga.browser.cjs.js",
     "./lib/analytics-plugin-ga.es.js": "./lib/analytics-plugin-ga.browser.es.js"
+  },
+  "projectMeta": {
+    "platforms": {
+      "browser": "./src/browser.js",
+      "node": "./src/node.js"
+    }
   },
   "files": [
     "dist",

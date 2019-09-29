@@ -1,49 +1,66 @@
-/**
- * Segment.com Node plugin
- */
 
-let ua
+let universalAnalytics
 if (!process.browser) {
-  ua = require('universal-analytics')
+  universalAnalytics = require('universal-analytics')
 }
 
-const config = {
-  /* Your site tracking ID */
-  trackingId: null
-}
-
-const NAMESPACE = 'google-analytics'
-
-/* Export the integration */
-export default function googleAnalytics(userConfig) {
-  const gaSettings = {
-    ...config,
-    ...userConfig
-  }
-  const client = ua(gaSettings.trackingId)
+/**
+ * Serverside Google Analytics plugin
+ * @param {object} pluginConfig - Plugin settings
+ * @param {string} pluginConfig.trackingId - site tracking Id
+ * @return {*}
+ * @example
+ *
+ * googleAnalytics({
+ *   trackingId: '123-xyz'
+ * })
+ */
+function googleAnalyticsNode(pluginConfig = {}) {
+  const client = initialize(pluginConfig)
   return {
-    NAMESPACE: NAMESPACE,
-    config: gaSettings,
+    NAMESPACE: 'google-analytics',
+    config: pluginConfig,
     // page view
     page: ({ payload, config }) => {
       const { properties } = payload
       const { path, href, title } = properties
-      if (!path || !href || !title) {
-        throw new Error('Missing path, href or title in page call for GA')
-      }
-      client.pageview(path, href, title).send()
+      pageView({ path, href, title }, client)
     },
     // track event
     track: ({ payload, config }) => {
       const { event, properties } = payload
       const category = properties.category || 'All' // todo finish
       const label = properties.label || 'NA' // todo finish
-      client.event(category, event, label, properties).send()
+      trackEvent({ category, event, label, properties }, client)
     },
-    // identify user
-    // identify: ({ payload }) => {
-    //   const { userId, traits } = payload
-    //   client.identify({ userId, traits })
-    // }
+    /* identify user */
+    identify: ({ payload }) => identifyVisitor(payload.userId, client)
   }
+}
+
+export default googleAnalyticsNode
+
+export function initialize(config) {
+  if (!config.trackingId) throw new Error('No google analytics trackingId defined')
+  return universalAnalytics(config.trackingId)
+}
+
+export function pageView({ path, href, title }, client) {
+  if (!path || !href || !title) {
+    throw new Error('Missing path, href or title in page call for GA')
+  }
+  client.pageview(path, href, title).send()
+}
+
+export function trackEvent({ category, event, label, properties }, client) {
+  client.event(category, event, label, properties).send()
+}
+
+/**
+ * Identify a visitor by Id
+ * @param  {string} id - unique visitor ID
+ * @param  {object} client - initialized GA client
+ */
+export function identifyVisitor(id, client) {
+  client.set('uid', id)
 }

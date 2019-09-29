@@ -8,7 +8,7 @@
 
 ```bash
 npm install analytics
-npm install analytics-plugin-ga
+npm install @analytics/google-analytics
 ```
 
 ## Usage
@@ -19,7 +19,7 @@ Set the `trackingId` of your site.
 
 ```js
 import Analytics from 'analytics'
-import googleAnalytics from 'analytics-plugin-ga'
+import googleAnalytics from '@analytics/google-analytics'
 
 const analytics = Analytics({
   app: 'doggieDating',
@@ -57,3 +57,62 @@ analytics.track('play', {
   value: 42
 })
 ```
+
+## Standalone Usage
+
+This package exports Google Analytics helper methods for any project to use.
+
+We recommend using the `default` export from this package with the `analytics` package.
+
+The analytics plugin will handle:
+
+- library initialization
+- offline retries
+- middleware functionality
+- callbacks
+- etc.
+
+The methods below are exposed do not attach to the `analytics` plugin lifecycle.
+
+### Install
+
+```bash
+npm install @analytics/google-analytics
+```
+
+### Import and use standalone functions
+
+```js
+// Stand alone functionality
+import { initialize, page, track, identify } from '@analytics/google-analytics'
+
+// Load GA on page
+initialize({
+  trackingId: 'UA-1234'
+})
+
+// Track page view
+page()
+
+// Track custom event
+track('buttonClick', {
+  label: 'event label',
+  category: 'event category',
+  value: 'event value'
+})
+```
+
+<!-- AUTO-GENERATED-CONTENT:START (PLUGIN_PLATFORMS_SUPPORTED) -->
+## Platforms Supported
+
+browser and node
+<!-- AUTO-GENERATED-CONTENT:END (PLUGIN_PLATFORMS_SUPPORTED) -->
+
+<!-- AUTO-GENERATED-CONTENT:START (PLUGIN_DOCS) -->
+## Platform browser
+`page`, `track`, `identify`
+
+## Platform node
+`page`, `track`
+
+<!-- AUTO-GENERATED-CONTENT:END (PLUGIN_DOCS) -->
