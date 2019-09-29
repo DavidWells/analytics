@@ -18,7 +18,9 @@ export default function initializeMiddleware(instance) {
         const groupedParams = paramsArray.reduce((acc, key) => {
           // match utm params & dclid (display) & gclid (cpc)
           if (key.match(/^utm_/) || key.match(/^(d|g)clid/)) {
-            acc.campaign[key] = params[key]
+            const cleanName = key.replace(/^utm_/, '')
+            const keyName = (cleanName === 'campaign') ? 'name' : cleanName
+            acc.campaign[keyName] = params[key]
           }
           if (key.match(/^an_prop_/)) {
             acc.props[`${key.replace(/^an_prop_/, '')}`] = params[key]
