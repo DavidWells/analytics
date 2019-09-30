@@ -1,7 +1,16 @@
 const path = require('path')
 const fs = require('fs')
+const { inspect } = require('util')
 const markdownMagic = require('markdown-magic')
 const dox = require('dox')
+const outdent = require('outdent')
+const forceSync = require('sync-rpc')
+// Force sync processing until markdown-magic 2.0 is released
+const getPluginInfo = forceSync(require.resolve('./docs/parseSync'))
+
+function deepLog(data) {
+  console.log(inspect(data, {showHidden: false, depth: null, colors: true}))
+}
 
 const config = {
   transforms: {
@@ -75,31 +84,97 @@ const config = {
       // const date = getFileUpdatedDate()
       return 'lol'
     },
+    PLUGIN_PLATFORMS_SUPPORTED(content, options, instance) {
+      let updatedContent = ''
+      const data = grabPluginData(instance.originalPath)
+      if (data) {
+        const platforms = data.map((d) => {
+          const plat = (d.platform === 'node') ? 'node.js' : d.platform
+          return capitalizeFirstLetter(plat)
+        }).join(' and ')
+        return outdent`
+        ## Platforms Supported
+
+        ${platforms}
+        `
+      }
+    },
+    PLUGIN_DOCS(content, options, instance) {
+      let updatedContent = ''
+      const data = grabPluginData(instance.originalPath)
+      if (data) {
+        deepLog(data)
+        const removeList = ['NAMESPACE', 'config', 'loaded', 'initialize']
+        /* Supported platforms */
+        const platforms = data.map((d) => {
+          let methods = ''
+          if (d.data.ast.methodsAndValues) {
+            methods = d.data.ast.methodsAndValues
+              .filter(x => !removeList.includes(x.name))
+              .map((x) => {
+                return `\`${x.name}\``
+              }).join(', ')
+          }
+          const plat = (d.platform === 'node') ? 'node.js' : d.platform
+          return outdent`
+          ### ${capitalizeFirstLetter(plat)} Methods
+          ${methods}\n
+          `
+        }).join('\n')
+        console.log('platforms', platforms)
+        updatedContent += platforms
+      }
+      return updatedContent
+    },
     API_DOCS(content, options) {
       const fileContents = fs.readFileSync(path.join(__dirname, '..', 'packages/analytics-core/src/index.js'), 'utf-8')
       const docBlocs = dox.parseComments(fileContents, { raw: true, skipSingleStar: true })
       let updatedContent = ''
+      const removeItems = ['analytics.instance', 'analytics.return']
       docBlocs.forEach((data) => {
         // console.log('data', data)
-        updatedContent += `### ${formatName(data.ctx.name)}\n\n`
-        updatedContent += `${data.description.full}\n\n`
-        updatedContent += `${formatArguments(data.tags)}`
-        /*
-        <details>
-          <summary>usage example</summary>
+        const niceName = formatName(data.ctx.name)
+        if (!removeItems.includes(niceName)) {
+          updatedContent += `### ${formatName(data.ctx.name)}\n\n`
+          updatedContent += `${data.description.full}\n\n`
+          updatedContent += `${formatArguments(data.tags)}`
+          /*
+          <details>
+            <summary>usage example</summary>
 
-          ```js
-          const la = 'foo'
-          ```
+            ```js
+            const la = 'foo'
+            ```
 
-        </details>
-         */
-        updatedContent += formatExample(data.tags).join('\n')
-        updatedContent += `\n`
+          </details>
+           */
+          updatedContent += formatExample(data.tags).join('\n')
+          updatedContent += `\n`
+        }
       })
       return updatedContent.replace(/^\s+|\s+$/g, '')
     }
   }
+}
+
+function grabPluginData(originalPath) {
+  const dir = path.dirname(originalPath)
+  const SRC_DIR = path.resolve(dir, 'src')
+  const PKG_DIR = path.join(dir, 'package.json')
+  const pkg = require(PKG_DIR)
+  if (pkg && pkg.projectMeta) {
+    if (pkg.projectMeta.platforms) {
+      return Object.keys(pkg.projectMeta.platforms).map((platform) => {
+        const entryPath = pkg.projectMeta.platforms[platform]
+        const resolvedEntryPath = path.resolve(dir, entryPath)
+        return {
+          platform: platform,
+          data: getPluginInfo(resolvedEntryPath)
+        }
+      })
+    }
+  }
+  return {}
 }
 
 const storageKeys = ['setItem', 'getItem', 'removeItem']
@@ -158,9 +233,29 @@ ${theArgs.join('\n')}
   variable: false
 }
 */
+
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1)
+}
+
+const SRC_LINKS = {
+  PageData: 'https://github.com/DavidWells/analytics/blob/master/packages/analytics-core/src/modules/page.js#L33'
+}
+
 function renderArg(tag) {
   const optionalText = (tag.name.match(/^\[/)) ? '(optional) ' : ''
-  return `- **${tag.name}** ${optionalText}${tag.typesDescription} ${tag.description}`
+  if (tag.name === '[data]') {
+    console.log('tag', tag)
+  }
+  let typesDescription = tag.typesDescription
+  // Remove link from description
+  if (tag.typesDescription.match((/^<a/))) {
+    const realLink = SRC_LINKS[tag.types[0]]
+    if (realLink) {
+      typesDescription = tag.typesDescription.replace(/href="(.*?)"/, `href="${realLink}"`)
+    }
+  }
+  return `- **${tag.name}** ${optionalText}${typesDescription} ${tag.description}`
 }
 
 function renderExample(example) {
