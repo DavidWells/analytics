@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/DavidWells/analytics/compare/analytics-plugin-ga@0.1.5...analytics-plugin-ga@0.2.0) (2019-09-30)
+
+
+### Features
+
+* **google-analytics:** expose standalone functions for general use ([88ef970](https://github.com/DavidWells/analytics/commit/88ef970))
+
+
+
+
+
 ## [0.1.5](https://github.com/DavidWells/analytics/compare/analytics-plugin-ga@0.1.4...analytics-plugin-ga@0.1.5) (2019-08-06)
 
 
