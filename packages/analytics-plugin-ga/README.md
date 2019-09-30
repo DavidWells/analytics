@@ -1,23 +1,41 @@
-# Google analytics
-
-> Note: This package has moved to [@analytics/google-analytics](https://www.npmjs.com/package/@analytics/google-analytics)
+# Google Analytics pkg
 
 This library exports the `google-analytics` plugin for the [`analytics`](https://www.npmjs.com/package/analytics) package & standalone methods for any project to use to make it easier to interact with [Google Analytics](https://analytics.google.com/analytics/web/).
 
 For more information [see the docs](https://getanalytics.io/plugins/google-analytics/).
 
-## Install
+<!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
+<details>
+<summary>Click to expand</summary>
+
+- [Using with analytics](#using-with-analytics)
+  * [Installation](#installation)
+  * [Using in your app](#using-in-your-app)
+  * [Customizing event payloads](#customizing-event-payloads)
+- [Using as a standalone package](#using-as-a-standalone-package)
+  * [Installation](#installation-1)
+  * [Using in your app](#using-in-your-app-1)
+- [Platforms Supported](#platforms-supported)
+  * [Browser Methods](#browser-methods)
+  * [Node.js Methods](#nodejs-methods)
+
+</details>
+<!-- AUTO-GENERATED-CONTENT:END -->
+
+## Using with analytics
+
+To use as an `analytics` plugin, install the package and initialize in your site or application.
+
+### Installation
 
 ```bash
 npm install analytics
 npm install @analytics/google-analytics
 ```
 
-## Usage
+### Using in your app
 
-Import analytics and use the google analytics plugin.
-
-Set the `trackingId` of your site.
+Set the `trackingId` of your site. This Id can be found in your google analytics admin panel.
 
 ```js
 import Analytics from 'analytics'
@@ -49,7 +67,7 @@ analytics.identify('user-id-xyz')
 
 After initializing `analytics` with your Google Analytics trackingId, data will be sent into google analytics whenever `analytics.page`, `analytics.track`, or `analytics.identify` are called.
 
-## Sending additional event fields
+### Customizing event payloads
 
 To send tracking custom events to Google Analytics with `eventLabel`, `eventCategory`, and `eventValue` [fields](https://developers.google.com/analytics/devguides/collection/analyticsjs/events#event_fields), add the `label`, `category`, and `value` keys to the event properties.
 
@@ -61,11 +79,11 @@ analytics.track('play', {
 })
 ```
 
-## Standalone Usage
+## Using as a standalone package
 
 This package exports Google Analytics helper methods for any project to use.
 
-> Note: We recommend using the `default` plugin export from this package alongside the `analytics` package.
+**Note:** We recommend using the plugin described above with the `analytics` core package.
 
 The standalone methods below will send data to Google Analytics but are not attached to the [analytics plugin lifecycle](https://getanalytics.io/lifecycle/).
 
@@ -78,15 +96,17 @@ Use `analytics` + `@analytics/google-analytics` packages together as described a
 - listeners
 - etc.
 
-### Install
+When using `standalone` methods, you will need to handle these edge cases & retries yourself.
 
-Using standalone
+### Installation
+
+Install the `@analytics/google-analytics` package.
 
 ```bash
 npm install @analytics/google-analytics
 ```
 
-### Import and use standalone functions
+### Using in your app
 
 When using `standalone` mode, you will need to initialize the provider javascript and pass in all the fields needed by said provider.
 
@@ -116,6 +136,8 @@ trackEvent('buttonClick', {
 identifyVisitor('user-123')
 ```
 
+**Tip**: The benefit of using with the `@analytics/google-analytics` as an `analytics` plugin is not having to update many places in your code when adding or removing an analytics tool. This make refactoring and responding to new business requirements much easier.
+
 <!-- AUTO-GENERATED-CONTENT:START (PLUGIN_PLATFORMS_SUPPORTED) -->
 ## Platforms Supported
 
@@ -124,7 +146,6 @@ Browser and Node.js
 
 <!-- AUTO-GENERATED-CONTENT:START (PLUGIN_DOCS) -->
 ### Browser Methods
-
 `page`, `track`, `identify`
 
 ### Node.js Methods

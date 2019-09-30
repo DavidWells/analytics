@@ -1,7 +1,7 @@
 {
-  "name": "analytics-plugin-ga",
+  "name": "@analytics/google-analytics",
   "version": "0.2.0",
-  "description": "Google analytics integration for 'analytics' module",
+  "description": "Google analytics plugin for 'analytics' module",
   "keywords": [
     "analytics",
     "analytics-project",
