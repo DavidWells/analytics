@@ -1,5 +1,7 @@
 import Analytics from 'analytics'
 import googleAnalytics from 'analytics-plugin-ga'
+import { page } from 'analytics-plugin-ga'
+
 import segmentPlugin from 'analytics-plugin-segment'
 import doNotTrack from 'analytics-plugin-do-not-track'
 import tabEvents from 'analytics-plugin-tab-events'
@@ -13,6 +15,9 @@ import exampleProviderPlugin from './plugins/provider-example'
 import visualizeLifecycle from './plugins/visualize-analytics'
 import eventValidation from 'analytics-plugin-event-validation'
 import crazyEgg from 'analytics-plugin-crazy-egg'
+
+// console.log('googleAnalytics', googleAnalytics)
+// console.log('pageView', page)
 
 const reduxPlugin = store => next => action => {
   if (action.type === 'page:segment') {
