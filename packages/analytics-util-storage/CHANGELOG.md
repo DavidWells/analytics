@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.2.0 (2019-10-01)
+
+
+### Features
+
+* **storage:** export cookie utils & add getItem(‘key’, ‘all') ([3ed5b93](https://github.com/DavidWells/analytics/commit/3ed5b93))
+
+
+
+
+
 ## [0.1.1](https://github.com/DavidWells/analytics/compare/analytics-util-storage@0.1.0...analytics-util-storage@0.1.1) (2019-10-01)
 
 **Note:** Version bump only for package analytics-util-storage
