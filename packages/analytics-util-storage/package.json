@@ -1,5 +1,5 @@
 {
-  "name": "analytics-util-storage",
+  "name": "@analytics/storage-utils",
   "version": "0.1.1",
   "description": "Storage utilities for saving values in browser",
   "author": "David Wells",
@@ -9,7 +9,10 @@
     "analytics",
     "analytics-project",
     "analytics-util",
-    "storage"
+    "storage",
+    "cookies",
+    "localStorage",
+    "persistance"
   ],
   "main": "lib/analytics-util-storage.cjs.js",
   "globalName": "analyticsUtilStorage",
