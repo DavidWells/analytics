@@ -1,5 +1,7 @@
 # Analytics Storage Utils
 
+> Note: This package has moved to @analytics/storage-utils
+
 Storage utilities for [analytics](https://www.npmjs.com/package/analytics)
 
 Storage tries to use `localStorage` then `cookies` then defaults to `global` window.

@@ -96,7 +96,7 @@ export function removeItem(key, options = {}) {
     removeCookie(key)
     return COOKIE
   }
-  /* 3. Fallback to window/global */
+  /* 3. Fallback to window / global */
   globalContext[key] = null
   return GLOBAL
 }
