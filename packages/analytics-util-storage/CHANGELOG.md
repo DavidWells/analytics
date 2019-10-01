@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.1](https://github.com/DavidWells/analytics/compare/analytics-util-storage@0.1.0...analytics-util-storage@0.1.1) (2019-10-01)
+
+**Note:** Version bump only for package analytics-util-storage
+
+
+
+
+
 # [0.1.0](https://github.com/DavidWells/analytics/compare/analytics-util-storage@0.0.6...analytics-util-storage@0.1.0) (2019-09-23)
 
 
