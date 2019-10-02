@@ -8,18 +8,18 @@ FullStory enables pixel perfect replays of what your visitor is doing on your we
 
 ## How to use
 
-Install `analytics` and `analytics-plugin-fullstory` packages
+Install `analytics` and `@analytics/fullstory` packages
 
 ```bash
 npm install analytics
-npm install analytics-plugin-fullstory
+npm install @analytics/fullstory
 ```
 
 Import and initialize in your project
 
 ```js
 import Analytics from 'analytics'
-import fullStoryPlugin from 'analytics-plugin-fullstory'
+import fullStoryPlugin from '@analytics/fullstory'
 
 const analytics = Analytics({
   app: 'awesome-app',
