@@ -1,4 +1,4 @@
-import storage, { getCookie, setCookie, removeCookie } from '@analytic/storage-utils'
+import storage, { getCookie, setCookie, removeCookie } from '@analytics/storage-utils'
 
 export {
   storage,
