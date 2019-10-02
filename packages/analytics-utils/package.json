@@ -55,5 +55,8 @@
     "rollup-plugin-terser": "^4.0.3",
     "rollup-plugin-uglify": "^6.0.2",
     "uglify-js": "^3.4.9"
+  },
+  "dependencies": {
+    "@analytics/storage-utils": "^0.2.1"
   }
 }

@@ -1,5 +1,11 @@
+import storage, { getCookie, setCookie, removeCookie } from '@analytic/storage-utils'
 
-export { default as cookie } from './cookie.js'
+export {
+  storage,
+  getCookie,
+  setCookie,
+  removeCookie
+}
 export { default as decodeUri } from './decodeUri.js'
 export { default as getBrowserLocale } from './getBrowserLocale.js'
 export { default as getTimeZone } from './getTimeZone.js'
@@ -12,7 +18,6 @@ export { default as paramsGet } from './paramsGet.js'
 export { default as paramsParse } from './paramsParse.js'
 export { default as paramsRemove } from './paramsRemove.js'
 export { default as parseReferrer } from './parseReferrer.js'
-export { default as storage } from './storage'
 export { default as url } from './url.js'
 export { default as uuid } from './uuid.js'
 export { default as globalContext } from './globalContext.js'
