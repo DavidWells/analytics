@@ -1,7 +1,5 @@
 # FullStory plugin for `analytics`
 
-> Note: This package has moved to [@analytics/fullstory](https://www.npmjs.com/package/@analytics/fullstory)
-
 Integration with [FullStory](https://www.fullstory.com/) for [analytics](https://www.npmjs.com/package/analytics)
 
 <!-- ANALYTICS_DOCS:START (TOC) -->
