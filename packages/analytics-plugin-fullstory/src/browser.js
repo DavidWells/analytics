@@ -8,6 +8,7 @@ export const config = {
 
 /**
  * FullStory Analytics plugin
+ * @link https://getanalytics.io/plugins/fullstory/
  * @link https://help.fullstory.com/hc/en-us/sections/360003732794-JavaScript-API
  * @param {object} pluginConfig - Plugin settings
  * @param {string} pluginConfig.org - FullStory account's `org` ID. The `_fs_org` value in settings.
