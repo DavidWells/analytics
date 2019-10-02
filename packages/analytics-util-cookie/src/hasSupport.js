@@ -5,9 +5,10 @@ export default function hasCookieSupport() {
     const key = '___c'
     // Try to set cookie
     cookie(key, '1')
+    const valueSet = document.cookie.indexOf(key) !== -1
     // Cleanup cookie
     cookie(key, '', -1)
-    return document.cookie.indexOf(key) !== -1
+    return valueSet
   } catch (e) {
     return false
   }
