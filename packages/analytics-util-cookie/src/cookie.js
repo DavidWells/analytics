@@ -22,6 +22,7 @@ cookie('test', '', -1)
 */
 
 function cookie(name, value, ttl, path, domain, secure) {
+  if (typeof window === 'undefined') return
   if (arguments.length > 1) {
     /* eslint-disable no-return-assign */
     return document.cookie = `${name}=${encodeURIComponent(value)}${(!ttl) ? '' : `; expires=${new Date(+new Date() + (ttl * 1000)).toUTCString()}`}${(!path) ? '' : `; path=${path}`}${(!domain) ? '' : `; domain=${domain}`}${(!secure) ? '' : '; secure'}`
@@ -30,7 +31,4 @@ function cookie(name, value, ttl, path, domain, secure) {
   return decodeURIComponent(((`; ${document.cookie}`).split(`; ${name}=`)[1] || '').split(';')[0])
 }
 
-const noOp = () => {}
-
-/* This module will shake out unused code and work in browser and node 🎉 */
-export default process.browser ? cookie : noOp
+export default cookie
