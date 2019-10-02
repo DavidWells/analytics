@@ -8,5 +8,9 @@
  * => "Bought keyword"
  */
 export default function decode(s) {
-  return decodeURIComponent(s).replace(/\+/g, ' ')
+  try {
+    return decodeURIComponent(s.replace(/\+/g, ' '))
+  } catch (e) {
+    return null
+  }
 }
