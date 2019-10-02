@@ -21,18 +21,18 @@ const hasCookies = hasCookieSupport()
  */
 export function getItem(key, options = {}) {
   if (!key) return null
-  const storage = getStorageType(options)
+  const storageType = getStorageType(options)
   // Get value from all locations
-  if (storage === 'all') return getAll(key)
+  if (storageType === 'all') return getAll(key)
   /* 1. Try localStorage */
-  if (useLocal(storage)) {
+  if (useLocal(storageType)) {
     const value = localStorage.getItem(key)
-    if (value || storage === LOCAL_STORAGE) return parse(value)
+    if (value || storageType === LOCAL_STORAGE) return parse(value)
   }
   /* 2. Fallback to cookie */
-  if (useCookie(storage)) {
+  if (useCookie(storageType)) {
     const value = getCookie(key)
-    if (value || storage === COOKIE) return parse(value)
+    if (value || storageType === COOKIE) return parse(value)
   }
   /* 3. Fallback to window/global. */
   return globalContext[key] || null
@@ -56,17 +56,17 @@ function getAll(key) {
  */
 export function setItem(key, value, options = {}) {
   if (!key || !value) return false
-  const storage = getStorageType(options)
+  const storageType = getStorageType(options)
   const saveValue = JSON.stringify(value)
   /* 1. Try localStorage */
-  if (useLocal(storage)) {
+  if (useLocal(storageType)) {
     // console.log('SET as localstorage', saveValue)
     const oldValue = parse(localStorage.getItem(key))
     localStorage.setItem(key, saveValue)
     return { value, oldValue, location: LOCAL_STORAGE }
   }
   /* 2. Fallback to cookie */
-  if (useCookie(storage)) {
+  if (useCookie(storageType)) {
     // console.log('SET as cookie', saveValue)
     const oldValue = parse(getCookie(key))
     setCookie(key, saveValue)
@@ -86,12 +86,12 @@ export function setItem(key, value, options = {}) {
  */
 export function removeItem(key, options = {}) {
   if (!key) return false
-  const storage = getStorageType(options)
-  if (useLocal(storage)) {
+  const storageType = getStorageType(options)
+  if (useLocal(storageType)) {
     /* 1. Try localStorage */
     localStorage.removeItem(key)
     return LOCAL_STORAGE
-  } else if (useCookie(storage)) {
+  } else if (useCookie(storageType)) {
     /* 2. Fallback to cookie */
     removeCookie(key)
     return COOKIE
@@ -113,13 +113,16 @@ function useCookie(storage) {
   return hasCookies && (!storage || storage === COOKIE)
 }
 
-export default {
-  getItem,
-  setItem,
-  removeItem,
-  hasLocalStorageSupport,
+export {
   getCookie,
   setCookie,
   removeCookie,
+  hasLocalStorageSupport,
   hasCookieSupport
+}
+
+export default {
+  getItem,
+  setItem,
+  removeItem
 }
