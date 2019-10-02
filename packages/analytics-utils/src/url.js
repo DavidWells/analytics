@@ -22,7 +22,7 @@ export function getDomainHost(url) {
  * @return {String} base hostname of page
  *
  * @example
- *  getDomainHost('https://subdomain.my-site.com/')
+ *  getDomainBase('https://subdomain.my-site.com/')
  *  > my-site.com
  */
 export function getDomainBase(url) {
