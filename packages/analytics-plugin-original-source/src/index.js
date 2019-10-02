@@ -1,4 +1,4 @@
-import { inBrowser, parseReferrer, cookie, storage } from 'analytics-utils'
+import { inBrowser, parseReferrer, getCookie, storage } from 'analytics-utils'
 import { formatPipeString, parsePipeString } from './utils'
 
 const events = {
@@ -47,7 +47,7 @@ export function getOriginalSource(opts = {}) {
     return parsePipeString(originalSrc)
   }
   // 2. then try __utmz cookie
-  const utmzCookie = cookie.getCookie('__utmz')
+  const utmzCookie = getCookie('__utmz')
   if (utmzCookie) {
     const parsedCookie = parsePipeString(utmzCookie)
     if (parsedCookie) {
