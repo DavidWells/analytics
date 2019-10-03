@@ -1,6 +1,8 @@
 import Analytics from 'analytics'
-import googleAnalytics from 'analytics-plugin-ga'
-import { page } from 'analytics-plugin-ga'
+import googleAnalytics from '@analytics/google-analytics'
+import { getCookie, setCookie } from '@analytics/cookie-utils'
+import { setCookie as set } from '@analytics/storage-utils'
+import { setCookie as otherSet } from 'analytics-utils'
 
 import segmentPlugin from 'analytics-plugin-segment'
 import doNotTrack from 'analytics-plugin-do-not-track'
@@ -16,6 +18,9 @@ import visualizeLifecycle from './plugins/visualize-analytics'
 import eventValidation from 'analytics-plugin-event-validation'
 import crazyEgg from 'analytics-plugin-crazy-egg'
 
+// setCookie('xyz', "hi")
+// set('abc', "hi")
+// otherSet('dfg', "hi")
 // console.log('googleAnalytics', googleAnalytics)
 // console.log('pageView', page)
 
@@ -132,6 +137,8 @@ const analytics = Analytics({
     }*/
   ]
 })
+
+// analytics.storage.setItem('wer', "hi", 'cookie')
 
 window.Analytics = analytics
 
