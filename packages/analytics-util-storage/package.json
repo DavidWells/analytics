@@ -1,6 +1,6 @@
 {
   "name": "@analytics/storage-utils",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Storage utilities for saving values in browser",
   "author": "David Wells",
   "license": "MIT",
@@ -46,6 +46,6 @@
     "@babel/preset-env": "^7.4.5"
   },
   "dependencies": {
-    "@analytics/cookie-utils": "^0.2.1"
+    "@analytics/cookie-utils": "^0.2.2"
   }
 }
