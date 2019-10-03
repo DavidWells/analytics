@@ -92,7 +92,7 @@ If you'd like to have your own naming conventions & rules for analytics, you can
 
 ```js
 import Analytics from 'analytics'
-import googleAnalytics from 'analytics-plugin-ga'
+import googleAnalytics from '@analytics/google-analytics'
 
 const customValidationPlugin = {
   NAMESPACE: 'company-xyz-event-validation',

@@ -11,7 +11,7 @@ This plugin will send page views, track custom events, and identify visitors in 
 
 ```bash
 npm install analytics
-npm install analytics-plugin-ga
+npm install analytics-plugin-hubspot
 ```
 
 ## How to use

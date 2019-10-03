@@ -61,7 +61,7 @@ This plugin will load the google analytics tracking script onto the page and han
 ```js{7-11}
 /* src/analytics.js */
 import Analytics from 'analytics'
-import googleAnalytics from 'analytics-plugin-ga'
+import googleAnalytics from '@analytics/google-analytics'
 
 const analytics = Analytics({
   app: 'app-name',
@@ -165,7 +165,7 @@ Demo coming soon. The above steps will work for Vue apps.
 
 ```js
 import Analytics from 'analytics'
-import googleAnalyticsPlugin from 'analytics-plugin-ga'
+import googleAnalyticsPlugin from '@analytics/google-analytics'
 import customerIOPlugin from 'analytics-plugin-customerio'
 
 /* Initialize analytics */
