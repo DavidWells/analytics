@@ -103,29 +103,31 @@ function parseDomain(referrer) {
  * Search engine query string data
  * @type {Object}
  */
+const Q = 'q'
+const QUERY = 'query'
 const searchEngines = {
-  'daum.net': 'q',
+  'daum.net': Q,
   'eniro.se': 'search_word',
-  'naver.com': 'query',
+  'naver.com': QUERY,
   'yahoo.com': 'p',
-  'msn.com': 'q',
-  'aol.com': 'q',
-  'lycos.com': 'q',
-  'ask.com': 'q',
-  'cnn.com': 'query',
+  'msn.com': Q,
+  'aol.com': Q,
+  'lycos.com': Q,
+  'ask.com': Q,
+  'cnn.com': QUERY,
   'about.com': 'terms',
   'baidu.com': 'wd',
   'yandex.com': 'text',
-  'seznam.cz': 'q',
-  'search.com': 'q',
+  'seznam.cz': Q,
+  'search.com': Q,
   'yam.com': 'k',
-  'kvasir.no': 'q',
-  'terra.com': 'query',
-  'mynet.com': 'q',
+  'kvasir.no': Q,
+  'terra.com': QUERY,
+  'mynet.com': Q,
   'rambler.ru': 'words',
-  'google': 'q',
+  'google': Q,
   'bing.com': {
-    'p': 'q',
+    'p': Q,
     'n': 'live'
   },
 }
