@@ -2,17 +2,9 @@
   <img src="https://user-images.githubusercontent.com/532272/61419845-ab1e9a80-a8b4-11e9-8fd1-18b9e743bb6f.png" width="450" />
 </a>
 
-A lightweight, extendable analytics library designed to work with **any** third-party analytics provider to track page views, custom events, & identify users.
+A lightweight analytics abstraction library for tracking page views, custom events, & identify visitors. Designed to work with any [third-party analytics tool](https://getanalytics.io/plugins/).
 
-The `analytics` library allows users to:
-
-- Connect with your favorite analytics providers
-- Trigger custom logic based on user activity
-- Extend with functionality via [plugins](#analytic-plugins)
-- Easily allow visitors to opt out of tracking
-- [... and lots more](#features)
-
-[View the docs](https://getanalytics.io/)
+[Read the docs](https://getanalytics.io/) or view the [live demo app](https://analytics-demo.netlify.com)
 
 ## Table of Contents
 <!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
