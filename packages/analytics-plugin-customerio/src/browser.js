@@ -1,22 +1,12 @@
 /* global _cio */
 
-/* Default configuration */
-const config = {
-  /* Customer.io site ID */
-  siteId: null,
-  /* Disable anonymous events from firing */
-  disableAnonymousTraffic: false
-}
-
-// Because customer.io automatically fired a page view onLoad
-// We need to ignore the first .page() call
-let initialPageViewFired = false
-
 /**
  * Customer.io analytics integration
+ * @link https://getanalytics.io/plugins/customerio/
  * @link https://customer.io/docs/javascript-quick-start
  * @param {object} pluginConfig - Plugin settings
  * @param {string} pluginConfig.siteId - Customer.io site Id for client side tracking
+ * @param {boolean} [pluginConfig.disableAnonymousTraffic] -  Disable anonymous events from firing
  * @return {object} Analytics plugin
  * @example
  *
@@ -25,12 +15,12 @@ let initialPageViewFired = false
  * })
  */
 export default function customerIOPlugin(pluginConfig = {}) {
+  // Because customer.io automatically fired a page view onLoad
+  // We need to ignore the first .page() call
+  let initialPageViewFired = false
   return {
     NAMESPACE: 'customerio',
-    config: {
-      ...config,
-      ...pluginConfig
-    },
+    config: pluginConfig,
     initialize: ({ config }) => {
       const { siteId } = config
       if (!siteId) {
@@ -59,8 +49,6 @@ export default function customerIOPlugin(pluginConfig = {}) {
     },
     page: ({ payload, config }) => {
       if (config.disableAnonymousTraffic && !payload.userId) return
-      // disableAnonymousPageView
-      // disableAnonymousTrack
       /* ignore the first .page() call b/c customer.io already fired it */
       if (!initialPageViewFired) {
         initialPageViewFired = true

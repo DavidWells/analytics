@@ -6,7 +6,8 @@
     "analytics",
     "analytics-project",
     "analytics-plugin",
-    "customerio"
+    "customerio",
+    "customer.io"
   ],
   "author": "David Wells",
   "license": "MIT",

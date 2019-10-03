@@ -1,11 +1,10 @@
-# Customer.io plugin for `analytics`
+# Customer.io plugin for analytics
+
+> Note: This package has moved to @analytics/customerio
 
 Integration with [customer.io](https://customer.io/) for [analytics](https://www.npmjs.com/package/analytics) package.
 
-<!-- ANALYTICS_DOCS:START (TOC) -->
-- [Usage](#usage)
-- [Plugin Options](#plugin-options)
-<!-- ANALYTICS_DOCS:END (TOC) -->
+[View the docs](https://getanalytics.io/plugins/customerio/)
 
 <!-- ANALYTICS_DOCS:START (USAGE) -->
 ## Usage
@@ -20,7 +19,7 @@ Import and initialize in project
 
 ```js
 import Analytics from 'analytics'
-import customerIOPlugin from 'analytics-plugin-customerio'
+import customerIOPlugin from '@analytics/customerio'
 
 const analytics = Analytics({
   app: 'awesome-app',

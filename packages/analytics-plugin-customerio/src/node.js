@@ -4,16 +4,9 @@ if (!process.browser) {
   CustomerIO = require('customerio-node')
 }
 
-/* Default configuration */
-const config = {
-  /* Customer.io site ID */
-  siteId: null,
-  /* Customer.io API key */
-  apiKey: null,
-}
-
 /**
  * Customer.io analytics server side integration. Uses https://github.com/customerio/customerio-node
+ * @link https://getanalytics.io/plugins/customerio/
  * @link https://customer.io/docs/api/
  * @param {object} pluginConfig - Plugin settings
  * @param {string} pluginConfig.siteId - Customer.io site Id for server side tracking
@@ -29,29 +22,29 @@ const config = {
  */
 export default function customerIOPlugin(pluginConfig = {}) {
   // Allow for userland overides of base methods
-  const cioConfig = {
-    ...config,
-    ...pluginConfig
+  if (!pluginConfig.siteId) {
+    throw new Error('customer.io siteId missing')
   }
-
-  const cio = new CustomerIO(cioConfig.siteId, cioConfig.apiKey)
-
+  if (!pluginConfig.apiKey) {
+    throw new Error('customer.io apiKey missing')
+  }
+  const client = new CustomerIO(pluginConfig.siteId, pluginConfig.apiKey)
   return {
     NAMESPACE: 'customerio',
-    config: cioConfig,
+    config: pluginConfig,
     // page view
-    page: ({ payload, config }) => {
+    page: ({ payload }) => {
       const { userId, properties } = payload
       if (!userId) return false
 
-      cio.trackPageView(userId, properties.url)
+      client.trackPageView(userId, properties.url)
     },
     // track event
-    track: ({ payload, config }) => {
+    track: ({ payload }) => {
       const { userId, event, properties } = payload
       if (!userId) return false
 
-      cio.track(userId, {
+      client.track(userId, {
         name: event,
         data: properties
       })
@@ -59,7 +52,7 @@ export default function customerIOPlugin(pluginConfig = {}) {
     // identify user
     identify: ({ payload }) => {
       const { userId, traits } = payload
-      cio.identify(userId, traits)
+      client.identify(userId, traits)
     }
   }
 }
