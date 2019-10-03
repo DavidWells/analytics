@@ -1,27 +1,11 @@
 ---
-title: Open Source Javascript Analytics Library Documentation
-description: Analytics is lightweight, extendable library designed to work with any third party analytics provider to track page views, custom events, & identify users
+title: Open source analytics abstraction library for browsers & Node.js
+description: Analytics is a lightweight abstraction library for tracking page views, custom events, & identify visitors
 pageTitle: Analytics Documentation
-subTitle: Start here to learn about the analytics
+subTitle: An open source analytics abstraction library for browsers & Node.js
 ---
 
-A lightweight, extendable analytics library designed to work with **any** third party analytics provider to track page views, custom events, & identify users.
-
-The `analytics` library allows users to:
-
-- Connect with your favorite analytics providers
-- Trigger custom logic based on user activity
-- Extend with functionality via plugins
-- Easily allow visitors to opt out of tracking
-
-## Features
-
-- [x] Extendable - Bring your own third party tool & plugins
-- [x] Test & debug analytics integrations with time travel & offline mode
-- [x] Add functionality/modify tracking calls with baked in lifecycle hooks
-- [x] Isomorphic. Works in browser & on server
-- [x] Queues events to send when analytic libraries are loaded
-- [x] Works offline
+Analytics is a lightweight abstraction library for tracking page views, custom events, & identify visitors. It is pluggable & designed to work with any [third-party analytics tool](https://getanalytics.io/plugins/) or your own backend.
 
 ##  About the library
 
@@ -31,7 +15,7 @@ This results in a lot of complexity, maintenance, and extra code when adding/rem
 
 This library aims to solves that with a simple pluggable abstraction layer.
 
-**Driving philosophy:**
+### Driving philosophy
 
 - You should never be locked into a analytics tool
 - DX is paramount. Adding & removing analytic tools from your application should be easy
@@ -39,6 +23,18 @@ This library aims to solves that with a simple pluggable abstraction layer.
 - A pluggable API makes adding new business requests easy
 
 To add or remove an analytics provider adjust the `plugins` you load into `analytics`.
+
+## Features
+
+- [x] Extendable - Bring your own third party tool & plugins
+- [x] Test & debug analytics integrations with time travel & offline mode
+- [x] Add functionality/modify tracking calls with baked in lifecycle hooks
+- [x] Isomorphic. Works in browser & on server
+- [x] Queues events to send when analytic libraries are loaded
+- [x] Works offline
+- [x] Typescript support
+- [See the api docs](https://getanalytics.io/api/)
+
 
 ## How to Install
 
@@ -54,7 +50,7 @@ Or from a CDN as a script tag:
 <script src="https://unpkg.com/analytics/dist/analytics.min.js"></script>
 ```
 
-## Using analytics in your app
+## Using in your app
 
 Initialize analytics, include your analytic tools, & start tracking events.
 
@@ -96,4 +92,12 @@ analytics.identify('user-id-xyz', {
 })
 ```
 
-[View the full api docs](https://getanalytics.io/api/)
+## API reference
+
+- [View the full api docs](https://getanalytics.io/api/)
+
+## Using Plugins
+
+- [Using plugins](https://getanalytics.io/plugins/)
+- [Writing plugins](https://getanalytics.io/plugins/writing-plugins/)
+- [Learn about the plugin lifecycle](https://getanalytics.io/lifecycle/)

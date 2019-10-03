@@ -12,7 +12,6 @@ module.exports = {
         spectrumPath: 'analytics',
         sidebarCategories: {
           null: [
-            'index',
             'tutorial/getting-started',
           ],
           Docs: [
