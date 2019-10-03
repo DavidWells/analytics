@@ -1,4 +1,5 @@
-import { paramsParse, paramsRemove, storage, uuid } from 'analytics-utils'
+/* eslint-disable camelcase */
+import { paramsParse, storage, uuid } from 'analytics-utils'
 import EVENTS from '../events'
 import { ANON_ID } from '../constants'
 
@@ -6,15 +7,16 @@ import { ANON_ID } from '../constants'
 export default function initializeMiddleware(instance) {
   return store => next => action => {
     if (action.type === EVENTS.bootstrap) {
+      const params = paramsParse()
       /* 1. Set anonymous ID */
       if (!storage.getItem(ANON_ID)) {
-        instance.storage.setItem(ANON_ID, uuid())
+        const anonId = params.an_aid || uuid()
+        instance.storage.setItem(ANON_ID, anonId)
       }
-
       /* 2. Parse url params */
-      const params = paramsParse()
       const paramsArray = Object.keys(params)
       if (paramsArray.length) {
+        const { an_uid, an_event } = params
         const groupedParams = paramsArray.reduce((acc, key) => {
           // match utm params & dclid (display) & gclid (cpc)
           if (key.match(/^utm_/) || key.match(/^(d|g)clid/)) {
@@ -38,20 +40,23 @@ export default function initializeMiddleware(instance) {
         store.dispatch({
           type: EVENTS.params,
           raw: params,
-          ...groupedParams
+          ...groupedParams,
+          ...(an_uid ? { userId: an_uid } : {}),
         })
 
-        if (params.an_uid) {
+        /* If userId set, call identify */
+        if (an_uid) {
           // timeout to debounce and make sure integration is registered. Todo refactor
           setTimeout(() => {
-            instance.identify(params.an_uid, groupedParams.traits)
+            instance.identify(an_uid, groupedParams.traits)
           }, 0)
         }
 
-        if (params.an_event) {
+        /* If tracking event set, call track */
+        if (an_event) {
           // timeout to debounce and make sure integration is registered. Todo refactor
           setTimeout(() => {
-            instance.track(params.an_event, groupedParams.props)
+            instance.track(an_event, groupedParams.props)
           }, 0)
         }
 
@@ -62,40 +67,7 @@ export default function initializeMiddleware(instance) {
             campaign: groupedParams.campaign
           })
         }
-
-        if (params.an_clean) {
-          // timeout to debounce and make sure integration is registered. Todo refactor
-          setTimeout(() => {
-            paramsRemove('an_')
-          }, 0)
-        }
       }
-
-      /* TODO set these?
-      var setFirstVisitDate = function(storage) {
-          var now = new Date();
-          var year = now.getFullYear().toString();
-          var day = now.getDate().toString();
-          var month = now.getMonth() + 1;
-          if (month < 10) {
-              month = '0' + month.toString();
-          }
-          var dateString = year + month + day;
-
-          storage.set('firstVisitDate', dateString);
-          return dateString;
-      }
-      var setDaysSinceFirstVisit = function(storage, firstDate) {
-          var firstDateISO = firstDate.substring(0, 4) + '-' + firstDate.substring(4, 6) + '-' + firstDate.substring(6);
-          var firstDateTime = new Date(firstDateISO)
-          var now = new Date();
-
-          var oneDay = 24 * 60 * 60 * 1000;
-          var daysSince = Math.round(Math.abs((firstDateTime.getTime() - now.getTime())/(oneDay)));
-
-          return daysSince.toString();
-      }
-      */
     }
     return next(action)
   }
