@@ -59,7 +59,7 @@ npm install analytics-plugin-event-validation
 ```js
 import Analytics from 'analytics'
 import eventValidation from 'analytics-plugin-event-validation'
-import customerIOPlugin from 'analytics-plugin-customerio'
+import customerIOPlugin from '@analytics/customerio'
 
 const analytics = Analytics({
   app: 'awesomesauce',

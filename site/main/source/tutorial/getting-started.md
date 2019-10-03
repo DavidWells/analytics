@@ -166,7 +166,7 @@ Demo coming soon. The above steps will work for Vue apps.
 ```js
 import Analytics from 'analytics'
 import googleAnalyticsPlugin from '@analytics/google-analytics'
-import customerIOPlugin from 'analytics-plugin-customerio'
+import customerIOPlugin from '@analytics/customerio'
 
 /* Initialize analytics */
 const analytics = Analytics({

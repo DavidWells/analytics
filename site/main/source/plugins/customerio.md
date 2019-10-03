@@ -13,18 +13,18 @@ Integration with [customer.io](https://customer.io/) for [analytics](https://www
 <!-- ANALYTICS_DOCS:START (USAGE) -->
 ## Usage
 
-Install `analytics` and `analytics-plugin-customerio` packages
+Install `analytics` and `@analytics/customerio` packages
 
 ```bash
 npm install analytics
-npm install analytics-plugin-customerio
+npm install @analytics/customerio
 ```
 
 Import and initialize in project
 
 ```js
 import Analytics from 'analytics'
-import customerIOPlugin from 'analytics-plugin-customerio'
+import customerIOPlugin from '@analytics/customerio'
 
 const analytics = Analytics({
   app: 'awesome-app',
