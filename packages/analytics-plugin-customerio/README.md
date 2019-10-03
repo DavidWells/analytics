@@ -1,7 +1,5 @@
 # Customer.io plugin for analytics
 
-> Note: This package has moved to @analytics/customerio
-
 Integration with [customer.io](https://customer.io/) for [analytics](https://www.npmjs.com/package/analytics) package.
 
 [View the docs](https://getanalytics.io/plugins/customerio/)
@@ -9,10 +7,11 @@ Integration with [customer.io](https://customer.io/) for [analytics](https://www
 <!-- ANALYTICS_DOCS:START (USAGE) -->
 ## Usage
 
-Install `analytics` and `analytics-plugin-customerio` packages
+Install `analytics` and `@analytics/customerio` packages
 
 ```bash
-npm install analytics analytics-plugin-customerio
+npm install analytics
+npm install @analytics/customerio
 ```
 
 Import and initialize in project
