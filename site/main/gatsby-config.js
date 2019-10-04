@@ -42,9 +42,9 @@ module.exports = {
             'utils/cookies',
             'utils/forms',
           ],
-          Tutorial: [
+          Tutorials: [
             'tutorial/getting-started',
-            // 'tutorial/whats-next'
+            'tutorial/handling-campaign-url-parameters',
           ],
           Resources: [
             'resources/faq',
