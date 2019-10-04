@@ -35,10 +35,20 @@ const reduxPlugin = store => next => action => {
 
 var tabInterval
 
+// Listen for ?utm params and send data to Netlify function
+const customUtmTokenPlugin = {
+  NAMESPACE: 'save-campaign-data',
+  campaign: ({ payload }) => {
+    console.log('utm data', payload)
+    // alert(JSON.stringify(payload))
+  }
+}
+
 /* initialize analytics and load plugins */
 const analytics = Analytics({
   debug: true,
   plugins: [
+    customUtmTokenPlugin,
     /*{
       // If already has anonymousId use it
       NAMESPACE: 'set-anon-id',
