@@ -11,7 +11,7 @@ This plugin will send page views, track custom events, and identify visitors in 
 
 ```bash
 npm install analytics
-npm install analytics-plugin-hubspot
+npm install @analytics/hubspot
 ```
 
 ## How to use
@@ -20,7 +20,7 @@ Import and initialize in project
 
 ```js
 import Analytics from 'analytics'
-import hubSpotPlugin from 'analytics-plugin-hubspot'
+import hubSpotPlugin from '@analytics/hubspot'
 
 const analytics = Analytics({
   app: 'awesome-app',
