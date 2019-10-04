@@ -1,7 +1,5 @@
 # HubSpot plugin for `analytics`
 
-> Note: This package has moved to [@analytics/hubspot](https://www.npmjs.com/package/@analytics/hubspot)
-
 Integration with HubSpot for [analytics](https://www.npmjs.com/package/analytics)
 
 [View the docs](https://getanalytics.io/plugins/hubspot/)
@@ -18,7 +16,8 @@ Integration with HubSpot for [analytics](https://www.npmjs.com/package/analytics
 Install `analytics` and `@analytics/hubspot` packages
 
 ```bash
-npm install analytics @analytics/hubspot
+npm install analytics
+npm install @analytics/hubspot
 ```
 
 Import and initialize in project
