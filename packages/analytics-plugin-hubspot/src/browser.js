@@ -1,12 +1,8 @@
 /* global _hsq */
 
-export const config = {
-  portalId: '',
-  // formatTraits: (key, value) => {}
-}
-
 /**
  * HubSpot Analytics plugin
+ * @link https://getanalytics.io/plugins/hubspot/
  * @link https://developers.hubspot.com/docs/methods/tracking_code_api/tracking_code_overview
  * @param {object} pluginConfig - Plugin settings
  * @param {string} pluginConfig.portalId - The HubSpot Portal (or Hub) Id of your HubSpot account
@@ -23,10 +19,7 @@ export default function hubSpotPlugin(pluginConfig = {}) {
   // Allow for userland overides of base methods
   return {
     NAMESPACE: 'hubspot',
-    config: {
-      ...config,
-      ...pluginConfig
-    },
+    config: pluginConfig,
     initialize: ({ config }) => {
       const { portalId } = config
       if (!portalId) {

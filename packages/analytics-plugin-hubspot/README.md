@@ -1,6 +1,10 @@
 # HubSpot plugin for `analytics`
 
+> Note: This package has moved to [@analytics/hubspot](https://www.npmjs.com/package/@analytics/hubspot)
+
 Integration with HubSpot for [analytics](https://www.npmjs.com/package/analytics)
+
+[View the docs](https://getanalytics.io/plugins/hubspot/)
 
 <!-- ANALYTICS_DOCS:START (TOC) -->
 - [Usage](#usage)
@@ -11,17 +15,17 @@ Integration with HubSpot for [analytics](https://www.npmjs.com/package/analytics
 
 ## Usage
 
-Install `analytics` and `analytics-plugin-hubspot` packages
+Install `analytics` and `@analytics/hubspot` packages
 
 ```bash
-npm install analytics analytics-plugin-hubspot
+npm install analytics @analytics/hubspot
 ```
 
 Import and initialize in project
 
 ```js
 import Analytics from 'analytics'
-import hubSpotPlugin from 'analytics-plugin-hubspot'
+import hubSpotPlugin from '@analytics/hubspot'
 
 const analytics = Analytics({
   app: 'awesome-app',
