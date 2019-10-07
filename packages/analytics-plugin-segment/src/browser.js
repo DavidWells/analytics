@@ -11,6 +11,7 @@ const config = {
 
 /**
  * Segment analytics plugin
+ * @link https://getanalytics.io/plugins/segment/
  * @link https://segment.com/docs/sources/website/analytics.js/
  * @param {object}  pluginConfig - Plugin settings
  * @param {string}  pluginConfig.writeKey - Your segment writeKey

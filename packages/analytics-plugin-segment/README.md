@@ -1,6 +1,10 @@
 # Segment plugin for `analytics`
 
+> Note: This package has moved to [@analytics/segment](https://www.npmjs.com/package/@analytics/segment)
+
 Integration with [segment](https://segment.com/) for [analytics](https://www.npmjs.com/package/analytics)
+
+For more information [see the docs](https://getanalytics.io/plugins/segment/).
 
 <!-- ANALYTICS_DOCS:START (TOC) -->
 - [Usage](#usage)
@@ -10,17 +14,17 @@ Integration with [segment](https://segment.com/) for [analytics](https://www.npm
 <!-- ANALYTICS_DOCS:START (USAGE) -->
 ## Usage
 
-Install `analytics` and `analytics-plugin-segment` packages
+Install `analytics` and `@analytics/segment` packages
 
 ```bash
-npm install analytics analytics-plugin-segment
+npm install analytics @analytics/segment
 ```
 
-Import and initialize in project
+Initialize `analytics` with the segment plugin. After initialization the segment script will be automatically loaded into the page and send data to [segment](https://segment.com/).
 
 ```js
 import Analytics from 'analytics'
-import segmentPlugin from 'analytics-plugin-segment'
+import segmentPlugin from '@analytics/segment'
 
 const analytics = Analytics({
   app: 'awesome-app',
@@ -28,6 +32,7 @@ const analytics = Analytics({
     segmentPlugin({
       writeKey: '123-xyz'
     })
+    // ... other plugins
   ]
 })
 
@@ -64,4 +69,4 @@ segmentPlugin({
 ```
 <!-- ANALYTICS_DOCS:END -->
 
-See the [full list of analytics provider plugins](https://github.com/DavidWells/analytics#current-plugins) in the main repo.
+See the [full list of analytics provider plugins](https://getanalytics.io/plugins/) in the main repo.
