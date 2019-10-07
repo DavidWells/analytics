@@ -2,6 +2,7 @@
 
 /**
  * Crazy egg plugin
+ * @link https://getanalytics.io/plugins/crazyegg/
  * @link https://help.crazyegg.com/article/43-crazy-egg-manual-installation
  * @param {object} pluginConfig - Plugin settings
  * @param {string} pluginConfig.accountNumber - crazy egg account ID
