@@ -10,8 +10,7 @@ Integration with [customer.io](https://customer.io/) for [analytics](https://www
 Install `analytics` and `@analytics/customerio` packages
 
 ```bash
-npm install analytics
-npm install @analytics/customerio
+npm install analytics @analytics/customerio
 ```
 
 Import and initialize in project
@@ -51,6 +50,7 @@ analytics.identify('user-xzy-123', {
 
 - **pluginConfig** <code>object</code> - Plugin settings
 - **pluginConfig.siteId** <code>string</code> - Customer.io site Id for client side tracking
+- **[pluginConfig.disableAnonymousTraffic]** (optional) <code>boolean</code> - Disable anonymous events from firing
 
 **Example**
 
