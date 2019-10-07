@@ -7,7 +7,6 @@
 export default function getPluginByMethod(method, plugins) {
   return Object.keys(plugins).reduce((arr, name) => {
     const int = plugins[name]
-    // console.log('int', int)
     return (int[method]) ? arr.concat(int) : arr
   }, [])
 }
