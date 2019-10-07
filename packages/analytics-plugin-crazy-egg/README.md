@@ -1,7 +1,5 @@
 # Crazy Egg Plugin for `analytics`
 
-> Note: This package has moved to [@analytics/crazy-egg](https://www.npmjs.com/package/@analytics/crazy-egg)
-
 Integration with [crazy egg](https://www.crazyegg.com/) for [analytics](https://www.npmjs.com/package/analytics)
 
 For more information [see the docs](https://getanalytics.io/plugins/crazyegg/).
