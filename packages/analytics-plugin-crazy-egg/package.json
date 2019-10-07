@@ -1,6 +1,6 @@
 {
   "name": "@analytics/crazy-egg",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "Crazy Egg integration for 'analytics' module",
   "keywords": [
     "analytics",
