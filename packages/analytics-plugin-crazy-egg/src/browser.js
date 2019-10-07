@@ -14,7 +14,6 @@
  * })
  */
 export default function crazyEgg(pluginConfig = {}) {
-  // Allow for userland overides of base methods
   return {
     NAMESPACE: 'crazy-egg',
     config: pluginConfig,
