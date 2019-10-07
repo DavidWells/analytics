@@ -2,6 +2,7 @@
 
 /**
  * Simple Analytics plugin
+ * @link https://getanalytics.io/plugins/simple-analytics/
  * @link https://simpleanalytics.com/
  * @return {object} Analytics plugin
  * @example
