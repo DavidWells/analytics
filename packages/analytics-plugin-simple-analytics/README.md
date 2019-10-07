@@ -1,7 +1,5 @@
 # Simple Analytics Plugin
 
-> Note: This package has moved to [@analytics/simple-analytics](https://www.npmjs.com/package/@analytics/simple-analytics)
-
 Integration with simple analytics [Simple Analytics](https://simpleanalytics.com/)
 
 For more information [see the docs](https://getanalytics.io/plugins/simple-analytics/).

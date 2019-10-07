@@ -1,7 +1,5 @@
 # Segment plugin for `analytics`
 
-> Note: This package has moved to [@analytics/segment](https://www.npmjs.com/package/@analytics/segment)
-
 Integration with [segment](https://segment.com/) for [analytics](https://www.npmjs.com/package/analytics)
 
 For more information [see the docs](https://getanalytics.io/plugins/segment/).

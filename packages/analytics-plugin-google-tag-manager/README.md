@@ -1,7 +1,5 @@
 # Google Tag Manager plugin for `analytics`
 
-> Note: This package has moved to [@analytics/google-tag-manager](https://www.npmjs.com/package/@analytics/google-tag-manager)
-
 Integration with google tag manager for [analytics](https://www.npmjs.com/package/analytics)
 
 For more information [see the docs](https://getanalytics.io/plugins/google-tag-manager/).
