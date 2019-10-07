@@ -8,6 +8,7 @@ export const config = {
 
 /**
  * Google tag manager plugin
+ * @link https://getanalytics.io/plugins/google-tag-manager/
  * @link https://developers.google.com/tag-manager/
  * @param {object} pluginConfig - Plugin settings
  * @param {string} pluginConfig.containerId - The Container ID uniquely identifies the GTM Container.

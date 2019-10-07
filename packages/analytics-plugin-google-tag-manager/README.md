@@ -1,6 +1,10 @@
-# Google analytics plugin for `analytics`
+# Google Tag Manager plugin for `analytics`
+
+> Note: This package has moved to [@analytics/google-tag-manager](https://www.npmjs.com/package/@analytics/google-tag-manager)
 
 Integration with google tag manager for [analytics](https://www.npmjs.com/package/analytics)
+
+For more information [see the docs](https://getanalytics.io/plugins/google-tag-manager/).
 
 <!-- ANALYTICS_DOCS:START (TOC) -->
 - [Usage](#usage)
@@ -11,24 +15,25 @@ Integration with google tag manager for [analytics](https://www.npmjs.com/packag
 <!-- ANALYTICS_DOCS:START (USAGE) -->
 ## Usage
 
-Install `analytics` and `analytics-plugin-google-tag-manager` packages
+Install `analytics` and `@analytics/google-tag-manager` packages
 
 ```bash
-npm install analytics analytics-plugin-google-tag-manager
+npm install analytics @analytics/google-tag-manager
 ```
 
 Import and initialize in project
 
 ```js
 import Analytics from 'analytics'
-import googleTagManager from 'analytics-plugin-google-tag-manager'
+import googleTagManager from '@analytics/google-tag-manager'
 
 const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
     googleTagManager({
-      containerId: 'GTM-123xyz'
+      containerId: 'GTM-123xyz',
     })
+    // ... other plugins
   ]
 })
 
@@ -43,7 +48,6 @@ analytics.identify('user-xzy-123', {
   name: 'Bill Murray',
   cool: true
 })
-
 ```
 <!-- ANALYTICS_DOCS:END -->
 
@@ -72,4 +76,4 @@ googleTagManager({
 ```
 <!-- ANALYTICS_DOCS:END -->
 
-See the [full list of analytics provider plugins](https://github.com/DavidWells/analytics#current-plugins) in the main repo.
+See the [full list of analytics provider plugins](https://getanalytics.io/plugins/) in the main repo.
