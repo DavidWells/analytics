@@ -14,18 +14,18 @@ Integration with google tag manager for [analytics](https://www.npmjs.com/packag
 <!-- ANALYTICS_DOCS:START (USAGE) -->
 ## Usage
 
-Install `analytics` and `analytics-plugin-google-tag-manager` packages
+Install `analytics` and `@analytics/google-tag-manager` packages
 
 ```bash
 npm install analytics
-npm install analytics-plugin-google-tag-manager
+npm install @analytics/google-tag-manager
 ```
 
 Import and initialize in project
 
 ```js
 import Analytics from 'analytics'
-import googleTagManager from 'analytics-plugin-google-tag-manager'
+import googleTagManager from '@analytics/google-tag-manager'
 
 const analytics = Analytics({
   app: 'awesome-app',

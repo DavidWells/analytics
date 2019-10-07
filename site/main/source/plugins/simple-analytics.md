@@ -9,7 +9,7 @@ Integration with simple analytics [Simple Analytics](https://simpleanalytics.com
 
 ```bash
 npm install analytics
-npm install analytics-plugin-simple-analytics
+npm install @analytics/simple-analytics
 ```
 
 ## Usage
@@ -20,7 +20,7 @@ Once initialized, simple analytics will automatically track page views.
 
 ```js
 import Analytics from 'analytics'
-import simpleAnalyticsPlugin from 'analytics-plugin-simple-analytics'
+import simpleAnalyticsPlugin from '@analytics/simple-analytics'
 
 const analytics = Analytics({
   app: 'awesome-app',

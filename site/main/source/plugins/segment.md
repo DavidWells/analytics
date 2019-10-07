@@ -13,18 +13,18 @@ Integration with [segment](https://segment.com/) for [analytics](https://www.npm
 <!-- ANALYTICS_DOCS:START (USAGE) -->
 ## Usage
 
-Install `analytics` and `analytics-plugin-segment` packages
+Install `analytics` and `@analytics/segment` packages
 
 ```bash
 npm install analytics
-npm install analytics-plugin-segment
+npm install @analytics/segment
 ```
 
 Import and initialize in project
 
 ```js
 import Analytics from 'analytics'
-import segmentPlugin from 'analytics-plugin-segment'
+import segmentPlugin from '@analytics/segment'
 
 const analytics = Analytics({
   app: 'awesome-app',

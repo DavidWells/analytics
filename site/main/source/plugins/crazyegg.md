@@ -9,16 +9,18 @@ Integration with [crazy egg](https://www.crazyegg.com/) for [analytics](https://
 
 ```bash
 npm install analytics
-npm install analytics-plugin-crazy-egg
+npm install @analytics/crazy-egg
 ```
 
 ## Usage
 
-Once installed and initialized this plugin will load crazy egg onto every page of your site.
+Include `analytics` and `@analytics/crazy-egg` in the source code of your project.
+
+Initialize analytics with the crazy-egg plugin and the crazy-egg heat mapping script will be automatically loaded into the page.
 
 ```js
 import Analytics from 'analytics'
-import crazyEgg from 'analytics-plugin-crazy-egg'
+import crazyEgg from '@analytics/crazy-egg'
 
 const analytics = Analytics({
   app: 'awesome-app',
@@ -26,6 +28,7 @@ const analytics = Analytics({
     crazyEgg({
       accountNumber: '12345678'
     }),
+    // ... other plugins
   ]
 })
 
