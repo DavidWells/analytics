@@ -72,6 +72,8 @@ To add or remove an analytics provider adjust the `plugins` you load into `analy
 
 ## Install
 
+This module is distributed via [npm](https://npmjs.com/package/analytics) which is bundled with [node](https://nodejs.org/) and should be installed as one of your project's dependencies.
+
 ```bash
 npm install analytics --save
 ```
@@ -86,8 +88,8 @@ Or as a script tag:
 
 ```js
 import Analytics from 'analytics'
-import googleAnalyticsPlugin from 'analytics-plugin-ga'
-import customerIOPlugin from 'analytics-plugin-customerio'
+import googleAnalyticsPlugin from '@analytics/google-analytics'
+import customerIOPlugin from '@analytics/customerio'
 
 /* Initialize analytics */
 const analytics = Analytics({
@@ -619,13 +621,13 @@ The `analytics` has a robust plugin system. Here is a list of currently availabl
 <!-- AUTO-GENERATED-CONTENT:START (PLUGINS) -->
 - [analytics-cli](https://github.com/DavidWells/analytics/tree/master/packages/analytics-cli) CLI for `analytics` pkg [npm link](https://www.npmjs.com/package/analytics-cli).
 - [analytics-plugin-crazy-egg](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-crazy-egg) Crazy Egg integration for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-crazy-egg).
-- [analytics-plugin-customerio](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-customerio) Customer.io integration for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-customerio).
+- [@analytics/customerio](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-customerio) Customer.io integration for 'analytics' module [npm link](https://www.npmjs.com/package/@analytics/customerio).
 - [analytics-plugin-do-not-track](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-do-not-track) Disable tracking for opted out visitors plugin for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-do-not-track).
 - [analytics-plugin-event-validation](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-event-validation) Event validation plugin for analytics [npm link](https://www.npmjs.com/package/analytics-plugin-event-validation).
 - [@analytics/fullstory](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-fullstory) FullStory plugin for 'analytics' module [npm link](https://www.npmjs.com/package/@analytics/fullstory).
 - [@analytics/google-analytics](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-ga) Google analytics plugin for 'analytics' module [npm link](https://www.npmjs.com/package/@analytics/google-analytics).
 - [analytics-plugin-google-tag-manager](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-google-tag-manager) Google tag manager plugin for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-google-tag-manager).
-- [analytics-plugin-hubspot](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-hubspot) HubSpot plugin for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-hubspot).
+- [@analytics/hubspot](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-hubspot) HubSpot plugin for 'analytics' module [npm link](https://www.npmjs.com/package/@analytics/hubspot).
 - [analytics-plugin-lifecycle-example](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-lifecycle-example) Example plugin with lifecycle methods for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-lifecycle-example).
 - [analytics-plugin-original-source](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-original-source) Save original referral source of visitor plugin for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-original-source).
 - [analytics-plugin-segment](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-segment) Segment integration for 'analytics' module for browser & node [npm link](https://www.npmjs.com/package/analytics-plugin-segment).
@@ -744,7 +746,7 @@ Using this plugin is the same as any other.
 
 ```js
 import Analytics from 'analytics'
-import customerIoPlugin from 'analytics-plugin-customerio'
+import customerIoPlugin from '@analytics/customerio'
 import myPlugin from './plugin.js'
 
 const analytics = Analytics({
