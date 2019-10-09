@@ -14,7 +14,7 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
 
     if (type === EVENTS.disablePlugin || type === EVENTS.enablePlugin) {
       // TODO run initialize if not loaded
-      if (callback) {
+      if (typeof callback === 'function') {
         callback(name)
       }
     }

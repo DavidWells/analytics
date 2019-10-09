@@ -569,7 +569,7 @@ function abortFunction(pluginName, method, abortablePlugins, otherPlugin, action
 
 function notAbortableError(action, method) {
   return () => {
-    throw new Error(`Action "${action.type}" is not cancellable. Remove abort from plugin ${method}`)
+    throw new Error(`Action "${action.type}" is not cancellable. Remove abort in ${method}`)
   }
 }
 
