@@ -18,7 +18,7 @@ Install `analytics` and `@analytics/segment` packages
 npm install analytics @analytics/segment
 ```
 
-Initialize `analytics` with the segment plugin. After initialization the segment script will be automatically loaded into the page and send data to [segment](https://segment.com/).
+Import and initialize in project
 
 ```js
 import Analytics from 'analytics'
@@ -30,7 +30,7 @@ const analytics = Analytics({
     segmentPlugin({
       writeKey: '123-xyz'
     })
-    // ... other plugins
+    // ...other plugins
   ]
 })
 

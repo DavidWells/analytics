@@ -25,6 +25,7 @@ const analytics = Analytics({
     customerIOPlugin({
       siteId: '123-xyz'
     })
+    // ...other plugins
   ]
 })
 
