@@ -13,6 +13,7 @@
   "license": "MIT",
   "scripts": {
     "docs": "node ../analytics-cli/bin/run docs",
+    "types": "../../node_modules/.bin/jsdoc -t ../../node_modules/tsd-jsdoc/dist -r ./src/ -d temp-types",
     "build": "node ../../scripts/build/index.js",
     "watch": "node ../../scripts/build/_watch.js",
     "release:patch": "npm version patch && npm publish",
@@ -27,6 +28,12 @@
   "browser": {
     "./lib/analytics-plugin-customerio.cjs.js": "./lib/analytics-plugin-customerio.browser.cjs.js",
     "./lib/analytics-plugin-customerio.es.js": "./lib/analytics-plugin-customerio.browser.es.js"
+  },
+  "projectMeta": {
+    "platforms": {
+      "browser": "./src/browser.js",
+      "node": "./src/node.js"
+    }
   },
   "files": [
     "dist",

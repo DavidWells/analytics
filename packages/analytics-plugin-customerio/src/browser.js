@@ -14,7 +14,7 @@
  *   siteId: '123-xyz'
  * })
  */
-export default function customerIOPlugin(pluginConfig = {}) {
+function customerIOPlugin(pluginConfig = {}) {
   // Because customer.io automatically fired a page view onLoad
   // We need to ignore the first .page() call
   let initialPageViewFired = false
@@ -87,3 +87,5 @@ export default function customerIOPlugin(pluginConfig = {}) {
     }
   }
 }
+
+export default customerIOPlugin

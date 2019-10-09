@@ -15,12 +15,12 @@ if (!process.browser) {
  *
  * @example
  *
- * customerIOPlugin({
+ * customerIOServer({
  *   siteId: '123-xyz',
  *   apiKey: '9876543'
  * })
  */
-export default function customerIOPlugin(pluginConfig = {}) {
+function customerIOServer(pluginConfig = {}) {
   // Allow for userland overides of base methods
   if (!pluginConfig.siteId) {
     throw new Error('customer.io siteId missing')
@@ -56,3 +56,5 @@ export default function customerIOPlugin(pluginConfig = {}) {
     }
   }
 }
+
+export default customerIOServer
