@@ -68,7 +68,7 @@ function analytics(config = {}) {
       acc.pluginsArray = acc.pluginsArray.concat(p)
 
       if (acc.plugins[NAMESPACE]) {
-        throw new Error(`"${NAMESPACE}" plugin loaded twice!`)
+        throw new Error(`"${NAMESPACE}" plugin loaded twice`)
       }
       acc.plugins[NAMESPACE] = p
       if (!acc.plugins[NAMESPACE].loaded) {
@@ -112,7 +112,7 @@ function analytics(config = {}) {
 
   const { addMiddleware, removeMiddleware, dynamicMiddlewares } = new DynamicMiddleware()
 
-  const nonAbortable = () => { throw new Error('Abort not allowed from listener') }
+  const nonAbortable = () => { throw new Error('Abort not allowed in listener') }
 
   /**
    * Analytic instance returned from initialization
@@ -379,7 +379,7 @@ function analytics(config = {}) {
      * removeListener()
      */
     on: (name, callback) => {
-      if (!name || !callback || typeof callback !== 'function') {
+      if (!name || typeof callback !== 'function') {
         return false
       }
       if (name === 'bootstrap') {
@@ -463,7 +463,7 @@ function analytics(config = {}) {
      * listener()
      */
     once: (name, callback) => {
-      if (!name || !callback || typeof callback !== 'function') {
+      if (!name || typeof callback !== 'function') {
         return false
       }
       const listener = instance.on(name, ({ payload }) => {

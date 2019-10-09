@@ -16,7 +16,6 @@ export function watch(cb) {
   let fn = _ => check().then(cb)
   let listener = listen.bind(null, 'online offline', fn)
   listener(true)
-  return _ => {
-    listener(false)
-  }
+  // return unsubscribe
+  return _ => listener(false)
 }

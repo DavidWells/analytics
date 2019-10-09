@@ -5,11 +5,12 @@ export default function identifyMiddleware(instance) {
   const { storage } = instance
   return store => next => action => {
     const { userId, traits, options, callback } = action
+    /* Reset user id and traits */
     if (action.type === EVENTS.reset) {
       storage.removeItem(USER_ID)
       storage.removeItem(USER_TRAITS)
       storage.removeItem(ANON_ID)
-      if (callback && typeof callback === 'function') {
+      if (typeof callback === 'function') {
         callback()
       }
     }
@@ -32,10 +33,12 @@ export default function identifyMiddleware(instance) {
         })
       }
 
+      /* Save user id */
       if (userId) {
         storage.setItem(USER_ID, userId)
       }
 
+      /* Save user traits */
       if (traits) {
         storage.setItem(USER_TRAITS, {
           ...currentTraits,
