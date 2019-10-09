@@ -29,9 +29,9 @@ const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
     googleTagManager({
-      containerId: 'GTM-123xyz',
+      containerId: 'GTM-123xyz'
     })
-    // ... other plugins
+    // ...other plugins
   ]
 })
 
@@ -46,6 +46,7 @@ analytics.identify('user-xzy-123', {
   name: 'Bill Murray',
   cool: true
 })
+
 ```
 <!-- ANALYTICS_DOCS:END -->
 
