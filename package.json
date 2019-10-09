@@ -2,7 +2,7 @@
   "name": "root",
   "private": true,
   "scripts": {
-    "bootstrap": "npm install && lerna bootstrap",
+    "setup": "npm install && lerna bootstrap",
     "setup-examples": "node ./scripts/installer.js",
     "clean": "rimraf packages/*/dist",
     "reset": "npm run clean && lerna clean --yes",

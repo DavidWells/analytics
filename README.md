@@ -40,8 +40,10 @@ A lightweight analytics abstraction library for tracking page views, custom even
   * [Optional - Using middleware](#optional---using-middleware)
   * [Opt out example plugin](#opt-out-example-plugin)
 - [Plugin Naming Conventions](#plugin-naming-conventions)
-- [Development](#development)
+- [Debugging analytics](#debugging-analytics)
 - [Contributing](#contributing)
+- [Setup & Install dependencies](#setup--install-dependencies)
+- [Development](#development)
 
 </details>
 <!-- AUTO-GENERATED-CONTENT:END -->
@@ -839,7 +841,7 @@ npm install analytics-plugin-awesome-stuff
 
 Then submit to the [list above](#analytic-plugins)
 
-## Development
+## Debugging analytics
 
 During development you can turn on `debug` mode. This will connect redux dev tools for you to visually see the analytics events passing through your application.
 
@@ -858,3 +860,23 @@ const analytics = Analytics({
 
 Contributions are always welcome, no matter how large or small. Before contributing,
 please read the [code of conduct](CODE_OF_CONDUCT.md).
+
+## Setup & Install dependencies
+
+Clone the repo and run
+
+```sh
+$ git clone https://github.com/davidwells/analytics
+$ cd analytics
+$ npm install && npm run setup
+```
+
+This will setup all the packages and their dependencies.
+
+## Development
+
+You can watch and rebuild packages with the `npm run watch` command.
+
+```sh
+npm run watch
+```

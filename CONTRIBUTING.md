@@ -9,13 +9,12 @@ please read the [code of conduct](CODE_OF_CONDUCT.md).
 
 ### Install dependencies
 
-> Only required on the first run, subsequent runs can use `npm start` to both
-bootstrap and run the development server.
+> Only required when setting up the project
 
 ```sh
 $ git clone https://github.com/davidwells/analytics
 $ cd analytics
-$ npm run bootstrap
+$ npm run setup
 ```
 
 Because analytics has a large number of packages, we need to also [install watchmen](https://facebook.github.io/watchman/docs/install.html) for better watching.
@@ -33,14 +32,14 @@ $ npm start
 
 ## Available scripts
 
-### `bootstrap`
+### `setup`
 
-Installs and bootstraps any analytics package dependencies.
+Installs and sets up all analytics package dependencies.
 
 #### Usage
 
 ```sh
-$ npm run bootstrap
+$ npm run setup
 ```
 
 ### `watch`
@@ -55,7 +54,7 @@ $ npm run watch
 
 ### `start`
 
-Starts the development server. This task runs both the `bootstrap` and `watch` scripts.
+Starts the development server. This task runs both the `setup` and `watch` scripts.
 
 #### Usage
 
