@@ -10,9 +10,9 @@
     "deploy": "netlify deploy --prod"
   },
   "dependencies": {
+    "@analytics/segment": "^0.2.3",
     "@reach/router": "^1.2.1",
-    "analytics": "^0.1.16",
-    "analytics-plugin-segment": "^0.1.7",
+    "analytics": "^0.1.20",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-helmet": "^5.2.1",

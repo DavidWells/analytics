@@ -16,6 +16,7 @@ export default class App extends Component {
   componentDidMount() {
     /* Fire a listener on every event */
     this.listener = analytics.on('*', ({ payload }) => {
+      delete payload._
       this.setState({
         history: window.__ANALYTICS_HISTORY__.concat(payload)
       })

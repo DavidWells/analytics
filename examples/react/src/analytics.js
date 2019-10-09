@@ -1,5 +1,5 @@
 import Analytics from 'analytics'
-import segmentPlugin from 'analytics-plugin-segment'
+import segmentPlugin from '@analytics/segment'
 
 /* initialize analytics and load plugins */
 const analytics = Analytics({
