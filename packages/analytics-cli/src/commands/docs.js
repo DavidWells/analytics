@@ -89,7 +89,7 @@ var config = {
       if (typeof lib === 'function') {
         const string = lib.toString()
         // console.log('string', string)
-        
+
         // const methods = lib()
         // console.log('methods', methods)
       }
@@ -146,7 +146,8 @@ import ${name} from '${pkg}'
 const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
-    ${example.replace(/^\s+|\s+$/g, '')}
+    ${example.replace(/^\s+|\s+$/g, '')},
+    // ...other plugins
   ]
 })
 
