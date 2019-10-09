@@ -1,16 +1,13 @@
 {
   "name": "vanilla-html",
+  "private": true,
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Using analytics with regular HTML",
   "scripts": {
     "start": "http-server",
     "predeploy": "cp index.html build",
     "deploy": "netlify deploy --dir build --prod"
   },
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "analytics": "file:../../packages/analytics-core"
-  }
+  "license": "MIT"
 }
