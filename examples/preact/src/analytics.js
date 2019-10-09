@@ -1,5 +1,5 @@
 import Analytics from 'analytics'
-import googleAnalytics from 'analytics-plugin-ga'
+import googleAnalytics from '@analytics/google-analytics'
 
 const analytics = Analytics({
   app: 'app-name',
@@ -7,7 +7,6 @@ const analytics = Analytics({
   plugins: [
     googleAnalytics({
       trackingId: 'UA-126647663-2',
-      autoTrack: true,
     }),
   ]
 })

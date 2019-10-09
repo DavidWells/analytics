@@ -25,7 +25,7 @@ export default class App extends Component {
 
 	componentDidMount() {
 		analytics.on('pageEnd', ({ payload }) => {
-			console.log('pageView fired', payload)
+			console.log('pageView fired from analytics', payload.properties)
 		})
 	}
 	/** Gets fired when the route changes.

@@ -3,8 +3,9 @@ import Wrapper from '../../components/content'
 
 const Home = () => (
 	<Wrapper>
-		<h1>Home</h1>
-		<p>This is the Home component.</p>
+		<h1>Analytics Preact demo</h1>
+		<p>Open the console to see page views firing. Also checkout the networks tab</p>
+		<p><a href="https://getanalytics.io/">View the docs</a></p>
 	</Wrapper>
 )
 
