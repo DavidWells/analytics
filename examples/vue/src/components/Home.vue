@@ -13,6 +13,9 @@
         github.com/DavidWells/analytics/examples/vue
         </a>
       </p>
+
+      <p><a href="https://getanalytics.io/">View the docs</a></p>
+
     </div>
 </template>
 <script>
