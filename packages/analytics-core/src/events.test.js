@@ -6,7 +6,6 @@ test('nonEvents should contain all non events keys as array', (t) => {
 })
 
 test('coreEvents should contain all events as array', (t) => {
-  console.log(coreEvents)
   t.deepEqual(coreEvents, [
     'bootstrap',
     'params',
