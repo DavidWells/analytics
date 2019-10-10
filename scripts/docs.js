@@ -4,13 +4,24 @@ const { inspect } = require('util')
 const markdownMagic = require('markdown-magic')
 const dox = require('dox')
 const outdent = require('outdent')
-const forceSync = require('sync-rpc')
+const prettier = require('prettier')
+const getPluginDetails = require('./docs/get-plugin-details')
+const indentString = require('indent-string')
 // Force sync processing until markdown-magic 2.0 is released
-const getPluginInfo = forceSync(require.resolve('./docs/parseSync'))
 
 function deepLog(data) {
   console.log(inspect(data, {showHidden: false, depth: null, colors: true}))
 }
+
+const SRC_LINKS = {
+  PageData: 'https://github.com/DavidWells/analytics/blob/master/packages/analytics-core/src/modules/page.js#L33',
+  track: 'https://getanalytics.io/api/#analyticstrack',
+  page: 'https://getanalytics.io/api/#analyticspage',
+  identify: 'https://getanalytics.io/api/#analyticsidentify',
+  reset: 'https://getanalytics.io/api/#analyticsreset'
+}
+
+const cache = {}
 
 const config = {
   transforms: {
@@ -81,17 +92,21 @@ const config = {
         return stats.mtime
       }
       console.log('instance', instance)
-      // const date = getFileUpdatedDate()
-      return 'lol'
+      const date = getFileUpdatedDate(instance.originalPath)
+      return date
     },
     PLUGIN_PLATFORMS_SUPPORTED(content, options, instance) {
       let updatedContent = ''
-      const data = grabPluginData(instance.originalPath)
+      const { originalPath } = instance
+      let data
+      if (cache[originalPath]) {
+        data = cache[originalPath]
+      } else {
+        data = getPluginDetails(originalPath)
+        cache[originalPath] = data
+      }
       if (data) {
-        const platforms = data.map((d) => {
-          const plat = (d.platform === 'node') ? 'node.js' : d.platform
-          return capitalizeFirstLetter(plat)
-        }).join(' and ')
+        const platforms = getPlatforms(data).join(' and ')
         return outdent`
         ## Platforms Supported
 
@@ -101,16 +116,33 @@ const config = {
     },
     PLUGIN_DOCS(content, options, instance) {
       let updatedContent = ''
-      const data = grabPluginData(instance.originalPath)
-      if (data) {
-        deepLog(data)
-        const removeList = ['NAMESPACE', 'config', 'loaded', 'initialize']
+      let exampleText = ''
+      let data
+      const { originalPath } = instance
+      if (cache[originalPath]) {
+        data = cache[originalPath]
+      } else {
+        data = getPluginDetails(originalPath)
+        cache[originalPath] = data
+      }
+      if (data && data.length) {
+        // deepLog(data)
+
+        const examples = data.reduce((acc, d) => {
+          acc = acc.concat(renderUsage(d, data))
+          return acc
+        }, [])
+          .sort(sortUsageExamples)
+          .map((ex) => ex.text)
+          .join('\n')
+
+        exampleText = examples
         /* Supported platforms */
         const platforms = data.map((d) => {
           let methods = ''
           if (d.data.ast.methodsAndValues) {
             methods = d.data.ast.methodsAndValues
-              .filter(x => !removeList.includes(x.name))
+              .filter(x => removeMethod(x.name))
               .map((x) => {
                 return `\`${x.name}\``
               }).join(', ')
@@ -121,10 +153,10 @@ const config = {
           ${methods}\n
           `
         }).join('\n')
-        console.log('platforms', platforms)
+        // console.log('platforms', platforms)
         updatedContent += platforms
       }
-      return updatedContent
+      return `${exampleText}`
     },
     API_DOCS(content, options) {
       const fileContents = fs.readFileSync(path.join(__dirname, '..', 'packages/analytics-core/src/index.js'), 'utf-8')
@@ -157,24 +189,325 @@ const config = {
   }
 }
 
-function grabPluginData(originalPath) {
-  const dir = path.dirname(originalPath)
-  const SRC_DIR = path.resolve(dir, 'src')
-  const PKG_DIR = path.join(dir, 'package.json')
-  const pkg = require(PKG_DIR)
-  if (pkg && pkg.projectMeta) {
-    if (pkg.projectMeta.platforms) {
-      return Object.keys(pkg.projectMeta.platforms).map((platform) => {
-        const entryPath = pkg.projectMeta.platforms[platform]
-        const resolvedEntryPath = path.resolve(dir, entryPath)
-        return {
-          platform: platform,
-          data: getPluginInfo(resolvedEntryPath)
-        }
-      })
-    }
+function formatCode(code, type = 'babel') {
+  return prettier.format(code, { semi: false, singleQuote: true, parser: type })
+}
+
+const removeList = ['NAMESPACE', 'config', 'loaded', 'initialize']
+function removeMethod(name) {
+  return !removeList.includes(name)
+}
+
+function sortUsageExamples(a, b) {
+  if (a.order < b.order) return -1
+  if (a.order > b.order) return 1
+  return 0
+}
+
+function renderUsage(d, allData) {
+  const { data, pkg, platform } = d
+  if (platform === 'node') {
+    return [{
+      name: 'es6node',
+      order: 1,
+      text: es6Usage(data, pkg)
+    },
+    {
+      name: 'node',
+      order: 2,
+      text: nodeUsage(data, pkg)
+    }]
+  } else {
+    const esmHtml = browserESMUsage(data, pkg)
+    const vanillaHtml = browserStandaloneUsage(data, pkg)
+
+    return [{
+      name: 'main',
+      order: 0,
+      text: mainUsageBlock(data, pkg, allData)
+    }, {
+      name: 'esHtml',
+      order: 4,
+      text: esmHtml
+    },
+    {
+      name: 'html',
+      order: 3,
+      text: vanillaHtml
+    }]
   }
-  return {}
+}
+
+function getPlatforms(allData) {
+  return allData.map((d) => {
+    return capitalizeFirstLetter(getPlatformName(d))
+  })
+}
+
+function getPlatformName(data) {
+  return (data.platform === 'node') ? 'node.js' : data.platform
+}
+
+function renderJsDocs(data) {
+  let updatedContent = ''
+  const defaultExport = data.ast.foundExports.find((x) => Boolean(x.isDefault))
+  console.log('defaultExport', defaultExport)
+  console.log('data.jsdocs', data.jsdoc)
+  const jsDocForDefaultExport = data.jsdoc.find((x) => x.id === defaultExport.name)
+  console.log('Docs to use', jsDocForDefaultExport)
+  return updatedContent
+  updatedContent += `${formatArguments(data.tags)}`
+  updatedContent += formatExample(data.tags).join('\n')
+  updatedContent += `\n`
+  return
+}
+
+function mainUsageBlock(data, pkg, allData) {
+  console.log('allData', allData)
+  const platforms = getPlatforms(allData)
+  console.log('platforms', platforms)
+  const main = data.jsdoc.find((doc) => Boolean(doc.examples))
+
+  const name = main.name
+  const exampleCode = main.examples[0]
+  const code = `
+import Analytics from 'analytics'
+import ${name} from '${pkg.name}'
+
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    ${exampleCode}
+  ]
+})
+
+${renderRelevantMethods(data)}
+`
+
+  const what = allData.map((y) => {
+    const name = getPlatformName(y)
+    const exp = getExposedFunctions(y.data)
+    const jsDoc = renderJsDocs(y.data)
+    const niceName = (name === 'node.js') ? `Server-side` : name
+    const niceText = (name === 'node.js') ? `${niceName} ${capitalizeFirstLetter(name)}` : niceName
+    return `### ${capitalizeFirstLetter(niceName)}
+
+The ${niceText} side plugin works with these [analytics api methods](https://getanalytics.io/api/)
+
+${exp.map((x) => {
+    const link = SRC_LINKS[x]
+    const linkText = (link) ? `[${x}](${link})` : x
+    return linkText
+}).join(', ')}
+
+API Docs here
+`
+  })
+
+return `
+## Usage
+
+The \`${pkg.name}\` package works in ${platforms.join(' and ')}
+
+Below is an example of the browser side plugin
+
+\`\`\`js
+${indentString(formatCode(code), 0)}
+\`\`\`
+
+${what.join('\n')}
+`
+}
+// ${example.replace(/^\s+|\s+$/g, '')},
+function es6Usage(data, pkg) {
+  const main = data.jsdoc.find((doc) => Boolean(doc.examples))
+
+  const name = main.name
+  const exampleCode = main.examples[0]
+  const code = `
+import Analytics from 'analytics'
+import ${name} from '${pkg.name}'
+
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    ${exampleCode}
+    // ...other plugins
+  ]
+})
+
+${renderRelevantMethods(data)}
+`
+
+return `<details>
+  <summary>Serverside ES6</summary>
+
+  \`\`\`js
+${indentString(formatCode(code), 2)}
+  \`\`\`
+
+</details>
+`
+}
+
+function getExposedFunctions(data) {
+  return data.ast.methodsByName.filter(removeMethod)
+}
+
+function renderRelevantMethods(data) {
+  const exposedFunctions = getExposedFunctions(data)
+  console.log('methods', exposedFunctions)
+  let page = ''
+  if (exposedFunctions.includes('page')) {
+    page = `
+    /* Track a page view */
+    analytics.page()`
+  }
+  let track = ''
+  if (exposedFunctions.includes('track')) {
+    track = `
+    /* Track a custom event */
+    analytics.track('cartCheckout', {
+      price: 20,
+      item: 'pink socks'
+    })`
+  }
+
+  let identify = ''
+  if (exposedFunctions.includes('identify')) {
+    identify = `
+    /* Identify a visitor */
+    analytics.identify('user-id-xyz', {
+      firstName: 'bill',
+      lastName: 'murray',
+    })`
+  }
+
+  return `${page}${track}${identify}`
+}
+
+function nodeUsage(data, pkg) {
+  // Find doc block with example (should only be one the main function)
+  const main = data.jsdoc.find((doc) => Boolean(doc.examples))
+
+  const name = main.name
+  const exampleCode = main.examples[0]
+
+  const code = `
+const analyticsLib = require('analytics').default
+const ${name} = require('${pkg.name}').default
+
+const analytics = analyticsLib({
+  app: 'my-app-name',
+  plugins: [
+    ${exampleCode}
+  ]
+})
+
+${renderRelevantMethods(data)}`
+
+  return `<details>
+  <summary>Node.js common JS</summary>
+
+  \`\`\`js
+${indentString(formatCode(code), 2)}
+  \`\`\`
+
+</details>
+`
+}
+
+function browserStandaloneUsage(data, pkg) {
+  // Find doc block with example (should only be one the main function)
+  const main = data.jsdoc.find((doc) => Boolean(doc.examples))
+
+  const exampleCode = main.examples[0]
+
+  const code = `
+<!doctype html>
+<html>
+  <head>
+    <title>Using ${pkg.name} in HTML</title>
+    <script src="https://unpkg.com/analytics/dist/analytics.min.js"></script>
+    <script src="https://unpkg.com/${pkg.name}/dist/${pkg.name}.min.js"></script>
+    <script type="text/javascript">
+      /* Initialize analytics */
+      var Analytics = _analytics.init({
+        app: 'my-app-name',
+        plugins: [
+          ${exampleCode.replace(main.name, `${pkg.globalName}.init`)}
+        ]
+      })
+
+      ${renderRelevantMethods(data)}
+    </script>
+  </head>
+  <body>
+    ....
+  </body>
+</html>
+`
+
+  return `<details>
+  <summary>Using in HTML</summary>
+
+  \`\`\`html
+${indentString(formatCode(code, 'html'), 2)}
+  \`\`\`
+
+</details>
+`
+}
+
+function browserESMUsage(data, pkg) {
+  // Find doc block with example (should only be one the main function)
+  const main = data.jsdoc.find((doc) => Boolean(doc.examples))
+
+  const exampleCode = main.examples[0]
+  const esmModulePath = `./${pkg.module}`
+  const browserEsmPath = pkg.browser[esmModulePath].replace(/^\.\//, '')
+  const code = `
+<!doctype html>
+<html>
+  <head>
+    <title>Using ${pkg.name} in HTML via ESModules</title>
+    <script>
+      // Polyfill process.
+      // **Note**: Because \`import\`s are hoisted, we need a separate, prior <script> block.
+      window.process = window.process || { env: { NODE_ENV: "production" } };
+    </script>
+    <script type="module">
+      import analytics from 'https://unpkg.com/analytics/lib/analytics.browser.es.js?module';
+      import ${pkg.globalName} from 'https://unpkg.com/${pkg.name}/${browserEsmPath}?module';
+      /* Initialize analytics */
+      const Analytics = analytics({
+        app: 'analytics-html-demo',
+        debug: true,
+        plugins: [
+          ${exampleCode.replace(main.name, `${pkg.globalName}`)}
+          // ... add any other third party analytics plugins
+        ]
+      })
+      ${renderRelevantMethods(data)}
+    </script>
+  </head>
+  <body>
+    ....
+  </body>
+</html>
+`
+
+  return `<details>
+  <summary>Using in HTML via ES Modules</summary>
+
+  Using \`${pkg.name}\` in ESM(odules).
+
+  \`\`\`html
+${indentString(formatCode(code, 'html'), 2)}
+  \`\`\`
+
+</details>
+`
 }
 
 const storageKeys = ['setItem', 'getItem', 'removeItem']
@@ -236,10 +569,6 @@ ${theArgs.join('\n')}
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1)
-}
-
-const SRC_LINKS = {
-  PageData: 'https://github.com/DavidWells/analytics/blob/master/packages/analytics-core/src/modules/page.js#L33'
 }
 
 function renderArg(tag) {

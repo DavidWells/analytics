@@ -74,7 +74,8 @@ function parseCode(code) {
   // console.log('methodsAndValues', methodsAndValues)
   return {
     methodsByName: methodsByName,
-    methodsAndValues: methodsAndValues
+    methodsAndValues: methodsAndValues,
+    foundExports: foundExports
   }
 }
 
@@ -91,12 +92,11 @@ function getMethodsReturned(body, name) {
 function getExports(body) {
   return body.filter((node) => {
     return (node.type === 'ExpressionStatement' ||
-            node.type === 'ExportDefaultDeclaration') // || node.type === 'ExportNamedDeclaration')
+            node.type === 'ExportDefaultDeclaration' || node.type === 'ExportNamedDeclaration')
   }).map((node) => {
-    // console.log('node', node)
     // ES6 default export
     if (node.type === 'ExportDefaultDeclaration') {
-      console.log('node', node)
+      // console.log('node', node)
       const { declaration } = node
       const name = declaration.name || declaration.id.name
       return {
@@ -108,7 +108,11 @@ function getExports(body) {
     // ES6 named export
     if (node.type === 'ExportNamedDeclaration') {
       const { declaration } = node
-      // Todo add support
+      return {
+        isDefault: false,
+        name: getName(declaration),
+        statement: 'todo'
+      }
     }
 
     const { left, right } = node.expression
