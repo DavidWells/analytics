@@ -249,23 +249,52 @@ function getPlatformName(data) {
 }
 
 function renderJsDocs(data) {
-  let updatedContent = ''
   const defaultExport = data.ast.foundExports.find((x) => Boolean(x.isDefault))
-  console.log('defaultExport', defaultExport)
-  console.log('data.jsdocs', data.jsdoc)
   const jsDocForDefaultExport = data.jsdoc.find((x) => x.id === defaultExport.name)
-  console.log('Docs to use', jsDocForDefaultExport)
-  return updatedContent
-  updatedContent += `${formatArguments(data.tags)}`
-  updatedContent += formatExample(data.tags).join('\n')
-  updatedContent += `\n`
-  return
+  const jsdocContent = jsDocFormatArguments(jsDocForDefaultExport.params)
+  const jsDocExample = jsDocRenderExample(jsDocForDefaultExport.examples[0])
+  return `${jsdocContent}${jsDocExample}`
+}
+
+function jsDocFormatArguments(params) {
+  const theArgs = params.map((param) => {
+    return jsDocRenderArg(param)
+  })
+  // console.log('theArgs', theArgs)
+  if (theArgs.length) {
+    return `**Arguments**
+
+${theArgs.join('\n')}
+
+`
+  }
+  return ''
+}
+
+function jsDocRenderArg(param) {
+  const optionalText = (param.optional) ? '(optional) ' : ''
+  const type = `\`${param.type.names[0]}\``
+  return `- **${param.name}** ${optionalText}${type} ${param.description}`
+}
+
+function jsDocRenderExample(example) {
+  if (!example) {
+    return ''
+  }
+  return `**Example**
+
+\`\`\`js
+${example.replace(/^\s+|\s+$/g, '')}
+\`\`\``
+}
+
+function getPlatformNiceName(name) {
+  const lower = name.toLowerCase()
+  return (lower === 'node.js') ? `server-side` : lower
 }
 
 function mainUsageBlock(data, pkg, allData) {
-  console.log('allData', allData)
   const platforms = getPlatforms(allData)
-  console.log('platforms', platforms)
   const main = data.jsdoc.find((doc) => Boolean(doc.examples))
 
   const name = main.name
@@ -300,14 +329,13 @@ ${exp.map((x) => {
     return linkText
 }).join(', ')}
 
-API Docs here
+${jsDoc}
 `
   })
-
 return `
 ## Usage
 
-The \`${pkg.name}\` package works in ${platforms.join(' and ')}
+The \`${pkg.name}\` package works in ${platforms.map((x) => `[${x}](#${getPlatformNiceName(x)})`).join(' and ')}
 
 Below is an example of the browser side plugin
 
@@ -316,6 +344,8 @@ ${indentString(formatCode(code), 0)}
 \`\`\`
 
 ${what.join('\n')}
+
+### Additional Usage Examples
 `
 }
 // ${example.replace(/^\s+|\s+$/g, '')},
@@ -340,7 +370,7 @@ ${renderRelevantMethods(data)}
 `
 
 return `<details>
-  <summary>Serverside ES6</summary>
+  <summary>Server-side ES6</summary>
 
   \`\`\`js
 ${indentString(formatCode(code), 2)}
@@ -356,21 +386,22 @@ function getExposedFunctions(data) {
 
 function renderRelevantMethods(data) {
   const exposedFunctions = getExposedFunctions(data)
-  console.log('methods', exposedFunctions)
   let page = ''
   if (exposedFunctions.includes('page')) {
     page = `
     /* Track a page view */
-    analytics.page()`
+    analytics.page()
+    `
   }
   let track = ''
   if (exposedFunctions.includes('track')) {
     track = `
     /* Track a custom event */
     analytics.track('cartCheckout', {
-      price: 20,
-      item: 'pink socks'
-    })`
+      item: 'pink socks',
+      price: 20
+    })
+    `
   }
 
   let identify = ''
@@ -407,7 +438,7 @@ const analytics = analyticsLib({
 ${renderRelevantMethods(data)}`
 
   return `<details>
-  <summary>Node.js common JS</summary>
+  <summary>Server-side Node.js common JS</summary>
 
   \`\`\`js
 ${indentString(formatCode(code), 2)}
