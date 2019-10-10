@@ -11,7 +11,7 @@ const analytics = Analytics({
     }),
     exampleProviderPlugin({
       xyz: '123'
-    }),
+    })
   ]
 })
 
