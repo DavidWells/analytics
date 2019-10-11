@@ -15,7 +15,7 @@ if (!process.browser) {
  *   trackingId: '123-xyz'
  * })
  */
-function googleAnalyticsNode(pluginConfig = {}) {
+function googleAnalytics(pluginConfig = {}) {
   const client = initialize(pluginConfig)
   return {
     NAMESPACE: 'google-analytics',
@@ -38,7 +38,7 @@ function googleAnalyticsNode(pluginConfig = {}) {
   }
 }
 
-export default googleAnalyticsNode
+export default googleAnalytics
 
 export function initialize(config) {
   if (!config.trackingId) throw new Error('No google analytics trackingId defined')
