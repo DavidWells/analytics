@@ -30,6 +30,7 @@
     "@babel/preset-env": "7.5.5",
     "ava": "^2.3.0",
     "dox": "^0.9.0",
+    "indent-string": "^4.0.0",
     "jsdoc": "^3.6.3",
     "lerna": "^3.10.7",
     "markdown-magic": "^0.1.25",
@@ -78,6 +79,7 @@
     "brotli-size": "0.0.3",
     "gzip-size": "^5.0.0",
     "jsdoc-to-markdown": "^5.0.1",
+    "prettier": "^1.18.2",
     "pretty-bytes": "^5.1.0"
   }
 }

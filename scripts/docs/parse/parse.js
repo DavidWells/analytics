@@ -56,7 +56,22 @@ function parseCode(code) {
   // console.log(ast)
 
   const foundExports = getExports(ast.body)
-  // console.log('foundExports', foundExports)
+
+  // If parsing a window iife fallback and regex file
+  if (!foundExports.length) {
+    let m = getWindowExports(code)
+    return {
+      methodsByName: m.map((prop) => prop.name),
+      methodsAndValues: m.map((x) => {
+        return {
+          name: x.name,
+          type: x.statement,
+          value: x.statement
+        }
+      }),
+      foundExports: m
+    }
+  }
 
   const mainFunction = foundExports.find(exportedThings => exportedThings.isDefault)
   // console.log('mainFunction', mainFunction)
@@ -88,6 +103,33 @@ function getMethodsReturned(body, name) {
   // Then try to find variable declaration as fallback
   return getVariableDetails(body, name)
 }
+
+function getWindowExports(code) {
+  const re = /exports\.(.*);/gm
+  let m = []
+  let e
+  while (e = re.exec(code)) { // eslint-disable-line
+    const name = (e[1] || '').split('=')[0].trim()
+    m.push({
+      isDefault: name === 'default' || name === 'init',
+      name: name,
+      statement: e[0]
+    })
+  }
+  return m
+}
+
+// function getVariableInformation(body) {
+//     return body
+//     .filter((node) => node.type === 'VariableDeclaration')
+//     .map((node) => {
+//       // console.log('node', node)
+//       const { declarations } = node
+//       const xyz = declarations.filter((node) => node.type === 'ExpressionStatement')
+//       console.log('declarations', declarations[0].init)
+//       // deepLog(declarations)
+//     })
+// }
 
 function getExports(body) {
   return body.filter((node) => {

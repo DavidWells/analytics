@@ -5,6 +5,7 @@ const markdownMagic = require('markdown-magic')
 const dox = require('dox')
 const outdent = require('outdent')
 const prettier = require('prettier')
+const parseSourceCode = require('./docs/parse').sync
 const getPluginDetails = require('./docs/get-plugin-details')
 const indentString = require('indent-string')
 // Force sync processing until markdown-magic 2.0 is released
@@ -129,7 +130,7 @@ const config = {
         // deepLog(data)
 
         const examples = data.reduce((acc, d) => {
-          acc = acc.concat(renderUsage(d, data))
+          acc = acc.concat(renderUsage(d, data, originalPath))
           return acc
         }, [])
           .sort(sortUsageExamples)
@@ -204,7 +205,7 @@ function sortUsageExamples(a, b) {
   return 0
 }
 
-function renderUsage(d, allData) {
+function renderUsage(d, allData, directory) {
   const { data, pkg, platform } = d
   if (platform === 'node') {
     return [{
@@ -219,7 +220,7 @@ function renderUsage(d, allData) {
     }]
   } else {
     const esmHtml = browserESMUsage(data, pkg)
-    const vanillaHtml = browserStandaloneUsage(data, pkg)
+    const vanillaHtml = browserStandaloneUsage(data, pkg, directory)
 
     return [{
       name: 'main',
@@ -312,36 +313,90 @@ const analytics = Analytics({
 
 ${renderRelevantMethods(data)}
 `
+  function cleanName(name) {
+    return name.replace(/@analytics\//, '')
+  }
 
+  function aboutMethods(name) {
+    return {
+      'page': `Sends page views into ${name}`,
+      'track': `Track custom events and send to ${name}`,
+      'identify': `Identify visitors and send details to ${name}`,
+      'reset': `Reset browser storage cookies & localstorage for ${name} values`
+    }
+  }
+
+  const theName = cleanName(pkg.projectMeta.provider.name)
+  const ABOUT_METHODS = aboutMethods(theName)
+
+  const DATA_METHODS = ['page', 'track', 'identify']
+  function afterText(name, provider, methods) {
+    const dataMethods = methods.filter((x) => DATA_METHODS.includes(x))
+    if (!dataMethods.length) {
+      return ''
+    }
+    const dataMethodText = dataMethods
+      .map((x) => {
+        const link = SRC_LINKS[x]
+        const linkText = (link) ? `[analytics.${x}](${link})` : `\`analytics.${x}\``
+        return linkText
+      })
+      .reduce((acc, curr, i) => {
+        if ((dataMethods.length - 1) === i) {
+          acc = `${acc}or ${curr}`
+          return acc
+        }
+        acc = `${acc}${curr}, `
+        return acc
+      }, '')
+    return `After initializing \`analytics\` with the \`${name}\` plugin, data will be sent into ${provider} whenever ${dataMethodText} are called.`
+  }
+
+  let exposedFuncs
   const what = allData.map((y) => {
     const name = getPlatformName(y)
-    const exp = getExposedFunctions(y.data)
+    exposedFuncs = getExposedFunctions(y.data)
+    const exp = exposedFuncs
     const jsDoc = renderJsDocs(y.data)
-    const niceName = (name === 'node.js') ? `Server-side` : name
+    const niceName = (name === 'node.js') ? `server-side` : name
     const niceText = (name === 'node.js') ? `${niceName} ${capitalizeFirstLetter(name)}` : niceName
     return `### ${capitalizeFirstLetter(niceName)}
 
-The ${niceText} side plugin works with these [analytics api methods](https://getanalytics.io/api/)
+The ${niceText} side ${theName} plugin works with these api methods:
 
 ${exp.map((x) => {
     const link = SRC_LINKS[x]
     const linkText = (link) ? `[${x}](${link})` : x
-    return linkText
-}).join(', ')}
+    return `- **${linkText}** - ${ABOUT_METHODS[x]} `
+}).join('\n')}
 
 ${jsDoc}
 `
   })
+
+  const NICE_NAMES = {
+    'Browser': 'the browser',
+    'Node.js': 'server-side in node.js'
+  }
+
 return `
+## Platforms Supported
+
+The \`${pkg.name}\` package works in ${platforms.map((x) => `[${NICE_NAMES[x]}](#${getPlatformNiceName(x)})`).join(' and ')}
+
 ## Usage
 
-The \`${pkg.name}\` package works in ${platforms.map((x) => `[${x}](#${getPlatformNiceName(x)})`).join(' and ')}
+To use the \`${pkg.name}\` package install in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
 
-Below is an example of the browser side plugin
+Below is an example of how to use the browser plugin.
 
 \`\`\`js
 ${indentString(formatCode(code), 0)}
 \`\`\`
+
+${afterText(name, theName, exposedFuncs)}
+
+See [additional implementation examples](#additional-usage-examples) for more details on using in your project.
 
 ${what.join('\n')}
 
@@ -395,6 +450,7 @@ function renderRelevantMethods(data) {
   }
   let track = ''
   if (exposedFunctions.includes('track')) {
+    // TODO add way to grab real example from code is supplied
     track = `
     /* Track a custom event */
     analytics.track('cartCheckout', {
@@ -448,12 +504,31 @@ ${indentString(formatCode(code), 2)}
 `
 }
 
-function browserStandaloneUsage(data, pkg) {
+function browserStandaloneUsage(data, pkg, directory) {
+  const dir = path.dirname(directory)
+  const browserFile = path.join(dir, 'dist', `${pkg.name}.js`)
+
+  const xx = parseSourceCode(browserFile)
+
+  let initSet = false
+  const exportData = xx.ast.foundExports.filter((x) => {
+    return x.isDefault
+  }).reduce((acc, curr) => {
+    if (initSet) return acc
+    if (curr.name === 'init') {
+      initSet = true
+      return curr
+    }
+    return curr
+  }, {})
+
+  const defaultExportName = (exportData && exportData.name) ? `${pkg.globalName}.${exportData.name}` : pkg.globalName
+  console.log('defaultExportName', defaultExportName)
   // Find doc block with example (should only be one the main function)
   const main = data.jsdoc.find((doc) => Boolean(doc.examples))
 
   const exampleCode = main.examples[0]
-
+  // TODO cross reference the main exports and named exports to verify whatever.init
   const code = `
 <!doctype html>
 <html>
@@ -466,7 +541,7 @@ function browserStandaloneUsage(data, pkg) {
       var Analytics = _analytics.init({
         app: 'my-app-name',
         plugins: [
-          ${exampleCode.replace(main.name, `${pkg.globalName}.init`)}
+          ${exampleCode.replace(main.name, `${defaultExportName}`)}
         ]
       })
 
