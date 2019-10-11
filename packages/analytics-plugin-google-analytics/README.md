@@ -77,7 +77,7 @@ See [additional implementation examples](#additional-usage-examples) for more de
 
 ### Browser
 
-The browser side Google Analytics plugin works with these api methods:
+The Google Analytics client side browser plugin works with these api methods:
 
 - **[page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Google Analytics 
 - **[track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Google Analytics 
@@ -98,7 +98,7 @@ googleAnalytics({
 
 ### Server-side
 
-The server-side Node.js side Google Analytics plugin works with these api methods:
+The Google Analytics server-side node.js plugin works with these api methods:
 
 - **[page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Google Analytics 
 - **[track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Google Analytics 

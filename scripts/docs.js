@@ -250,8 +250,11 @@ function getPlatformName(data) {
 }
 
 function renderJsDocs(data) {
+  console.log('data', data)
+  console.log('data.ast.foundExports', data.ast.foundExports)
   const defaultExport = data.ast.foundExports.find((x) => Boolean(x.isDefault))
   const jsDocForDefaultExport = data.jsdoc.find((x) => x.id === defaultExport.name)
+  console.log('jsDocForDefaultExport', jsDocForDefaultExport)
   const jsdocContent = jsDocFormatArguments(jsDocForDefaultExport.params)
   const jsDocExample = jsDocRenderExample(jsDocForDefaultExport.examples[0])
   return `${jsdocContent}${jsDocExample}`
@@ -352,6 +355,8 @@ ${renderRelevantMethods(data)}
     return `After initializing \`analytics\` with the \`${name}\` plugin, data will be sent into ${provider} whenever ${dataMethodText} are called.`
   }
 
+  const API_METHODS = ['page', 'track', 'identify', 'reset']
+
   let exposedFuncs
   const what = allData.map((y) => {
     const name = getPlatformName(y)
@@ -359,12 +364,14 @@ ${renderRelevantMethods(data)}
     const exp = exposedFuncs
     const jsDoc = renderJsDocs(y.data)
     const niceName = (name === 'node.js') ? `server-side` : name
-    const niceText = (name === 'node.js') ? `${niceName} ${capitalizeFirstLetter(name)}` : niceName
+    const niceText = (name === 'node.js') ? `${niceName} ${name}` : `client side ${niceName}`
     return `### ${capitalizeFirstLetter(niceName)}
 
-The ${niceText} side ${theName} plugin works with these api methods:
+The ${theName} ${niceText} plugin works with these api methods:
 
-${exp.map((x) => {
+${exp
+  .filter((x) => API_METHODS.includes(x))
+  .map((x) => {
     const link = SRC_LINKS[x]
     const linkText = (link) ? `[${x}](${link})` : x
     return `- **${linkText}** - ${ABOUT_METHODS[x]} `

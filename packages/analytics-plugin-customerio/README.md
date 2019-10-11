@@ -75,7 +75,7 @@ See [additional implementation examples](#additional-usage-examples) for more de
 
 ### Browser
 
-The browser side Customer.io plugin works with these api methods:
+The Customer.io client side browser plugin works with these api methods:
 
 - **[page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Customer.io 
 - **[reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for Customer.io values 
@@ -98,7 +98,7 @@ customerIOPlugin({
 
 ### Server-side
 
-The server-side Node.js side Customer.io plugin works with these api methods:
+The Customer.io server-side node.js plugin works with these api methods:
 
 - **[page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Customer.io 
 - **[track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Customer.io 
