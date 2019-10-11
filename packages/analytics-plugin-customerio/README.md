@@ -9,6 +9,7 @@ Integration with [customer.io](https://customer.io/) for [analytics](https://www
 <summary>Click to expand</summary>
 
 - [Install](#install)
+- [Platforms Supported](#platforms-supported)
 - [Usage](#usage)
   * [Browser](#browser)
   * [Server-side](#server-side)
@@ -22,16 +23,21 @@ Integration with [customer.io](https://customer.io/) for [analytics](https://www
 Install `analytics` and `@analytics/customerio` packages
 
 ```bash
-npm install analytics @analytics/customerio
+npm install analytics
+npm install @analytics/customerio
 ```
 
 <!-- AUTO-GENERATED-CONTENT:START (PLUGIN_DOCS) -->
 
+## Platforms Supported
+
+The `@analytics/customerio` package works in [the browser](#browser) and [server-side in node.js](#server-side)
+
 ## Usage
 
-The `@analytics/customerio` package works in [Browser](#browser) and [Node.js](#server-side)
+To use the `@analytics/customerio` package install in your project and initialize the plugin with analytics.
 
-Below is an example of the browser side plugin
+Below is an example of how to use the browser plugin.
 
 ```js
 import Analytics from 'analytics'
@@ -63,11 +69,18 @@ analytics.identify('user-id-xyz', {
 
 ```
 
+After initializing `analytics` with the `customerIOPlugin` plugin, data will be sent into Customer.io whenever [analytics.page](https://getanalytics.io/api/#analyticspage), [analytics.track](https://getanalytics.io/api/#analyticstrack), or [analytics.identify](https://getanalytics.io/api/#analyticsidentify) are called.
+
+See [additional implementation examples](#additional-usage-examples) for more details on using in your project.
+
 ### Browser
 
-The browser side plugin works with these [analytics api methods](https://getanalytics.io/api/)
+The browser side Customer.io plugin works with these api methods:
 
-[page](https://getanalytics.io/api/#analyticspage), [reset](https://getanalytics.io/api/#analyticsreset), [track](https://getanalytics.io/api/#analyticstrack), [identify](https://getanalytics.io/api/#analyticsidentify)
+- **[page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Customer.io 
+- **[reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for Customer.io values 
+- **[track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Customer.io 
+- **[identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Customer.io 
 
 **Arguments**
 
@@ -85,9 +98,11 @@ customerIOPlugin({
 
 ### Server-side
 
-The Server-side Node.js side plugin works with these [analytics api methods](https://getanalytics.io/api/)
+The server-side Node.js side Customer.io plugin works with these api methods:
 
-[page](https://getanalytics.io/api/#analyticspage), [track](https://getanalytics.io/api/#analyticstrack), [identify](https://getanalytics.io/api/#analyticsidentify)
+- **[page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Customer.io 
+- **[track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Customer.io 
+- **[identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Customer.io 
 
 **Arguments**
 
@@ -195,7 +210,7 @@ customerIOServer({
         var Analytics = _analytics.init({
           app: 'my-app-name',
           plugins: [
-            analyticsCustomerio.init({
+            analyticsCustomerio({
               siteId: '123-xyz'
             })
           ]

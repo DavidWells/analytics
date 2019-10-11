@@ -30,6 +30,10 @@
     "./lib/analytics-plugin-customerio.es.js": "./lib/analytics-plugin-customerio.browser.es.js"
   },
   "projectMeta": {
+    "provider": {
+      "name": "Customer.io",
+      "url": "https://customer.io/"
+    },
     "platforms": {
       "browser": "./src/browser.js",
       "node": "./src/node.js"
