@@ -28,6 +28,16 @@
     "./lib/analytics-plugin-segment.cjs.js": "./lib/analytics-plugin-segment.browser.cjs.js",
     "./lib/analytics-plugin-segment.es.js": "./lib/analytics-plugin-segment.browser.es.js"
   },
+  "projectMeta": {
+    "provider": {
+      "name": "Segment",
+      "url": "https://segment.com/"
+    },
+    "platforms": {
+      "browser": "./src/browser.js",
+      "node": "./src/node.js"
+    }
+  },
   "files": [
     "dist",
     "lib",

@@ -23,7 +23,7 @@ const config = {
  *   writeKey: '123-xyz'
  * })
  */
-export default function segmentPlugin(pluginConfig = {}) {
+function segmentPlugin(pluginConfig = {}) {
   return {
     NAMESPACE: 'segment',
     config: {
@@ -92,6 +92,8 @@ export default function segmentPlugin(pluginConfig = {}) {
     }
   }
 }
+
+export default segmentPlugin
 
 /* Load Segment analytics.js on page */
 function initialize({ config, instance, payload }) {

@@ -1,7 +1,3 @@
-/**
- * Segment.com Node plugin
- * uses https://github.com/segmentio/analytics-node
- */
 
 let Analytics
 if (!process.browser) {
@@ -19,8 +15,22 @@ const config = {
 
 const NAMESPACE = 'segment'
 
-/* Export the integration */
-export default function segment(userConfig = {}) {
+/**
+ * Segment serverside analytics plugin
+ * @link https://getanalytics.io/plugins/segment/
+ * @link https://segment.com/docs/sources/website/analytics.js/
+ * @param {object}  pluginConfig - Plugin settings
+ * @param {string}  pluginConfig.writeKey - Your segment writeKey
+ * @param {boolean} [pluginConfig.flushInterval] - Segment sdk flushInterval. Docs https://bit.ly/2H2jJMb
+ * @param {boolean} [pluginConfig.disableAnonymousTraffic] - Disable loading segment for anonymous visitors
+ * @return {object} Analytics plugin
+ * @example
+ *
+ * segmentPlugin({
+ *   writeKey: '123-xyz'
+ * })
+ */
+function segmentPlugin(userConfig = {}) {
   // Initialize segment client
   const segmentConfig = {
     ...config,
@@ -70,3 +80,5 @@ export default function segment(userConfig = {}) {
     }
   }
 }
+
+export default segmentPlugin
