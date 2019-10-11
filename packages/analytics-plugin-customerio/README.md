@@ -35,7 +35,7 @@ The `@analytics/customerio` package works in [the browser](#browser) and [server
 
 ## Usage
 
-To use the `@analytics/customerio` package install in your project and initialize the plugin with analytics.
+To use the `@analytics/customerio` package install in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
 
 Below is an example of how to use the browser plugin.
 

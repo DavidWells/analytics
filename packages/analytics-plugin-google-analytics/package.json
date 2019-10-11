@@ -30,6 +30,11 @@
     "./lib/analytics-plugin-ga.es.js": "./lib/analytics-plugin-ga.browser.es.js"
   },
   "projectMeta": {
+    "provider": {
+      "name": "Google Analytics",
+      "url": "https://analytics.google.com/analytics/web/"
+    },
+    "windowGlobal": "analyticsGa",
     "platforms": {
       "browser": "./src/browser.js",
       "node": "./src/node.js"
