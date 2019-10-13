@@ -1,6 +1,6 @@
 import Analytics from 'analytics'
-import fullStoryPlugin from 'analytics-plugin-fullstory'
-import googleAnalytics from 'analytics-plugin-ga'
+import fullStoryPlugin from '@analytics/fullstory'
+import googleAnalytics from '@analytics/google-analytics'
 
 const analytics = Analytics({
   debug: true,

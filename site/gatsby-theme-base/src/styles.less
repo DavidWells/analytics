@@ -43,6 +43,9 @@ h3 {
 h4, p, li {
   font-size: 1.125rem
 }
+details {
+  margin-bottom: 10px;
+}
 details ul {
   margin-top: 10px;
 }
@@ -51,6 +54,9 @@ details li {
 }
 details li p {
   margin-bottom: 0px;
+}
+details > p:first-of-type {
+  margin-top: 10px;
 }
 
 h5 {
@@ -74,6 +80,13 @@ li {
   margin-bottom: @default-margin / 2;
   > ul, > ol {
     margin-top: @default-margin / 2;
+  }
+}
+
+li {
+  > ul, > ol {
+    margin-top: 5px;
+    margin-bottom: 0px;
   }
 }
 
