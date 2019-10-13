@@ -35,7 +35,7 @@ npm install @analytics/simple-analytics
 
 ## How to use
 
-The `@analytics/simple-analytics` package works in [the browser](#browser). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
+The `@analytics/simple-analytics` package works in [the browser](#browser-usage). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
 
 Below is an example of how to use the browser plugin.
 
@@ -50,7 +50,7 @@ const analytics = Analytics({
 
 ```
 
-See [additional implementation examples](#additional-usage-examples) for more details on using in your project.
+See [additional implementation examples](#additional-examples) for more details on using in your project.
 
 ## Browser usage
 
@@ -68,7 +68,7 @@ const analytics = Analytics({
 
 ## Platforms Supported
 
-The `@analytics/simple-analytics` package works in [the browser](#browser)
+The `@analytics/simple-analytics` package works in [the browser](#browser-usage)
 
 ## Additional examples
 

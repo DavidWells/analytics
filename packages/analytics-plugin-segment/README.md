@@ -35,7 +35,7 @@ npm install @analytics/segment
 
 ## How to use
 
-The `@analytics/segment` package works in [the browser](#browser) and [server-side in node.js](#server-side). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
+The `@analytics/segment` package works in [the browser](#browser-usage) and [server-side in node.js](#server-side-usage). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
 
 Below is an example of how to use the browser plugin.
 
@@ -71,16 +71,16 @@ analytics.identify('user-id-xyz', {
 
 After initializing `analytics` with the `segmentPlugin` plugin, data will be sent into Segment whenever [analytics.page](https://getanalytics.io/api/#analyticspage), [analytics.track](https://getanalytics.io/api/#analyticstrack), or [analytics.identify](https://getanalytics.io/api/#analyticsidentify) are called.
 
-See [additional implementation examples](#additional-usage-examples) for more details on using in your project.
+See [additional implementation examples](#additional-examples) for more details on using in your project.
 
 ## Browser usage
 
 The Segment client side browser plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Segment
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Segment
-- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Segment
-- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for Segment values
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Segment 
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Segment 
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Segment 
+- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for Segment values 
 
 ### Browser API
 
@@ -106,9 +106,9 @@ const analytics = Analytics({
 
 The Segment server-side node.js plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Segment
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Segment
-- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Segment
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Segment 
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Segment 
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Segment 
 
 ### Server-side API
 
@@ -134,7 +134,7 @@ const analytics = Analytics({
 
 ## Platforms Supported
 
-The `@analytics/segment` package works in [the browser](#browser) and [server-side in node.js](#server-side)
+The `@analytics/segment` package works in [the browser](#browser-usage) and [server-side in node.js](#server-side-usage)
 
 ## Additional examples
 

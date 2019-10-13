@@ -205,7 +205,7 @@ Below is an example of how to use the ${primaryExample.platform} plugin.
 ${indentString(formatCode(code), 0)}
 \`\`\`
 ${whatThisEnablesText(exampleFunctionName, providerName, exposedFuncs)}
-See [additional implementation examples](#additional-usage-examples) for more details on using in your project.
+See [additional implementation examples](#additional-examples) for more details on using in your project.
 
 ${apiDocs.join('\n')}
 
@@ -228,7 +228,7 @@ function renderPlatformSentence(platforms) {
   }
 
   return platforms.map((x) => {
-    return `[${NICE_NAMES[x]}](#${getPlatformNiceName(x)})`
+    return `[${NICE_NAMES[x]}](#${getPlatformNiceName(x)}-usage)`
   }).join(' and ')
 }
 

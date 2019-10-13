@@ -36,7 +36,7 @@ npm install @analytics/google-tag-manager
 
 ## How to use
 
-The `@analytics/google-tag-manager` package works in [the browser](#browser). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
+The `@analytics/google-tag-manager` package works in [the browser](#browser-usage). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
 
 Below is an example of how to use the browser plugin.
 
@@ -66,14 +66,14 @@ analytics.track('cartCheckout', {
 
 After initializing `analytics` with the `googleTagManager` plugin, data will be sent into Google Tag Manager whenever [analytics.page](https://getanalytics.io/api/#analyticspage), or [analytics.track](https://getanalytics.io/api/#analyticstrack) are called.
 
-See [additional implementation examples](#additional-usage-examples) for more details on using in your project.
+See [additional implementation examples](#additional-examples) for more details on using in your project.
 
 ## Browser usage
 
 The Google Tag Manager client side browser plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Google Tag Manager
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Google Tag Manager
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Google Tag Manager 
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Google Tag Manager 
 
 ### Browser API
 
@@ -97,7 +97,7 @@ const analytics = Analytics({
 
 ## Platforms Supported
 
-The `@analytics/google-tag-manager` package works in [the browser](#browser)
+The `@analytics/google-tag-manager` package works in [the browser](#browser-usage)
 
 ## Additional examples
 

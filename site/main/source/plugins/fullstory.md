@@ -38,7 +38,7 @@ To find your FullStory account's `org` ID go to **Settings > FullStory Setup.** 
 
 ## How to use
 
-The `@analytics/fullstory` package works in [the browser](#browser). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
+The `@analytics/fullstory` package works in [the browser](#browser-usage). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
 
 Below is an example of how to use the browser plugin.
 
@@ -71,14 +71,14 @@ analytics.identify('user-id-xyz', {
 
 After initializing `analytics` with the `fullStoryPlugin` plugin, data will be sent into FullStory whenever [analytics.identify](https://getanalytics.io/api/#analyticsidentify), or [analytics.track](https://getanalytics.io/api/#analyticstrack) are called.
 
-See [additional implementation examples](#additional-usage-examples) for more details on using in your project.
+See [additional implementation examples](#additional-examples) for more details on using in your project.
 
 ## Browser usage
 
 The FullStory client side browser plugin works with these analytic api methods:
 
-- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to FullStory
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to FullStory
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to FullStory 
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to FullStory 
 
 ### Browser API
 
@@ -101,7 +101,7 @@ const analytics = Analytics({
 
 ## Platforms Supported
 
-The `@analytics/fullstory` package works in [the browser](#browser)
+The `@analytics/fullstory` package works in [the browser](#browser-usage)
 
 ## Additional examples
 

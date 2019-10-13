@@ -36,7 +36,7 @@ npm install @analytics/hubspot
 
 ## How to use
 
-The `@analytics/hubspot` package works in [the browser](#browser). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
+The `@analytics/hubspot` package works in [the browser](#browser-usage). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
 
 Below is an example of how to use the browser plugin.
 
@@ -72,15 +72,15 @@ analytics.identify({
 
 After initializing `analytics` with the `hubSpotPlugin` plugin, data will be sent into HubSpot whenever [analytics.identify](https://getanalytics.io/api/#analyticsidentify), [analytics.page](https://getanalytics.io/api/#analyticspage), or [analytics.track](https://getanalytics.io/api/#analyticstrack) are called.
 
-See [additional implementation examples](#additional-usage-examples) for more details on using in your project.
+See [additional implementation examples](#additional-examples) for more details on using in your project.
 
 ## Browser usage
 
 The HubSpot client side browser plugin works with these analytic api methods:
 
-- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to HubSpot
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into HubSpot
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to HubSpot
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to HubSpot 
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into HubSpot 
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to HubSpot 
 
 ### Browser API
 
@@ -103,7 +103,7 @@ const analytics = Analytics({
 
 ## Platforms Supported
 
-The `@analytics/hubspot` package works in [the browser](#browser)
+The `@analytics/hubspot` package works in [the browser](#browser-usage)
 
 ## Additional examples
 
