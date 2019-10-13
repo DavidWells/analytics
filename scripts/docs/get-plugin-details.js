@@ -14,6 +14,8 @@ module.exports = function grabPluginData(originalPath) {
     const entryPath = pkg.projectMeta.platforms[platform]
     const resolvedEntryPath = path.resolve(dir, entryPath)
     return {
+      path: resolvedEntryPath,
+      dir: dir,
       platform: platform,
       data: parseSourceCode(resolvedEntryPath),
       pkg: pkg

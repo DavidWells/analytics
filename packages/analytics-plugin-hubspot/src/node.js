@@ -11,7 +11,7 @@ const logMessage = () => {
 }
 
 /* Export the integration */
-export default function hubspotPlugin(userConfig = {}) {
+function hubSpotPlugin(userConfig = {}) {
   // Allow for userland overides of base methods
   return {
     NAMESPACE: NAMESPACE,
@@ -46,3 +46,5 @@ export default function hubspotPlugin(userConfig = {}) {
     }
   }
 }
+
+export default hubSpotPlugin

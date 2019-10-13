@@ -4,18 +4,43 @@ subTitle: Using the FullStory plugin
 description: Integrate FullStory visitor tracking with the open source analytics module
 ---
 
-FullStory enables pixel perfect replays of what your visitor is doing on your website or app. It can give you deep insight into user flows & potential bottlenecks of your applications.
+Integration with [FullStory](https://www.fullstory.com/) for [analytics](https://www.npmjs.com/package/analytics)
 
-## How to use
+<!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
+<details>
+<summary>Click to expand</summary>
 
-Install `analytics` and `@analytics/fullstory` packages
+- [Installation](#installation)
+- [How to use](#how-to-use)
+- [Browser usage](#browser-usage)
+  * [Browser API](#browser-api)
+- [Platforms Supported](#platforms-supported)
+- [Additional examples](#additional-examples)
+- [Formatting payloads](#formatting-payloads)
+
+</details>
+<!-- AUTO-GENERATED-CONTENT:END -->
+
+## Installation
+
+Install `analytics` and `@analytics/customerio` packages
 
 ```bash
 npm install analytics
-npm install @analytics/fullstory
+npm install @analytics/customerio
 ```
 
-Import and initialize in your project
+You will need your `org` ID from [FullStory setting](https://help.fullstory.com/hc/en-us/articles/360020623514-How-do-I-get-FullStory-up-and-running-on-my-site-) to connect to your account and initialize analytics.
+
+To find your FullStory account's `org` ID go to **Settings > FullStory Setup.** and grab the `_fs_org` value.
+
+<!-- AUTO-GENERATED-CONTENT:START (PLUGIN_DOCS) -->
+
+## How to use
+
+The `@analytics/fullstory` package works in [the browser](#browser). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
+
+Below is an example of how to use the browser plugin.
 
 ```js
 import Analytics from 'analytics'
@@ -25,51 +50,167 @@ const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
     fullStoryPlugin({
-      /* org name from Full Story settings */
-      org: 'ABCDE'
+      org: 'your-org-name'
     })
   ]
 })
 
-/* Track custom events */
-analytics.track('itemPurchased', {
-  price: 11.50,
-  is_user: true
+/* Track a custom event */
+analytics.track('cartCheckout', {
+  item: 'pink socks',
+  price: 20
 })
 
-/* Identify visitors */
-analytics.identify('user-xzy-123', {
-  email: 'bill@murray.com',
-  accountLevel: 'pro'
+/* Identify a visitor */
+analytics.identify('user-id-xyz', {
+  firstName: 'bill',
+  lastName: 'murray'
 })
+
 ```
 
-## Configuration
+After initializing `analytics` with the `fullStoryPlugin` plugin, data will be sent into FullStory whenever [analytics.identify](https://getanalytics.io/api/#analyticsidentify), or [analytics.track](https://getanalytics.io/api/#analyticstrack) are called.
 
-Below are the configuration options for the analytics full story plugin.
+See [additional implementation examples](#additional-usage-examples) for more details on using in your project.
 
-You will need your `org` ID from [full story setting](https://help.fullstory.com/hc/en-us/articles/360020623514-How-do-I-get-FullStory-up-and-running-on-my-site-) to connect to your account.
+## Browser usage
 
-First, find your FullStory account's `org` ID by clicking on **Settings > FullStory Setup.** and viewing the `_fs_org` value.
+The FullStory client side browser plugin works with these analytic api methods:
 
-**Arguments**
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to FullStory
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to FullStory
 
-- **pluginConfig** <code>object</code> - Plugin settings
-- **pluginConfig.org** <code>string</code> - FullStory account's `org` ID. The `_fs_org` value in settings.
-
-**Example**
+### Browser API
 
 ```js
-fullStoryPlugin({
-  org: 'NRVXW' // org name from Full Story settings
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    fullStoryPlugin({
+      org: 'your-org-name'
+    })
+  ]
 })
+
 ```
 
-## Event Formatting Details
+**Initialization arguments**
+
+- **pluginConfig** `object` Plugin settings
+- **pluginConfig.org** `string` FullStory account's `org` ID. The `_fs_org` value in settings.
+
+## Platforms Supported
+
+The `@analytics/fullstory` package works in [the browser](#browser)
+
+## Additional examples
+
+Below are additional implementation examples.
+
+<details>
+  <summary>Using in HTML</summary>
+
+  Below is an example of importing via the unpkg CDN. Please note this will pull in the latest version of the package.
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>Using @analytics/fullstory in HTML</title>
+      <script src="https://unpkg.com/analytics/dist/analytics.min.js"></script>
+      <script src="https://unpkg.com/@analytics/fullstory/dist/@analytics/fullstory.min.js"></script>
+      <script type="text/javascript">
+        /* Initialize analytics */
+        var Analytics = _analytics.init({
+          app: 'my-app-name',
+          plugins: [
+            analyticsFullStory({
+              org: 'your-org-name'
+            })
+          ]
+        })
+
+        /* Track a custom event */
+        analytics.track('cartCheckout', {
+          item: 'pink socks',
+          price: 20
+        })
+
+        /* Identify a visitor */
+        analytics.identify('user-id-xyz', {
+          firstName: 'bill',
+          lastName: 'murray'
+        })
+      </script>
+    </head>
+    <body>
+      ....
+    </body>
+  </html>
+
+  ```
+
+</details>
+
+<details>
+  <summary>Using in HTML via ES Modules</summary>
+
+  Using `@analytics/fullstory` in ESM modules.
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>Using @analytics/fullstory in HTML via ESModules</title>
+      <script>
+        // Polyfill process.
+        // **Note**: Because `import`s are hoisted, we need a separate, prior <script> block.
+        window.process = window.process || { env: { NODE_ENV: 'production' } }
+      </script>
+      <script type="module">
+        import analytics from 'https://unpkg.com/analytics/lib/analytics.browser.es.js?module'
+        import analyticsFullStory from 'https://unpkg.com/@analytics/fullstory/lib/analytics-plugin-fullstory.browser.es.js?module'
+        /* Initialize analytics */
+        const Analytics = analytics({
+          app: 'analytics-html-demo',
+          debug: true,
+          plugins: [
+            analyticsFullStory({
+              org: 'your-org-name'
+            })
+            // ... add any other third party analytics plugins
+          ]
+        })
+
+        /* Track a custom event */
+        analytics.track('cartCheckout', {
+          item: 'pink socks',
+          price: 20
+        })
+
+        /* Identify a visitor */
+        analytics.identify('user-id-xyz', {
+          firstName: 'bill',
+          lastName: 'murray'
+        })
+      </script>
+    </head>
+    <body>
+      ....
+    </body>
+  </html>
+
+  ```
+
+</details>
+
+<!-- AUTO-GENERATED-CONTENT:END (PLUGIN_DOCS) -->
+
+## Formatting payloads
 
 Full story requires [specific naming conventions](https://help.fullstory.com/hc/en-us/articles/360020623234) for tracking.
 
-Luckily, we have taken the liberty of making this easier to use with this plugin. 🎉
+We have taken the liberty of making this easier to use with this plugin. 🎉
 
 Values sent to Full Story will be automatically converted into a values their API will understand.
 
@@ -83,7 +224,7 @@ analytics.track('itemPurchased', {
 })
 ```
 
-The above tracking payload will be automatically converted to the [fullstory naming conventions](https://help.fullstory.com/hc/en-us/articles/360020623234) that FullStory will save. Under the hood analytics is sending the event like so:
+This tracking payload will be automatically converted to the [fullstory naming conventions](https://help.fullstory.com/hc/en-us/articles/360020623234) and will be sent like:
 
 ```js
 FS.event('itemPurchased', {

@@ -8,7 +8,8 @@
     "start": "yarn workspace main develop",
     "build": "yarn workspace main build",
     "serve": "yarn workspace main serve",
-    "deploy": "yarn workspace main deploy"
+    "deploy": "yarn workspace main deploy",
+    "sync": "node sync.js"
   },
   "workspaces": [
     "gatsby-theme-base",
@@ -16,9 +17,10 @@
     "main"
   ],
   "dependencies": {
-    "change-case": "^3.1.0"
+    "change-case": "^3.1.0",
   },
   "devDependencies": {
-    "markdown-magic": "^1.0.0"
+    "markdown-magic": "^1.0.0",
+    "fs-extra": "^8.1.0"
   }
 }

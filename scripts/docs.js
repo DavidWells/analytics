@@ -78,86 +78,33 @@ const config = {
         desc = desc.replace(/\n/g, '<br/>')
         // console.log('data', data)
         md += `| **\`${eventName[1]}\`** | ${desc} |\n`
-        // updatedContent += `### ${formatName(data.ctx.name)}\n\n`
-        // updatedContent += `${data.description.full}\n\n`
-        // updatedContent += `${formatArguments(data.tags)}`
-        // updatedContent += formatExample(data.tags).join('\n')
-        // updatedContent += `\n`
       })
       return md.replace(/^\s+|\s+$/g, '')
     },
-    // https://flaviocopes.com/how-to-get-last-updated-date-file-node/
-    LAST_MODIFIED(content, options, instance) {
-      const getFileUpdatedDate = (path) => {
-        const stats = fs.statSync(path)
-        return stats.mtime
-      }
-      console.log('instance', instance)
-      const date = getFileUpdatedDate(instance.originalPath)
-      return date
-    },
-    PLUGIN_PLATFORMS_SUPPORTED(content, options, instance) {
-      let updatedContent = ''
-      const { originalPath } = instance
-      let data
-      if (cache[originalPath]) {
-        data = cache[originalPath]
-      } else {
-        data = getPluginDetails(originalPath)
-        cache[originalPath] = data
-      }
-      if (data) {
-        const platforms = getPlatforms(data).join(' and ')
-        return outdent`
-        ## Platforms Supported
-
-        ${platforms}
-        `
-      }
-    },
     PLUGIN_DOCS(content, options, instance) {
-      let updatedContent = ''
-      let exampleText = ''
-      let data
+      let pluginDocs = ''
+      let pluginData
       const { originalPath } = instance
       if (cache[originalPath]) {
-        data = cache[originalPath]
+        pluginData = cache[originalPath]
       } else {
-        data = getPluginDetails(originalPath)
-        cache[originalPath] = data
+        pluginData = getPluginDetails(originalPath)
+        cache[originalPath] = pluginData
       }
-      if (data && data.length) {
+      if (pluginData && pluginData.length) {
         // deepLog(data)
+        let mainExample = pluginData.find((d) => d.platform === 'browser')
+        if (!mainExample) {
+          mainExample = pluginData.find((d) => d.platform === 'node')
+        }
 
-        const examples = data.reduce((acc, d) => {
-          acc = acc.concat(renderUsage(d, data, originalPath))
-          return acc
-        }, [])
-          .sort(sortUsageExamples)
-          .map((ex) => ex.text)
-          .join('\n')
-
-        exampleText = examples
-        /* Supported platforms */
-        const platforms = data.map((d) => {
-          let methods = ''
-          if (d.data.ast.methodsAndValues) {
-            methods = d.data.ast.methodsAndValues
-              .filter(x => removeMethod(x.name))
-              .map((x) => {
-                return `\`${x.name}\``
-              }).join(', ')
-          }
-          const plat = (d.platform === 'node') ? 'node.js' : d.platform
-          return outdent`
-          ### ${capitalizeFirstLetter(plat)} Methods
-          ${methods}\n
-          `
-        }).join('\n')
-        // console.log('platforms', platforms)
-        updatedContent += platforms
+        if (!mainExample) {
+          return ''
+        }
+        // Chug through plugin data and print docs
+        pluginDocs = mainUsageBlock(mainExample, pluginData)
       }
-      return `${exampleText}`
+      return `${pluginDocs}`
     },
     API_DOCS(content, options) {
       const fileContents = fs.readFileSync(path.join(__dirname, '..', 'packages/analytics-core/src/index.js'), 'utf-8')
@@ -165,22 +112,11 @@ const config = {
       let updatedContent = ''
       const removeItems = ['analytics.instance', 'analytics.return']
       docBlocs.forEach((data) => {
-        // console.log('data', data)
         const niceName = formatName(data.ctx.name)
         if (!removeItems.includes(niceName)) {
           updatedContent += `### ${formatName(data.ctx.name)}\n\n`
           updatedContent += `${data.description.full}\n\n`
           updatedContent += `${formatArguments(data.tags)}`
-          /*
-          <details>
-            <summary>usage example</summary>
-
-            ```js
-            const la = 'foo'
-            ```
-
-          </details>
-           */
           updatedContent += formatExample(data.tags).join('\n')
           updatedContent += `\n`
         }
@@ -188,6 +124,112 @@ const config = {
       return updatedContent.replace(/^\s+|\s+$/g, '')
     }
   }
+}
+
+function mainUsageBlock(primaryExample, allData) {
+  const { data, pkg } = primaryExample
+  const platforms = getPlatforms(allData)
+  const main = data.jsdoc.find((doc) => Boolean(doc.examples))
+
+  const exampleFunctionName = main.name
+  const exampleCode = main.examples[0]
+  const code = `
+import Analytics from 'analytics'
+import ${exampleFunctionName} from '${pkg.name}'
+
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    ${exampleCode}
+  ]
+})
+
+${renderRelevantMethods(data)}
+`
+
+  const providerName = cleanName(pkg.projectMeta.provider.name)
+  const ABOUT_METHODS = aboutMethods(providerName)
+
+  const API_METHODS = ['page', 'track', 'identify', 'reset']
+
+  /* Get additional Usage examples */
+  const additionalExamples = allData.reduce((acc, d) => {
+    acc = acc.concat(getUsageExamples(d, data))
+    return acc
+  }, [])
+    .sort(sortUsageExamples)
+    .map((ex) => ex.text)
+    .join('\n')
+
+  let exposedFuncs
+  const apiDocs = allData.map((y) => {
+    const name = getPlatformName(y)
+    exposedFuncs = getExposedFunctions(y.data)
+    const exp = exposedFuncs
+    const jsDoc = renderJsDocs(y.data, y)
+    const niceName = (name === 'node.js') ? `server-side` : name
+    const niceText = (name === 'node.js') ? `${niceName} ${name}` : `client side ${niceName}`
+    const capsName = capitalizeFirstLetter(niceName)
+    const apiMethodsExposed = exp
+      .filter((x) => API_METHODS.includes(x))
+      .map((x) => {
+        const link = SRC_LINKS[x]
+        const linkText = (link) ? `[analytics.${x}](${link})` : x
+        return `- **${linkText}** - ${ABOUT_METHODS[x]} `
+      }).join('\n')
+    // console.log('apiMethodsExposed', apiMethodsExposed)
+    let renderMethods = 'See below from browser API'
+    if (apiMethodsExposed) {
+      renderMethods = `The ${providerName} ${niceText} plugin works with these analytic api methods:
+
+${apiMethodsExposed}`
+    }
+
+    return `## ${capsName} usage
+
+${renderMethods}
+
+### ${capsName} API
+
+${jsDoc}`
+  })
+
+return `
+## How to use
+
+The \`${pkg.name}\` package works in ${renderPlatformSentence(platforms)}. To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
+
+Below is an example of how to use the ${primaryExample.platform} plugin.
+
+\`\`\`js
+${indentString(formatCode(code), 0)}
+\`\`\`
+${whatThisEnablesText(exampleFunctionName, providerName, exposedFuncs)}
+See [additional implementation examples](#additional-usage-examples) for more details on using in your project.
+
+${apiDocs.join('\n')}
+
+## Platforms Supported
+
+The \`${pkg.name}\` package works in ${renderPlatformSentence(platforms)}
+
+## Additional examples
+
+Below are additional implementation examples.
+
+${additionalExamples}
+`
+}
+
+function renderPlatformSentence(platforms) {
+  const NICE_NAMES = {
+    'Browser': 'the browser',
+    'Node.js': 'server-side in node.js'
+  }
+
+  return platforms.map((x) => {
+    return `[${NICE_NAMES[x]}](#${getPlatformNiceName(x)})`
+  }).join(' and ')
 }
 
 function formatCode(code, type = 'babel') {
@@ -205,8 +247,8 @@ function sortUsageExamples(a, b) {
   return 0
 }
 
-function renderUsage(d, allData, directory) {
-  const { data, pkg, platform } = d
+function getUsageExamples(d) {
+  const { data, pkg, platform, dir } = d
   if (platform === 'node') {
     return [{
       name: 'es6node',
@@ -220,13 +262,9 @@ function renderUsage(d, allData, directory) {
     }]
   } else {
     const esmHtml = browserESMUsage(data, pkg)
-    const vanillaHtml = browserStandaloneUsage(data, pkg, directory)
+    const vanillaHtml = browserStandaloneUsage(data, pkg, dir)
 
     return [{
-      name: 'main',
-      order: 0,
-      text: mainUsageBlock(data, pkg, allData)
-    }, {
       name: 'esHtml',
       order: 4,
       text: esmHtml
@@ -249,27 +287,34 @@ function getPlatformName(data) {
   return (data.platform === 'node') ? 'node.js' : data.platform
 }
 
-function renderJsDocs(data) {
-  console.log('data', data)
-  console.log('data.ast.foundExports', data.ast.foundExports)
+function renderJsDocs(data, allData) {
   const defaultExport = data.ast.foundExports.find((x) => Boolean(x.isDefault))
-  const jsDocForDefaultExport = data.jsdoc.find((x) => x.id === defaultExport.name)
-  console.log('jsDocForDefaultExport', jsDocForDefaultExport)
+  let jsDocForDefaultExport = data.jsdoc.find((x) => x.id === defaultExport.name)
+  if (!jsDocForDefaultExport) {
+    if (data.jsdoc && data.jsdoc.length === 1) {
+      jsDocForDefaultExport = data.jsdoc[0]
+    }
+    if (!jsDocForDefaultExport) {
+      throw new Error(`Missing default export for ${allData.dir}`)
+    }
+  }
   const jsdocContent = jsDocFormatArguments(jsDocForDefaultExport.params)
   const jsDocExample = jsDocRenderExample(jsDocForDefaultExport.examples[0])
-  return `${jsdocContent}${jsDocExample}`
+  return `${jsDocExample}${jsdocContent}`
 }
 
 function jsDocFormatArguments(params) {
+  if (!params) return ''
   const theArgs = params.map((param) => {
     return jsDocRenderArg(param)
   })
   // console.log('theArgs', theArgs)
   if (theArgs.length) {
-    return `**Arguments**
+    return `
+
+**Initialization arguments**
 
 ${theArgs.join('\n')}
-
 `
   }
   return ''
@@ -285,10 +330,16 @@ function jsDocRenderExample(example) {
   if (!example) {
     return ''
   }
-  return `**Example**
-
-\`\`\`js
-${example.replace(/^\s+|\s+$/g, '')}
+  const code = `
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    ${example.replace(/^\s+|\s+$/g, '')}
+  ]
+})
+`
+  return `\`\`\`js
+${formatCode(code)}
 \`\`\``
 }
 
@@ -297,119 +348,44 @@ function getPlatformNiceName(name) {
   return (lower === 'node.js') ? `server-side` : lower
 }
 
-function mainUsageBlock(data, pkg, allData) {
-  const platforms = getPlatforms(allData)
-  const main = data.jsdoc.find((doc) => Boolean(doc.examples))
+function cleanName(name) {
+  return name.replace(/@analytics\//, '')
+}
 
-  const name = main.name
-  const exampleCode = main.examples[0]
-  const code = `
-import Analytics from 'analytics'
-import ${name} from '${pkg.name}'
-
-const analytics = Analytics({
-  app: 'awesome-app',
-  plugins: [
-    ${exampleCode}
-  ]
-})
-
-${renderRelevantMethods(data)}
-`
-  function cleanName(name) {
-    return name.replace(/@analytics\//, '')
+function aboutMethods(name) {
+  return {
+    'page': `Sends page views into ${name}`,
+    'track': `Track custom events and send to ${name}`,
+    'identify': `Identify visitors and send details to ${name}`,
+    'reset': `Reset browser storage cookies & localstorage for ${name} values`
   }
+}
 
-  function aboutMethods(name) {
-    return {
-      'page': `Sends page views into ${name}`,
-      'track': `Track custom events and send to ${name}`,
-      'identify': `Identify visitors and send details to ${name}`,
-      'reset': `Reset browser storage cookies & localstorage for ${name} values`
-    }
+const DATA_METHODS = ['page', 'track', 'identify']
+function whatThisEnablesText(name, provider, methods) {
+  const dataMethods = methods.filter((x) => DATA_METHODS.includes(x))
+  if (!dataMethods.length) {
+    return ''
   }
-
-  const theName = cleanName(pkg.projectMeta.provider.name)
-  const ABOUT_METHODS = aboutMethods(theName)
-
-  const DATA_METHODS = ['page', 'track', 'identify']
-  function afterText(name, provider, methods) {
-    const dataMethods = methods.filter((x) => DATA_METHODS.includes(x))
-    if (!dataMethods.length) {
-      return ''
-    }
-    const dataMethodText = dataMethods
-      .map((x) => {
-        const link = SRC_LINKS[x]
-        const linkText = (link) ? `[analytics.${x}](${link})` : `\`analytics.${x}\``
-        return linkText
-      })
-      .reduce((acc, curr, i) => {
-        if ((dataMethods.length - 1) === i) {
-          acc = `${acc}or ${curr}`
-          return acc
-        }
-        acc = `${acc}${curr}, `
+  const dataMethodText = dataMethods
+    .map((x) => {
+      const link = SRC_LINKS[x]
+      const linkText = (link) ? `[analytics.${x}](${link})` : `\`analytics.${x}\``
+      return linkText
+    })
+    .reduce((acc, curr, i) => {
+      if ((dataMethods.length - 1) === i) {
+        acc = `${acc}or ${curr}`
         return acc
-      }, '')
-    return `After initializing \`analytics\` with the \`${name}\` plugin, data will be sent into ${provider} whenever ${dataMethodText} are called.`
-  }
-
-  const API_METHODS = ['page', 'track', 'identify', 'reset']
-
-  let exposedFuncs
-  const what = allData.map((y) => {
-    const name = getPlatformName(y)
-    exposedFuncs = getExposedFunctions(y.data)
-    const exp = exposedFuncs
-    const jsDoc = renderJsDocs(y.data)
-    const niceName = (name === 'node.js') ? `server-side` : name
-    const niceText = (name === 'node.js') ? `${niceName} ${name}` : `client side ${niceName}`
-    return `### ${capitalizeFirstLetter(niceName)}
-
-The ${theName} ${niceText} plugin works with these api methods:
-
-${exp
-  .filter((x) => API_METHODS.includes(x))
-  .map((x) => {
-    const link = SRC_LINKS[x]
-    const linkText = (link) ? `[${x}](${link})` : x
-    return `- **${linkText}** - ${ABOUT_METHODS[x]} `
-}).join('\n')}
-
-${jsDoc}
-`
-  })
-
-  const NICE_NAMES = {
-    'Browser': 'the browser',
-    'Node.js': 'server-side in node.js'
-  }
-
-return `
-## Platforms Supported
-
-The \`${pkg.name}\` package works in ${platforms.map((x) => `[${NICE_NAMES[x]}](#${getPlatformNiceName(x)})`).join(' and ')}
-
-## Usage
-
-To use the \`${pkg.name}\` package install in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
-
-Below is an example of how to use the browser plugin.
-
-\`\`\`js
-${indentString(formatCode(code), 0)}
-\`\`\`
-
-${afterText(name, theName, exposedFuncs)}
-
-See [additional implementation examples](#additional-usage-examples) for more details on using in your project.
-
-${what.join('\n')}
-
-### Additional Usage Examples
+      }
+      acc = `${acc}${curr}, `
+      return acc
+    }, '')
+  return `
+After initializing \`analytics\` with the \`${name}\` plugin, data will be sent into ${provider} whenever ${dataMethodText} are called.
 `
 }
+
 // ${example.replace(/^\s+|\s+$/g, '')},
 function es6Usage(data, pkg) {
   const main = data.jsdoc.find((doc) => Boolean(doc.examples))
@@ -447,35 +423,62 @@ function getExposedFunctions(data) {
 }
 
 function renderRelevantMethods(data) {
+  // console.log('data', data)
   const exposedFunctions = getExposedFunctions(data)
+  // console.log('exposedFunctions', exposedFunctions)
   let page = ''
   if (exposedFunctions.includes('page')) {
-    page = `
-    /* Track a page view */
-    analytics.page()
-    `
+    const hasCustom = data.jsdoc.find((doc) => doc.longname === 'page')
+    if (hasCustom && hasCustom.examples) {
+      page = `
+      /* Track a page view */
+      ${hasCustom.examples[0]}
+      `
+    } else {
+      page = `
+      /* Track a page view */
+      analytics.page()
+      `
+    }
   }
   let track = ''
   if (exposedFunctions.includes('track')) {
-    // TODO add way to grab real example from code is supplied
-    track = `
-    /* Track a custom event */
-    analytics.track('cartCheckout', {
-      item: 'pink socks',
-      price: 20
-    })
-    `
+    const hasCustom = data.jsdoc.find((doc) => doc.longname === 'track')
+    if (hasCustom && hasCustom.examples) {
+      track = `
+      /* Track a custom event */
+      ${hasCustom.examples[0]}
+      `
+    } else {
+      track = `
+      /* Track a custom event */
+      analytics.track('cartCheckout', {
+        item: 'pink socks',
+        price: 20
+      })
+      `
+    }
   }
 
   let identify = ''
   if (exposedFunctions.includes('identify')) {
-    identify = `
-    /* Identify a visitor */
-    analytics.identify('user-id-xyz', {
-      firstName: 'bill',
-      lastName: 'murray',
-    })`
+    const hasCustom = data.jsdoc.find((doc) => doc.longname === 'identify')
+    if (hasCustom && hasCustom.examples) {
+      identify = `
+      /* Identify a visitor */
+      ${hasCustom.examples[0]}
+      `
+    } else {
+      identify = `
+      /* Identify a visitor */
+      analytics.identify('user-id-xyz', {
+        firstName: 'bill',
+        lastName: 'murray',
+      })`
+    }
   }
+
+  // TODO add .reset
 
   return `${page}${track}${identify}`
 }
@@ -501,7 +504,9 @@ const analytics = analyticsLib({
 ${renderRelevantMethods(data)}`
 
   return `<details>
-  <summary>Server-side Node.js common JS</summary>
+  <summary>Server-side Node.js with common JS</summary>
+
+  If using node, you will want to import the \`.default\`
 
   \`\`\`js
 ${indentString(formatCode(code), 2)}
@@ -511,8 +516,7 @@ ${indentString(formatCode(code), 2)}
 `
 }
 
-function browserStandaloneUsage(data, pkg, directory) {
-  const dir = path.dirname(directory)
+function browserStandaloneUsage(data, pkg, dir) {
   const browserFile = path.join(dir, 'dist', `${pkg.name}.js`)
 
   const xx = parseSourceCode(browserFile)
@@ -530,7 +534,7 @@ function browserStandaloneUsage(data, pkg, directory) {
   }, {})
 
   const defaultExportName = (exportData && exportData.name) ? `${pkg.globalName}.${exportData.name}` : pkg.globalName
-  console.log('defaultExportName', defaultExportName)
+  // console.log('defaultExportName', defaultExportName)
   // Find doc block with example (should only be one the main function)
   const main = data.jsdoc.find((doc) => Boolean(doc.examples))
 
@@ -563,6 +567,8 @@ function browserStandaloneUsage(data, pkg, directory) {
 
   return `<details>
   <summary>Using in HTML</summary>
+
+  Below is an example of importing via the unpkg CDN. Please note this will pull in the latest version of the package.
 
   \`\`\`html
 ${indentString(formatCode(code, 'html'), 2)}
@@ -613,7 +619,7 @@ function browserESMUsage(data, pkg) {
   return `<details>
   <summary>Using in HTML via ES Modules</summary>
 
-  Using \`${pkg.name}\` in ESM(odules).
+  Using \`${pkg.name}\` in ESM modules.
 
   \`\`\`html
 ${indentString(formatCode(code, 'html'), 2)}
@@ -665,20 +671,6 @@ ${theArgs.join('\n')}
   }
   return ''
 }
-/*
-{
-  type: 'param',
-  string: '{String} namespace - integration namespace',
-  name: 'namespace',
-  description: '- integration namespace',
-  types: [Array],
-  typesDescription: '<code>String</code>',
-  optional: false,
-  nullable: false,
-  nonNullable: false,
-  variable: false
-}
-*/
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1)
@@ -687,7 +679,7 @@ function capitalizeFirstLetter(string) {
 function renderArg(tag) {
   const optionalText = (tag.name.match(/^\[/)) ? '(optional) ' : ''
   if (tag.name === '[data]') {
-    console.log('tag', tag)
+    // console.log('tag', tag)
   }
   let typesDescription = tag.typesDescription
   // Remove link from description
@@ -712,7 +704,6 @@ ${example.replace(/^\s+|\s+$/g, '')}
 const rootDir = path.join(__dirname, '..')
 const markdownFiles = [
   path.join(rootDir, 'README.md'),
-  path.join(rootDir, 'packages/**/**.md'),
   path.join(rootDir, 'packages/**/**.md'),
   `!${path.join(rootDir, 'packages/**/node_modules/**/**.md')}`,
   '!node_modules'

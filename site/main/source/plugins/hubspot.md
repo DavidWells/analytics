@@ -3,20 +3,42 @@ title: HubSpot
 description: Using the HubSpot plugin
 ---
 
-Analytics integration with the [HubSpot](https://www.hubspot.com/) inbound marketing suite.
+Integration with HubSpot for [analytics](https://www.npmjs.com/package/analytics)
 
-This plugin will send page views, track custom events, and identify visitors in your HubSpot account.
+<!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
+<details>
+<summary>Click to expand</summary>
+
+- [Installation](#installation)
+- [How to use](#how-to-use)
+- [Browser usage](#browser-usage)
+  * [Browser API](#browser-api)
+- [Platforms Supported](#platforms-supported)
+- [Additional examples](#additional-examples)
+- [Using identify](#using-identify)
+- [Configuration](#configuration)
+- [Plugin Options](#plugin-options)
+- [Plugin Options](#plugin-options-1)
+
+</details>
+<!-- AUTO-GENERATED-CONTENT:END (TOC) -->
 
 ## Installation
+
+Install `analytics` and `@analytics/hubspot` packages
 
 ```bash
 npm install analytics
 npm install @analytics/hubspot
 ```
 
+<!-- AUTO-GENERATED-CONTENT:START (PLUGIN_DOCS) -->
+
 ## How to use
 
-Import and initialize in project
+The `@analytics/hubspot` package works in [the browser](#browser). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
+
+Below is an example of how to use the browser plugin.
 
 ```js
 import Analytics from 'analytics'
@@ -31,34 +53,166 @@ const analytics = Analytics({
   ]
 })
 
-/* Track page views */
+/* Track a page view */
 analytics.page()
 
-/* Track custom events */
-analytics.track('buttonClicked')
-
-/* Identify visitors */
-analytics.identify('user-xzy-123', {
-  email: 'bill@murray.com',
-  accountLevel: 'pro'
+/* Track a custom event */
+analytics.track('cartCheckout', {
+  item: 'pink socks',
+  price: 20
 })
+
+/* Identify a visitor */
+analytics.identify({
+  name: 'bob',
+  email: 'bob@bob.com' // email is required
+})
+
 ```
 
+After initializing `analytics` with the `hubSpotPlugin` plugin, data will be sent into HubSpot whenever [analytics.identify](https://getanalytics.io/api/#analyticsidentify), [analytics.page](https://getanalytics.io/api/#analyticspage), or [analytics.track](https://getanalytics.io/api/#analyticstrack) are called.
 
-## Configuration
+See [additional implementation examples](#additional-usage-examples) for more details on using in your project.
 
-**Arguments**
+## Browser usage
 
-- **pluginConfig** <code>object</code> - Plugin settings
-- **pluginConfig.portalId** <code>string</code> - The Hubspot Portal (or Hub) Id of your hubspot account
+The HubSpot client side browser plugin works with these analytic api methods:
 
-**Example**
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to HubSpot
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into HubSpot
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to HubSpot
+
+### Browser API
 
 ```js
-hubSpotPlugin({
-  portalId: '234576'
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    hubSpotPlugin({
+      portalId: '234576'
+    })
+  ]
 })
+
 ```
+
+**Initialization arguments**
+
+- **pluginConfig** `object` Plugin settings
+- **pluginConfig.portalId** `string` The HubSpot Portal (or Hub) Id of your HubSpot account
+
+## Platforms Supported
+
+The `@analytics/hubspot` package works in [the browser](#browser)
+
+## Additional examples
+
+Below are additional implementation examples.
+
+<details>
+  <summary>Using in HTML</summary>
+
+  Below is an example of importing via the unpkg CDN. Please note this will pull in the latest version of the package.
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>Using @analytics/hubspot in HTML</title>
+      <script src="https://unpkg.com/analytics/dist/analytics.min.js"></script>
+      <script src="https://unpkg.com/@analytics/hubspot/dist/@analytics/hubspot.min.js"></script>
+      <script type="text/javascript">
+        /* Initialize analytics */
+        var Analytics = _analytics.init({
+          app: 'my-app-name',
+          plugins: [
+            analyticsHubspot({
+              portalId: '234576'
+            })
+          ]
+        })
+
+        /* Track a page view */
+        analytics.page()
+
+        /* Track a custom event */
+        analytics.track('cartCheckout', {
+          item: 'pink socks',
+          price: 20
+        })
+
+        /* Identify a visitor */
+        analytics.identify({
+          name: 'bob',
+          email: 'bob@bob.com' // email is required
+        })
+      </script>
+    </head>
+    <body>
+      ....
+    </body>
+  </html>
+
+  ```
+
+</details>
+
+<details>
+  <summary>Using in HTML via ES Modules</summary>
+
+  Using `@analytics/hubspot` in ESM modules.
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>Using @analytics/hubspot in HTML via ESModules</title>
+      <script>
+        // Polyfill process.
+        // **Note**: Because `import`s are hoisted, we need a separate, prior <script> block.
+        window.process = window.process || { env: { NODE_ENV: 'production' } }
+      </script>
+      <script type="module">
+        import analytics from 'https://unpkg.com/analytics/lib/analytics.browser.es.js?module'
+        import analyticsHubspot from 'https://unpkg.com/@analytics/hubspot/lib/analytics-plugin-hubspot.browser.es.js?module'
+        /* Initialize analytics */
+        const Analytics = analytics({
+          app: 'analytics-html-demo',
+          debug: true,
+          plugins: [
+            analyticsHubspot({
+              portalId: '234576'
+            })
+            // ... add any other third party analytics plugins
+          ]
+        })
+
+        /* Track a page view */
+        analytics.page()
+
+        /* Track a custom event */
+        analytics.track('cartCheckout', {
+          item: 'pink socks',
+          price: 20
+        })
+
+        /* Identify a visitor */
+        analytics.identify({
+          name: 'bob',
+          email: 'bob@bob.com' // email is required
+        })
+      </script>
+    </head>
+    <body>
+      ....
+    </body>
+  </html>
+
+  ```
+
+</details>
+
+<!-- AUTO-GENERATED-CONTENT:END (PLUGIN_DOCS) -->
 
 ## Using identify
 
@@ -76,3 +230,33 @@ analytics.identify('user-xzy-123', {
   accountLevel: 'pro' // trait will be `account_level`
 })
 ```
+
+## Configuration
+
+<!-- ANALYTICS_DOCS:START (API) -->
+## Plugin Options
+
+**Arguments**
+
+- **pluginConfig** <code>object</code> - Plugin settings
+- **pluginConfig.portalId** <code>string</code> - The HubSpot Portal (or Hub) Id of your HubSpot account
+
+**Example**
+
+```js
+hubSpotPlugin({
+  portalId: '234576'
+})
+```
+
+## Plugin Options
+
+**Example**
+
+```js
+analytics.identify({
+  name: 'bob',
+  email: 'bob@bob.com' // email is required
+})
+```
+<!-- ANALYTICS_DOCS:END -->

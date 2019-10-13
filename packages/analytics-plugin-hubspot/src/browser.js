@@ -13,7 +13,7 @@
  *   portalId: '234576'
  * })
  */
-export default function hubSpotPlugin(pluginConfig = {}) {
+function hubSpotPlugin(pluginConfig = {}) {
   // Because hubspot automatically fired a page view onLoad. We need to ignore the first .page() call
   let initialPageViewFired = false
   // Allow for userland overides of base methods
@@ -49,7 +49,16 @@ export default function hubSpotPlugin(pluginConfig = {}) {
         firstScript.parentNode.insertBefore(script, firstScript)
       }, 0)
     },
-    // https://developers.hubspot.com/docs/methods/tracking_code_api/identify_visitor
+    /**
+     * Identify a visitor in hubspot
+     * @link https://developers.hubspot.com/docs/methods/tracking_code_api/identify_visitor
+     * @example
+     *
+     * analytics.identify({
+     *   name: 'bob',
+     *   email: 'bob@bob.com' // email is required
+     * })
+     */
     identify: ({ payload, config }) => {
       const { userId, traits } = payload
       if (typeof _hsq === 'undefined') return false
@@ -83,6 +92,8 @@ export default function hubSpotPlugin(pluginConfig = {}) {
     },
   }
 }
+
+export default hubSpotPlugin
 
 // Todo expose as option if needed
 function defaultFormatter(key, value) {

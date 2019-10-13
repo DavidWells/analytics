@@ -1,3 +1,9 @@
+<!--
+title: FullStory
+subTitle: Using the FullStory plugin
+description: Integrate FullStory visitor tracking with the open source analytics module
+-->
+
 # FullStory plugin for `analytics`
 
 Integration with [FullStory](https://www.fullstory.com/) for [analytics](https://www.npmjs.com/package/analytics)
@@ -14,8 +20,7 @@ Integration with [FullStory](https://www.fullstory.com/) for [analytics](https:/
   * [Browser API](#browser-api)
 - [Platforms Supported](#platforms-supported)
 - [Additional examples](#additional-examples)
-- [Formatting Identify & Tracking payloads](#formatting-identify--tracking-payloads)
-- [Configuration](#configuration)
+- [Formatting payloads](#formatting-payloads)
 
 </details>
 <!-- AUTO-GENERATED-CONTENT:END -->

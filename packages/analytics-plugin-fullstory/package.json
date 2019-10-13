@@ -2,6 +2,15 @@
   "name": "@analytics/fullstory",
   "version": "0.2.0",
   "description": "FullStory plugin for 'analytics' module",
+  "projectMeta": {
+    "provider": {
+      "name": "FullStory",
+      "url": "https://www.fullstory.com/"
+    },
+    "platforms": {
+      "browser": "./src/browser.js"
+    }
+  },
   "keywords": [
     "analytics",
     "analytics-project",
@@ -28,15 +37,6 @@
   "browser": {
     "./lib/analytics-plugin-fullstory.cjs.js": "./lib/analytics-plugin-fullstory.browser.cjs.js",
     "./lib/analytics-plugin-fullstory.es.js": "./lib/analytics-plugin-fullstory.browser.es.js"
-  },
-  "projectMeta": {
-    "provider": {
-      "name": "FullStory",
-      "url": "https://www.fullstory.com/"
-    },
-    "platforms": {
-      "browser": "./src/browser.js"
-    }
   },
   "ava": {
     "files": [

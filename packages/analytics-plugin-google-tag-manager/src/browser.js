@@ -19,7 +19,7 @@ export const config = {
  *   containerId: 'GTM-123xyz'
  * })
  */
-export default function googleTagManager(pluginConfig = {}) {
+function googleTagManager(pluginConfig = {}) {
   // Allow for userland overides of base methods
   return {
     NAMESPACE: 'google-tag-manager',
@@ -81,6 +81,8 @@ export default function googleTagManager(pluginConfig = {}) {
     },
   }
 }
+
+export default googleTagManager
 
 function scriptLoaded() {
   const scripts = document.getElementsByTagName('script')

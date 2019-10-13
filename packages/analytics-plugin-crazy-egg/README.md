@@ -1,8 +1,27 @@
+<!--
+title: CrazyEgg
+description: Using the CrazyEgg plugin
+-->
 # Crazy Egg Plugin for `analytics`
 
 Integration with [crazy egg](https://www.crazyegg.com/) for [analytics](https://www.npmjs.com/package/analytics)
 
-For more information [see the docs](https://getanalytics.io/plugins/crazyegg/).
+[View the docs](https://getanalytics.io/plugins/crazyegg/).
+
+<!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
+<details>
+<summary>Click to expand</summary>
+
+- [Installation](#installation)
+- [How to use](#how-to-use)
+- [Browser usage](#browser-usage)
+  * [Browser API](#browser-api)
+- [Platforms Supported](#platforms-supported)
+- [Additional examples](#additional-examples)
+- [Usage](#usage)
+
+</details>
+<!-- AUTO-GENERATED-CONTENT:END -->
 
 ## Installation
 
@@ -13,7 +32,7 @@ npm install analytics
 npm install @analytics/crazy-egg
 ```
 
-<!-- AUTO-GENERATED-CONTENT:START (PLUGIN_DOCZ) -->
+<!-- AUTO-GENERATED-CONTENT:START (PLUGIN_DOCS) -->
 
 ## How to use
 
@@ -148,7 +167,7 @@ Below are additional implementation examples.
 </details>
 
 
-<!-- AUTO-GENERATED-CONTENT:END (PLUGIN_DOCZ) -->
+<!-- AUTO-GENERATED-CONTENT:END (PLUGIN_DOCS) -->
 ## Usage
 
 Include `analytics` and `@analytics/crazy-egg` in the source code of your project.

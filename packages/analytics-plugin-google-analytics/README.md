@@ -1,3 +1,9 @@
+<!--
+title: Adding Google Analytics to your app using open source analytics
+description: Connect Google Analytics to the analytics library
+pageTitle: Google Analytics
+-->
+
 # Google Analytics
 
 This library exports the `google-analytics` plugin for the [`analytics`](https://www.npmjs.com/package/analytics) package & standalone methods for any project to use to make it easier to interact with [Google Analytics](https://analytics.google.com/analytics/web/).
@@ -9,14 +15,16 @@ For more information [see the docs](https://getanalytics.io/plugins/google-analy
 <summary>Click to expand</summary>
 
 - [Installation](#installation)
+- [How to use](#how-to-use)
+- [Browser usage](#browser-usage)
+  * [Browser API](#browser-api)
+- [Server-side usage](#server-side-usage)
+  * [Server-side API](#server-side-api)
 - [Platforms Supported](#platforms-supported)
-- [Usage](#usage)
-  * [Browser](#browser)
-  * [Server-side](#server-side)
-  * [Additional Usage Examples](#additional-usage-examples)
-  * [Customizing event payloads](#customizing-event-payloads)
+- [Additional examples](#additional-examples)
+- [Customizing event payloads](#customizing-event-payloads)
 - [Using as a standalone package](#using-as-a-standalone-package)
-  * [Installation](#installation-1)
+  * [Standalone Installation](#standalone-installation)
   * [Using in your app](#using-in-your-app)
 
 </details>
@@ -31,13 +39,9 @@ npm install @analytics/google-analytics
 
 <!-- AUTO-GENERATED-CONTENT:START (PLUGIN_DOCS) -->
 
-## Platforms Supported
+## How to use
 
-The `@analytics/google-analytics` package works in [the browser](#browser) and [server-side in node.js](#server-side)
-
-## Usage
-
-To use the `@analytics/google-analytics` package install in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
+The `@analytics/google-analytics` package works in [the browser](#browser) and [server-side in node.js](#server-side). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
 
 Below is an example of how to use the browser plugin.
 
@@ -58,9 +62,10 @@ const analytics = Analytics({
 analytics.page()
 
 /* Track a custom event */
-analytics.track('cartCheckout', {
-  item: 'pink socks',
-  price: 20
+analytics.track('playedVideo', {
+  category: 'Videos',
+  label: 'Fall Campaign',
+  value: 42
 })
 
 /* Identify a visitor */
@@ -75,50 +80,68 @@ After initializing `analytics` with the `googleAnalytics` plugin, data will be s
 
 See [additional implementation examples](#additional-usage-examples) for more details on using in your project.
 
-### Browser
+## Browser usage
 
-The Google Analytics client side browser plugin works with these api methods:
+The Google Analytics client side browser plugin works with these analytic api methods:
 
-- **[page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Google Analytics 
-- **[track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Google Analytics 
-- **[identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Google Analytics 
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Google Analytics
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Google Analytics
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Google Analytics
 
-**Arguments**
+### Browser API
+
+```js
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    googleAnalytics({
+      trackingId: '123-xyz'
+    })
+  ]
+})
+
+```
+
+**Initialization arguments**
 
 - **pluginConfig** `object` Plugin settings
 - **pluginConfig.trackingId** `string` site tracking Id
 
-**Example**
+## Server-side usage
+
+The Google Analytics server-side node.js plugin works with these analytic api methods:
+
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Google Analytics
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Google Analytics
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Google Analytics
+
+### Server-side API
 
 ```js
-googleAnalytics({
-  trackingId: '123-xyz'
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    googleAnalytics({
+      trackingId: '123-xyz'
+    })
+  ]
 })
+
 ```
 
-### Server-side
-
-The Google Analytics server-side node.js plugin works with these api methods:
-
-- **[page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Google Analytics 
-- **[track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Google Analytics 
-- **[identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Google Analytics 
-
-**Arguments**
+**Initialization arguments**
 
 - **pluginConfig** `object` Plugin settings
 - **pluginConfig.trackingId** `string` site tracking Id
 
-**Example**
 
-```js
-googleAnalytics({
-  trackingId: '123-xyz'
-})
-```
+## Platforms Supported
 
+The `@analytics/google-analytics` package works in [the browser](#browser) and [server-side in node.js](#server-side)
 
-### Additional Usage Examples
+## Additional examples
+
+Below are additional implementation examples.
 
 <details>
   <summary>Server-side ES6</summary>
@@ -157,7 +180,9 @@ googleAnalytics({
 </details>
 
 <details>
-  <summary>Server-side Node.js common JS</summary>
+  <summary>Server-side Node.js with common JS</summary>
+
+  If using node, you will want to import the `.default`
 
   ```js
   const analyticsLib = require('analytics').default
@@ -194,6 +219,8 @@ googleAnalytics({
 <details>
   <summary>Using in HTML</summary>
 
+  Below is an example of importing via the unpkg CDN. Please note this will pull in the latest version of the package.
+
   ```html
   <!DOCTYPE html>
   <html>
@@ -216,9 +243,10 @@ googleAnalytics({
         analytics.page()
 
         /* Track a custom event */
-        analytics.track('cartCheckout', {
-          item: 'pink socks',
-          price: 20
+        analytics.track('playedVideo', {
+          category: 'Videos',
+          label: 'Fall Campaign',
+          value: 42
         })
 
         /* Identify a visitor */
@@ -240,7 +268,7 @@ googleAnalytics({
 <details>
   <summary>Using in HTML via ES Modules</summary>
 
-  Using `@analytics/google-analytics` in ESM(odules).
+  Using `@analytics/google-analytics` in ESM modules.
 
   ```html
   <!DOCTYPE html>
@@ -271,9 +299,10 @@ googleAnalytics({
         analytics.page()
 
         /* Track a custom event */
-        analytics.track('cartCheckout', {
-          item: 'pink socks',
-          price: 20
+        analytics.track('playedVideo', {
+          category: 'Videos',
+          label: 'Fall Campaign',
+          value: 42
         })
 
         /* Identify a visitor */
@@ -292,10 +321,11 @@ googleAnalytics({
 
 </details>
 
+
 <!-- AUTO-GENERATED-CONTENT:END (PLUGIN_DOCS) -->
 
 
-### Customizing event payloads
+## Customizing event payloads
 
 To send tracking custom events to Google Analytics with `eventLabel`, `eventCategory`, and `eventValue` [fields](https://developers.google.com/analytics/devguides/collection/analyticsjs/events#event_fields), add the `label`, `category`, and `value` keys to the event properties.
 
@@ -326,7 +356,7 @@ Use `analytics` + `@analytics/google-analytics` packages together as described a
 
 When using `standalone` methods, you will need to handle these edge cases & retries yourself.
 
-### Installation
+### Standalone Installation
 
 Install the `@analytics/google-analytics` package.
 

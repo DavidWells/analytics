@@ -11,7 +11,7 @@ const logMessage = () => {
 }
 
 /* Export the integration */
-export default function fullStoryPlugin(userConfig = {}) {
+function fullStoryPlugin(userConfig = {}) {
   // Allow for userland overides of base methods
   return {
     NAMESPACE: NAMESPACE,
@@ -32,3 +32,5 @@ export default function fullStoryPlugin(userConfig = {}) {
     }
   }
 }
+
+export default fullStoryPlugin

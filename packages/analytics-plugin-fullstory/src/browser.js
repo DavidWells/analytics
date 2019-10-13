@@ -1,7 +1,7 @@
 /* global FS */
 const camelCase = require('camelcase')
 
-export const config = {
+const defaultConfig = {
   org: '',
   debug: false
 }
@@ -19,12 +19,12 @@ export const config = {
  *   org: 'your-org-name'
  * })
  */
-export default function fullStoryPlugin(pluginConfig = {}) {
+function fullStoryPlugin(pluginConfig = {}) {
   const source = 'analytics'
   return {
     NAMESPACE: 'fullstory',
     config: {
-      ...config,
+      ...defaultConfig,
       ...pluginConfig
     },
     initialize: ({ config }) => {
@@ -94,6 +94,8 @@ export default function fullStoryPlugin(pluginConfig = {}) {
     },
   }
 }
+
+export default fullStoryPlugin
 
 /* Full story formatting reqs https://help.fullstory.com/hc/en-us/articles/360020623234 */
 const suffixes = ['str', 'int', 'date', 'real', 'bool', 'strs', 'ints', 'dates', 'reals', 'bools']

@@ -1,3 +1,7 @@
+<!--
+title: Segment
+description: Using the segment plugin
+-->
 # Segment plugin for `analytics`
 
 Integration with [segment](https://segment.com/) for [analytics](https://www.npmjs.com/package/analytics)
@@ -8,17 +12,19 @@ For more information [see the docs](https://getanalytics.io/plugins/segment/).
 <details>
 <summary>Click to expand</summary>
 
-- [Install](#install)
+- [Installation](#installation)
+- [How to use](#how-to-use)
+- [Browser usage](#browser-usage)
+  * [Browser API](#browser-api)
+- [Server-side usage](#server-side-usage)
+  * [Server-side API](#server-side-api)
 - [Platforms Supported](#platforms-supported)
-- [Usage](#usage)
-  * [Browser](#browser)
-  * [Server-side](#server-side)
-  * [Additional Usage Examples](#additional-usage-examples)
+- [Additional examples](#additional-examples)
 
 </details>
 <!-- AUTO-GENERATED-CONTENT:END -->
 
-## Install
+## Installation
 
 ```bash
 npm install analytics
@@ -27,13 +33,9 @@ npm install @analytics/segment
 
 <!-- AUTO-GENERATED-CONTENT:START (PLUGIN_DOCS) -->
 
-## Platforms Supported
+## How to use
 
-The `@analytics/segment` package works in [the browser](#browser) and [server-side in node.js](#server-side)
-
-## Usage
-
-To use the `@analytics/segment` package install in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
+The `@analytics/segment` package works in [the browser](#browser) and [server-side in node.js](#server-side). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
 
 Below is an example of how to use the browser plugin.
 
@@ -71,54 +73,72 @@ After initializing `analytics` with the `segmentPlugin` plugin, data will be sen
 
 See [additional implementation examples](#additional-usage-examples) for more details on using in your project.
 
-### Browser
+## Browser usage
 
-The Segment client side browser plugin works with these api methods:
+The Segment client side browser plugin works with these analytic api methods:
 
-- **[page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Segment 
-- **[track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Segment 
-- **[identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Segment 
-- **[reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for Segment values 
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Segment
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Segment
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Segment
+- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for Segment values
 
-**Arguments**
+### Browser API
+
+```js
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    segmentPlugin({
+      writeKey: '123-xyz'
+    })
+  ]
+})
+
+```
+
+**Initialization arguments**
 
 - **pluginConfig** `object` Plugin settings
 - **pluginConfig.writeKey** `string` Your segment writeKey
 - **pluginConfig.disableAnonymousTraffic** (optional) `boolean` Disable loading segment for anonymous visitors
 
-**Example**
+## Server-side usage
+
+The Segment server-side node.js plugin works with these analytic api methods:
+
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Segment
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Segment
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Segment
+
+### Server-side API
 
 ```js
-segmentPlugin({
-  writeKey: '123-xyz'
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    segmentPlugin({
+      writeKey: '123-xyz'
+    })
+  ]
 })
+
 ```
 
-### Server-side
-
-The Segment server-side node.js plugin works with these api methods:
-
-- **[page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Segment 
-- **[track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Segment 
-- **[identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Segment 
-
-**Arguments**
+**Initialization arguments**
 
 - **pluginConfig** `object` Plugin settings
 - **pluginConfig.writeKey** `string` Your segment writeKey
 - **pluginConfig.flushInterval** (optional) `boolean` Segment sdk flushInterval. Docs https://bit.ly/2H2jJMb
 - **pluginConfig.disableAnonymousTraffic** (optional) `boolean` Disable loading segment for anonymous visitors
 
-**Example**
 
-```js
-segmentPlugin({
-  writeKey: '123-xyz'
-})
-```
+## Platforms Supported
 
+The `@analytics/segment` package works in [the browser](#browser) and [server-side in node.js](#server-side)
 
-### Additional Usage Examples
+## Additional examples
+
+Below are additional implementation examples.
 
 <details>
   <summary>Server-side ES6</summary>
@@ -157,7 +177,9 @@ segmentPlugin({
 </details>
 
 <details>
-  <summary>Server-side Node.js common JS</summary>
+  <summary>Server-side Node.js with common JS</summary>
+
+  If using node, you will want to import the `.default`
 
   ```js
   const analyticsLib = require('analytics').default
@@ -193,6 +215,8 @@ segmentPlugin({
 
 <details>
   <summary>Using in HTML</summary>
+
+  Below is an example of importing via the unpkg CDN. Please note this will pull in the latest version of the package.
 
   ```html
   <!DOCTYPE html>
@@ -240,7 +264,7 @@ segmentPlugin({
 <details>
   <summary>Using in HTML via ES Modules</summary>
 
-  Using `@analytics/segment` in ESM(odules).
+  Using `@analytics/segment` in ESM modules.
 
   ```html
   <!DOCTYPE html>
@@ -291,6 +315,7 @@ segmentPlugin({
   ```
 
 </details>
+
 
 <!-- AUTO-GENERATED-CONTENT:END -->
 

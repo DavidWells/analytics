@@ -25,7 +25,16 @@ function googleAnalytics(pluginConfig = {}) {
       const { properties } = payload
       pageView(properties.path)
     },
-    // Google Analytics track event
+    /**
+     * Google Analytics track event
+     * @example
+     *
+     * analytics.track('playedVideo', {
+     *   category: 'Videos',
+     *   label: 'Fall Campaign',
+     *   value: 42
+     * })
+     */
     track: ({ payload, config, instance }) => {
       const { properties, event } = payload
       const { label, value, category, nonInteraction } = properties

@@ -2,6 +2,17 @@
   "name": "@analytics/google-analytics",
   "version": "0.2.0",
   "description": "Google analytics plugin for 'analytics' module",
+  "projectMeta": {
+    "provider": {
+      "name": "Google Analytics",
+      "url": "https://analytics.google.com/analytics/web/"
+    },
+    "windowGlobal": "analyticsGa",
+    "platforms": {
+      "browser": "./src/browser.js",
+      "node": "./src/node.js"
+    }
+  },
   "keywords": [
     "analytics",
     "analytics-project",
@@ -28,17 +39,6 @@
   "browser": {
     "./lib/analytics-plugin-ga.cjs.js": "./lib/analytics-plugin-ga.browser.cjs.js",
     "./lib/analytics-plugin-ga.es.js": "./lib/analytics-plugin-ga.browser.es.js"
-  },
-  "projectMeta": {
-    "provider": {
-      "name": "Google Analytics",
-      "url": "https://analytics.google.com/analytics/web/"
-    },
-    "windowGlobal": "analyticsGa",
-    "platforms": {
-      "browser": "./src/browser.js",
-      "node": "./src/node.js"
-    }
   },
   "files": [
     "dist",

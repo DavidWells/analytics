@@ -2,6 +2,15 @@
   "name": "@analytics/hubspot",
   "version": "0.1.2",
   "description": "HubSpot plugin for 'analytics' module",
+  "projectMeta": {
+    "provider": {
+      "name": "HubSpot",
+      "url": "https://hubspot.com/"
+    },
+    "platforms": {
+      "browser": "./src/browser.js"
+    }
+  },
   "keywords": [
     "analytics",
     "analytics-project",

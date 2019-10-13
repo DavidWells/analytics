@@ -2,6 +2,16 @@
   "name": "@analytics/segment",
   "version": "0.2.3",
   "description": "Segment integration for 'analytics' module for browser & node",
+  "projectMeta": {
+    "provider": {
+      "name": "Segment",
+      "url": "https://segment.com/"
+    },
+    "platforms": {
+      "browser": "./src/browser.js",
+      "node": "./src/node.js"
+    }
+  },
   "keywords": [
     "analytics",
     "analytics-project",
@@ -27,16 +37,6 @@
   "browser": {
     "./lib/analytics-plugin-segment.cjs.js": "./lib/analytics-plugin-segment.browser.cjs.js",
     "./lib/analytics-plugin-segment.es.js": "./lib/analytics-plugin-segment.browser.es.js"
-  },
-  "projectMeta": {
-    "provider": {
-      "name": "Segment",
-      "url": "https://segment.com/"
-    },
-    "platforms": {
-      "browser": "./src/browser.js",
-      "node": "./src/node.js"
-    }
   },
   "files": [
     "dist",

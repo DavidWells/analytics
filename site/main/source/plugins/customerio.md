@@ -5,13 +5,23 @@ description: Using the customer.io plugin
 
 Integration with [customer.io](https://customer.io/) for [analytics](https://www.npmjs.com/package/analytics) package.
 
-<!-- ANALYTICS_DOCS:START (TOC) -->
-- [Usage](#usage)
-- [Plugin Options](#plugin-options)
-<!-- ANALYTICS_DOCS:END (TOC) -->
+<!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
+<details>
+<summary>Click to expand</summary>
 
-<!-- ANALYTICS_DOCS:START (USAGE) -->
-## Usage
+- [Installation](#installation)
+- [How to use](#how-to-use)
+- [Browser usage](#browser-usage)
+  * [Browser API](#browser-api)
+- [Server-side usage](#server-side-usage)
+  * [Server-side API](#server-side-api)
+- [Platforms Supported](#platforms-supported)
+- [Additional examples](#additional-examples)
+
+</details>
+<!-- AUTO-GENERATED-CONTENT:END -->
+
+## Installation
 
 Install `analytics` and `@analytics/customerio` packages
 
@@ -20,7 +30,13 @@ npm install analytics
 npm install @analytics/customerio
 ```
 
-Import and initialize in project
+<!-- AUTO-GENERATED-CONTENT:START (PLUGIN_DOCS) -->
+
+## How to use
+
+The `@analytics/customerio` package works in [the browser](#browser) and [server-side in node.js](#server-side). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
+
+Below is an example of how to use the browser plugin.
 
 ```js
 import Analytics from 'analytics'
@@ -35,37 +51,271 @@ const analytics = Analytics({
   ]
 })
 
-/* Track page views */
+/* Track a page view */
 analytics.page()
 
-/* Track custom events */
-analytics.track('buttonClicked')
+/* Track a custom event */
+analytics.track('cartCheckout', {
+  item: 'pink socks',
+  price: 20
+})
 
-/* Identify visitors */
-analytics.identify('user-xzy-123', {
-  name: 'Bill Murray',
-  cool: true
+/* Identify a visitor */
+analytics.identify('user-id-xyz', {
+  firstName: 'bill',
+  lastName: 'murray'
 })
 
 ```
-<!-- ANALYTICS_DOCS:END -->
 
-<!-- ANALYTICS_DOCS:START (API) -->
-## Plugin Options
+After initializing `analytics` with the `customerIOPlugin` plugin, data will be sent into Customer.io whenever [analytics.page](https://getanalytics.io/api/#analyticspage), [analytics.track](https://getanalytics.io/api/#analyticstrack), or [analytics.identify](https://getanalytics.io/api/#analyticsidentify) are called.
 
-**Arguments**
+See [additional implementation examples](#additional-usage-examples) for more details on using in your project.
 
-- **pluginConfig** <code>object</code> - Plugin settings
-- **pluginConfig.siteId** <code>string</code> - Customer.io site Id for client side tracking
+## Browser usage
 
-**Example**
+The Customer.io client side browser plugin works with these analytic api methods:
+
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Customer.io
+- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for Customer.io values
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Customer.io
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Customer.io
+
+### Browser API
 
 ```js
-customerIOPlugin({
-  siteId: '123-xyz'
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    customerIOPlugin({
+      siteId: '123-xyz'
+    })
+  ]
 })
-```
-<!-- ANALYTICS_DOCS:END -->
 
+```
+
+**Initialization arguments**
+
+- **pluginConfig** `object` Plugin settings
+- **pluginConfig.siteId** `string` Customer.io site Id for client side tracking
+- **pluginConfig.disableAnonymousTraffic** (optional) `boolean` Disable anonymous events from firing
+
+## Server-side usage
+
+The Customer.io server-side node.js plugin works with these analytic api methods:
+
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Customer.io
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Customer.io
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Customer.io
+
+### Server-side API
+
+```js
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    customerIOServer({
+      siteId: '123-xyz',
+      apiKey: '9876543'
+    })
+  ]
+})
+
+```
+
+**Initialization arguments**
+
+- **pluginConfig** `object` Plugin settings
+- **pluginConfig.siteId** `string` Customer.io site Id for server side tracking
+- **pluginConfig.apiKey** `string` Customer.io API key for server side tracking
+
+## Platforms Supported
+
+The `@analytics/customerio` package works in [the browser](#browser) and [server-side in node.js](#server-side)
+
+## Additional examples
+
+Below are additional implementation examples.
+
+<details>
+  <summary>Server-side ES6</summary>
+
+  ```js
+  import Analytics from 'analytics'
+  import customerIOServer from '@analytics/customerio'
+
+  const analytics = Analytics({
+    app: 'awesome-app',
+    plugins: [
+      customerIOServer({
+        siteId: '123-xyz',
+        apiKey: '9876543'
+      })
+      // ...other plugins
+    ]
+  })
+
+  /* Track a page view */
+  analytics.page()
+
+  /* Track a custom event */
+  analytics.track('cartCheckout', {
+    item: 'pink socks',
+    price: 20
+  })
+
+  /* Identify a visitor */
+  analytics.identify('user-id-xyz', {
+    firstName: 'bill',
+    lastName: 'murray'
+  })
+
+  ```
+
+</details>
+
+<details>
+  <summary>Server-side Node.js with common JS</summary>
+
+  If using node, you will want to import the `.default`
+
+  ```js
+  const analyticsLib = require('analytics').default
+  const customerIOServer = require('@analytics/customerio').default
+
+  const analytics = analyticsLib({
+    app: 'my-app-name',
+    plugins: [
+      customerIOServer({
+        siteId: '123-xyz',
+        apiKey: '9876543'
+      })
+    ]
+  })
+
+  /* Track a page view */
+  analytics.page()
+
+  /* Track a custom event */
+  analytics.track('cartCheckout', {
+    item: 'pink socks',
+    price: 20
+  })
+
+  /* Identify a visitor */
+  analytics.identify('user-id-xyz', {
+    firstName: 'bill',
+    lastName: 'murray'
+  })
+
+  ```
+
+</details>
+
+<details>
+  <summary>Using in HTML</summary>
+
+  Below is an example of importing via the unpkg CDN. Please note this will pull in the latest version of the package.
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>Using @analytics/customerio in HTML</title>
+      <script src="https://unpkg.com/analytics/dist/analytics.min.js"></script>
+      <script src="https://unpkg.com/@analytics/customerio/dist/@analytics/customerio.min.js"></script>
+      <script type="text/javascript">
+        /* Initialize analytics */
+        var Analytics = _analytics.init({
+          app: 'my-app-name',
+          plugins: [
+            analyticsCustomerio({
+              siteId: '123-xyz'
+            })
+          ]
+        })
+
+        /* Track a page view */
+        analytics.page()
+
+        /* Track a custom event */
+        analytics.track('cartCheckout', {
+          item: 'pink socks',
+          price: 20
+        })
+
+        /* Identify a visitor */
+        analytics.identify('user-id-xyz', {
+          firstName: 'bill',
+          lastName: 'murray'
+        })
+      </script>
+    </head>
+    <body>
+      ....
+    </body>
+  </html>
+
+  ```
+
+</details>
+
+<details>
+  <summary>Using in HTML via ES Modules</summary>
+
+  Using `@analytics/customerio` in ESM modules.
+
+  ```html
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>Using @analytics/customerio in HTML via ESModules</title>
+      <script>
+        // Polyfill process.
+        // **Note**: Because `import`s are hoisted, we need a separate, prior <script> block.
+        window.process = window.process || { env: { NODE_ENV: 'production' } }
+      </script>
+      <script type="module">
+        import analytics from 'https://unpkg.com/analytics/lib/analytics.browser.es.js?module'
+        import analyticsCustomerio from 'https://unpkg.com/@analytics/customerio/lib/analytics-plugin-customerio.browser.es.js?module'
+        /* Initialize analytics */
+        const Analytics = analytics({
+          app: 'analytics-html-demo',
+          debug: true,
+          plugins: [
+            analyticsCustomerio({
+              siteId: '123-xyz'
+            })
+            // ... add any other third party analytics plugins
+          ]
+        })
+
+        /* Track a page view */
+        analytics.page()
+
+        /* Track a custom event */
+        analytics.track('cartCheckout', {
+          item: 'pink socks',
+          price: 20
+        })
+
+        /* Identify a visitor */
+        analytics.identify('user-id-xyz', {
+          firstName: 'bill',
+          lastName: 'murray'
+        })
+      </script>
+    </head>
+    <body>
+      ....
+    </body>
+  </html>
+
+  ```
+
+</details>
+
+<!-- AUTO-GENERATED-CONTENT:END -->
 
 See the [full list of analytics provider plugins](https://github.com/DavidWells/analytics#current-plugins) in the main repo.

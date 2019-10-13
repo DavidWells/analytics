@@ -1,3 +1,7 @@
+<!--
+title: Customer.io
+description: Using the customer.io plugin
+-->
 # Customer.io plugin for analytics
 
 Integration with [customer.io](https://customer.io/) for [analytics](https://www.npmjs.com/package/analytics) package.
@@ -75,10 +79,10 @@ See [additional implementation examples](#additional-usage-examples) for more de
 
 The Customer.io client side browser plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Customer.io 
-- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for Customer.io values 
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Customer.io 
-- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Customer.io 
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Customer.io
+- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for Customer.io values
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Customer.io
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Customer.io
 
 ### Browser API
 
@@ -99,13 +103,14 @@ const analytics = Analytics({
 - **pluginConfig** `object` Plugin settings
 - **pluginConfig.siteId** `string` Customer.io site Id for client side tracking
 - **pluginConfig.disableAnonymousTraffic** (optional) `boolean` Disable anonymous events from firing
+
 ## Server-side usage
 
 The Customer.io server-side node.js plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Customer.io 
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Customer.io 
-- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Customer.io 
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Customer.io
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Customer.io
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Customer.io
 
 ### Server-side API
 
@@ -127,6 +132,7 @@ const analytics = Analytics({
 - **pluginConfig** `object` Plugin settings
 - **pluginConfig.siteId** `string` Customer.io site Id for server side tracking
 - **pluginConfig.apiKey** `string` Customer.io API key for server side tracking
+
 
 ## Platforms Supported
 

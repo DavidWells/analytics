@@ -2,6 +2,22 @@
   "name": "@analytics/simple-analytics",
   "version": "0.1.3",
   "description": "Simple analytics plugin for 'analytics' module for browser",
+  "projectMeta": {
+    "provider": {
+      "name": "Simple Analytics",
+      "url": "https://simpleanalytics.com/"
+    },
+    "platforms": {
+      "browser": "./src/browser.js"
+    }
+  },
+  "keywords": [
+    "analytics",
+    "analytics-project",
+    "analytics-plugin",
+    "simple-analytics-plugin",
+    "simple analytics"
+  ],
   "main": "lib/analytics-plugin-simple-analytics.cjs.js",
   "globalName": "simpleAnalytics",
   "jsnext:main": "lib/analytics-plugin-simple-analytics.es.js",
@@ -18,12 +34,6 @@
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish"
   },
-  "keywords": [
-    "analytics",
-    "analytics-project",
-    "analytics-plugin",
-    "simple-analytics-plugin"
-  ],
   "author": "",
   "license": "MIT",
   "devDependencies": {
