@@ -68,6 +68,7 @@ function formatContent(content) {
     .replace(removeContentRegex, '')
     // remove redudant view docs link
     .replace(/\[View the docs\]\(.*\)\.?/, '')
+    .replace(/For more information \[see the docs\]\(.*\)\.?/, '')
     // remove md magic blocks
     // .replace(mdMagicRegex, '')
     .replace('<!--', '---')
