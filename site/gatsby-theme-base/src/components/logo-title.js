@@ -26,7 +26,7 @@ export default function LogoTitle(props) {
       render={data => (
         <Container className={props.className}>
           <Logo height={25} width={25} />
-          <span style={{display: 'inline-block', marginLeft: 10, letterSpacing: '-0.7px', fontSize: '22px'}}>
+          <span style={{color: '#000', display: 'inline-block', marginLeft: 10, letterSpacing: '-0.7px', fontSize: '22px'}}>
             {data.site.siteMetadata.title}
           </span>
         </Container>
