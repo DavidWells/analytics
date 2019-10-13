@@ -8,17 +8,19 @@ Integration with [customer.io](https://customer.io/) for [analytics](https://www
 <details>
 <summary>Click to expand</summary>
 
-- [Install](#install)
+- [Installation](#installation)
+- [How to use](#how-to-use)
+- [Browser usage](#browser-usage)
+  * [Browser API](#browser-api)
+- [Server-side usage](#server-side-usage)
+  * [Server-side API](#server-side-api)
 - [Platforms Supported](#platforms-supported)
-- [Usage](#usage)
-  * [Browser](#browser)
-  * [Server-side](#server-side)
-  * [Additional Usage Examples](#additional-usage-examples)
+- [Additional examples](#additional-examples)
 
 </details>
 <!-- AUTO-GENERATED-CONTENT:END -->
 
-## Install
+## Installation
 
 Install `analytics` and `@analytics/customerio` packages
 
@@ -29,13 +31,9 @@ npm install @analytics/customerio
 
 <!-- AUTO-GENERATED-CONTENT:START (PLUGIN_DOCS) -->
 
-## Platforms Supported
+## How to use
 
-The `@analytics/customerio` package works in [the browser](#browser) and [server-side in node.js](#server-side)
-
-## Usage
-
-To use the `@analytics/customerio` package install in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
+The `@analytics/customerio` package works in [the browser](#browser) and [server-side in node.js](#server-side). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
 
 Below is an example of how to use the browser plugin.
 
@@ -73,54 +71,72 @@ After initializing `analytics` with the `customerIOPlugin` plugin, data will be 
 
 See [additional implementation examples](#additional-usage-examples) for more details on using in your project.
 
-### Browser
+## Browser usage
 
-The Customer.io client side browser plugin works with these api methods:
+The Customer.io client side browser plugin works with these analytic api methods:
 
-- **[page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Customer.io 
-- **[reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for Customer.io values 
-- **[track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Customer.io 
-- **[identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Customer.io 
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Customer.io 
+- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for Customer.io values 
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Customer.io 
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Customer.io 
 
-**Arguments**
+### Browser API
+
+```js
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    customerIOPlugin({
+      siteId: '123-xyz'
+    })
+  ]
+})
+
+```
+
+**Initialization arguments**
 
 - **pluginConfig** `object` Plugin settings
 - **pluginConfig.siteId** `string` Customer.io site Id for client side tracking
 - **pluginConfig.disableAnonymousTraffic** (optional) `boolean` Disable anonymous events from firing
 
-**Example**
+## Server-side usage
+
+The Customer.io server-side node.js plugin works with these analytic api methods:
+
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Customer.io 
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Customer.io 
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Customer.io 
+
+### Server-side API
 
 ```js
-customerIOPlugin({
-  siteId: '123-xyz'
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    customerIOServer({
+      siteId: '123-xyz',
+      apiKey: '9876543'
+    })
+  ]
 })
+
 ```
 
-### Server-side
-
-The Customer.io server-side node.js plugin works with these api methods:
-
-- **[page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Customer.io 
-- **[track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Customer.io 
-- **[identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Customer.io 
-
-**Arguments**
+**Initialization arguments**
 
 - **pluginConfig** `object` Plugin settings
 - **pluginConfig.siteId** `string` Customer.io site Id for server side tracking
 - **pluginConfig.apiKey** `string` Customer.io API key for server side tracking
 
-**Example**
 
-```js
-customerIOServer({
-  siteId: '123-xyz',
-  apiKey: '9876543'
-})
-```
+## Platforms Supported
 
+The `@analytics/customerio` package works in [the browser](#browser) and [server-side in node.js](#server-side)
 
-### Additional Usage Examples
+## Additional examples
+
+Below are additional implementation examples.
 
 <details>
   <summary>Server-side ES6</summary>
@@ -160,7 +176,9 @@ customerIOServer({
 </details>
 
 <details>
-  <summary>Server-side Node.js common JS</summary>
+  <summary>Server-side Node.js with common JS</summary>
+
+  If using node, you will want to import the `.default`
 
   ```js
   const analyticsLib = require('analytics').default
@@ -197,6 +215,8 @@ customerIOServer({
 
 <details>
   <summary>Using in HTML</summary>
+
+  Below is an example of importing via the unpkg CDN. Please note this will pull in the latest version of the package.
 
   ```html
   <!DOCTYPE html>
@@ -244,7 +264,7 @@ customerIOServer({
 <details>
   <summary>Using in HTML via ES Modules</summary>
 
-  Using `@analytics/customerio` in ESM(odules).
+  Using `@analytics/customerio` in ESM modules.
 
   ```html
   <!DOCTYPE html>
@@ -295,6 +315,7 @@ customerIOServer({
   ```
 
 </details>
+
 
 <!-- AUTO-GENERATED-CONTENT:END -->
 
