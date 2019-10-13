@@ -29,6 +29,15 @@
     "./lib/analytics-plugin-fullstory.cjs.js": "./lib/analytics-plugin-fullstory.browser.cjs.js",
     "./lib/analytics-plugin-fullstory.es.js": "./lib/analytics-plugin-fullstory.browser.es.js"
   },
+  "projectMeta": {
+    "provider": {
+      "name": "FullStory",
+      "url": "https://www.fullstory.com/"
+    },
+    "platforms": {
+      "browser": "./src/browser.js"
+    }
+  },
   "ava": {
     "files": [
       "**/**/*.test.js"
