@@ -2,6 +2,15 @@
   "name": "@analytics/crazy-egg",
   "version": "0.1.0",
   "description": "Crazy Egg integration for 'analytics' module",
+  "projectMeta": {
+    "provider": {
+      "name": "Crazy Egg",
+      "url": "https://www.crazyegg.com/"
+    },
+    "platforms": {
+      "browser": "./src/browser.js"
+    }
+  },
   "keywords": [
     "analytics",
     "analytics-project",

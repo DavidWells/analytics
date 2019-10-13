@@ -9,6 +9,7 @@
  * @return {AnalyticsPlugin}
  * @example
  *
+ * // This will load crazy egg on to the page
  * crazyEgg({
  *   accountNumber: '1234578'
  * })
@@ -20,7 +21,7 @@ export default function crazyEgg(pluginConfig = {}) {
     initialize: ({ config }) => {
       const { accountNumber } = config
       if (!accountNumber) {
-        throw new Error('No crazy egg accoint defined')
+        throw new Error('No crazy egg accountNumber defined')
       }
       const { location } = document
 
