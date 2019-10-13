@@ -99,7 +99,6 @@ const analytics = Analytics({
 - **pluginConfig** `object` Plugin settings
 - **pluginConfig.siteId** `string` Customer.io site Id for client side tracking
 - **pluginConfig.disableAnonymousTraffic** (optional) `boolean` Disable anonymous events from firing
-
 ## Server-side usage
 
 The Customer.io server-side node.js plugin works with these analytic api methods:
@@ -128,7 +127,6 @@ const analytics = Analytics({
 - **pluginConfig** `object` Plugin settings
 - **pluginConfig.siteId** `string` Customer.io site Id for server side tracking
 - **pluginConfig.apiKey** `string` Customer.io API key for server side tracking
-
 
 ## Platforms Supported
 
