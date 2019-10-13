@@ -5,8 +5,6 @@ description: Using the google tag manager plugin
 
 Integration with google tag manager for [analytics](https://www.npmjs.com/package/analytics)
 
-For more information [see the docs](https://getanalytics.io/plugins/google-tag-manager/).
-
 <!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
 <details>
 <summary>Click to expand</summary>

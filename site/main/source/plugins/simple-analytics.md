@@ -7,8 +7,6 @@ Integration with simple analytics [Simple Analytics](https://simpleanalytics.com
 
 The simple analytics plugin automatically tracks page views on route changes for single page applications.
 
-For more information [see the docs](https://getanalytics.io/plugins/simple-analytics/).
-
 <!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
 <details>
 <summary>Click to expand</summary>

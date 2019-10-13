@@ -5,8 +5,6 @@ description: Using the segment plugin
 
 Integration with [segment](https://segment.com/) for [analytics](https://www.npmjs.com/package/analytics)
 
-For more information [see the docs](https://getanalytics.io/plugins/segment/).
-
 <!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
 <details>
 <summary>Click to expand</summary>
