@@ -1,6 +1,6 @@
 {
   "name": "@analytics/hubspot",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "HubSpot plugin for 'analytics' module",
   "projectMeta": {
     "provider": {
