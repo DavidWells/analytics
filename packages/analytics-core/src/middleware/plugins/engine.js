@@ -143,7 +143,7 @@ async function processEvent({
 }) {
   const { plugins, context } = state
   const method = action.type
-
+  const isStartEvent = method.match(/Start$/)
   // console.log(`data ${method}`, data)
   // console.log(`data allMatches ${method}`, allMatches)
   let abortable = data.exact.map((x) => {
@@ -151,7 +151,7 @@ async function processEvent({
   })
 
   /* If abort is called from xyzStart */
-  if (method.match(/Start$/)) {
+  if (isStartEvent) {
     abortable = allMatches.during.map((x) => {
       return x.pluginName
     })
@@ -213,7 +213,6 @@ async function processEvent({
           }
         }
 
-        // console.log(`funcArgs ${method}`, funcArgs)
         const val = await p.method({
           payload: curScopeData,
           instance,
@@ -244,7 +243,12 @@ async function processEvent({
     const { pluginName } = curr
     const currentPlugin = allPlugins[pluginName]
     const currentActionValue = await promise
-    const payloadValue = (payloads[pluginName]) ? payloads[pluginName] : {}
+
+    let payloadValue = (payloads[pluginName]) ? payloads[pluginName] : {}
+    /* If eventStart, allow for value merging */
+    if (isStartEvent) {
+      payloadValue = currentActionValue
+    }
 
     if (shouldAbort(payloadValue, pluginName)) {
       // console.log(`> Abort from payload specific "${pluginName}" abort value`, payloadValue)
@@ -311,7 +315,7 @@ async function processEvent({
       hello: pluginName,
       abort: funcArgs.abort,
       // Send in original action value or scope payload
-      payload: payloads[pluginName], // || currentActionValue,
+      payload: payloadValue,
       instance,
       config: getConfig(pluginName, plugins, allPlugins),
       plugins: plugins
@@ -337,8 +341,10 @@ async function processEvent({
       const nameSpaceEvent = `${method}:${pluginName}`
       const actionDepth = (nameSpaceEvent.match(/:/g) || []).length
       if (actionDepth < 2 && !method.match(/^bootstrap/) && !method.match(/^ready/)) {
+        const updatedPayload = (isStartEvent) ? merged : payloadValue
+        // Dispatched for `.on('xyz') listeners.
         instance.dispatch({
-          ...scopedPayload,
+          ...updatedPayload,
           type: nameSpaceEvent,
           _: {
             called: nameSpaceEvent,
@@ -351,21 +357,21 @@ async function processEvent({
     return Promise.resolve(merged)
   }, Promise.resolve(action))
 
-  // Dispatch End
+  // Dispatch End. Make sure actions don't get double dispatched. EG userIdChanged
   if (!method.match(/Start$/) &&
       !method.match(/^registerPlugin/) &&
       // !method.match(/^disablePlugin/) &&
       // !method.match(/^enablePlugin/) &&
       !method.match(/^ready/) &&
       !method.match(/^bootstrap/) &&
-      !method.match(/^params/)
+      !method.match(/^params/) &&
+      !method.match(/^userIdChanged/)
   ) {
     if (EVENTS.plugins.includes(method)) {
       // console.log(`Dont dispatch for ${method}`, resolvedAction)
       // return resolvedAction
     }
     /*
-    🔥🔥🔥
       Verify this original action setup.
       It's intended to keep actions from double dispatching themselves
     */
