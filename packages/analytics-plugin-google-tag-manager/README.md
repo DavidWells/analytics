@@ -6,6 +6,8 @@ description: Using the google tag manager plugin
 
 Integration with google tag manager for [analytics](https://www.npmjs.com/package/analytics)
 
+This analytics plugin will load google tag manager into your application.
+
 For more information [see the docs](https://getanalytics.io/plugins/google-tag-manager/).
 
 <!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
