@@ -137,10 +137,21 @@ Build these formats
     "name": "_analytics" <-- name of global
   },
 */
+
+function getGlobalName(pkg) {
+  if (pkg.projectMeta && pkg.projectMeta.windowGlobal) {
+    return pkg.projectMeta.windowGlobal
+  }
+  if (typeof pkg.globalName === 'object') {
+    return pkg.globalName.name
+  }
+  return pkg.globalName
+}
+
 function getFormats(pkg) {
   const { name, globalName, browser, module: moduleName, main } = pkg
 
-  const iifeName = (typeof globalName === 'object') ? globalName.name : globalName
+  const iifeName = getGlobalName(pkg)
   const iifeSettings = {
     name: iifeName,
     format: 'iife',
