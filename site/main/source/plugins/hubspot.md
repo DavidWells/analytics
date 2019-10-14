@@ -1,9 +1,11 @@
 ---
 title: HubSpot
-description: Using the HubSpot plugin
+description: Using the HubSpot analytics plugin
 ---
 
 Integration with HubSpot for [analytics](https://www.npmjs.com/package/analytics)
+
+This analytics plugin will load HubSpot's client side tracking script into your application and send custom events, page views, and identify visitors inside HubSpot.
 
 <!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
 <details>
@@ -16,9 +18,6 @@ Integration with HubSpot for [analytics](https://www.npmjs.com/package/analytics
 - [Platforms Supported](#platforms-supported)
 - [Additional examples](#additional-examples)
 - [Using identify](#using-identify)
-- [Configuration](#configuration)
-- [Plugin Options](#plugin-options)
-- [Plugin Options](#plugin-options-1)
 
 </details>
 <!-- AUTO-GENERATED-CONTENT:END (TOC) -->
@@ -230,33 +229,3 @@ analytics.identify('user-xzy-123', {
   accountLevel: 'pro' // trait will be `account_level`
 })
 ```
-
-## Configuration
-
-<!-- ANALYTICS_DOCS:START (API) -->
-## Plugin Options
-
-**Arguments**
-
-- **pluginConfig** <code>object</code> - Plugin settings
-- **pluginConfig.portalId** <code>string</code> - The HubSpot Portal (or Hub) Id of your HubSpot account
-
-**Example**
-
-```js
-hubSpotPlugin({
-  portalId: '234576'
-})
-```
-
-## Plugin Options
-
-**Example**
-
-```js
-analytics.identify({
-  name: 'bob',
-  email: 'bob@bob.com' // email is required
-})
-```
-<!-- ANALYTICS_DOCS:END -->

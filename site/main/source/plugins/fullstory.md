@@ -1,10 +1,14 @@
 ---
 title: FullStory
-subTitle: Using the FullStory plugin
+subTitle: Using the FullStory analytics plugin
 description: Integrate FullStory visitor tracking with the open source analytics module
 ---
 
 Integration with [FullStory](https://www.fullstory.com/) for [analytics](https://www.npmjs.com/package/analytics)
+
+FullStory is a tool that tracks user behavior in your application. User sessions are recorded and can be played back allowing developers and product owners to identify areas for improvement in their software.
+
+This analytics plugin will add the FullStory javascript library to your app & send custom events into FullStory.
 
 <!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
 <details>

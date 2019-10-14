@@ -6,6 +6,8 @@ pageTitle: Google Analytics
 
 This library exports the `google-analytics` plugin for the [`analytics`](https://www.npmjs.com/package/analytics) package & standalone methods for any project to use to make it easier to interact with [Google Analytics](https://analytics.google.com/analytics/web/).
 
+This analytics plugin will load google analytics into your application.
+
 <!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
 <details>
 <summary>Click to expand</summary>
