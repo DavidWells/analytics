@@ -27,85 +27,85 @@ test('Lifecycle should execute in correct order', async (t) => {
     plugins: [{
       NAMESPACE: 'plugin-one',
       bootstrap: ({ abort, config, instance }) => {
-        executionOrder.push('bootstrap')
+        executionOrder.push('From method: bootstrap')
         instance.on('pageStart', () => {
-          executionOrder.push('pageStart listener from plugin')
+          executionOrder.push('.on("pageStart") listener from plugin')
           pageStartListener()
         })
         instance.on('page', () => {
-          executionOrder.push('page listener from plugin')
+          executionOrder.push('.on("page") listener from plugin')
           pageListener()
         })
         instance.on('pageEnd', () => {
-          executionOrder.push('pageEnd listener from plugin')
+          executionOrder.push('.on("pageEnd") listener from plugin')
           pageEndListener()
         })
         instance.on('pageStart:plugin-two', () => {
-          executionOrder.push('on("pageStart:plugin-two")')
+          executionOrder.push('.on("pageStart:plugin-two") listener from plugin')
         })
         instance.on('page:plugin-two', () => {
-          executionOrder.push('on("page:plugin-two")')
+          executionOrder.push('.on("page:plugin-two") listener from plugin')
         })
         instance.on('pageEnd:plugin-two', () => {
-          executionOrder.push('on("pageEnd:plugin-two")')
+          executionOrder.push('.on("pageEnd:plugin-two") listener from plugin')
         })
       },
       pageStart: ({ abort, config }) => {
-        executionOrder.push('pageStart:plugin-one')
+        executionOrder.push('From method: pageStart:plugin-one')
         pageStartMethod()
         console.log('1. pageStart')
       },
       page: ({ abort, config }) => {
-        executionOrder.push('page:plugin-one')
+        executionOrder.push('From method: page:plugin-one')
         pageMethod()
         console.log('2. page')
       },
       pageEnd: ({ abort, config }) => {
-        executionOrder.push('pageEnd:plugin-one')
+        executionOrder.push('From method: pageEnd:plugin-one')
         pageEndMethod()
         console.log('3. pageEnd')
       },
       ready: () => {
-        executionOrder.push('ready:plugin-one')
+        executionOrder.push('From method: ready:plugin-one')
       }
     },
     {
       NAMESPACE: 'plugin-two',
       bootstrap: ({ abort, config, instance }) => {
-        executionOrder.push('bootstrap two')
+        executionOrder.push('From method: bootstrap two')
       },
       pageStart: ({ abort, config }) => {
-        executionOrder.push('pageStart:plugin-two')
+        executionOrder.push('From method: pageStart:plugin-two')
         secondPageStartMethod()
       },
       page: ({ abort, config }) => {
-        executionOrder.push('page:plugin-two')
+        executionOrder.push('From method: page:plugin-one')
         secondPageMethod()
       },
       pageEnd: ({ abort, config }) => {
-        executionOrder.push('pageEnd:plugin-two')
+        executionOrder.push('From method: pageEnd:plugin-two')
         secondPageEndMethod()
       },
       ready: () => {
-        executionOrder.push('ready:plugin-two')
+        executionOrder.push('From method: ready:plugin-two')
       }
     }]
   })
 
   analytics.on('pageStart', () => {
-    executionOrder.push('pageStart listener')
+    executionOrder.push('.on("pageStart") listener')
   })
 
   analytics.on('page', () => {
-    executionOrder.push('page listener')
+    executionOrder.push('.on("page") listener')
   })
 
   analytics.on('pageEnd', () => {
-    executionOrder.push('pageEnd listener')
+    executionOrder.push('.on("pageEnd") listener')
   })
 
   analytics.on('ready', ({ payload }) => {
-    executionOrder.push('ready listener')
+    executionOrder.push('.on("ready") listener')
   })
   analytics.ready(({ payload }) => {
     executionOrder.push('.ready() listener')
@@ -121,27 +121,33 @@ test('Lifecycle should execute in correct order', async (t) => {
   await delay(2000)
   t.is(pageMethod.callCount, 1)
   t.deepEqual(executionOrder, [
-    'bootstrap',
-    'bootstrap two',
-    'ready:plugin-one',
-    'ready:plugin-two',
-    'ready listener',
+    // Bootstrap
+    'From method: bootstrap',
+    'From method: bootstrap two',
+    // Ready
+    'From method: ready:plugin-one',
+    'From method: ready:plugin-two',
+    '.on("ready") listener',
     '.ready() listener',
-    'pageStart listener from plugin',
-    'pageStart listener',
-    'pageStart:plugin-one',
-    'pageStart:plugin-two',
-    'on("pageStart:plugin-two")',
-    'page:plugin-one',
-    'page:plugin-two',
-    'on("page:plugin-two")',
-    'page listener from plugin',
-    'page listener',
-    'pageEnd:plugin-one',
-    'pageEnd:plugin-two',
-    'on("pageEnd:plugin-two")',
-    'pageEnd listener from plugin',
-    'pageEnd listener',
+    // PageStart
+    '.on("pageStart") listener from plugin',
+    '.on("pageStart") listener',
+    'From method: pageStart:plugin-one',
+    'From method: pageStart:plugin-two',
+    '.on("pageStart:plugin-two") listener from plugin',
+    // Page
+    'From method: page:plugin-one',
+    'From method: page:plugin-one',
+    '.on("page:plugin-two") listener from plugin',
+    '.on("page") listener from plugin',
+    '.on("page") listener',
+    // PageEnd
+    'From method: pageEnd:plugin-one',
+    'From method: pageEnd:plugin-two',
+    '.on("pageEnd:plugin-two") listener from plugin',
+    '.on("pageEnd") listener from plugin',
+    '.on("pageEnd") listener',
+    // page callback
     '.page() callback'
   ])
   // console.log('executionOrder', executionOrder)
