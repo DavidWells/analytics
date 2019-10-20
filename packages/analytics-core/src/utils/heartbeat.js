@@ -1,6 +1,7 @@
-/*
-  Heartbeat retries queued events
-*/
+import * as _CONSTANTS from './_constants'
+import isFunction from './isFunction'
+
+/* Heartbeat retries queued events */
 export default function heartBeat(store, getPlugins, instance) {
   const timer = setInterval(() => {
     const pluginMethods = getPlugins()
@@ -34,7 +35,7 @@ export default function heartBeat(store, getPlugins, instance) {
           const currentPlugin = processAction.plugin
           const currentMethod = processAction.payload.type
           const method = pluginMethods[currentPlugin][currentMethod]
-          if (method && typeof method === 'function') {
+          if (method && isFunction(method)) {
             /* enrich queued payload with userId / anon id if missing */
             /* TODO hoist enrich into where action queued? */
             const enrichedPayload = enrich(processAction.payload, user)
@@ -60,14 +61,16 @@ export default function heartBeat(store, getPlugins, instance) {
 
         /* Removed processed actions */
         const reQueueActions = queue.actions.filter((value, index) => {
-          return pipeline.processIndex.indexOf(index) === -1
+          // !~ === return pipeline.processIndex.indexOf(index) === -1
+          return !~pipeline.processIndex.indexOf(index)
         })
 
         /* Set queue actions. TODO refactor to non mutatable or move out of redux */
         queue.actions = reQueueActions
       }
     }
-  }, 3000)
+  // 3000 ms
+  }, 3e3)
   return timer
 }
 
@@ -83,10 +86,7 @@ function fixEmptyValues(obj, objTwo, key) {
 
 // Assign userId && anonymousId values if present in payload but null
 function enrich(payload, user = {}) {
-  const keys = ['userId', 'anonymousId']
-  return keys.reduce((acc, key) => {
-    const updated = fixEmptyValues(acc, user, key)
-    // console.log('updated', updated)
-    return updated
+  return [ _CONSTANTS.id, _CONSTANTS.anonId ].reduce((acc, key) => {
+    return fixEmptyValues(acc, user, key)
   }, payload)
 }
