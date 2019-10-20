@@ -8,6 +8,12 @@ const analytics = Analytics({
   debug: true,
   app: 'yolo',
   plugins: [
+    {
+      name: 'hahahaa',
+      track: () => {
+        console.log('hi')
+      }
+    },
     exampleProviderPlugin({
       settingOne: 'xyz'
     }),
