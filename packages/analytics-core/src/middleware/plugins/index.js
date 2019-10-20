@@ -80,7 +80,7 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
         setTimeout(() => {
           if (pluginsArray.length === allCalls.length) {
             store.dispatch({
-              type: 'ready',
+              type: EVENTS.ready,
               plugins: completed,
               failed: failed
             })
@@ -90,7 +90,7 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
     }
 
     /* New plugin system */
-    if (type !== 'bootstrap') {
+    if (type !== EVENTS.bootstrap) {
       const updated = await runPlugins(action, getPlugins, instance, store, systemEvents)
       return next(updated)
     }
