@@ -2,6 +2,7 @@ import { storage } from 'analytics-utils'
 import { ANON_ID, USER_ID, USER_TRAITS } from '../constants'
 import timeStamp from '../utils/timestamp'
 import globalContext from '../utils/global'
+import isObject from '../utils/isObject'
 import EVENTS from '../events'
 
 /* user reducer */
@@ -57,7 +58,7 @@ export function getUserProp(key, instance, payload) {
   if (currentId) return currentId
 
   /* 2. Try event payload */
-  if (payload && typeof payload === 'object' && payload[key]) {
+  if (payload && isObject(payload) && payload[key]) {
     return payload[key]
   }
 
@@ -73,30 +74,3 @@ export function getUserProp(key, instance, payload) {
     return globalContext[tempKey(key)]
   }
 }
-
-// Suggested Traits
-/*
-{
-  address: {
-    city: null,
-    country: null,
-    postalCode: null,
-    state: null,
-    street: null
-  },
-  age: 20
-  avatar: 'http://url.com/thumbnail.jpg'
-  birthday: 122321212,
-  createdAt: 1111111,
-  description: 'Description of the user',
-  email: 'email@email.com',
-  firstName: 'david',
-  lastName: 'wells',
-  name: 'david wells',
-  gender: 'male',
-  id: 'String Unique ID in your database for a user',
-  phone: '727-777-8888',
-  title: 'boss ceo',
-  username: 'davidwells',
-}
-*/

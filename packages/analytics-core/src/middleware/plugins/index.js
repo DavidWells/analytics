@@ -1,5 +1,6 @@
 import EVENTS, { nonEvents } from '../../events'
 import waitForReady from '../../utils/waitForReady'
+import isFunction from '../../utils/isFunction'
 import runPlugins from './engine'
 
 export default function pluginMiddleware(instance, getPlugins, systemEvents) {
@@ -14,7 +15,7 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
 
     if (type === EVENTS.disablePlugin || type === EVENTS.enablePlugin) {
       // TODO run initialize if not loaded
-      if (typeof callback === 'function') {
+      if (isFunction(callback)) {
         callback(name)
       }
     }
@@ -48,20 +49,21 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
       let completed = []
       let failed = []
       const allCalls = allInitialized.map((plugin) => {
-        const { loaded, NAMESPACE } = plugin
-        return waitForReady(plugin, loaded, 10000).then((d) => {
-          if (!called[NAMESPACE]) {
+        const { loaded, name } = plugin
+        // 1e4 === 10000 MS
+        return waitForReady(plugin, loaded, 1e4).then((d) => {
+          if (!called[name]) {
             // only dispatch namespaced rdy once
             store.dispatch({
-              type: EVENTS.pluginReadyType(NAMESPACE), // `ready:${NAMESPACE}`
-              name: NAMESPACE,
+              type: EVENTS.pluginReadyType(name), // `ready:${name}`
+              name: name,
               events: Object.keys(plugin).filter((name) => {
                 return !nonEvents.includes(name)
               })
             })
-            called[NAMESPACE] = true
+            called[name] = true
           }
-          completed = completed.concat(NAMESPACE)
+          completed = completed.concat(name)
           // It's loaded! run the command
         }).catch((e) => {
           // Timeout Add to queue
@@ -69,7 +71,7 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
           if (e instanceof Error) {
             throw new Error(e)
           }
-          failed = failed.concat(e.NAMESPACE)
+          failed = failed.concat(e.name)
           // Failed to fire, add to queue
           return e
         })

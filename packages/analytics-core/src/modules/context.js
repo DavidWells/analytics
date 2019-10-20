@@ -33,13 +33,12 @@ const initialState = {
   library: {
     name: 'analytics',
     // TODO fix version number. npm run publish:patch has wrong version
-    version: process.env.VERSION || 'devmode'
+    version: process.env.VERSION
   },
   timezone: timeZone,
   locale: locale,
   campaign: {},
   referrer: referrer,
-  // ip:
 }
 
 // context reducer

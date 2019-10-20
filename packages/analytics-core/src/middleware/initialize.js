@@ -3,6 +3,10 @@ import { paramsParse, storage, uuid } from 'analytics-utils'
 import EVENTS from '../events'
 import { ANON_ID } from '../constants'
 
+const utmRegex = /^utm_/
+const propRegex = /^an_prop_/
+const traitRegex = /^an_trait_/
+
 // Middleware runs during EVENTS.initialize
 export default function initializeMiddleware(instance) {
   return store => next => action => {
@@ -19,16 +23,16 @@ export default function initializeMiddleware(instance) {
         const { an_uid, an_event } = params
         const groupedParams = paramsArray.reduce((acc, key) => {
           // match utm params & dclid (display) & gclid (cpc)
-          if (key.match(/^utm_/) || key.match(/^(d|g)clid/)) {
-            const cleanName = key.replace(/^utm_/, '')
+          if (key.match(utmRegex) || key.match(/^(d|g)clid/)) {
+            const cleanName = key.replace(utmRegex, '')
             const keyName = (cleanName === 'campaign') ? 'name' : cleanName
             acc.campaign[keyName] = params[key]
           }
-          if (key.match(/^an_prop_/)) {
-            acc.props[`${key.replace(/^an_prop_/, '')}`] = params[key]
+          if (key.match(propRegex)) {
+            acc.props[`${key.replace(propRegex, '')}`] = params[key]
           }
-          if (key.match(/^an_trait_/)) {
-            acc.traits[`${key.replace(/^an_trait_/, '')}`] = params[key]
+          if (key.match(traitRegex)) {
+            acc.traits[`${key.replace(traitRegex, '')}`] = params[key]
           }
           return acc
         }, {

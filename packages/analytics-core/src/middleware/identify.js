@@ -1,22 +1,22 @@
 import { USER_ID, USER_TRAITS, ANON_ID } from '../constants'
+import isFunction from '../utils/isFunction'
 import EVENTS from '../events'
 
 export default function identifyMiddleware(instance) {
-  const { storage } = instance
+  const { setItem, removeItem, getItem } = instance.storage
   return store => next => action => {
     const { userId, traits, options, callback } = action
     /* Reset user id and traits */
     if (action.type === EVENTS.reset) {
-      storage.removeItem(USER_ID)
-      storage.removeItem(USER_TRAITS)
-      storage.removeItem(ANON_ID)
-      if (typeof callback === 'function') {
+      // Remove stored data
+      [ USER_ID, USER_TRAITS, ANON_ID ].forEach((key) => removeItem(key))
+      if (isFunction(callback)) {
         callback()
       }
     }
     if (action.type === EVENTS.identify) {
-      const currentId = storage.getItem(USER_ID)
-      const currentTraits = storage.getItem(USER_TRAITS) || {}
+      const currentId = getItem(USER_ID)
+      const currentTraits = getItem(USER_TRAITS) || {}
       if (currentId && (currentId !== userId)) {
         store.dispatch({
           type: EVENTS.userIdChanged,
@@ -35,12 +35,12 @@ export default function identifyMiddleware(instance) {
 
       /* Save user id */
       if (userId) {
-        storage.setItem(USER_ID, userId)
+        setItem(USER_ID, userId)
       }
 
       /* Save user traits */
       if (traits) {
-        storage.setItem(USER_TRAITS, {
+        setItem(USER_TRAITS, {
           ...currentTraits,
           ...traits
         })
