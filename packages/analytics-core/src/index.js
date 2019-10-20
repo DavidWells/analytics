@@ -382,7 +382,7 @@ function analytics(config = {}) {
       if (!name || typeof callback !== 'function') {
         return false
       }
-      if (name === 'bootstrap') {
+      if (name === EVENTS.bootstrap) {
         throw new Error(`Listeners not allowed for ${name}`)
       }
       const startRegex = /Start$|Start:/
