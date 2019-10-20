@@ -1,3 +1,4 @@
+
 const fs = require('fs')
 const path = require('path')
 
@@ -17,7 +18,13 @@ const strings = [
   'Actions may not have an undefined "type" property. Have you misspelled a constant?',
   'Cannot call a class as a function',
   'Expected the enhancer to be a function.',
-  'Expected the enhancer to be a function.',
+  'Expected the nextReducer to be a function.',
+  "The iterator does not provide a 'throw' method",
+  'Invalid attempt to destructure non-iterable instance',
+  'iterator result is not an object',
+  'Generator is already running',
+  'try statement without catch or finally',
+  'illegal catch attempt',
   'Reducers may not dispatch actions.'
 ]
 
