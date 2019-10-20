@@ -3,10 +3,8 @@
 */
 export default function heartBeat(store, getPlugins, instance) {
   const timer = setInterval(() => {
-    // console.log('____heartbeat_____')
     const pluginMethods = getPlugins()
     const { plugins, context, queue, user } = store.getState()
-    // console.log('CURRENT Q', queue)
     const isOnline = !context.offline
 
     /* If network connection found and there is items in queue, process them all */
