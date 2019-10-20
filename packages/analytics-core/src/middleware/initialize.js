@@ -47,17 +47,13 @@ export default function initializeMiddleware(instance) {
         /* If userId set, call identify */
         if (an_uid) {
           // timeout to debounce and make sure integration is registered. Todo refactor
-          setTimeout(() => {
-            instance.identify(an_uid, groupedParams.traits)
-          }, 0)
+          setTimeout(() => instance.identify(an_uid, groupedParams.traits), 0)
         }
 
         /* If tracking event set, call track */
         if (an_event) {
           // timeout to debounce and make sure integration is registered. Todo refactor
-          setTimeout(() => {
-            instance.track(an_event, groupedParams.props)
-          }, 0)
+          setTimeout(() => instance.track(an_event, groupedParams.props), 0)
         }
 
         // if url has utm params
