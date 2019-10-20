@@ -39,8 +39,6 @@ A lightweight analytics abstraction library for tracking page views, custom even
 - [Analytic plugins](#analytic-plugins)
 - [Creating analytics plugins](#creating-analytics-plugins)
   * [React to any event](#react-to-any-event)
-  * [Optional - Using middleware](#optional---using-middleware)
-  * [Opt out example plugin](#opt-out-example-plugin)
 - [Plugin Naming Conventions](#plugin-naming-conventions)
 - [Debugging analytics](#debugging-analytics)
 - [Contributing](#contributing)
@@ -92,18 +90,18 @@ Or as a script tag:
 
 ```js
 import Analytics from 'analytics'
-import googleAnalyticsPlugin from '@analytics/google-analytics'
-import customerIOPlugin from '@analytics/customerio'
+import googleAnalytics from '@analytics/google-analytics'
+import customerIo from '@analytics/customerio'
 
 /* Initialize analytics */
 const analytics = Analytics({
   app: 'my-app-name',
   version: 100,
   plugins: [
-    googleAnalyticsPlugin({
+    googleAnalytics({
       trackingId: 'UA-121991291',
     }),
-    customerIOPlugin({
+    customerIo({
       siteId: '123-xyz'
     })
   ]
@@ -660,8 +658,8 @@ Here is a quick example of a plugin:
 export default function pluginExample(userConfig) {
   // return object for analytics to use
   return {
-    /* All plugins require a NAMESPACE */
-    NAMESPACE: 'my-example-plugin',
+    /* All plugins require a name */
+    name: 'my-example-plugin',
     /* Everything else below this is optional depending on your plugin requirements */
     config: {
       whatEver: userConfig.whatEver,
@@ -687,7 +685,7 @@ export default function pluginExample(userConfig) {
 }
 ```
 
-`NAMESPACE` is required for all plugins. All other methods are optional.
+`name` is required for all plugins. All other methods are optional.
 
 If you don't need to hook into `page` tracking, just omit the `page` key from your plugin object.
 
@@ -721,7 +719,9 @@ For a full list of core events, checkout [`events.js`](https://github.com/DavidW
 // Example Plugin plugin.js
 export default function myPlugin(userConfig) {
   return {
-    NAMESPACE: 'my-plugin',
+    /* Name is a required field for plugins */
+    name: 'my-plugin',
+    /* Bootstrap runs when analytics starts */
     bootstrap: ({ payload, config, instance }) => {
       // Do whatever on `bootstrap` event
     },
@@ -764,67 +764,6 @@ const analytics = Analytics({
     ...otherPlugins
   ]
 })
-```
-
-### Optional - Using middleware
-
-Alternatively, you can also attach any middleware functionality you'd like from the `redux` ecosystem.
-
-```js
-// logger-plugin.js redux middleware
-const logger = store => next => action => {
-  if (action.type) {
-    console.log(`>> analytics dispatching ${action.type}`, JSON.stringify(action))
-  }
-  return next(action)
-}
-
-export default logger
-```
-
-Using this plugin is the same as any other.
-
-```js
-import Analytics from 'analytics'
-import loggerPlugin from './logger-plugin.js'
-
-const analytics = Analytics({
-  app: 'my-app-name',
-  plugins: [
-    ...otherPlugins,
-    loggerPlugin
-  ]
-})
-```
-
-### Opt out example plugin
-
-This is a vanilla redux middleware that will opt out users from tracking. There are **many** ways to implement this type of functionality using `analytics`
-
-```js
-const optOutMiddleware = store => next => action => {
-  const { type } = action
-  if (type === 'trackStart' || type === 'pageStart' || type === 'trackStart') {
-    // Check cookie/localStorage/Whatever to see if visitor opts out
-
-    // Here I am checking user traits persisted to localStorage
-    const { user } = store.getState()
-
-    // user has optOut trait cancel action
-    if (user && user.traits.optOut) {
-      return next({
-        ...action,
-        ...{
-          abort: true,
-          reason: 'User opted out'
-        },
-      })
-    }
-  }
-  return next(finalAction)
-}
-
-export default optOutMiddleware
 ```
 
 ##  Plugin Naming Conventions
