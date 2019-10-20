@@ -2,6 +2,8 @@
   <img src="https://user-images.githubusercontent.com/532272/61419845-ab1e9a80-a8b4-11e9-8fd1-18b9e743bb6f.png" width="450" />
 </a>
 
+![npm](https://img.shields.io/npm/dw/analytics?style=flat-square) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/analytics?style=flat-square)
+
 A lightweight analytics abstraction library for tracking page views, custom events, & identify visitors. Designed to work with any [third-party analytics tool](https://getanalytics.io/plugins/).
 
 [Read the docs](https://getanalytics.io/) or view the [live demo app](https://analytics-demo.netlify.com)
