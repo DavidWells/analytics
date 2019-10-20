@@ -1,9 +1,16 @@
 import fitlerDisabledPlugins from '../../utils/filterDisabled'
+import isFunction from '../../utils/isFunction'
+import isObject from '../../utils/isObject'
+import isString from '../../utils/isString'
+
+const endsWithStartRegex = /Start$/
+const bootstrapRegex = /^bootstrap/
+const readyRegex = /^ready/
 
 export default async function (action, getPlugins, instance, store, eventsInfo) {
-  const pluginObject = (typeof getPlugins === 'function') ? getPlugins() : getPlugins
+  const pluginObject = isFunction(getPlugins) ? getPlugins() : getPlugins
   const originalType = action.type
-  const updatedType = originalType.replace(/Start$/, '')
+  const updatedType = originalType.replace(endsWithStartRegex, '')
 
   /* If action already dispatched exit early. This makes it so plugin methods are not fired twice. */
   if (action._ && action._.called) {
@@ -15,7 +22,7 @@ export default async function (action, getPlugins, instance, store, eventsInfo) 
   /* Remove plugins that are disabled by options or by settings */
   const activePlugins = fitlerDisabledPlugins(pluginObject, state.plugins, action.options)
   // console.log('activePlugins', activePlugins)
-  const allActivePluginKeys = activePlugins.map((p) => p.NAMESPACE)
+  const allActivePluginKeys = activePlugins.map((p) => p.name)
   // console.log('allActivePluginKeys', allActivePluginKeys)
   const allMatches = getAllMatchingCalls(originalType, activePlugins, pluginObject)
   // console.log('allMatches', allMatches)
@@ -48,7 +55,7 @@ export default async function (action, getPlugins, instance, store, eventsInfo) 
 
   /* Filter over the plugin method calls and remove aborted plugin by name */
   // const activeAndNonAbortedCalls = activePlugins.filter((plugin) => {
-  //   if (shouldAbort(actionBefore, plugin.NAMESPACE)) return false
+  //   if (shouldAbort(actionBefore, plugin.name)) return false
   //   return true
   // })
   // console.log(`activeAndNonAbortedCalls ${action.type}`, activeAndNonAbortedCalls)
@@ -87,7 +94,7 @@ export default async function (action, getPlugins, instance, store, eventsInfo) 
    *  This is process 'pageEnd' methods from plugins and update the event to send through
    */
   // 🔥 Only trigger `eventTypeEnd` if originalAction has Start ending. Verify
-  if (originalType.match(/Start$/)) {
+  if (originalType.match(endsWithStartRegex)) {
     const afterName = `${updatedType}End`
     const actionAfter = await processEvent({
       action: {
@@ -122,7 +129,7 @@ function getCallback(action) {
   if (!action.meta) return false
   return Object.keys(action.meta).reduce((acc, key) => {
     const thing = action.meta[key]
-    if (typeof thing === 'function') return thing
+    if (isFunction(thing)) return thing
     return acc
   }, false)
 }
@@ -143,7 +150,7 @@ async function processEvent({
 }) {
   const { plugins, context } = state
   const method = action.type
-  const isStartEvent = method.match(/Start$/)
+  const isStartEvent = method.match(endsWithStartRegex)
   // console.log(`data ${method}`, data)
   // console.log(`data allMatches ${method}`, allMatches)
   let abortable = data.exact.map((x) => {
@@ -187,7 +194,7 @@ async function processEvent({
       const scopedPayload = await data.namespaced[pluginName].reduce(async (acc, p, count) => {
         // await value
         const curScopeData = await acc
-        if (!p.method || typeof p.method !== 'function') {
+        if (!p.method || !isFunction(p.method)) {
           return curScopeData
         }
 
@@ -220,7 +227,7 @@ async function processEvent({
           config: getConfig(pluginName, plugins, allPlugins),
           plugins: plugins
         })
-        const returnValue = (typeof val === 'object') ? val : {}
+        const returnValue = isObject(val) ? val : {}
         return Promise.resolve({
           ...curScopeData,
           ...returnValue
@@ -292,14 +299,14 @@ async function processEvent({
     /*
     const checkForLoaded = () => {
       const p = instance.getState('plugins')
-      return p[currentPlugin.NAMESPACE].loaded
+      return p[currentPlugin.name].loaded
     }
     // const p = instance.getState('plugins')
-    console.log(`loaded "${currentPlugin.NAMESPACE}" > ${method}:`, p[currentPlugin.NAMESPACE].loaded)
+    console.log(`loaded "${currentPlugin.name}" > ${method}:`, p[currentPlugin.name].loaded)
     // await waitForReady(currentPlugin, checkForLoaded, 10000).then((d) => {
-    //   console.log(`Loaded ${method}`, currentPlugin.NAMESPACE)
+    //   console.log(`Loaded ${method}`, currentPlugin.name)
     // }).catch((e) => {
-    //   console.log(`Error ${method} ${currentPlugin.NAMESPACE}`, e)
+    //   console.log(`Error ${method} ${currentPlugin.name}`, e)
     //   // TODO dispatch failure
     // })
     */
@@ -321,7 +328,7 @@ async function processEvent({
       plugins: plugins
     })
 
-    const returnValue = (typeof val === 'object') ? val : {}
+    const returnValue = isObject(val) ? val : {}
     const merged = {
       ...currentActionValue,
       ...returnValue
@@ -340,7 +347,7 @@ async function processEvent({
     } else {
       const nameSpaceEvent = `${method}:${pluginName}`
       const actionDepth = (nameSpaceEvent.match(/:/g) || []).length
-      if (actionDepth < 2 && !method.match(/^bootstrap/) && !method.match(/^ready/)) {
+      if (actionDepth < 2 && !method.match(bootstrapRegex) && !method.match(readyRegex)) {
         const updatedPayload = (isStartEvent) ? merged : payloadValue
         // Dispatched for `.on('xyz') listeners.
         instance.dispatch({
@@ -358,12 +365,12 @@ async function processEvent({
   }, Promise.resolve(action))
 
   // Dispatch End. Make sure actions don't get double dispatched. EG userIdChanged
-  if (!method.match(/Start$/) &&
+  if (!method.match(endsWithStartRegex) &&
       !method.match(/^registerPlugin/) &&
       // !method.match(/^disablePlugin/) &&
       // !method.match(/^enablePlugin/) &&
-      !method.match(/^ready/) &&
-      !method.match(/^bootstrap/) &&
+      !method.match(readyRegex) &&
+      !method.match(bootstrapRegex) &&
       !method.match(/^params/) &&
       !method.match(/^userIdChanged/)
   ) {
@@ -420,12 +427,10 @@ function abortDispatch({ data, method, instance, pluginName, store }) {
   })
 }
 
-function getConfig(pluginName, pluginState, allPlugins) {
-  if (pluginState[pluginName] && pluginState[pluginName].config) {
-    return pluginState[pluginName].config
-  }
-  if (allPlugins[pluginName] && allPlugins[pluginName].config) {
-    return allPlugins[pluginName].config
+function getConfig(name, pluginState, allPlugins) {
+  const pluginData = pluginState[name] || allPlugins[name]
+  if (pluginData && pluginData.config) {
+    return pluginData.config
   }
   return {}
 }
@@ -434,14 +439,14 @@ function getPluginFunctions(methodName, plugins) {
   return plugins.reduce((arr, plugin) => {
     return (!plugin[methodName]) ? arr : arr.concat({
       methodName: methodName,
-      pluginName: plugin.NAMESPACE,
+      pluginName: plugin.name,
       method: plugin[methodName],
     })
   }, [])
 }
 
 function formatMethod(type) {
-  return type.replace(/Start$/, '')
+  return type.replace(endsWithStartRegex, '')
 }
 
 /**
@@ -472,21 +477,21 @@ function getAllMatchingCalls(eventType, activePlugins, allPlugins) {
   })
   // Gather nameSpaced Events
   return activePlugins.reduce((acc, plugin) => {
-    const { NAMESPACE } = plugin
-    const nameSpacedEvents = getEventNames(eventType, NAMESPACE)
+    const { name } = plugin
+    const nameSpacedEvents = getEventNames(eventType, name)
     // console.log('eventNames namespaced', nameSpacedEvents)
     const [ beforeFuncs, duringFuncs, afterFuncs ] = nameSpacedEvents.map((word) => {
       return getPluginFunctions(word, activePlugins)
     })
 
     if (beforeFuncs.length) {
-      acc.beforeNS[NAMESPACE] = beforeFuncs
+      acc.beforeNS[name] = beforeFuncs
     }
     if (duringFuncs.length) {
-      acc.duringNS[NAMESPACE] = duringFuncs
+      acc.duringNS[name] = duringFuncs
     }
     if (afterFuncs.length) {
-      acc.afterNS[NAMESPACE] = afterFuncs
+      acc.afterNS[name] = afterFuncs
     }
     return acc
   }, {
@@ -507,9 +512,9 @@ function shouldAbort({ abort }, pluginName) {
 
 function shouldAbortAll({ abort }, pluginsCount) {
   if (!abort) return false
-  if (abort === true || typeof abort === 'string') return true
+  if (abort === true || isString(abort)) return true
   const { plugins } = abort
-  return isArray(abort) && (abort.length === pluginsCount) || isArray(plugins) && (plugins.length === pluginsCount)
+  return (isArray(abort) && (abort.length === pluginsCount)) || (isArray(plugins) && (plugins.length === pluginsCount))
 }
 
 function isArray(arr) {
@@ -530,14 +535,14 @@ function includes(arr, name) {
 function argumentFactory(instance, abortablePlugins) {
   // console.log('abortablePlugins', abortablePlugins)
   return function (action, plugin, otherPlugin) {
-    const { config, NAMESPACE } = plugin
-    let method = `${NAMESPACE}.${action.type}`
+    const { config, name } = plugin
+    let method = `${name}.${action.type}`
     if (otherPlugin) {
       method = otherPlugin.event
     }
 
-    const abortF = (action.type.match(/Start$/))
-      ? abortFunction(NAMESPACE, method, abortablePlugins, otherPlugin, action)
+    const abortF = (action.type.match(endsWithStartRegex))
+      ? abortFunction(name, method, abortablePlugins, otherPlugin, action)
       : notAbortableError(action, method)
 
     return {
@@ -553,12 +558,12 @@ function argumentFactory(instance, abortablePlugins) {
 
 function abortFunction(pluginName, method, abortablePlugins, otherPlugin, action) {
   return function (reason, plugins) {
-    const caller = (otherPlugin) ? otherPlugin.NAMESPACE : pluginName
+    const caller = (otherPlugin) ? otherPlugin.name : pluginName
     let pluginsToAbort = (plugins && isArray(plugins)) ? plugins : abortablePlugins
     if (otherPlugin) {
       pluginsToAbort = (plugins && isArray(plugins)) ? plugins : [pluginName]
       if (!pluginsToAbort.includes(pluginName) || pluginsToAbort.length !== 1) {
-        throw new Error(`Method "${method}" can only abort "${pluginName}" plugin. ${JSON.stringify(pluginsToAbort)} input valid`)
+        throw new Error(`Method ${method} can only abort ${pluginName} plugin. ${JSON.stringify(pluginsToAbort)} input valid`)
       }
     }
     return {
@@ -575,7 +580,7 @@ function abortFunction(pluginName, method, abortablePlugins, otherPlugin, action
 
 function notAbortableError(action, method) {
   return () => {
-    throw new Error(`Action "${action.type}" is not cancellable. Remove abort in ${method}`)
+    throw new Error(`Action ${action.type} not cancellable. Remove abort in ${method}`)
   }
 }
 
@@ -587,10 +592,10 @@ function validateMethod(actionName, pluginName) {
   const methodCallMatchesPluginNamespace = text && (text.name === pluginName)
   if (methodCallMatchesPluginNamespace) {
     const sub = getNameSpacedAction(text.method)
-    const subText = (sub) ? `or "${sub.method}"` : ''
-    throw new Error([`Plugin "${pluginName}" is calling method [${actionName}]`,
-      `Plugins should not call their own namespace.`,
-      `Use "${text.method}" ${subText} in "${pluginName}" plugin instead of "${actionName}"`]
+    const subText = (sub) ? `or ${sub.method}` : ''
+    throw new Error([`Plugin ${pluginName} is calling method [${actionName}]`,
+      `Plugins can't call their own name`,
+      `Use ${text.method} ${subText} in ${pluginName} plugin instead of ${actionName}`]
       .join('\n')
     )
   }
@@ -613,7 +618,7 @@ function formatPayload(action) {
     if (key === 'type') {
       return acc
     }
-    if (typeof action[key] === 'object') {
+    if (isObject(action[key])) {
       acc[key] = Object.assign({}, action[key])
     } else {
       acc[key] = action[key]
@@ -628,10 +633,10 @@ function getMatchingMethods(eventType, activePlugins) {
   // console.log('exact', exact)
   // Gather nameSpaced Events
   return activePlugins.reduce((acc, plugin) => {
-    const { NAMESPACE } = plugin
-    const clean = getPluginFunctions(`${eventType}:${NAMESPACE}`, activePlugins)
+    const { name } = plugin
+    const clean = getPluginFunctions(`${eventType}:${name}`, activePlugins)
     if (clean.length) {
-      acc.namespaced[NAMESPACE] = clean
+      acc.namespaced[name] = clean
     }
     return acc
   }, {

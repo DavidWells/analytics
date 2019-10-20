@@ -2,7 +2,7 @@ import test from 'ava'
 import EVENTS, { coreEvents, nonEvents, isReservedAction } from './events'
 
 test('nonEvents should contain all non events keys as array', (t) => {
-  t.deepEqual(nonEvents, ['NAMESPACE', 'EVENTS', 'config', 'loaded'])
+  t.deepEqual(nonEvents, ['name', 'EVENTS', 'config', 'loaded'])
 })
 
 test('coreEvents should contain all events as array', (t) => {

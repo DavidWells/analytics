@@ -190,7 +190,7 @@ export const coreEvents = [
 /*!
  * Keys on a plugin that are not considered events
  */
-export const nonEvents = ['NAMESPACE', 'EVENTS', 'config', 'loaded']
+export const nonEvents = ['name', 'EVENTS', 'config', 'loaded']
 
 const pluginEvents = {
   registerPluginType: (name) => `registerPlugin:${name}`,

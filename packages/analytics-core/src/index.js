@@ -1,21 +1,28 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
+// Middleware
 import * as middleware from './middleware'
 import DynamicMiddleware from './middleware/dynamic'
-import plugins, { enablePlugin, disablePlugin } from './modules/plugins'
+// Modules
+import pluginsMiddleware, { enablePlugin, disablePlugin } from './modules/plugins'
 import context, { makeContext } from './modules/context'
 import page, { getPageData } from './modules/page'
 import track from './modules/track'
 import queue from './modules/queue'
 import user, { reset, getUserProp, tempKey, getPersistedUserData } from './modules/user'
+import * as CONSTANTS from './constants'
+import * as _CONSTANTS from './utils/_constants'
+import EVENTS, { coreEvents, nonEvents, isReservedAction } from './events'
+// Utils
 import dotProp from './utils/dotProp'
 import timestamp from './utils/timestamp'
 import inBrowser from './utils/inBrowser'
 import { watch } from './utils/handleNetworkEvents'
 import getCallback from './utils/getCallback'
 import { Debug, composeWithDebug } from './utils/debug'
-import EVENTS, { coreEvents, nonEvents, isReservedAction } from './events'
-import * as CONSTANTS from './constants'
 import globalContext from './utils/global'
+import isFunction from './utils/isFunction'
+import isObject from './utils/isObject'
+import isString from './utils/isString'
 import heartBeat from './utils/heartbeat'
 
 const { setItem, removeItem, getItem } = middleware
@@ -50,35 +57,37 @@ function analytics(config = {}) {
   const customReducers = config.reducers || {}
 
   /* Parse plugins array */
-  const parsedOptions = (config.plugins || []).reduce((acc, p) => {
-    if (typeof p !== 'function' && p.NAMESPACE) {
-      const { NAMESPACE } = p
+  const parsedOptions = (config.plugins || []).reduce((acc, plugin) => {
+    if (!isFunction(plugin)) {
+      // Legacy plugin with Namespace
+      if (plugin.NAMESPACE) plugin.name = plugin.NAMESPACE
+      if (!plugin.name) throw new Error('missing name')
       // if plugin exposes EVENTS capture available events
-      const definedEvents = (p.EVENTS) ? Object.keys(p.EVENTS).map((k) => {
-        return p.EVENTS[k]
+      const definedEvents = (plugin.EVENTS) ? Object.keys(plugin.EVENTS).map((k) => {
+        return plugin.EVENTS[k]
       }) : []
       // Convert available methods into events
-      const methodsToEvents = Object.keys(p)
+      const methodsToEvents = Object.keys(plugin)
       // Combine events
       const allEvents = methodsToEvents.concat(definedEvents)
       // Dedupe events list
       const allEventsUnique = new Set(acc.events.concat(allEvents))
       acc.events = Array.from(allEventsUnique)
 
-      acc.pluginsArray = acc.pluginsArray.concat(p)
+      acc.pluginsArray = acc.pluginsArray.concat(plugin)
 
-      if (acc.plugins[NAMESPACE]) {
-        throw new Error(`"${NAMESPACE}" plugin loaded twice`)
+      if (acc.plugins[plugin.name]) {
+        throw new Error(`"${plugin.name}" plugin loaded twice`)
       }
-      acc.plugins[NAMESPACE] = p
-      if (!acc.plugins[NAMESPACE].loaded) {
+      acc.plugins[plugin.name] = plugin
+      if (!acc.plugins[plugin.name].loaded) {
         // set default loaded func
-        acc.plugins[NAMESPACE].loaded = () => { return true }
+        acc.plugins[plugin.name].loaded = () => { return true }
       }
       return acc
     }
     /* Custom redux middleware */
-    acc.middlewares = acc.middlewares.concat(p)
+    acc.middlewares = acc.middlewares.concat(plugin)
     return acc
   }, {
     plugins: {},
@@ -112,7 +121,7 @@ function analytics(config = {}) {
 
   const { addMiddleware, removeMiddleware, dynamicMiddlewares } = new DynamicMiddleware()
 
-  const nonAbortable = () => { throw new Error('Abort not allowed in listener') }
+  const nonAbortable = () => { throw new Error('Abort disabled in listener') }
 
   /**
    * Analytic instance returned from initialization
@@ -165,16 +174,16 @@ function analytics(config = {}) {
     * })
     */
     identify: (userId, traits, options, callback) => {
-      const id = (typeof userId === 'string') ? userId : null
-      const data = (typeof userId === 'object') ? userId : traits
+      const id = isString(userId) ? userId : null
+      const data = isObject(userId) ? userId : traits
       const opts = options || {}
       const cb = getCallback(traits, options, callback)
       const user = instance.user()
 
       /* sets temporary in memory id. Not to be relied on */
-      globalContext[tempKey('userId')] = id
+      globalContext[tempKey(_CONSTANTS.id)] = id
 
-      const resolvedId = id || data.userId || getUserProp('userId', instance, data)
+      const resolvedId = id || data.userId || getUserProp(_CONSTANTS.id, instance, data)
 
       store.dispatch({
         type: EVENTS.identifyStart,
@@ -225,16 +234,16 @@ function analytics(config = {}) {
      * })
      */
     track: (eventName, payload, options, callback) => {
-      const name = (typeof eventName === 'object') ? eventName.event : eventName
-      if (!name || typeof name !== 'string') {
-        throw new Error('EventName not supplied')
+      const name = isObject(eventName) ? eventName.event : eventName
+      if (!name || !isString(name)) {
+        throw new Error('Event missing')
       }
-      const data = (typeof eventName === 'object') ? eventName : (payload || {})
-      const opts = (typeof options === 'object') ? options : {}
+      const data = isObject(eventName) ? eventName : (payload || {})
+      const opts = isObject(options) ? options : {}
       const cb = getCallback(payload, options, callback)
 
-      const id = getUserProp('userId', instance, payload)
-      const anonId = getUserProp('anonymousId', instance, payload)
+      const id = getUserProp(_CONSTANTS.id, instance, payload)
+      const anonId = getUserProp(_CONSTANTS.anonId, instance, payload)
 
       store.dispatch({
         type: EVENTS.trackStart,
@@ -281,12 +290,12 @@ function analytics(config = {}) {
      * })
      */
     page: (data, options, callback) => {
-      const d = (typeof data === 'object') ? data : {}
-      const opts = (typeof options === 'object') ? options : {}
+      const d = isObject(data) ? data : {}
+      const opts = isObject(options) ? options : {}
       const cb = getCallback(data, options, callback)
 
-      const userId = getUserProp('userId', instance, d)
-      const anonymousId = getUserProp('anonymousId', instance, d)
+      const userId = getUserProp(_CONSTANTS.id, instance, d)
+      const anonymousId = getUserProp(_CONSTANTS.anonId, instance, d)
 
       store.dispatch({
         type: EVENTS.pageStart,
@@ -318,8 +327,8 @@ function analytics(config = {}) {
      * const companyName = analytics.user('traits.company.name')
      */
     user: (key) => {
-      if (key === 'userId' || key === 'id') {
-        const findId = getUserProp('userId', instance)
+      if (key === _CONSTANTS.id || key === 'id') {
+        const findId = getUserProp(_CONSTANTS.id, instance)
         return findId
       }
 
@@ -379,11 +388,11 @@ function analytics(config = {}) {
      * removeListener()
      */
     on: (name, callback) => {
-      if (!name || typeof callback !== 'function') {
+      if (!name || !isFunction(callback)) {
         return false
       }
       if (name === EVENTS.bootstrap) {
-        throw new Error(`Listeners not allowed for ${name}`)
+        throw new Error(`.on disabled for ${name}`)
       }
       const startRegex = /Start$|Start:/
       if (name === '*') {
@@ -463,8 +472,11 @@ function analytics(config = {}) {
      * listener()
      */
     once: (name, callback) => {
-      if (!name || typeof callback !== 'function') {
+      if (!name || !isFunction(callback)) {
         return false
+      }
+      if (name === EVENTS.bootstrap) {
+        throw new Error(`.once disabled for ${name}`)
       }
       const listener = instance.on(name, ({ payload }) => {
         callback({ // eslint-disable-line
@@ -502,9 +514,9 @@ function analytics(config = {}) {
      * @param  {Object} action - event to dispatch
      */
     dispatch: (action) => {
-      const actionData = (typeof action === 'string') ? { type: action } : action
+      const actionData = isString(action) ? { type: action } : action
       if (isReservedAction(actionData.type)) {
-        throw new Error(`Trying to dispatch reservedAction "${actionData.type}"`)
+        throw new Error(`reserved action "${actionData.type}"`)
       }
       const meta = actionData.meta || {}
       const _private = action._ || {}
@@ -663,12 +675,12 @@ function analytics(config = {}) {
       }
       // Set on global integration object
       customPlugins = Object.assign({}, customPlugins, {
-        [`${newPlugin.NAMESPACE}`]: newPlugin
+        [`${newPlugin.name}`]: newPlugin
       })
       // then add it, and init state key
       store.dispatch({
         type: EVENTS.pluginRegister,
-        name: newPlugin.NAMESPACE,
+        name: newPlugin.name,
         plugin: newPlugin
       })
     }, */
@@ -695,7 +707,7 @@ function analytics(config = {}) {
     user: user,
     page: page,
     track: track,
-    plugins: plugins(getPlugins),
+    plugins: pluginsMiddleware(getPlugins),
     queue: queue
   }
 
@@ -708,7 +720,7 @@ function analytics(config = {}) {
     }
     composeWithGlobalDebug = function() {
       if (arguments.length === 0) return Debug()
-      if (typeof arguments[0] === 'object') return composeWithDebug(arguments[0])
+      if (isObject(typeof arguments[0])) return composeWithDebug(arguments[0])
       return composeWithDebug().apply(null, arguments)
     }
   }
@@ -720,8 +732,8 @@ function analytics(config = {}) {
     context: initialConfig,
     user: initialUser,
     plugins: parsedOptions.pluginsArray.reduce((acc, plugin) => {
-      const { NAMESPACE, config, loaded } = plugin
-      acc[NAMESPACE] = {
+      const { name, config, loaded } = plugin
+      acc[name] = {
         enabled: true,
         // If plugin has no initialize method, set initialized to true
         initialized: (!plugin.initialize) ? true : false, // eslint-disable-line
@@ -764,14 +776,14 @@ function analytics(config = {}) {
 
   parsedOptions.pluginsArray.map((plugin, i) => { // eslint-disable-line
     const { bootstrap, config } = plugin
-    if (bootstrap && typeof bootstrap === 'function') {
+    if (bootstrap && isFunction(bootstrap)) {
       bootstrap({ instance, config, payload: plugin })
     }
-    const lastCall = plugins.length === (i + 1)
+    const lastCall = parsedOptions.pluginsArray.length === (i + 1)
     /* Register plugins */
     store.dispatch({
-      type: EVENTS.registerPluginType(plugin.NAMESPACE),
-      name: plugin.NAMESPACE,
+      type: EVENTS.registerPluginType(plugin.name),
+      name: plugin.name,
       plugin: plugin
     })
 
@@ -796,17 +808,7 @@ function analytics(config = {}) {
     heartBeat(store, getPlugins, instance)
   }
 
-  /* Optionally expose redux to instance */
-  if (config.exposeRedux) {
-    // Add redux methods to instance
-    return Object.assign({}, instance, {
-      // enables full dispatcher
-      dispatch: store.dispatch,
-      subscribe: store.subscribe,
-      replaceReducer: store.replaceReducer,
-    })
-  }
-
+  /* Return analytics instance */
   return instance
 }
 

@@ -1,6 +1,6 @@
 /**
   * @typedef {Object} AnalyticsPlugin
-  * @property {string} NAMESPACE - Name of plugin
+  * @property {string} name - Name of plugin
   * @property {Object} [EVENTS] - exposed events of plugin
   * @property {Object} [config] - Configuration of plugin
   * @property {function} [initialize] - Load analytics scripts method
