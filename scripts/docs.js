@@ -48,13 +48,20 @@ const config = {
       const packages = fs.readdirSync(path.resolve('packages'))
         .filter(pkg => !/^\./.test(pkg))
         .filter(pkg => pkg !== 'analytics-core')
-        .map(pkg => ([pkg, fs.readFileSync(path.join(base, pkg, 'package.json'), 'utf8')]))
+        .map(pkg => ([pkg, JSON.parse(fs.readFileSync(path.join(base, pkg, 'package.json'), 'utf8'))]))
         .filter(([pkg, json]) => {
-          const parsed = JSON.parse(json)
-          return parsed.private !== true
+          return json.private !== true
+        })
+        // alphabetize list
+        .sort((a, b) => {
+          const one = a[1]
+          const two = b[1]
+          var textA = one.name.toLowerCase()
+          var textB = two.name.toLowerCase()
+          return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
         })
         .map(([pkg, json]) => {
-          const { name, description } = JSON.parse(json)
+          const { name, description } = json
           return `- [${name}](https://github.com/DavidWells/analytics/tree/master/packages/${pkg}) ${description} [npm link](https://www.npmjs.com/package/${name}).`
         }).concat('- Add yours! 👇')
         .join('\n')
