@@ -35,3 +35,39 @@ test.cb('analytics.user("userId") with traits works', (t) => {
     t.end()
   })
 })
+
+test('analytics.reset() clears user details', async (t) => {
+  const analytics = Analytics({
+    app: 'appname',
+    version: 100
+  })
+
+  analytics.identify('xyz123', {
+    level: 'pro',
+    color: 'blue'
+  })
+
+  await delay(100)
+
+  analytics.reset()
+
+  await delay(100)
+
+  t.falsy(analytics.user('userId'))
+  t.falsy(analytics.user('anonymousId'))
+  t.falsy(analytics.user('traits'))
+  t.falsy(analytics.user('traits.color'))
+  t.falsy(analytics.user('traits.level'))
+
+  // Set values again
+  analytics.identify('abc123', {
+    level: 'basic',
+    color: 'red'
+  })
+
+  await delay(100)
+
+  t.is(analytics.user('userId'), 'abc123')
+  t.is(analytics.user('traits.level'), 'basic')
+  t.is(analytics.user('traits.color'), 'red')
+})

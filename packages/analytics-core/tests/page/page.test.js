@@ -1,7 +1,7 @@
 import test from 'ava'
 import sinon from 'sinon'
-import delay from './utils/delay'
-import Analytics from '../src'
+import delay from '../utils/delay'
+import Analytics from '../../src'
 
 test.beforeEach((t) => {
   t.context.sandbox = sinon.createSandbox()
