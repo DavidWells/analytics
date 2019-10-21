@@ -14,6 +14,12 @@ const analytics = Analytics({
         console.log('hi')
       }
     },
+    {
+      NAMESPACE: 'hello',
+      track: () => {
+        console.log('hi')
+      }
+    },
     exampleProviderPlugin({
       settingOne: 'xyz'
     }),
