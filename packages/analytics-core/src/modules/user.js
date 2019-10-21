@@ -1,5 +1,6 @@
 import { storage } from 'analytics-utils'
 import { ANON_ID, USER_ID, USER_TRAITS } from '../constants'
+import * as _CONSTANTS from '../utils/_constants'
 import timeStamp from '../utils/timestamp'
 import globalContext from '../utils/global'
 import isObject from '../utils/isObject'
@@ -25,7 +26,7 @@ export default function user(state = {}, action) {
       })
     case EVENTS.reset:
       // Side effect remove global fallback values
-      ['userId', 'anonymousId', 'traits'].forEach((key) => {
+      [_CONSTANTS.id, _CONSTANTS.anonId, 'traits'].forEach((key) => {
         globalContext[tempKey(key)] = null
       })
       return Object.assign({}, state, {
