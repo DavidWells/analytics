@@ -11,7 +11,7 @@ You can attach your own data collection method via an inline plugin
 
 ```js
 {
-  NAMESPACE: 'custom-analytics-plugin',
+  name: 'custom-analytics-plugin',
   page: ({ payload }) => {
     // Send data to custom collection endpoint
     fetch('https://your-custom-collection-endpoint.com', {

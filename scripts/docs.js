@@ -236,7 +236,7 @@ function formatCode(code, type = 'babel') {
   return prettier.format(code, { semi: false, singleQuote: true, parser: type })
 }
 
-const removeList = ['NAMESPACE', 'config', 'loaded', 'initialize']
+const removeList = ['NAMESPACE', 'name', 'config', 'loaded', 'initialize']
 function removeMethod(name) {
   return !removeList.includes(name)
 }

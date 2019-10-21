@@ -65,7 +65,7 @@ const analytics = Analytics({
   app: 'awesomesauce',
   plugins: [
     eventValidation({
-      // Namespace of current application
+      // name of current application
       context: 'app',
       // Allowed objects
       objects: [
@@ -95,7 +95,7 @@ import Analytics from 'analytics'
 import googleAnalytics from '@analytics/google-analytics'
 
 const customValidationPlugin = {
-  NAMESPACE: 'company-xyz-event-validation',
+  name: 'company-xyz-event-validation',
   trackStart: ({ payload, abort }) => {
     // Your custom validation logic here
     if (!isEventValid(payload.event)) {

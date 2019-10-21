@@ -111,7 +111,7 @@ import Analytics from 'analytics'
 
 /* Your custom code */
 const myCustomPlugin = {
-  NAMESPACE: 'do-not-track',
+  name: 'do-not-track',
   /* Hook into initializeStart. This is before third party scripts have loaded on the page */
   initializeStart: ({ abort, config }) => {
     return abort('Cancel the initialize call because of reason XYZ')

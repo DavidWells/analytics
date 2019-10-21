@@ -29,8 +29,8 @@ import Analytics from 'analytics'
 
 /* 1. Create the plugin & functionality you want to trigger */
 const customPlugin = {
-  // All plugins have a NAMESPACE
-  NAMESPACE: 'save-campaign-data',
+  // All plugins have a name
+  name: 'save-campaign-data',
   // Attach a function to the 'campaign' event
   campaign: ({ payload }) => {
     console.log('utm data', payload.campaign)
@@ -58,7 +58,7 @@ Will fire the `campaign` event with the payload
 
 ```js
 const customPlugin = {
-  NAMESPACE: 'save-campaign-data',
+  name: 'save-campaign-data',
   campaign: ({ payload }) => {
     console.log('utm data', payload.campaign)
     /*{

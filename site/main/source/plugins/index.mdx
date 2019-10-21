@@ -82,7 +82,7 @@ import { SupportedPlugins } from 'gatsby-theme-oss-docs';
 
 You can disable specific `page`, `track`, `identify` calls from passing through an installed plugin.
 
-In the `options` of the call, pass an `plugins` object and set the `NAMESPACE` of the plugin to `false`. This will disable the call from hitting that particular analytics service.
+In the `options` of the call, pass an `plugins` object and set the `name` of the plugin to `false`. This will disable the call from hitting that particular analytics service.
 
 ```js
 analytics.identify('xyz-123', {

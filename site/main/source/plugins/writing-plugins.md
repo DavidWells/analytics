@@ -41,8 +41,8 @@ Below is an example of a typically provider plugin
 export default function providerPluginExample(userConfig) {
   // return object for analytics to use
   return {
-    /* All plugins require a NAMESPACE */
-    NAMESPACE: 'my-example-plugin',
+    /* All plugins require a name */
+    name: 'my-example-plugin',
     /* Everything else below this is optional depending on your plugin requirements */
     config: {
       whatEver: userConfig.whatEver,
@@ -77,7 +77,7 @@ Below is an example of the [`do-not-track-plugin`](http://getanalytics.io/plugin
 ```js
 export default function doNotTrackPlugin(userConfig = {}) {
   return {
-    NAMESPACE: 'do-not-track',
+    name: 'do-not-track',
     config: Object.assign({}, userConfig),
     initializeStart: ({ abort, config }) => {
       if (doNotTrackEnabled()) {
@@ -105,7 +105,7 @@ export default function doNotTrackPlugin(userConfig = {}) {
 
 ## Plugin API
 
-* @property {string} NAMESPACE - Name of plugin
+* @property {string} name - Name of plugin
 * @property {Object} [EVENTS] - exposed events of plugin
 * @property {Object} [config] - Configuration of plugin
 * @property {function} [initialize] - Load analytics scripts method
@@ -115,7 +115,7 @@ export default function doNotTrackPlugin(userConfig = {}) {
 * @property {function} [loaded] - Function to determine if analytics script loaded
 * @property {function} [ready] - Fire function when plugin ready
 
-`NAMESPACE` is required for all plugins. All other methods are optional.
+`name` is required for all plugins. All other methods are optional.
 
 If you don't need to hook into `page` tracking, for example, just omit the `page` key from your plugin object.
 
@@ -149,7 +149,7 @@ For a full list of core events, checkout [`events.js`](https://github.com/DavidW
 // Example Plugin plugin.js
 export default function myPlugin(userConfig) {
   return {
-    NAMESPACE: 'my-plugin',
+    name: 'my-plugin',
     bootstrap: ({ payload, config, instance }) => {
       // Do whatever on `bootstrap` event
     },

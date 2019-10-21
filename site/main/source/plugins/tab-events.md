@@ -87,7 +87,7 @@ import tabEventsPlugin from 'analytics-plugin-tab-events'
 let tabInterval
 /* Example plugin that listener to tab events */
 const customPluginExample = {
-  NAMESPACE: 'custom-plugin-with-tab-listeners',
+  name: 'custom-plugin-with-tab-listeners',
   tabHidden: () => {
     console.log('Tab is now hidden')
     let tabHiddenCount = 0

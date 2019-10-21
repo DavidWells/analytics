@@ -22,7 +22,7 @@ import windowEventsPlugin from 'analytics-plugin-window-events'
 
 /* Example plugin that listener to window */
 const customWindowListenerPlugin = {
-  NAMESPACE: 'custom-window-listener-plugin',
+  name: 'custom-window-listener-plugin',
   windowEnter: () => {
     console.log('Window entered do something via plugin')
   },
