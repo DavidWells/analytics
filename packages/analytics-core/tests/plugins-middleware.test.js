@@ -15,7 +15,7 @@ test('Plugin with [x]Start should enrich [x]Start payloads', async (t) => {
     version: 100,
     plugins: [
       {
-        NAMESPACE: 'plugin-one',
+        name: 'plugin-one',
         initializeStart: ({ payload }) => {
           return {
             ...payload,
@@ -26,7 +26,7 @@ test('Plugin with [x]Start should enrich [x]Start payloads', async (t) => {
         }
       },
       {
-        NAMESPACE: 'plugin-two',
+        name: 'plugin-two',
         initializeStart: ({ payload }) => {
           secondPayload = payload
           return {
@@ -38,7 +38,7 @@ test('Plugin with [x]Start should enrich [x]Start payloads', async (t) => {
         }
       },
       {
-        NAMESPACE: 'plugin-three',
+        name: 'plugin-three',
         initializeStart: ({ payload }) => {
           finalPayload = payload
         }
@@ -70,7 +70,7 @@ test('Plugin (not xStart) returning values should NOT enrich other payloads', as
   const analytics = Analytics({
     plugins: [
       {
-        NAMESPACE: 'enrich-four',
+        name: 'enrich-four',
         'track:plugin-four': ({ payload }) => {
           firstPayload = payload
           return {
@@ -82,7 +82,7 @@ test('Plugin (not xStart) returning values should NOT enrich other payloads', as
         }
       },
       {
-        NAMESPACE: 'plugin-one',
+        name: 'plugin-one',
         track: ({ payload }) => {
           firstPayload = payload
           return {
@@ -94,7 +94,7 @@ test('Plugin (not xStart) returning values should NOT enrich other payloads', as
         }
       },
       {
-        NAMESPACE: 'plugin-two',
+        name: 'plugin-two',
         track: ({ payload }) => {
           secondPayload = payload
           return {
@@ -106,13 +106,13 @@ test('Plugin (not xStart) returning values should NOT enrich other payloads', as
         }
       },
       {
-        NAMESPACE: 'plugin-three',
+        name: 'plugin-three',
         track: ({ payload }) => {
           thirdPayload = payload
         }
       },
       {
-        NAMESPACE: 'plugin-four',
+        name: 'plugin-four',
         track: ({ payload }) => {
           fourthPayload = payload
         }
@@ -163,7 +163,7 @@ test('Namespace plugin should enrich specific data', async (t) => {
     version: 100,
     plugins: [
       {
-        NAMESPACE: 'enrich-one',
+        name: 'enrich-one',
         // Only enrich plugin-one
         'track:plugin-one': ({ payload }) => {
           return {
@@ -175,13 +175,13 @@ test('Namespace plugin should enrich specific data', async (t) => {
         }
       },
       {
-        NAMESPACE: 'plugin-one',
+        name: 'plugin-one',
         track: ({ payload }) => {
           payloadOne = payload
         }
       },
       {
-        NAMESPACE: 'plugin-two',
+        name: 'plugin-two',
         track: ({ payload }) => {
           payloadOriginal = payload
         }
@@ -223,7 +223,7 @@ test('Multiple Namespaced plugins should enrich specific data', async (t) => {
     version: 100,
     plugins: [
       {
-        NAMESPACE: 'enrich-one',
+        name: 'enrich-one',
         // Only enrich plugin-one
         'track:plugin-one': ({ payload }) => {
           return {
@@ -235,7 +235,7 @@ test('Multiple Namespaced plugins should enrich specific data', async (t) => {
         }
       },
       {
-        NAMESPACE: 'enrich-one-b',
+        name: 'enrich-one-b',
         // Only enrich plugin-one
         'track:plugin-one': ({ payload }) => {
           return {
@@ -247,7 +247,7 @@ test('Multiple Namespaced plugins should enrich specific data', async (t) => {
         }
       },
       {
-        NAMESPACE: 'enrich-two',
+        name: 'enrich-two',
         // Only enrich plugin-one
         'track:plugin-two': ({ payload }) => {
           return {
@@ -259,13 +259,13 @@ test('Multiple Namespaced plugins should enrich specific data', async (t) => {
         }
       },
       {
-        NAMESPACE: 'plugin-one',
+        name: 'plugin-one',
         track: ({ payload }) => {
           payloadOne = payload
         }
       },
       {
-        NAMESPACE: 'plugin-two',
+        name: 'plugin-two',
         track: ({ payload }) => {
           payloadTwo = payload
         }

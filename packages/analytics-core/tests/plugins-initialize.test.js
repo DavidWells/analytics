@@ -15,7 +15,7 @@ test('Instance should not call any initialize if aborted', async (t) => {
     version: 100,
     plugins: [
       {
-        NAMESPACE: 'cancel-plugin-loading',
+        name: 'cancel-plugin-loading',
         initializeStart: ({ payload }) => {
           return {
             abort: true
@@ -23,11 +23,11 @@ test('Instance should not call any initialize if aborted', async (t) => {
         }
       },
       {
-        NAMESPACE: 'plugin-one',
+        name: 'plugin-one',
         initialize: initializeOne
       },
       {
-        NAMESPACE: 'plugin-two',
+        name: 'plugin-two',
         initialize: initializeTwo
       }
     ]
@@ -47,7 +47,7 @@ test('Instance should not call specific initialize if plugin aborted by name', a
     version: 100,
     plugins: [
       {
-        NAMESPACE: 'cancel-plugin-loading',
+        name: 'cancel-plugin-loading',
         initializeStart: ({ payload }) => {
           return {
             abort: {
@@ -57,11 +57,11 @@ test('Instance should not call specific initialize if plugin aborted by name', a
         }
       },
       {
-        NAMESPACE: 'plugin-one',
+        name: 'plugin-one',
         initialize: initializeOne
       },
       {
-        NAMESPACE: 'plugin-two',
+        name: 'plugin-two',
         initialize: initializeTwo
       }
     ]

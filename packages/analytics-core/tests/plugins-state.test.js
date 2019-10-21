@@ -23,7 +23,7 @@ test('Instance should contain 1 plugin', async (t) => {
     version: 100,
     plugins: [
       {
-        NAMESPACE: 'plugin-one',
+        name: 'plugin-one',
         page: () => {}
       }
     ]
@@ -40,11 +40,11 @@ test('Instance should contain 2 plugins', async (t) => {
     version: 100,
     plugins: [
       {
-        NAMESPACE: 'plugin-one',
+        name: 'plugin-one',
         page: () => {}
       },
       {
-        NAMESPACE: 'plugin-two',
+        name: 'plugin-two',
         page: () => {},
         config: {
           lol: 'nice'
@@ -72,14 +72,14 @@ test.cb('Instance should load plugins in correct order', (t) => {
     version: 100,
     plugins: [
       {
-        NAMESPACE: 'plugin-one',
+        name: 'plugin-one',
         initialize: () => {
           pluginOrder.push(1)
           initializeOne()
         }
       },
       {
-        NAMESPACE: 'plugin-two',
+        name: 'plugin-two',
         initialize: () => {
           pluginOrder.push(2)
           initializeTwo()

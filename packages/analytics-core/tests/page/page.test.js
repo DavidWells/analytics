@@ -17,7 +17,7 @@ test.cb('should call page function in plugin', (t) => {
     version: 100,
     plugins: [
       {
-        NAMESPACE: 'test-plugin',
+        name: 'test-plugin',
         track: trackSpy,
         page: pageSpy,
         identify: identifySpy
@@ -41,7 +41,7 @@ test('should call .page callback', async (t) => {
     version: 100,
     plugins: [
       {
-        NAMESPACE: 'test-plugin',
+        name: 'test-plugin',
         page: pageSpy
       }
     ]

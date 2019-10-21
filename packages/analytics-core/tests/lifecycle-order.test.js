@@ -25,7 +25,7 @@ test('Lifecycle should execute in correct order', async (t) => {
     app: 'appname',
     version: 100,
     plugins: [{
-      NAMESPACE: 'plugin-one',
+      name: 'plugin-one',
       bootstrap: ({ abort, config, instance }) => {
         executionOrder.push('From method: bootstrap')
         instance.on('pageStart', () => {
@@ -70,7 +70,7 @@ test('Lifecycle should execute in correct order', async (t) => {
       }
     },
     {
-      NAMESPACE: 'plugin-two',
+      name: 'plugin-two',
       bootstrap: ({ abort, config, instance }) => {
         executionOrder.push('From method: bootstrap two')
       },

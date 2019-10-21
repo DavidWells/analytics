@@ -14,7 +14,7 @@ test('should abort calls', async (t) => {
   const analytics = Analytics({
     plugins: [
       {
-        NAMESPACE: 'test-plugin',
+        name: 'test-plugin',
         page: ({ payload }) => {
           pageSpy()
           return {
@@ -23,7 +23,7 @@ test('should abort calls', async (t) => {
         }
       },
       {
-        NAMESPACE: 'test-plugin-two',
+        name: 'test-plugin-two',
         page: () => {
           pageSpyTwo()
         }
@@ -51,7 +51,7 @@ test('should abort only specific plugins if abort.plugins array supplied', async
   const analytics = Analytics({
     plugins: [
       {
-        NAMESPACE: 'test-plugin',
+        name: 'test-plugin',
         page: ({ payload }) => {
           pageSpy()
           return {
@@ -65,13 +65,13 @@ test('should abort only specific plugins if abort.plugins array supplied', async
         }
       },
       {
-        NAMESPACE: 'test-plugin-two',
+        name: 'test-plugin-two',
         page: () => {
           pageSpyTwo()
         }
       },
       {
-        NAMESPACE: 'test-plugin-three',
+        name: 'test-plugin-three',
         page: () => {
           pageSpyThree()
         }

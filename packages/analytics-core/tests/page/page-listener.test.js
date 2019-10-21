@@ -23,14 +23,14 @@ test('should call .on listenering in correct order', async (t) => {
     version: 100,
     plugins: [
       {
-        NAMESPACE: 'test-plugin',
+        name: 'test-plugin',
         page: () => {
           pageSpy()
           pageExecutionOrder.push(1)
         }
       },
       {
-        NAMESPACE: 'test-plugin-two',
+        name: 'test-plugin-two',
         page: () => {
           pageSpyTwo()
           pageExecutionOrder.push(2)
@@ -89,7 +89,7 @@ test('should call .once listeners only once', async (t) => {
     version: 100,
     plugins: [
       {
-        NAMESPACE: 'test-plugin',
+        name: 'test-plugin',
         page: pageSpy
       }
     ]
