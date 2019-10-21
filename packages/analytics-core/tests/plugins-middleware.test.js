@@ -129,8 +129,8 @@ test('Plugin (not xStart) returning values should NOT enrich other payloads', as
     event: 'foobar',
     properties: {},
     options: {},
-    userId: undefined,
-    anonymousId: undefined,
+    userId: null,
+    anonymousId: null,
     // meta: { timestamp: 1571017886122 }
   }
 
@@ -149,8 +149,8 @@ test('Plugin (not xStart) returning values should NOT enrich other payloads', as
     event: 'foobar',
     properties: {},
     options: {},
-    userId: undefined,
-    anonymousId: undefined,
+    userId: null,
+    anonymousId: null,
     addToFourOnly: 'hello'
   })
 })
@@ -199,8 +199,8 @@ test('Namespace plugin should enrich specific data', async (t) => {
     event: 'lol',
     properties: {},
     options: {},
-    userId: undefined,
-    anonymousId: undefined,
+    userId: null,
+    anonymousId: null,
     foo: 'baz',
   })
 
@@ -210,8 +210,8 @@ test('Namespace plugin should enrich specific data', async (t) => {
     event: 'lol',
     properties: {},
     options: {},
-    userId: undefined,
-    anonymousId: undefined
+    userId: null,
+    anonymousId: null
   })
 })
 
@@ -283,8 +283,8 @@ test('Multiple Namespaced plugins should enrich specific data', async (t) => {
     event: 'lol',
     properties: {},
     options: {},
-    userId: undefined,
-    anonymousId: undefined,
+    userId: null,
+    anonymousId: null,
     foo: 'baz',
     wowowow: 'nice'
   })
@@ -295,8 +295,8 @@ test('Multiple Namespaced plugins should enrich specific data', async (t) => {
     event: 'lol',
     properties: {},
     options: {},
-    userId: undefined,
-    anonymousId: undefined,
+    userId: null,
+    anonymousId: null,
     awesome: 'sauce'
   })
 })

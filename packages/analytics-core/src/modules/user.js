@@ -26,9 +26,11 @@ export default function user(state = {}, action) {
       })
     case EVENTS.reset:
       // Side effect remove global fallback values
-      [_CONSTANTS.id, _CONSTANTS.anonId, 'traits'].forEach((key) => {
+      /* eslint-disable array-callback-return */
+      [_CONSTANTS.id, _CONSTANTS.anonId, 'traits'].map((key) => {
         globalContext[tempKey(key)] = null
       })
+      /* eslint-enable  */
       return Object.assign({}, state, {
         userId: null,
         anonymousId: null,
@@ -83,4 +85,6 @@ export function getUserProp(key, instance, payload) {
     // console.log('from global', globalContext[tempKey(key)])
     return globalContext[tempKey(key)]
   }
+  // return null instead of undefined for consistency
+  return null
 }
