@@ -24,6 +24,10 @@ export default function user(state = {}, action) {
         }
       })
     case EVENTS.reset:
+      // Side effect remove global fallback values
+      ['userId', 'anonymousId', 'traits'].forEach((key) => {
+        globalContext[tempKey(key)] = null
+      })
       return Object.assign({}, state, {
         userId: null,
         anonymousId: null,
@@ -55,22 +59,27 @@ export const tempKey = (key) => `__TEMP__${key}`
 export function getUserProp(key, instance, payload) {
   /* 1. Try current state */
   const currentId = instance.getState('user')[key]
-  if (currentId) return currentId
+  if (currentId) {
+    // console.log('from state', currentId)
+    return currentId
+  }
 
   /* 2. Try event payload */
   if (payload && isObject(payload) && payload[key]) {
+    // console.log('from payload', payload[key])
     return payload[key]
   }
 
   /* 3. Try persisted data */
   const persistedInfo = getPersistedUserData()[key]
   if (persistedInfo) {
-    // console.log(`persisted ${key}`, findId)
+    // console.log('from persistedInfo', persistedInfo)
     return persistedInfo
   }
 
   /* 4. Else, try to get in memory placeholder. TODO watch this for future issues */
   if (globalContext[tempKey(key)]) {
+    // console.log('from global', globalContext[tempKey(key)])
     return globalContext[tempKey(key)]
   }
 }
