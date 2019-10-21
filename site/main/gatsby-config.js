@@ -45,6 +45,7 @@ module.exports = {
           Tutorials: [
             'tutorial/getting-started',
             'tutorial/handling-campaign-url-parameters',
+            'tutorial/enriching-data',
           ],
           Resources: [
             'resources/faq',
