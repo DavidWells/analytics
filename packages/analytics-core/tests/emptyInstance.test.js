@@ -1,6 +1,6 @@
 import test from 'ava'
 import sinon from 'sinon'
-import delay from './utils/delay'
+import delay from './_utils/delay'
 import Analytics from '../src'
 
 test.beforeEach((t) => {
@@ -20,7 +20,7 @@ test.only('On listener and callback should still fire if no plugins', async (t) 
   analytics.page(pageCallbackSpy)
 
   // Timeout for async actions to fire
-  await delay(1000)
+  await delay(100)
 
   t.is(pageCallbackSpy.callCount, 1)
   t.is(onPageSpy.callCount, 3)

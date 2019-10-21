@@ -1,6 +1,6 @@
 import test from 'ava'
 import sinon from 'sinon'
-import delay from '../utils/delay'
+import delay from '../_utils/delay'
 import Analytics from '../../src'
 
 test.beforeEach((t) => {
@@ -38,7 +38,7 @@ test('should call .on listeners & callback if no plugins', async (t) => {
   })
 
   // Timeout for async actions to fire
-  await delay(1000)
+  await delay(100)
 
   // Ensure the listeners callbacks are called only once
   t.deepEqual(onPageStartSpy.callCount, 1)

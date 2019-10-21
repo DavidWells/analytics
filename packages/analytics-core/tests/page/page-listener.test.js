@@ -1,6 +1,6 @@
 import test from 'ava'
 import sinon from 'sinon'
-import delay from '../utils/delay'
+import delay from '../_utils/delay'
 import Analytics from '../../src'
 
 test.beforeEach((t) => {
@@ -58,7 +58,7 @@ test('should call .on listenering in correct order', async (t) => {
   })
 
   // Timeout for async actions to fire
-  await delay(1000)
+  await delay(100)
 
   // Ensure the page was called
   t.deepEqual(pageSpy.callCount, 1)
@@ -104,7 +104,7 @@ test('should call .once listeners only once', async (t) => {
   analytics.page()
 
   // Timeout for async actions to fire
-  await delay(1000)
+  await delay(100)
 
   t.is(pageSpy.callCount, 2)
 

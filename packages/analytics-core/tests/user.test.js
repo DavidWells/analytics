@@ -1,5 +1,5 @@
 import test from 'ava'
-import delay from './utils/delay'
+import delay from './_utils/delay'
 import Analytics from '../src'
 
 test.cb('analytics.user("userId") works', (t) => {

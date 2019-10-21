@@ -1,6 +1,6 @@
 import test from 'ava'
 import sinon from 'sinon'
-import delay from '../utils/delay'
+import delay from '../_utils/delay'
 import Analytics from '../../src'
 
 test.beforeEach((t) => {
@@ -48,7 +48,7 @@ test('should call .page callback', async (t) => {
   })
 
   analytics.page(pageCallbackSpy)
-  await delay(1000)
+  await delay(100)
   // var args = pageCallbackSpy.getCalls()[0].args
 
   t.is(pageCallbackSpy.callCount, 1)

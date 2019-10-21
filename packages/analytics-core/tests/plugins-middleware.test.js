@@ -1,6 +1,6 @@
 import test from 'ava'
 import sinon from 'sinon'
-import delay from './utils/delay'
+import delay from './_utils/delay'
 import Analytics from '../src'
 
 test.beforeEach((t) => {
@@ -46,7 +46,7 @@ test('Plugin with [x]Start should enrich [x]Start payloads', async (t) => {
     ]
   })
 
-  await delay(1000)
+  await delay(100)
 
   t.deepEqual(secondPayload, {
     type: 'initializeStart',
@@ -122,7 +122,7 @@ test('Plugin (not xStart) returning values should NOT enrich other payloads', as
 
   analytics.track('foobar')
 
-  await delay(1000)
+  await delay(100)
 
   const originalPayload = {
     type: 'track',
@@ -191,7 +191,7 @@ test('Namespace plugin should enrich specific data', async (t) => {
 
   analytics.track('lol')
 
-  await delay(1000)
+  await delay(100)
 
   delete payloadOne.meta
   t.deepEqual(payloadOne, {
@@ -275,7 +275,7 @@ test('Multiple Namespaced plugins should enrich specific data', async (t) => {
 
   analytics.track('lol')
 
-  await delay(1000)
+  await delay(100)
 
   delete payloadOne.meta
   t.deepEqual(payloadOne, {

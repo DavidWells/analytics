@@ -1,6 +1,6 @@
 import test from 'ava'
 import sinon from 'sinon'
-import delay from '../utils/delay'
+import delay from '../_utils/delay'
 import Analytics from '../../src'
 
 test.beforeEach((t) => {
@@ -34,7 +34,7 @@ test('should abort calls', async (t) => {
   analytics.page()
 
   // Timeout for async actions to fire
-  await delay(1000)
+  await delay(100)
 
   // Ensure the page was called
   t.is(pageSpy.callCount, 1)
@@ -82,7 +82,7 @@ test('should abort only specific plugins if abort.plugins array supplied', async
   analytics.page()
 
   // Timeout for async actions to fire
-  await delay(1000)
+  await delay(100)
 
   // Ensure the page was called
   t.deepEqual(pageSpy.callCount, 1)

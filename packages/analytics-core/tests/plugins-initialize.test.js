@@ -1,6 +1,6 @@
 import test from 'ava'
 import sinon from 'sinon'
-import delay from './utils/delay'
+import delay from './_utils/delay'
 import Analytics from '../src'
 
 test.beforeEach((t) => {
@@ -33,7 +33,7 @@ test('Instance should not call any initialize if aborted', async (t) => {
     ]
   })
 
-  await delay(1000)
+  await delay(100)
 
   t.is(initializeOne.callCount, 0)
   t.is(initializeTwo.callCount, 0)
@@ -67,7 +67,7 @@ test('Instance should not call specific initialize if plugin aborted by name', a
     ]
   })
 
-  await delay(1000)
+  await delay(100)
 
   t.is(initializeOne.callCount, 0)
   t.is(initializeTwo.callCount, 1)
