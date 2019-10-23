@@ -29,10 +29,16 @@ function googleAnalytics(pluginConfig = {}) {
     // track event
     track: ({ payload, config }) => {
       const { event, properties } = payload
-      const category = properties.category || 'All' // todo finish
-      const label = properties.label || 'NA' // todo finish
+      const category = properties.category || 'All'
+      const label = properties.label || 'NA'
       const value = properties.value
-      trackEvent({ category, event, label, value, properties }, client)
+      trackEvent({
+        category,
+        event,
+        label,
+        value,
+        properties
+      }, client)
     },
     /* identify user */
     identify: ({ payload }) => identifyVisitor(payload.userId, client)
