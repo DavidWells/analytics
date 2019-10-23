@@ -31,7 +31,8 @@ function googleAnalytics(pluginConfig = {}) {
       const { event, properties } = payload
       const category = properties.category || 'All' // todo finish
       const label = properties.label || 'NA' // todo finish
-      trackEvent({ category, event, label, properties }, client)
+      const value = properties.value
+      trackEvent({ category, event, label, value, properties }, client)
     },
     /* identify user */
     identify: ({ payload }) => identifyVisitor(payload.userId, client)
@@ -52,8 +53,9 @@ export function pageView({ path, href, title }, client) {
   client.pageview(path, href, title).send()
 }
 
-export function trackEvent({ category, event, label, properties }, client) {
-  client.event(category, event, label, properties).send()
+export function trackEvent({ category, event, label, value, properties }, client) {
+  // Todo map properties to custom dimensions
+  client.event(category, event, label, value).send()
 }
 
 /**
