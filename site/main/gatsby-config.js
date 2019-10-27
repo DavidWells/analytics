@@ -43,9 +43,9 @@ module.exports = {
             'utils/forms',
           ],
           Tutorials: [
-            'tutorial/getting-started',
-            'tutorial/handling-campaign-url-parameters',
-            'tutorial/enriching-data',
+            'tutorials/getting-started',
+            'tutorials/handling-campaign-url-parameters',
+            'tutorials/enriching-data',
           ],
           Resources: [
             'resources/faq',

@@ -9,7 +9,7 @@
     "start": "rm -rf .cache && gatsby develop",
     "develop": "rm -rf .cache && gatsby develop",
     "build": "gatsby build",
-    "postbuild": "node scripts/sitemap.js",
+    "postbuild": "node scripts/sitemap.js && cp _redirects public",
     "serve": "http-server public",
     "deploy": "netlify deploy -p --dir public"
   },
