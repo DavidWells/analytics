@@ -110,19 +110,25 @@ See the api docs for further details:
 - [Track](https://getanalytics.io/api/#analyticstrack)
 - [Identify](https://getanalytics.io/api/#analyticsidentify)
 
-## Usage in React
+## Usage examples
 
-Checkout the [using analytics with react demo](https://analytics-react-example.netlify.com/) & the [source code](https://github.com/DavidWells/analytics/tree/master/examples/react)
+Analytics works in the browser and on the server in node.js.
 
-For a larger example see the [kitchen sink example](https://analytics-demo.netlify.com) & it's [source code](https://github.com/DavidWells/analytics/tree/master/examples/demo).
+In the browser, `analytics` will work with any frontend framework.
 
-## Usage in HTML
+### HTML
 
 Analytics works in vanilla HTML pages and can be [imported from a CDN](#cdn-browser-usage).
 
 [Live demo](https://analytics-html-example.netlify.com/) & the [source code](https://github.com/DavidWells/analytics/tree/master/examples/vanilla-html).
 
-## Usage in Gatsby
+### React
+
+Checkout the [using analytics with react demo](https://analytics-react-example.netlify.com/) & the [source code](https://github.com/DavidWells/analytics/tree/master/examples/react)
+
+For a larger example see the [kitchen sink example](https://analytics-demo.netlify.com) & it's [source code](https://github.com/DavidWells/analytics/tree/master/examples/demo).
+
+### Gatsby
 
 To use analytics with Gatsby install the [gatsby-plugin-analytics](https://www.gatsbyjs.org/packages/gatsby-plugin-analytics/) plugin.
 
@@ -144,24 +150,24 @@ See the [gatsby-plugin-analytics docs](https://www.gatsbyjs.org/packages/gatsby-
 
 You can also reference the various [react examples](http://localhost:8000/tutorial/getting-started/#usage-in-react) above and directly integrate with a `pushState` listener in your site.
 
-## Usage in Preact
+### Preact
 
 Preact is a fast 3kB alternative to React with the same modern API.
 
 [Using analytics with preact demo](https://analytics-preact-example.netlify.com/) & the [source code](https://github.com/DavidWells/analytics/tree/master/examples/preact).
 
-## Usage in Vue
+### Vue
 
 [Using analytics with vue demo](https://analytics-vue-example.netlify.com/) & the [source code](
 https://github.com/DavidWells/analytics/tree/master/examples/vue).
 
-## Usage in Angular
+### Angular
 
 Demo coming soon. The above steps will work for Vue apps.
 
 ([contributions to the docs welcome](https://github.com/DavidWells/analytics/tree/master/examples) 😃).
 
-## ES6 Usage
+### ES6 Usage
 
 ```js
 import Analytics from 'analytics'
@@ -200,7 +206,7 @@ analytics.identify('user-id-xyz', {
 ```
 
 
-## CDN Browser usage
+### CDN Browser usage
 
 When importing global `analytics` into your project from a cdn the library is expose via a global `_analytics` variable.
 
@@ -222,8 +228,22 @@ Call `_analytics.init` to create an analytics instance.
 </script>
 ```
 
+If you are including analytics from the `unpkg` CDN via a script tag, it's possible that ad-blockers like uBlock Origin might block the script from loading.
 
-## Node.js Usage
+This only effects applications importing `analytics` from a CDN. This is because ad-block extensions will block any URL with the word `analytics`.
+
+This causes problems! This has been observed in CodeSandbox as well with ad-block browser extensions enabled.
+
+If you are including analytics via a `script` tag, it's advised to rename the path and host the analytics script yourself to avoid these issues.
+
+Example:
+
+```html
+<!-- updated script URL to avoid client breaking analytics -->
+<script src="https://cdn.my-site.com/load-this.min.js"></script>
+```
+
+### Node.js Usage
 
 
 For ES6/7 javascript you can `import Analytics from 'analytics'` for normal node.js usage you can import like so:
