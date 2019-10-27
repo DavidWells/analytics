@@ -116,6 +116,13 @@ Analytics works in the browser and on the server in node.js.
 
 In the browser, `analytics` will work with any frontend framework.
 
+- [HTML](https://getanalytics.io/tutorials/getting-started/#html)
+- [React](https://getanalytics.io/tutorials/getting-started/#react)
+- [Gatsby](https://getanalytics.io/tutorials/getting-started/#gatsby)
+- [Preact](https://getanalytics.io/tutorials/getting-started/#preact)
+- [Vue](https://getanalytics.io/tutorials/getting-started/#vue)
+- [Angular](https://getanalytics.io/tutorials/getting-started/#angular)
+
 ### HTML
 
 Analytics works in vanilla HTML pages and can be [imported from a CDN](#cdn-browser-usage).
@@ -134,13 +141,13 @@ To use analytics with Gatsby install the [gatsby-plugin-analytics](https://www.g
 
 [Live demo](https://getanalytics.io/) (this site) & the [source code](https://github.com/DavidWells/analytics/blob/09a720fdd89b5bb418e349cf24e0b4658f2bee95/site/gatsby-theme-oss-docs/src/analytics.js).
 
-```
+```bash
 npm install gatsby-plugin-analytics
 ```
 
 And add to your `gatsby.config.js` file. This will enable automate page tracking.
 
-```
+```js
 {
   resolve: 'gatsby-plugin-analytics'
 }
