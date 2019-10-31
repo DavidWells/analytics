@@ -72,6 +72,10 @@ function segmentPlugin(pluginConfig = {}) {
       cookies.forEach((key) => {
         instance.storage.removeItem(key, 'cookie')
       })
+      const localStorageItems = cookies.concat(['ajs_group_properties', 'ajs_user_traits'])
+      localStorageItems.forEach((key) => {
+        instance.storage.removeItem(key)
+      })
     },
     /* Sync id when ready */
     ready: ({ instance, config }) => {
