@@ -24,16 +24,21 @@ export default function user(state = {}, action) {
         }
       })
     case EVENTS.reset:
-      // Side effect remove global fallback values
+      // Side effect remove global fallback values.
+      // TODO refactor this and move away from globalThis
       /* eslint-disable array-callback-return */
       [ ID, ANONID, 'traits' ].map((key) => {
         globalContext[tempKey(key)] = null
+      });
+      [USER_ID, ANON_ID, USER_TRAITS].map((key) => {
+        storage.removeItem(key)
       })
       /* eslint-enable  */
       return Object.assign({}, state, {
         userId: null,
+        // TODO reset anon id automatically?
         anonymousId: null,
-        traits: null,
+        traits: {},
       })
     default:
       return state
