@@ -1,6 +1,4 @@
-// Follows ducks pattern http://bit.ly/2DnERMc
 import EVENTS from '../events'
-
 /*
 TODO figure out if this should live in state...
 Queue could be in mermory as well.
@@ -18,7 +16,7 @@ export default function queueReducer(state = initialState, action) {
     case 'queue':
       let actionChain
       /* prioritize identify in event queue */
-      if (payload && payload.type && payload.type === 'identify') {
+      if (payload && payload.type && payload.type === EVENTS.identify) {
         actionChain = [action].concat(state.actions)
       } else {
         actionChain = state.actions.concat(action)

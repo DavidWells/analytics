@@ -1,6 +1,7 @@
 import EVENTS, { nonEvents } from '../../events'
 import waitForReady from '../../utils/waitForReady'
 import isFunction from '../../utils/isFunction'
+import { processQueue } from '../../utils/heartbeat'
 import runPlugins from './engine'
 
 export default function pluginMiddleware(instance, getPlugins, systemEvents) {
@@ -93,6 +94,10 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
 
     /* New plugin system */
     if (type !== EVENTS.bootstrap) {
+      if (/^ready:([^:]*)$/.test(type)) {
+        // Immediately flush queue
+        setTimeout(() => processQueue(store, getPlugins, instance), 0)
+      }
       const updated = await runPlugins(action, getPlugins, instance, store, systemEvents)
       return next(updated)
     }
