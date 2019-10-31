@@ -34,6 +34,10 @@ export default function originalSourcePlugin(pluginConfig = {}) {
         originalSource: getOriginalSource(config),
         originalLandingPage: getOriginalLandingPage(config)
       })
+    },
+    reset: ({ instance }) => {
+      instance.storage.removeItem(CONFIG.originalSourceKey)
+      instance.storage.removeItem(CONFIG.originalLandingPageKey)
     }
   }
 }
