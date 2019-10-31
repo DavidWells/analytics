@@ -63,19 +63,23 @@ export default class App extends Component {
       hasCleared = true
     }
   }
-  doPage = () => {
+  doPage = async () => {
     this.clearLogs()
     analytics.page(() => {
       console.log('page callback')
     })
+    console.log('Page async fire this after')
   }
-  doTrack = () => {
+  doTrack = async () => {
     this.clearLogs()
     analytics.track('buttonClicked', {
       foo: 'bar'
-    }, () => {
-      console.log('track callback')
+    }, (lol) => {
+      console.log('track callback', lol)
+    }).then((what) => {
+      console.log('promises work!', what)
     })
+    console.log('other thing')
   }
   doIdentify = () => {
     this.clearLogs()

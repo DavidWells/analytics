@@ -145,8 +145,12 @@ export default class App extends Component {
     })
   }
 
-  resetVisitor = () => {
-    analytics.reset()
+  resetVisitor = async () => {
+    analytics.reset(() => {
+      console.log('reset callback')
+    }).then(() => {
+      console.log('reset promise')
+    })
   }
 
   detachAllListener = () => {
@@ -247,7 +251,7 @@ export default class App extends Component {
               Clear logs
             </button>
             <button onClick={this.resetVisitor}>
-              resetVisitor
+              {`analytics.reset()`}
             </button>
           </h2>
         </div>
