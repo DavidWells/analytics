@@ -26,12 +26,40 @@ test('Reset callback is called', async (t) => {
     version: 100
   })
 
+  await analytics.reset(() => {
+    callbackFunction()
+  })
+
+  t.is(callbackFunction.callCount, 1)
+})
+
+test('Reset resets the user data', async (t) => {
+  const analytics = Analytics({
+    app: 'appname',
+    version: 100
+  })
+
   const anonId = analytics.user('anonymousId')
 
   t.truthy(anonId)
 
-  await analytics.reset(() => {
-    callbackFunction()
+  await analytics.identify('xyz-123', {
+    name: 'bob'
   })
-  t.is(callbackFunction.callCount, 1)
+
+  const { userId, traits } = analytics.user()
+
+  t.is(userId, 'xyz-123')
+  t.deepEqual(traits, {
+    name: 'bob'
+  })
+
+  // Reset the data
+  await analytics.reset()
+
+  // Reset clears anon Id
+  const userData = analytics.user()
+  t.falsy(userData.anonymousId)
+  t.falsy(userData.userId)
+  t.deepEqual(userData.traits, {})
 })
