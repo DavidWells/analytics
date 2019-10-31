@@ -1,5 +1,5 @@
 import { storage } from 'analytics-utils'
-import timeStamp from '../utils/timestamp'
+import timestamp from '../utils/timestamp'
 import EVENTS from '../events'
 
 export default function storageMiddleware() {
@@ -31,7 +31,7 @@ export const getItem = (key, opts) => {
 export const setItem = (key, value, opts) => {
   return {
     type: EVENTS.setItemStart,
-    timestamp: timeStamp(),
+    timestamp: timestamp(),
     key: key,
     value: value,
     options: opts,
@@ -41,7 +41,7 @@ export const setItem = (key, value, opts) => {
 export const removeItem = (key, opts) => {
   return {
     type: EVENTS.removeItemStart,
-    timestamp: timeStamp(),
+    timestamp: timestamp(),
     key: key,
     options: opts,
   }
