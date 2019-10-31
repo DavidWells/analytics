@@ -1,4 +1,6 @@
 
-export const id = 'userId'
+export const ID = 'userId'
 
-export const anonId = 'anonymousId'
+export const ANONID = 'anonymousId'
+
+export const errorUrl = 'https://lytics.dev/errors/'

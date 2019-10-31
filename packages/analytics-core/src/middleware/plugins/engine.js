@@ -116,8 +116,10 @@ export default async function (action, getPlugins, instance, store, eventsInfo) 
 
     /* Fire callback if supplied */
     const cb = getCallback(actionAfter)
+    // console.log(`cb ${updatedType}`, cb)
     if (cb) {
       /** @TODO figure out exact args calls and .on will get */
+      // TODO make err, payload so promisfy utilities will work
       cb({ payload: actionAfter }) // eslint-disable-line
     }
   }

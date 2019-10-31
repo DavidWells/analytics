@@ -1,4 +1,5 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
+import { paramsParse } from 'analytics-utils'
 // Middleware
 import * as middleware from './middleware'
 import DynamicMiddleware from './middleware/dynamic'
@@ -8,9 +9,9 @@ import context, { makeContext } from './modules/context'
 import page, { getPageData } from './modules/page'
 import track from './modules/track'
 import queue from './modules/queue'
-import user, { reset, getUserProp, tempKey, getPersistedUserData } from './modules/user'
+import user, { getUserProp, tempKey, getPersistedUserData } from './modules/user'
 import * as CONSTANTS from './constants'
-import * as _CONSTANTS from './utils/_constants'
+import { ID, ANONID, errorUrl } from './utils/_constants'
 import EVENTS, { coreEvents, nonEvents, isReservedAction } from './events'
 // Utils
 import dotProp from './utils/dotProp'
@@ -61,7 +62,10 @@ function analytics(config = {}) {
     if (!isFunction(plugin)) {
       // Legacy plugin with Namespace
       if (plugin.NAMESPACE) plugin.name = plugin.NAMESPACE
-      if (!plugin.name) throw new Error('missing name')
+      if (!plugin.name) {
+        /* Plugins must supply a "name" property. See error url for more details */
+        throw new Error(`${errorUrl}1`)
+      }
       // if plugin exposes EVENTS capture available events
       const definedEvents = (plugin.EVENTS) ? Object.keys(plugin.EVENTS).map((k) => {
         return plugin.EVENTS[k]
@@ -110,18 +114,29 @@ function analytics(config = {}) {
   const allPluginEvents = pluginEvents.sort()
 
   /* plugin methods(functions) must be kept out of state. thus they live here */
-  const getPlugins = (asArray) => {
-    if (asArray) {
-      return Object.keys(customPlugins).map((plugin) => {
-        return customPlugins[plugin]
-      })
-    }
+  const getPlugins = () => {
     return customPlugins
   }
 
   const { addMiddleware, removeMiddleware, dynamicMiddlewares } = new DynamicMiddleware()
 
-  const nonAbortable = () => { throw new Error('Abort disabled in listener') }
+  const nonAbortable = () => {
+    // throw new Error(`${errorUrl}3`)
+    throw new Error('Abort disabled in listener')
+  }
+
+  // Async promise resolver
+  const resolvePromise = (resolver, cb) => {
+    return (payload) => {
+      if (cb) cb(payload)
+      resolver(payload)
+    }
+  }
+
+  // Parse URL parameters
+  const params = paramsParse()
+  // Initialize visitor information
+  const initialUser = getPersistedUserData(params)
 
   /**
    * Analytic instance returned from initialization
@@ -147,6 +162,7 @@ function analytics(config = {}) {
     * @param  {Object}   [traits]  - Object of user traits
     * @param  {Object}   [options] - Options to pass to identify call
     * @param  {Function} [callback] - Callback function after identify completes
+    * @returns {Promise}
     * @api public
     *
     * @example
@@ -177,25 +193,26 @@ function analytics(config = {}) {
       const id = isString(userId) ? userId : null
       const data = isObject(userId) ? userId : traits
       const opts = options || {}
-      const cb = getCallback(traits, options, callback)
       const user = instance.user()
 
       /* sets temporary in memory id. Not to be relied on */
-      globalContext[tempKey(_CONSTANTS.id)] = id
+      globalContext[tempKey(ID)] = id
 
-      const resolvedId = id || data.userId || getUserProp(_CONSTANTS.id, instance, data)
+      const resolvedId = id || data.userId || getUserProp(ID, instance, data)
 
-      store.dispatch({
-        type: EVENTS.identifyStart,
-        userId: resolvedId,
-        traits: data || {},
-        options: opts,
-        anonymousId: user.anonymousId,
-        ...(user.id && (user.id !== id) && { previousId: user.id }),
-        meta: {
-          timestamp: timestamp(),
-          ...(cb && { callback: cb })
-        },
+      return new Promise((resolve, reject) => {
+        store.dispatch({
+          type: EVENTS.identifyStart,
+          userId: resolvedId,
+          traits: data || {},
+          options: opts,
+          anonymousId: user.anonymousId,
+          ...(user.id && (user.id !== id) && { previousId: user.id }),
+          meta: {
+            timestamp: timestamp(),
+            callback: resolvePromise(resolve, getCallback(traits, options, callback))
+          },
+        })
       })
     },
     /**
@@ -205,6 +222,7 @@ function analytics(config = {}) {
      * @param  {Object}   [payload]   - Event payload
      * @param  {Object}   [options]   - Event options
      * @param  {Function} [callback]  - Callback to fire after tracking completes
+     * @returns {Promise}
      * @api public
      *
      * @example
@@ -240,22 +258,20 @@ function analytics(config = {}) {
       }
       const data = isObject(eventName) ? eventName : (payload || {})
       const opts = isObject(options) ? options : {}
-      const cb = getCallback(payload, options, callback)
 
-      const id = getUserProp(_CONSTANTS.id, instance, payload)
-      const anonId = getUserProp(_CONSTANTS.anonId, instance, payload)
-
-      store.dispatch({
-        type: EVENTS.trackStart,
-        event: name,
-        properties: data,
-        options: opts,
-        userId: id,
-        anonymousId: anonId,
-        meta: {
-          timestamp: timestamp(),
-          ...(cb && { callback: cb })
-        },
+      return new Promise((resolve, reject) => {
+        store.dispatch({
+          type: EVENTS.trackStart,
+          event: name,
+          properties: data,
+          options: opts,
+          userId: getUserProp(ID, instance, payload),
+          anonymousId: getUserProp(ANONID, instance, payload),
+          meta: {
+            timestamp: timestamp(),
+            callback: resolvePromise(resolve, getCallback(payload, options, callback))
+          },
+        })
       })
     },
     /**
@@ -264,6 +280,7 @@ function analytics(config = {}) {
      * @param  {PageData} [data] - Page data overrides.
      * @param  {Object}   [options] - Page tracking options
      * @param  {Function} [callback] - Callback to fire after page view call completes
+     * @returns {Promise}
      * @api public
      *
      * @example
@@ -292,21 +309,19 @@ function analytics(config = {}) {
     page: (data, options, callback) => {
       const d = isObject(data) ? data : {}
       const opts = isObject(options) ? options : {}
-      const cb = getCallback(data, options, callback)
 
-      const userId = getUserProp(_CONSTANTS.id, instance, d)
-      const anonymousId = getUserProp(_CONSTANTS.anonId, instance, d)
-
-      store.dispatch({
-        type: EVENTS.pageStart,
-        properties: getPageData(d),
-        options: opts,
-        userId: userId,
-        anonymousId: anonymousId,
-        meta: {
-          timestamp: timestamp(),
-          ...(cb && { callback: cb })
-        },
+      return new Promise((resolve, reject) => {
+        store.dispatch({
+          type: EVENTS.pageStart,
+          properties: getPageData(d),
+          options: opts,
+          userId: getUserProp(ID, instance, d),
+          anonymousId: getUserProp(ANONID, instance, d),
+          meta: {
+            timestamp: timestamp(),
+            callback: resolvePromise(resolve, getCallback(data, options, callback))
+          },
+        })
       })
     },
     /**
@@ -327,8 +342,8 @@ function analytics(config = {}) {
      * const companyName = analytics.user('traits.company.name')
      */
     user: (key) => {
-      if (key === _CONSTANTS.id || key === 'id') {
-        const findId = getUserProp(_CONSTANTS.id, instance)
+      if (key === ID || key === 'id') {
+        const findId = getUserProp(ID, instance)
         return findId
       }
 
@@ -341,14 +356,20 @@ function analytics(config = {}) {
      * Clear all information about the visitor & reset analytic state.
      * @typedef {Function} Reset
      * @param {Function} [callback] - Handler to run after reset
-     *
+     * @returns {Promise}
      * @example
      *
      * // Reset current visitor
      * analytics.reset()
      */
     reset: (callback) => {
-      store.dispatch(reset(callback))
+      return new Promise((resolve, reject) => {
+        store.dispatch({
+          type: EVENTS.resetStart,
+          timestamp: timestamp(),
+          callback: resolvePromise(resolve, callback)
+        })
+      })
     },
     /**
      * Fire callback on analytics ready event
@@ -726,7 +747,6 @@ function analytics(config = {}) {
   }
 
   const initialConfig = makeContext(config)
-  const initialUser = getPersistedUserData()
   // console.log('initialUser', initialUser)
   const initialState = {
     context: initialConfig,
@@ -736,7 +756,7 @@ function analytics(config = {}) {
       acc[name] = {
         enabled: true,
         // If plugin has no initialize method, set initialized to true
-        initialized: (!plugin.initialize) ? true : false, // eslint-disable-line
+        initialized: Boolean(!plugin.initialize),
         loaded: Boolean(loaded()),
         config: config || {}
       }
@@ -765,7 +785,9 @@ function analytics(config = {}) {
   store.dispatch({
     type: EVENTS.bootstrap,
     plugins: pluginKeys,
-    config: initialConfig
+    config: initialConfig,
+    params: params,
+    user: initialUser
   })
 
   /* Register analytic plugins */
