@@ -121,6 +121,7 @@ test('Plugin (not xStart) returning values should NOT enrich other payloads', as
   })
 
   analytics.track('foobar')
+  const anonId = analytics.user('anonymousId')
 
   await delay(100)
 
@@ -130,7 +131,7 @@ test('Plugin (not xStart) returning values should NOT enrich other payloads', as
     properties: {},
     options: {},
     userId: null,
-    anonymousId: null,
+    anonymousId: anonId,
     // meta: { timestamp: 1571017886122 }
   }
 
@@ -150,7 +151,7 @@ test('Plugin (not xStart) returning values should NOT enrich other payloads', as
     properties: {},
     options: {},
     userId: null,
-    anonymousId: null,
+    anonymousId: anonId,
     addToFourOnly: 'hello'
   })
 })
@@ -190,6 +191,7 @@ test('Namespace plugin should enrich specific data', async (t) => {
   })
 
   analytics.track('lol')
+  const anonId = analytics.user('anonymousId')
 
   await delay(100)
 
@@ -200,7 +202,7 @@ test('Namespace plugin should enrich specific data', async (t) => {
     properties: {},
     options: {},
     userId: null,
-    anonymousId: null,
+    anonymousId: anonId,
     foo: 'baz',
   })
 
@@ -211,7 +213,7 @@ test('Namespace plugin should enrich specific data', async (t) => {
     properties: {},
     options: {},
     userId: null,
-    anonymousId: null
+    anonymousId: anonId
   })
 })
 
@@ -274,6 +276,7 @@ test('Multiple Namespaced plugins should enrich specific data', async (t) => {
   })
 
   analytics.track('lol')
+  const anonId = analytics.user('anonymousId')
 
   await delay(100)
 
@@ -284,7 +287,7 @@ test('Multiple Namespaced plugins should enrich specific data', async (t) => {
     properties: {},
     options: {},
     userId: null,
-    anonymousId: null,
+    anonymousId: anonId,
     foo: 'baz',
     wowowow: 'nice'
   })
@@ -296,7 +299,7 @@ test('Multiple Namespaced plugins should enrich specific data', async (t) => {
     properties: {},
     options: {},
     userId: null,
-    anonymousId: null,
+    anonymousId: anonId,
     awesome: 'sauce'
   })
 })
