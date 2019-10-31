@@ -7,7 +7,7 @@ test('Should contain the app name', async (t) => {
     version: 100
   })
 
-  t.deepEqual(analytics.getState('context.app'), 'appname')
+  t.is(analytics.getState('context.app'), 'appname')
 })
 
 test('Should contain the app version', async (t) => {
@@ -16,7 +16,7 @@ test('Should contain the app version', async (t) => {
     version: 100
   })
 
-  t.deepEqual(analytics.getState('context.version'), 100)
+  t.is(analytics.getState('context.version'), 100)
 })
 
 test('Should contain debug', async (t) => {
@@ -26,5 +26,5 @@ test('Should contain debug', async (t) => {
     debug: true
   })
 
-  t.deepEqual(analytics.getState('context.debug'), true)
+  t.is(analytics.getState('context.debug'), true)
 })
