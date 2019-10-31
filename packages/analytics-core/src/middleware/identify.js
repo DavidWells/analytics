@@ -29,7 +29,6 @@ export default function identifyMiddleware(instance) {
             traits
           },
           options: options,
-          // callback: callback
         })
       }
 
