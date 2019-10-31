@@ -2,6 +2,8 @@
 import inBrowser from '../utils/inBrowser'
 import EVENTS from '../events'
 
+const hashRegex = /#.*$/
+
 function canonicalUrl() {
   if (!inBrowser) return
   const tags = document.getElementsByTagName('link')
@@ -15,7 +17,7 @@ function canonicalUrl() {
 function urlPath(url) {
   const regex = /(http[s]?:\/\/)?([^\/\s]+\/)(.*)/g
   const matches = regex.exec(url)
-  const pathMatch = (matches && matches[3]) ? matches[3].split('?')[0].replace(/#.*$/, '') : ''
+  const pathMatch = (matches && matches[3]) ? matches[3].split('?')[0].replace(hashRegex, '') : ''
   return `/${pathMatch}`
 }
 
@@ -26,7 +28,7 @@ function urlPath(url) {
  */
 function currentUrl(search) {
   const canonical = canonicalUrl()
-  if (!canonical) return window.location.href.replace(/#.*$/, '')
+  if (!canonical) return window.location.href.replace(hashRegex, '')
   return canonical.match(/\?/) ? canonical : `${canonical}${search}`
 }
 
