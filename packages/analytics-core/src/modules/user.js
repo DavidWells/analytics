@@ -1,7 +1,6 @@
-import { storage } from 'analytics-utils'
+import { storage, uuid } from 'analytics-utils'
 import { ANON_ID, USER_ID, USER_TRAITS } from '../constants'
-import * as _CONSTANTS from '../utils/_constants'
-import timeStamp from '../utils/timestamp'
+import { ID, ANONID } from '../utils/_constants'
 import globalContext from '../utils/global'
 import isObject from '../utils/isObject'
 import EVENTS from '../events'
@@ -27,7 +26,7 @@ export default function user(state = {}, action) {
     case EVENTS.reset:
       // Side effect remove global fallback values
       /* eslint-disable array-callback-return */
-      [_CONSTANTS.id, _CONSTANTS.anonId, 'traits'].map((key) => {
+      [ ID, ANONID, 'traits' ].map((key) => {
         globalContext[tempKey(key)] = null
       })
       /* eslint-enable  */
@@ -41,18 +40,10 @@ export default function user(state = {}, action) {
   }
 }
 
-export const reset = (callback) => {
+export function getPersistedUserData(params) {
   return {
-    type: EVENTS.resetStart,
-    timestamp: timeStamp(),
-    callback: callback
-  }
-}
-
-export function getPersistedUserData() {
-  return {
-    userId: storage.getItem(USER_ID),
-    anonymousId: storage.getItem(ANON_ID),
+    userId: storage.getItem(USER_ID) || params.an_uid,
+    anonymousId: storage.getItem(ANON_ID) || params.an_aid || uuid(),
     traits: storage.getItem(USER_TRAITS) || {}
   }
 }
@@ -74,7 +65,7 @@ export function getUserProp(key, instance, payload) {
   }
 
   /* 3. Try persisted data */
-  const persistedInfo = getPersistedUserData()[key]
+  const persistedInfo = getPersistedUserData({})[key]
   if (persistedInfo) {
     // console.log('from persistedInfo', persistedInfo)
     return persistedInfo

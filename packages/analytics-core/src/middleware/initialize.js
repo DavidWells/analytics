@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { paramsParse, storage, uuid } from 'analytics-utils'
+import { storage } from 'analytics-utils'
 import EVENTS from '../events'
 import { ANON_ID } from '../constants'
 
@@ -11,14 +11,13 @@ const traitRegex = /^an_trait_/
 export default function initializeMiddleware(instance) {
   return store => next => action => {
     if (action.type === EVENTS.bootstrap) {
-      const params = paramsParse()
-      /* 1. Set anonymous ID */
+      const { params, user } = action
+      /* 1. Set anonymous ID. TODO move UUID generation to main function. To fix race conditions */
       if (!storage.getItem(ANON_ID)) {
-        const anonId = params.an_aid || uuid()
-        instance.storage.setItem(ANON_ID, anonId)
+        instance.storage.setItem(ANON_ID, user.anonymousId)
       }
       /* 2. Parse url params */
-      const paramsArray = Object.keys(params)
+      const paramsArray = Object.keys(action.params)
       if (paramsArray.length) {
         const { an_uid, an_event } = params
         const groupedParams = paramsArray.reduce((acc, key) => {
