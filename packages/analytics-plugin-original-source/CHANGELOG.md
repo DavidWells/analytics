@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/DavidWells/analytics/compare/analytics-plugin-original-source@0.1.9...analytics-plugin-original-source@0.2.0) (2019-10-31)
+
+
+### Features
+
+* **original-src:** clear localstorage values on analytics.reset() ([2ad36b8](https://github.com/DavidWells/analytics/commit/2ad36b8))
+
+
+
+
+
 ## [0.1.9](https://github.com/DavidWells/analytics/compare/analytics-plugin-original-source@0.1.8...analytics-plugin-original-source@0.1.9) (2019-10-03)
 
 **Note:** Version bump only for package analytics-plugin-original-source

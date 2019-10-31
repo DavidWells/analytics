@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/DavidWells/analytics/compare/@analytics/segment@0.3.0...@analytics/segment@0.4.0) (2019-10-31)
+
+
+### Features
+
+* **segment:** clear all localstorage on analytics.reset() ([ff9886e](https://github.com/DavidWells/analytics/commit/ff9886e))
+
+
+
+
+
 # 0.3.0 (2019-10-14)
 
 

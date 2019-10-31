@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/DavidWells/analytics/compare/analytics@0.2.6...analytics@0.3.0) (2019-10-31)
+
+
+### Features
+
+* make .track, .page, .identify, .reset return promise for async usage ([4069c03](https://github.com/DavidWells/analytics/commit/4069c03))
+
+
+
+
+
 ## [0.2.6](https://github.com/DavidWells/analytics/compare/analytics@0.2.5...analytics@0.2.6) (2019-10-21)
 
 **Note:** Version bump only for package analytics
