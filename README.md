@@ -63,6 +63,8 @@ Companies frequently change analytics requirements based on evolving needs. This
 
 This library aims to solves that with a simple pluggable abstraction layer.
 
+![how analytics works](https://user-images.githubusercontent.com/532272/68093602-42036880-fe4c-11e9-8bb9-008045da8a32.gif)
+
 **Driving philosophy:**
 
 - You should never be locked into a analytics tool
