@@ -30,6 +30,7 @@ module.exports = {
             'plugins/hubspot',
             'plugins/fullstory',
             'plugins/crazyegg',
+            'plugins/gosquared',
             'plugins/simple-analytics',
             'plugins/do-not-track',
             'plugins/tab-events',

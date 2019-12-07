@@ -241,3 +241,15 @@ Take the `projectToken` value and use it in the initialization of the plugin
 By default this plugin does not send data when running locally. This helps prevent local development from polluting your stats.
 
 To turn on localhost tracking, set the `trackLocal` configuration setting to true.
+
+```js
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    goSquaredPlugin({
+      projectToken: 'GSN-123456-A',
+      trackLocal: true
+    })
+  ]
+})
+```
