@@ -16,14 +16,14 @@ This analytics plugin will load GoSquared into your application.
 <details>
 <summary>Click to expand</summary>
 
-- [GoSquared Plugin for `analytics`](#gosquared-plugin-for-analytics)
-  - [Installation](#installation)
-  - [How to use](#how-to-use)
-  - [Browser usage](#browser-usage)
-    - [Browser API](#browser-api)
-  - [Platforms Supported](#platforms-supported)
-  - [Additional examples](#additional-examples)
-  - [Usage](#usage)
+- [Installation](#installation)
+- [How to use](#how-to-use)
+- [Browser usage](#browser-usage)
+  * [Browser API](#browser-api)
+- [Platforms Supported](#platforms-supported)
+- [Additional examples](#additional-examples)
+- [Grabbing your projectToken](#grabbing-your-projecttoken)
+- [Running on localHost](#running-on-localhost)
 
 </details>
 <!-- AUTO-GENERATED-CONTENT:END -->
@@ -47,25 +47,46 @@ Below is an example of how to use the browser plugin.
 
 ```js
 import Analytics from 'analytics'
-import exports from '@analytics/gosquared'
+import goSquaredPlugin from '@analytics/gosquared'
 
 const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
-    // This will load GoSquared on to the page
-    goSquared({
+    goSquaredPlugin({
       projectToken: 'GSN-123456-A'
     })
   ]
 })
 
+/* Track a page view */
+analytics.page()
+
+/* Track a custom event */
+analytics.track('cartCheckout', {
+  item: 'pink socks',
+  price: 20
+})
+
+/* Identify a visitor */
+analytics.identify('user-id-xyz', {
+  firstName: 'bill',
+  lastName: 'murray'
+})
+
 ```
+
+After initializing `analytics` with the `goSquaredPlugin` plugin, data will be sent into GoSquared whenever [analytics.page](https://getanalytics.io/api/#analyticspage), [analytics.track](https://getanalytics.io/api/#analyticstrack), or [analytics.identify](https://getanalytics.io/api/#analyticsidentify) are called.
 
 See [additional implementation examples](#additional-examples) for more details on using in your project.
 
 ## Browser usage
 
-See below from browser API
+The GoSquared client side browser plugin works with these analytic api methods:
+
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into GoSquared 
+- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for GoSquared values 
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to GoSquared 
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to GoSquared 
 
 ### Browser API
 
@@ -73,8 +94,7 @@ See below from browser API
 const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
-    // This will load GoSquared on to the page
-    goSquared({
+    goSquaredPlugin({
       projectToken: 'GSN-123456-A'
     })
   ]
@@ -85,7 +105,14 @@ const analytics = Analytics({
 **Initialization arguments**
 
 - **pluginConfig** `object` Plugin settings
-- **pluginConfig.projectToken** `string` GoSquared project token
+- **pluginConfig.projectToken** `string` GoSquared project token for client side tracking
+- **pluginConfig.disableAnonymousTraffic** (optional) `boolean` Disable anonymous events from firing
+- **pluginConfig.trackLocal** (optional) `boolean` Enable tracking on localhost
+- **pluginConfig.anonymizeIP** (optional) `boolean` Prevent the visitors' IP address from being tracked
+- **pluginConfig.cookieDomain** (optional) `string` Override default cookie domain for subdomain tracking
+- **pluginConfig.useCookies** (optional) `boolean` Set to false to disable usage of cookies in the tracker
+- **pluginConfig.trackHash** (optional) `boolean` Whether to track hashes in the page URL
+- **pluginConfig.trackParams** (optional) `boolean` Whether to track URL querystring parameters
 
 
 ## Platforms Supported
@@ -113,11 +140,25 @@ Below are additional implementation examples.
         var Analytics = _analytics.init({
           app: 'my-app-name',
           plugins: [
-            // This will load GoSquared on to the page
-            goSquared({
+            analyticsGoSquared({
               projectToken: 'GSN-123456-A'
             })
           ]
+        })
+
+        /* Track a page view */
+        analytics.page()
+
+        /* Track a custom event */
+        analytics.track('cartCheckout', {
+          item: 'pink socks',
+          price: 20
+        })
+
+        /* Identify a visitor */
+        analytics.identify('user-id-xyz', {
+          firstName: 'bill',
+          lastName: 'murray'
         })
       </script>
     </head>
@@ -153,12 +194,26 @@ Below are additional implementation examples.
           app: 'analytics-html-demo',
           debug: true,
           plugins: [
-            // This will load GoSquared on to the page
-            goSquared({
+            analyticsGoSquared({
               projectToken: 'GSN-123456-A'
             })
             // ... add any other third party analytics plugins
           ]
+        })
+
+        /* Track a page view */
+        analytics.page()
+
+        /* Track a custom event */
+        analytics.track('cartCheckout', {
+          item: 'pink socks',
+          price: 20
+        })
+
+        /* Identify a visitor */
+        analytics.identify('user-id-xyz', {
+          firstName: 'bill',
+          lastName: 'murray'
         })
       </script>
     </head>
@@ -185,3 +240,9 @@ It's also visible in the tracking code
 ![image](https://user-images.githubusercontent.com/532272/70370401-b7af8980-187b-11ea-9f2b-dfac31b427af.png)
 
 Take the `projectToken` value and use it in the initialization of the plugin
+
+## Running on localHost
+
+By default this plugin does not send data when running locally. This helps prevent local development from polluting your stats.
+
+To turn on localhost tracking, set the `trackLocal` configuration setting to true.
