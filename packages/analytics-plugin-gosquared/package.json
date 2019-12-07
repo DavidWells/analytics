@@ -21,6 +21,7 @@
   "author": "Ben Clark",
   "license": "MIT",
   "scripts": {
+    "docs": "node ../analytics-cli/bin/run docs",
     "build": "node ../../scripts/build/index.js",
     "watch": "node ../../scripts/build/_watch.js",
     "release:patch": "npm version patch && npm publish",

@@ -173,26 +173,15 @@ Below are additional implementation examples.
 
 
 <!-- AUTO-GENERATED-CONTENT:END (PLUGIN_DOCS) -->
-## Usage
 
-Include `analytics` and `@analytics/gosquared` in the source code of your project.
+## Grabbing your projectToken
 
-Initialize analytics with the gosquared plugin and the gosquared heat mapping script will be automatically loaded into the page.
+Inside of the gosquared admin panel you can find your tracking ID in the URL of the dashboard.
 
-```js
-import Analytics from 'analytics'
-import goSquaredPlugin from '@analytics/gosquared'
+![image](https://user-images.githubusercontent.com/532272/70370383-9a7abb00-187b-11ea-8fc7-97584d5ba8c2.png)
 
-const analytics = Analytics({
-  app: 'awesome-app',
-  plugins: [
-    goSquaredPlugin({
-      projectToken: '12345678'
-    }),
-  ]
-})
+It's also visible in the tracking code
 
-// GoSquared now loaded!
-```
+![image](https://user-images.githubusercontent.com/532272/70370401-b7af8980-187b-11ea-9f2b-dfac31b427af.png)
 
-See the [full list of analytics provider plugins](https://getanalytics.io/plugins/) in the main repo.
+Take the `projectToken` value and use it in the initialization of the plugin
