@@ -202,7 +202,8 @@ var tools = [
   },
   {
     'name': 'gosquared',
-    'image': 'gosquared.svg'
+    'image': 'gosquared.svg',
+    url: 'https://getanalytics.io/plugins/gosquared/'
   },
   {
     'name': 'heap',
