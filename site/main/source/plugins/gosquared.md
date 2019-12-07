@@ -5,9 +5,7 @@ description: Using the GoSquared plugin
 
 Integration with [GoSquared](https://www.gosquared.com/) for [analytics](https://www.npmjs.com/package/analytics)
 
-GoSquared adds heat mapping, A/B testing, and session recording functionality to websites and applications. This allows developers, marketers, and product owners to see what is working and what areas of an application might need improvements.
-
-This analytics plugin will load GoSquared into your application.
+GoSquared provides analytics, live chat, & automation tools to help developers identify areas of improvement in their application flows & to help convert users.
 
 <!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
 <details>
@@ -19,7 +17,7 @@ This analytics plugin will load GoSquared into your application.
   * [Browser API](#browser-api)
 - [Platforms Supported](#platforms-supported)
 - [Additional examples](#additional-examples)
-- [Grabbing your projectToken](#grabbing-your-projecttoken)
+- [Finding your GoSquared projectToken](#finding-your-gosquared-projecttoken)
 - [Running on localHost](#running-on-localhost)
 
 </details>
@@ -224,9 +222,9 @@ Below are additional implementation examples.
 
 <!-- AUTO-GENERATED-CONTENT:END (PLUGIN_DOCS) -->
 
-## Grabbing your projectToken
+## Finding your GoSquared projectToken
 
-Inside of the gosquared admin panel you can find your tracking ID in the URL of the dashboard.
+Inside of the GoSquared admin panel you can find your tracking ID in the URL of the dashboard.
 
 ![image](https://user-images.githubusercontent.com/532272/70370383-9a7abb00-187b-11ea-8fc7-97584d5ba8c2.png)
 

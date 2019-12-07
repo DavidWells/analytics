@@ -6,9 +6,7 @@ description: Using the GoSquared plugin
 
 Integration with [GoSquared](https://www.gosquared.com/) for [analytics](https://www.npmjs.com/package/analytics)
 
-GoSquared adds heat mapping, A/B testing, and session recording functionality to websites and applications. This allows developers, marketers, and product owners to see what is working and what areas of an application might need improvements.
-
-This analytics plugin will load GoSquared into your application.
+GoSquared provides analytics, live chat, & automation tools to help developers identify areas of improvement in their application flows & to help convert users.
 
 [View the docs](https://getanalytics.io/plugins/gosquared/).
 
@@ -22,7 +20,7 @@ This analytics plugin will load GoSquared into your application.
   * [Browser API](#browser-api)
 - [Platforms Supported](#platforms-supported)
 - [Additional examples](#additional-examples)
-- [Grabbing your projectToken](#grabbing-your-projecttoken)
+- [Finding your GoSquared projectToken](#finding-your-gosquared-projecttoken)
 - [Running on localHost](#running-on-localhost)
 
 </details>
@@ -83,10 +81,10 @@ See [additional implementation examples](#additional-examples) for more details 
 
 The GoSquared client side browser plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into GoSquared 
-- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for GoSquared values 
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to GoSquared 
-- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to GoSquared 
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into GoSquared
+- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for GoSquared values
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to GoSquared
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to GoSquared
 
 ### Browser API
 
@@ -229,9 +227,9 @@ Below are additional implementation examples.
 
 <!-- AUTO-GENERATED-CONTENT:END (PLUGIN_DOCS) -->
 
-## Grabbing your projectToken
+## Finding your GoSquared projectToken
 
-Inside of the gosquared admin panel you can find your tracking ID in the URL of the dashboard.
+Inside of the GoSquared admin panel you can find your tracking ID in the URL of the dashboard.
 
 ![image](https://user-images.githubusercontent.com/532272/70370383-9a7abb00-187b-11ea-8fc7-97584d5ba8c2.png)
 
@@ -246,3 +244,15 @@ Take the `projectToken` value and use it in the initialization of the plugin
 By default this plugin does not send data when running locally. This helps prevent local development from polluting your stats.
 
 To turn on localhost tracking, set the `trackLocal` configuration setting to true.
+
+```js
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    goSquaredPlugin({
+      projectToken: 'GSN-123456-A',
+      trackLocal: true
+    })
+  ]
+})
+```
