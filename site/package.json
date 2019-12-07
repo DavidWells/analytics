@@ -9,6 +9,7 @@
     "build": "yarn workspace main build",
     "serve": "yarn workspace main serve",
     "deploy": "yarn workspace main deploy",
+    "deploydev": "yarn workspace main deploydev",
     "sync": "node sync.js"
   },
   "workspaces": [
