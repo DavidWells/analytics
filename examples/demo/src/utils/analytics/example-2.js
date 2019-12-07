@@ -1,4 +1,5 @@
 import Analytics from 'analytics'
+import goSquared from '@analytics/gosquared'
 import googleAnalytics from '@analytics/google-analytics'
 import exampleProviderPlugin from './plugins/provider-example'
 
@@ -26,6 +27,9 @@ const analytics = Analytics({
     googleAnalytics({
       trackingId: process.env.REACT_APP_GOOGLE_ANALYTICS_ID,
     }),
+    // goSquared({
+    //   projectToken: 'GSN-722377-Y'
+    // })
   ]
 })
 

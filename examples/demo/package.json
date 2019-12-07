@@ -17,6 +17,7 @@
     "@analytics/google-analytics": "file:../../packages/analytics-plugin-google-analytics",
     "analytics": "file:../../packages/analytics-core",
     "@analytics/simple-analytics": "file:../../packages/analytics-plugin-simple-analytics",
+    "@analytics/gosquared": "file:../../packages/analytics-plugin-gosquared",
     "@analytics/customerio": "file:../../packages/analytics-plugin-customerio",
     "analytics-plugin-do-not-track": "file:../../packages/analytics-plugin-do-not-track",
     "@analytics/hubspot": "file:../../packages/analytics-plugin-hubspot",
