@@ -36,7 +36,8 @@ function goSquaredPlugin(pluginConfig = {}) {
           d.src = '//d1l6p2sc9645hc.cloudfront.net/tracker.js'
           q.parentNode.insertBefore(d, q)
         }(window, document, 'script', '_gs'))
-        _gs('set', 'trackLocal', debug);
+        // Settings https://www.gosquared.com/docs/api/javascript-tracking-code/configuration/
+        _gs('set', 'trackLocal', debug)
         _gs(projectToken)
       }
     },
@@ -63,7 +64,7 @@ function goSquaredPlugin(pluginConfig = {}) {
       }
     },
     identify: ({ payload }) => {
-      const { userId: email, traits: custom } = payload;
+      const { userId: email, traits: custom } = payload
       if (typeof _gs !== 'undefined' && email) {
         _gs('identify', {
           email,
