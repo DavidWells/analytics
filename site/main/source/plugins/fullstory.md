@@ -27,11 +27,11 @@ This analytics plugin will add the FullStory javascript library to your app & se
 
 ## Installation
 
-Install `analytics` and `@analytics/customerio` packages
+Install `analytics` and `@analytics/fullstory` packages
 
 ```bash
 npm install analytics
-npm install @analytics/customerio
+npm install @analytics/fullstory
 ```
 
 You will need your `org` ID from [FullStory setting](https://help.fullstory.com/hc/en-us/articles/360020623514-How-do-I-get-FullStory-up-and-running-on-my-site-) to connect to your account and initialize analytics.
