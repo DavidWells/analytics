@@ -1,6 +1,6 @@
 {
   "name": "@analytics/gosquared",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "GoSquared integration for 'analytics' module",
   "projectMeta": {
     "provider": {
