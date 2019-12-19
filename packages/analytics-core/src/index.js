@@ -70,6 +70,19 @@ function analytics(config = {}) {
       const definedEvents = (plugin.EVENTS) ? Object.keys(plugin.EVENTS).map((k) => {
         return plugin.EVENTS[k]
       }) : []
+
+      if (plugin.methods) {
+        acc.methods = Object.keys(plugin.methods).reduce((a, c) => {
+          if (a[c]) {
+            throw new Error(`Method "${c}" duplicated in analytics.methods. See plugin ${plugin.name}`)
+          }
+          // enrich methods with analytics instance
+          a[c] = appendArguments(plugin.methods[c])
+          return a
+        }, acc.methods)
+        // Remove additional methods from plugins
+        delete plugin.methods
+      }
       // Convert available methods into events
       const methodsToEvents = Object.keys(plugin)
       // Combine events
@@ -81,12 +94,12 @@ function analytics(config = {}) {
       acc.pluginsArray = acc.pluginsArray.concat(plugin)
 
       if (acc.plugins[plugin.name]) {
-        throw new Error(`"${plugin.name}" plugin loaded twice`)
+        throw new Error(`'${plugin.name}' plugin loaded twice`)
       }
       acc.plugins[plugin.name] = plugin
       if (!acc.plugins[plugin.name].loaded) {
-        // set default loaded func
-        acc.plugins[plugin.name].loaded = () => { return true }
+        // Set default loaded func
+        acc.plugins[plugin.name].loaded = () => true
       }
       return acc
     }
@@ -94,6 +107,7 @@ function analytics(config = {}) {
     acc.middlewares = acc.middlewares.concat(plugin)
     return acc
   }, {
+    methods: {},
     plugins: {},
     pluginsArray: [],
     middlewares: [],
@@ -155,6 +169,8 @@ function analytics(config = {}) {
    * @property {DisablePlugin} disablePlugin - Disable plugin
    */
   const instance = {
+    // Methods are the functions supplied by plugins to extend the base analytics instance
+    methods: parsedOptions.methods,
     /**
     * Identify a user. This will trigger `identify` calls in any installed plugins and will set user data in localStorage
     * @typedef {Function} Identify
@@ -828,6 +844,25 @@ function analytics(config = {}) {
 
     /* Tick heartbeat for queued events */
     heartBeat(store, getPlugins, instance)
+  }
+
+  function appendArguments(fn) {
+    return function () {
+      const originalArgs = Array.prototype.slice.call(arguments)
+      // Pass analytics instance as last arg for arrow functions
+      const argsToPass = Array.apply(null, Array(fn.length))
+        .map(() => {})
+        .map((x, i) => {
+          if (originalArgs[i] || originalArgs[i] === false || originalArgs[i] === null) {
+            return originalArgs[i]
+          }
+        })
+        // Add instance to args
+        .concat(instance)
+      // Set instance on extended methods
+      const newThis = { instance: instance }
+      return fn.apply(newThis, argsToPass)
+    }
   }
 
   /* Return analytics instance */
