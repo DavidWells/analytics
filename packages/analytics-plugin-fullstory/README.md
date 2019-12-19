@@ -31,11 +31,11 @@ This analytics plugin will add the FullStory javascript library to your app & se
 
 ## Installation
 
-Install `analytics` and `@analytics/customerio` packages
+Install `analytics` and `@analytics/fullstory` packages
 
 ```bash
 npm install analytics
-npm install @analytics/customerio
+npm install @analytics/fullstory
 ```
 
 You will need your `org` ID from [FullStory setting](https://help.fullstory.com/hc/en-us/articles/360020623514-How-do-I-get-FullStory-up-and-running-on-my-site-) to connect to your account and initialize analytics.
@@ -85,8 +85,8 @@ See [additional implementation examples](#additional-examples) for more details 
 
 The FullStory client side browser plugin works with these analytic api methods:
 
-- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to FullStory 
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to FullStory 
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to FullStory
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to FullStory
 
 ### Browser API
 
