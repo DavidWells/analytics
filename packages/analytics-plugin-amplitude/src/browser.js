@@ -24,6 +24,9 @@ export default function amplitude(pluginConfig = {}) {
     name: 'amplitude',
     config: pluginConfig,
 
+		// An escape hatch that allows accessing Amplitude APIs directly.
+		amplitude: amplitudeLib,
+
     initialize: ({ config }) => {
       const { apiKey, projectName, options } = config
       if (!apiKey) {
