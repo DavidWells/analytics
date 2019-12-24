@@ -1,15 +1,13 @@
 {
-  "name": "@analytics/amplitude",
+  "name": "@analytics/amplitude-node",
   "version": "0.1.0",
-  "description": "Amplitude plugin for 'analytics' module",
+  "description": "Amplitude NodeJS plugin for 'analytics' module",
   "projectMeta": {
     "provider": {
       "name": "Amplitude",
       "url": "https://amplitude.com/"
     },
-    "windowGlobal": "analyticsAmplitude",
     "platforms": {
-      "browser": "./src/browser.js",
       "node": "./src/node.js"
     }
   },
@@ -22,6 +20,8 @@
   "author": "Roman Mazur",
   "license": "MIT",
   "scripts": {
+    "test": "ava -v",
+    "test:watch": "ava -v --watch",
     "types": "../../node_modules/.bin/jsdoc -t ../../node_modules/tsd-jsdoc/dist -r ./src/ -d temp-types",
     "build": "node ../../scripts/build/index.js",
     "watch": "node ../../scripts/build/_watch.js",
@@ -31,7 +31,6 @@
     "es": "../../node_modules/.bin/babel-node ./testBabel.js"
   },
   "main": "lib/analytics-plugin-amplitude.cjs.js",
-  "globalName": "analyticsAmplitude",
   "jsnext:main": "lib/analytics-plugin-amplitude.es.js",
   "module": "lib/analytics-plugin-amplitude.es.js",
   "browser": {
@@ -39,7 +38,6 @@
     "./lib/analytics-plugin-amplitude.es.js": "./lib/analytics-plugin-amplitude.browser.es.js"
   },
   "files": [
-    "dist",
     "lib",
     "README.md"
   ],
@@ -49,10 +47,30 @@
     "url": "git+https://github.com/DavidWells/analytics.git"
   },
   "devDependencies": {
-    "@babel/core": "^7.2.2",
-    "@babel/preset-env": "^7.3.1"
+    "@babel/core": "7.5.5",
+    "@babel/preset-env": "7.5.5",
+    "@babel/register": "7.5.5",
+    "analytics": "^0.3.0",
+    "ava": "^2.2.0",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1"
   },
   "dependencies": {
-    "amplitude-js": "^5.8.0"
+    "request": "^2.88.0"
+  },
+  "ava": {
+    "files": [
+      "**/*.test.js"
+    ],
+    "require": [
+      "esm",
+      "@babel/register"
+    ],
+    "verbose": true,
+    "failFast": true,
+    "sources": [
+      "**/*.{js,jsx}"
+    ],
+    "timeout": "10s"
   }
 }

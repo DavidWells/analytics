@@ -1,0 +1,56 @@
+{
+  "name": "@analytics/amplitude-browser",
+  "version": "0.1.0",
+  "description": "Amplitude browser plugin for 'analytics' module",
+  "projectMeta": {
+    "provider": {
+      "name": "Amplitude",
+      "url": "https://amplitude.com/"
+    },
+    "windowGlobal": "analyticsAmplitude",
+    "platforms": {
+      "browser": "./src/index.js"
+    }
+  },
+  "keywords": [
+    "analytics",
+    "analytics-project",
+    "analytics-plugin",
+    "amplitude"
+  ],
+  "author": "Roman Mazur",
+  "license": "MIT",
+  "scripts": {
+    "types": "../../node_modules/.bin/jsdoc -t ../../node_modules/tsd-jsdoc/dist -r ./src/ -d temp-types",
+    "build": "node ../../scripts/build/index.js",
+    "watch": "node ../../scripts/build/_watch.js",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish",
+    "es": "../../node_modules/.bin/babel-node ./testBabel.js"
+  },
+  "main": "lib/analytics-plugin-amplitude-browser.cjs.js",
+  "jsnext:main": "lib/analytics-plugin-amplitude-browser.es.js",
+  "module": "lib/analytics-plugin-amplitude-browser.es.js",
+  "browser": {
+    "./lib/analytics-plugin-amplitude-browser.cjs.js": "./lib/analytics-plugin-amplitude-browser.browser.cjs.js",
+    "./lib/analytics-plugin-amplitude-browser.es.js": "./lib/analytics-plugin-amplitude-browser.browser.es.js"
+  },
+  "files": [
+    "dist",
+    "lib",
+    "README.md"
+  ],
+  "homepage": "https://github.com/DavidWells/analytics#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidWells/analytics.git"
+  },
+  "devDependencies": {
+    "@babel/core": "7.5.5",
+    "@babel/preset-env": "7.5.5"
+  },
+  "dependencies": {
+    "amplitude-js": "^5.8.0"
+  }
+}
