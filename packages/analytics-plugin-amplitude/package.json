@@ -53,6 +53,6 @@
     "@babel/preset-env": "^7.3.1"
   },
   "dependencies": {
-    "amplitude-js": "^5.6.0"
+    "amplitude-js": "^5.8.0"
   }
 }

@@ -3,6 +3,7 @@ node_modules
 lib
 temp-types
 *.log
+yarn.lock
 
 # IDE stuff
 **/.idea
