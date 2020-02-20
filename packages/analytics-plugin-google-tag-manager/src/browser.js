@@ -85,7 +85,7 @@ function googleTagManager(pluginConfig = {}) {
 export default googleTagManager
 
 function scriptLoaded() {
-  const scripts = document.getElementsByTagName('script')
+  const scripts = document.querySelectorAll('script[src]')
   return !!Object.keys(scripts).filter((key) => {
     const { src } = scripts[key]
     return src.match(/googletagmanager\.com\/gtm\.js/)
