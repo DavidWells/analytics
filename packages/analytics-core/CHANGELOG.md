@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.1](https://github.com/DavidWells/analytics/compare/analytics@0.3.0...analytics@0.3.1) (2020-03-02)
+
+
+### Bug Fixes
+
+*  namespaced plugin config values should reflect current plugin ([a3cc443](https://github.com/DavidWells/analytics/commit/a3cc443)), closes [#25](https://github.com/DavidWells/analytics/issues/25)
+
+
+
+
+
 # [0.3.0](https://github.com/DavidWells/analytics/compare/analytics@0.2.6...analytics@0.3.0) (2019-10-31)
 
 
