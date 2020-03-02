@@ -1,5 +1,5 @@
 import Analytics from 'analytics'
-import googleAnalytics from 'analytics-plugin-ga'
+import googleAnalytics from '@analytics/google-analytics'
 
 const analytics = Analytics({
   app: 'my-vue-app',

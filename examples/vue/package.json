@@ -10,8 +10,8 @@
     "deploy": "netlify deploy -p"
   },
   "dependencies": {
-    "@analytics/google-analytics": "^0.2.0",
-    "analytics": "^0.1.20",
+    "@analytics/google-analytics": "^0.2.2",
+    "analytics": "^0.3.0",
     "core-js": "^2.6.5",
     "vue": "^2.6.10",
     "vue-router": "^3.0.7"
