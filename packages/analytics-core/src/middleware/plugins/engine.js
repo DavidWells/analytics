@@ -226,7 +226,7 @@ async function processEvent({
           payload: curScopeData,
           instance,
           abort: genAbort(curScopeData, pluginName, p.pluginName),
-          config: getConfig(pluginName, plugins, allPlugins),
+          config: getConfig(p.pluginName, plugins, allPlugins),
           plugins: plugins
         })
         const returnValue = isObject(val) ? val : {}
