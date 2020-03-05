@@ -716,7 +716,7 @@ Plugins can react to any event flowing through the `analytics` library.
 
 For example, if you wanted to trigger custom logic when `analytics` bootstraps you can attach a function handler to the `bootstrap` event.
 
-For a full list of core events, checkout [`events.js`](https://github.com/DavidWells/analytics/blob/master/packages/analytics-core/events.js).
+For a full list of core events, checkout [`events.js`](https://github.com/DavidWells/analytics/blob/master/packages/analytics-core/src/events.js).
 
 ```js
 // Example Plugin plugin.js
