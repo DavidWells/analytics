@@ -22,7 +22,7 @@ export const config = {
 function googleTagManager(pluginConfig = {}) {
   // Allow for userland overides of base methods
   return {
-    NAMESPACE: 'google-tag-manager',
+    name: 'google-tag-manager',
     config: {
       ...config,
       ...pluginConfig
@@ -84,8 +84,14 @@ function googleTagManager(pluginConfig = {}) {
 
 export default googleTagManager
 
+const regexCache = {}
+
 function scriptLoaded(containerId) {
-  const regex = new RegExp('googletagmanager\\.com\\/gtm\\.js.*[?&]id=' + containerId)
+  let regex = regexCache[containerId]
+  if (!regex) {
+    regex = new RegExp('googletagmanager\\.com\\/gtm\\.js.*[?&]id=' + containerId)
+    regexCache[containerId] = regex
+  }
   const scripts = document.querySelectorAll('script[src]')
   return !!Object.keys(scripts).filter(key => scripts[key].src.match(regex)).length
 }
