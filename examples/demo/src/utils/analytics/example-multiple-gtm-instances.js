@@ -10,6 +10,7 @@ const GTMTwo = Object.assign({}, googleTagManager({ containerId: 'GTM-456abc'}),
 /* initialize analytics and load plugins */
 const analytics = Analytics({
   app: 'awesome-app',
+  debug: true,
   plugins: [
     GTMOne,
     GTMTwo
