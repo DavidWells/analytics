@@ -81,8 +81,8 @@ See [additional implementation examples](#additional-examples) for more details 
 
 The FullStory client side browser plugin works with these analytic api methods:
 
-- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to FullStory 
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to FullStory 
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to FullStory
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to FullStory
 
 ### Browser API
 

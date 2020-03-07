@@ -71,8 +71,8 @@ See [additional implementation examples](#additional-examples) for more details 
 
 The Google Tag Manager client side browser plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Google Tag Manager 
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Google Tag Manager 
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Google Tag Manager
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Google Tag Manager
 
 ### Browser API
 
@@ -203,3 +203,50 @@ If you are using a SPA you want to listen to history changes as well.
 ![image](https://user-images.githubusercontent.com/532272/52185417-538fe500-27d4-11e9-9500-abf702e5d802.png)
 
 See the [full list of analytics provider plugins](https://getanalytics.io/plugins/) in the main repo.
+
+## Using multiple instances of GTM
+
+As noted in the [GTM docs](https://developers.google.com/tag-manager/devguide#multiple-containers), it's possible to load multiple instances of google tag manager on the page. This method is [not exactly recommended](https://www.simoahava.com/gtm-tips/multiple-gtm-containers-on-the-page/) by analytics experts if you can avoid it by using a single container. But if you must! You can!
+
+```js
+import Analytics from 'analytics'
+import googleTagManager from '@analytics/google-tag-manager'
+
+const GTMOne = googleTagManager({ containerId: 'GTM-123xyz' })
+// For instance 2, override the plugin 'name' and provide the 2nd GTM container ID
+const GTMTwo = Object.assign({}, googleTagManager({ containerId: 'GTM-456abc'}), {
+  name: 'google-tag-manager-two'
+})
+
+// Load up analytics
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    GTMOne,
+    GTMTwo
+  ]
+})
+
+// Both instances will be loaded into the page
+```
+
+This functionality has been [added](https://github.com/DavidWells/analytics/pull/30) by the wonderful [@zobzn](https://github.com/zobzn)!
+
+## Tracking if JS is disabled
+
+The [analytics library](https://github.com/DavidWells/analytics/) will load the Google Tag manager javascript onto the page. This will work for every web site visitor that has javascript enabled.
+
+For the small number of people who might have javascript disabled you will want to add the following `<noscript>` tags to the HTML of your site as outlined in [GTM install docs](https://developers.google.com/tag-manager/quickstart)
+
+Add the following HTML to your site & replace `GTM-XXXX` with your container ID.
+
+```html
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXX"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+```
+
+If you are using multiple containers, you will want to add one `<noscript>` tag for each.
+
+These days, apps typically don't even work without JS enabled & users must turn in on to use a site. So it's up to you & your use case if you want to add the additional `<noscript>` tags.
