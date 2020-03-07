@@ -86,6 +86,11 @@ export default googleTagManager
 
 const regexCache = {}
 
+/*
+TODO add logic to make it impossible to load 2 plugins with the same container ID
+[containerID]: pluginName
+*/
+
 function scriptLoaded(containerId) {
   let regex = regexCache[containerId]
   if (!regex) {
