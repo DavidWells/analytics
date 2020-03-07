@@ -32,7 +32,7 @@ function googleTagManager(pluginConfig = {}) {
       if (!containerId) {
         throw new Error('No google tag manager containerId defined')
       }
-      if (!scriptLoaded()) {
+      if (!scriptLoaded(containerId)) {
         /* eslint-disable */
         (function(w, d, s, l, i) {
           w[l] = w[l] || [];
@@ -77,17 +77,15 @@ function googleTagManager(pluginConfig = {}) {
     },
     loaded: () => {
       const hasDataLayer = !!(window.dataLayer && Array.prototype.push !== window.dataLayer.push)
-      return scriptLoaded() && hasDataLayer
+      return scriptLoaded(pluginConfig.containerId) && hasDataLayer
     },
   }
 }
 
 export default googleTagManager
 
-function scriptLoaded() {
-  const scripts = document.getElementsByTagName('script')
-  return !!Object.keys(scripts).filter((key) => {
-    const { src } = scripts[key]
-    return src.match(/googletagmanager\.com\/gtm\.js/)
-  }).length
+function scriptLoaded(containerId) {
+  const regex = new RegExp('googletagmanager\\.com\\/gtm\\.js.*[?&]id=' + containerId)
+  const scripts = document.querySelectorAll('script[src]')
+  return !!Object.keys(scripts).filter(key => scripts[key].src.match(regex)).length
 }
