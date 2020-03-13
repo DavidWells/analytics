@@ -98,5 +98,5 @@ function scriptLoaded(containerId) {
     regexCache[containerId] = regex
   }
   const scripts = document.querySelectorAll('script[src]')
-  return !!Object.keys(scripts).filter(key => scripts[key].src.match(regex)).length
+  return !!Object.keys(scripts).filter((key) => (scripts[key].src || '').match(regex)).length
 }
