@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.3](https://github.com/DavidWells/analytics/compare/@analytics/google-tag-manager@0.2.2...@analytics/google-tag-manager@0.2.3) (2020-03-13)
+
+
+### Bug Fixes
+
+* GTM plugin undefined src ([8ce2852](https://github.com/DavidWells/analytics/commit/8ce2852))
+
+
+
+
+
 ## [0.2.2](https://github.com/DavidWells/analytics/compare/@analytics/google-tag-manager@0.2.1...@analytics/google-tag-manager@0.2.2) (2020-03-07)
 
 **Note:** Version bump only for package @analytics/google-tag-manager
