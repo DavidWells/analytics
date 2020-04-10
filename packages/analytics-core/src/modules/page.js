@@ -81,7 +81,7 @@ const initialState = getPageData()
 export default function page(state = initialState, action) {
   switch (action.type) {
     case EVENTS.page:
-      return Object.assign({}, state, action.data)
+      return Object.assign({}, state, action.properties)
     default:
       return state
   }
