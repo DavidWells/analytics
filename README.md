@@ -67,16 +67,16 @@ This library aims to solves that with a simple pluggable abstraction layer.
 
 **Driving philosophy:**
 
-- You should never be locked into a analytics tool
+- You should never be locked into an analytics tool
 - DX is paramount. Adding & removing analytic tools from your application should be easy
-- Respecting visitor privacy settings & allowing for opt out mechanisms is crucial
+- Respecting visitor privacy settings & allowing for opt-out mechanisms is crucial
 - A pluggable API makes adding new business requests easy
 
-To add or remove an analytics provider adjust the `plugins` you load into `analytics`.
+To add or remove an analytics provider, adjust the `plugins` you load into `analytics` during initialization.
 
 ## Install
 
-This module is distributed via [npm](https://npmjs.com/package/analytics) which is bundled with [node](https://nodejs.org/) and should be installed as one of your project's dependencies.
+This module is distributed via [npm](https://npmjs.com/package/analytics), which is bundled with [node](https://nodejs.org/) and should be installed as one of your project's dependencies.
 
 ```bash
 npm install analytics --save
@@ -157,7 +157,7 @@ analytics.identify('user-id-xyz', {
 <details>
   <summary>Browser usage</summary>
 
-  When importing global `analytics` into your project from a cdn the library is expose via a global `_analytics` variable.
+  When importing global `analytics` into your project from a CDN, the library exposes via a global `_analytics` variable.
 
   Call `_analytics.init` to create an analytics instance.
 
@@ -714,7 +714,7 @@ const analytics = Analytics({
 
 Plugins can react to any event flowing through the `analytics` library.
 
-For example, if you wanted to trigger custom logic when `analytics` bootstraps you can attach a function handler to the `bootstrap` event.
+For example, if you wanted to trigger custom logic when `analytics` bootstraps, you can attach a function handler to the `bootstrap` event.
 
 For a full list of core events, checkout [`events.js`](https://github.com/DavidWells/analytics/blob/master/packages/analytics-core/src/events.js).
 
@@ -787,7 +787,7 @@ Then submit to the [list above](#analytic-plugins)
 
 ## Debugging analytics
 
-During development you can turn on `debug` mode. This will connect redux dev tools for you to visually see the analytics events passing through your application.
+During development, you can turn on `debug` mode. This will connect the dev tools for you to see the analytics events passing through your application visually.
 
 ![analytics-debug-tools](https://user-images.githubusercontent.com/532272/61163639-21da2300-a4c4-11e9-8743-b45d3a570271.gif)
 
@@ -802,9 +802,7 @@ const analytics = Analytics({
 
 # Contributing
 
-Contributions are always welcome, no matter how large or small. Before contributing,
-please read the [code of conduct](CODE_OF_CONDUCT.md).
-
+Contributions are always welcome, no matter how large or small. Before contributing, please read the [code of conduct](CODE_OF_CONDUCT.md).
 
 ## Setup & Install dependencies
 
@@ -816,7 +814,7 @@ $ cd analytics
 $ npm install && npm run setup
 ```
 
-This will setup all the packages and their dependencies.
+The above command will set up all the packages and their dependencies.
 
 ## Development
 
@@ -825,3 +823,5 @@ You can watch and rebuild packages with the `npm run watch` command.
 ```sh
 npm run watch
 ```
+
+While watch mode is activated, you can work against the demo site in examples to test out your changes on a live application.

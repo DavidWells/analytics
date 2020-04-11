@@ -5,7 +5,7 @@ pageTitle: Getting Started
 subTitle: Start here to learn how to build apps with the analytics
 ---
 
-This guide will walk you though installing & wiring up **analytics** in your application.
+This guide will walk you through installing & wiring up **analytics** in your application.
 
 Analytics is designed to work with any frontend javascript framework and it works in plain static HTML. For framework specific implementation examples checkout the main [repo](https://github.com/DavidWells/analytics/tree/master/examples).
 
@@ -48,11 +48,11 @@ See the [configuration docs](https://getanalytics.io/api/#configuration) for mor
 
 ## 3. Connect plugins
 
-**Connect analytics with a third party analytics tool**
+**Connect analytics with a third-party analytics tool**
 
-To connect `analytics` to your third party tools (e.g. Google analytics), install the [provider plugin](https://getanalytics.io/plugins).
+To connect `analytics` to your third-party tools (e.g. Google analytics), install the [provider plugin](https://getanalytics.io/plugins).
 
-If there is no plugin for your provider, you can [create your own plugin](http://getanalytics.io/plugins/writing-plugins) or send us a [request](https://getanalytics.io/plugins/request/).
+If there is no plugin for your provider, you can [create a plugin](http://getanalytics.io/plugins/writing-plugins) or send us a [request](https://getanalytics.io/plugins/request/).
 
 The example below is showing how to connect google analytics using the [google analytics plugin](https://getanalytics.io/plugins/google-analytics/).
 

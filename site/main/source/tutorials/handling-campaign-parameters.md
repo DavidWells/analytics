@@ -1,13 +1,13 @@
 ---
-title: 'Fire custom logic for utm campaign parameters'
-description: Listen for utm campaign parameters and trigger custom logic with an analytics plugin or listener
+title: 'Fire custom logic for UTM campaign parameters'
+description: Listen for UTM campaign parameters and trigger custom logic with an analytics plugin or listener
 pageTitle: Handling campaign parameters
-subTitle: Listen for utm campaign parameters with a plugin or listener
+subTitle: Listen for UTM campaign parameters with a plugin or listener
 ---
 
-`utm` tracking tokens are very commonly used for measuring the effectiveness of marketing campaigns. They are very useful when running ads, sending emails, and tracking traffic from external sources.
+`UTM` tracking tokens are commonly used for measuring the effectiveness of marketing campaigns. They are handy when running ads, sending emails, and tracking traffic from external sources.
 
-When using the [google analytics plugin](https://getanalytics.io/plugins/google-analytics/), these are automatically sent into google analytics.
+When using the [google analytics plugin](https://getanalytics.io/plugins/google-analytics/), these UTM parameters are automatically sent into google analytics.
 
 > But, what if we want to save the campaign data in other tools?
 
@@ -15,7 +15,7 @@ We can use the analytics plugin system or event listeners to do this!
 
 ## The `campaign` event
 
-In the [analytics lifecycle](https://getanalytics.io/lifecycle/), there is a **campaign** event that is emitted if there are `utm` parameters found in the current URL.
+In the [analytics lifecycle](https://getanalytics.io/lifecycle/), there is a **campaign** event that is emitted if there are `UTM` parameters found in the current URL.
 
 This **campaign** event can be hooked into with a [plugin](https://getanalytics.io/plugins/writing-plugins/) or a [listener](https://getanalytics.io/using-listeners/).
 
@@ -48,7 +48,7 @@ const analytics = Analytics({
 })
 ```
 
-After attaching the plugin, anytime there is a `utm` paramters in a url this functionality will trigger.
+After attaching the plugin, anytime `UTM` parameters are found in a URL, this functionality will trigger.
 
 **For example:**
 
@@ -96,7 +96,7 @@ analytics.on('campaign', ({ payload }) => {
 })
 ```
 
-You can also use the `once` listener to ensure a callback is only fired once.
+You can also use the `once` listener to ensure a callback is fired only one time.
 
 ```js
 /* Alternatively Attach a listener to campaign */

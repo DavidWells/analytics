@@ -6,13 +6,16 @@ description: How to install & use analytics plugins
 
 The `analytics` library is extendable via plugins.
 
-Analytics is an event driven system driven by a lifecycle. This lifecycle exposes hooks for plugins to react & alter default library behavior. Plugins can do a number of things like:
+Analytics is an event-driven system driven by a lifecycle. This lifecycle exposes hooks for plugins to react & alter default library behavior.
+
+Plugins can do a number of things like:
 
 - Add a new analytics provider destination for tracking, page views, & identifying visitors
-- Enhance / enrich data flowing to third party tools
-- Allow visitors to opt out of tracking & manage preferences
+- Enhance/enrich data flowing to third-party tools
+- Allow visitors to opt-out of tracking & manage preferences
 - Add custom functionality to your app based on user behavior
-- Enforce analytic naming conventions & keep data clean
+- Enforce analytic event naming conventions & keep data clean
+- Listen & react to browser events
 - ... etc.
 
 This guide will walk through installing & using plugins.
@@ -34,20 +37,20 @@ import { SupportedPlugins } from 'gatsby-theme-oss-docs';
     ```bash
     npm install analytics
     npm install analytics-plugin-google-tag-manager
-    ```
+    `"
 
 2. **Include analytics in your project**
 
     Import `analytics` and any plugins you wish to use in the `plugins` array.
 
-    Plugins need to be attached at initialization.
+    Plugins need to be attached during initialization.
 
     ```js
     /* analytics.js */
     import Analytics from 'analytics'
     import googleTagManager from 'analytics-plugin-google-tag-manager'
 
-    // export analytics instance for use in app
+    // export analytics instance for use in the app
     export default Analytics({
       app: 'app-name',
       plugins: [
@@ -89,7 +92,7 @@ analytics.identify('xyz-123', {
   super: true,
   rad: 'dope'
 }, {
-  /* Disable the ‘vanilla’ plugin for this identify call */
+  /* Disable the 'vanilla' plugin for this identify call */
   plugins: {
     vanilla: false
   }

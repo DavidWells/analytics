@@ -5,7 +5,7 @@ description: Listen to analytic events
 
 The `analytics` library is extendable via plugins.
 
-This guide will walk through installing & using plugins
+This guide will walk through installing & using plugins.
 
 ## Installation & Usage
 
@@ -22,14 +22,14 @@ This guide will walk through installing & using plugins
 
     Import `analytics` and any plugins you wish to use in the `plugins` array.
 
-    Plugins need to be attached at initialization.
+    Plugins need to be attached during initialization.
 
     ```js
     /* analytics.js */
     import Analytics from 'analytics'
     import googleTagManager from 'analytics-plugin-google-tag-manager'
 
-    // export analytics instance for use in app
+    // export analytics instance for use in the app
     export default Analytics({
       app: 'app-name',
       plugins: [

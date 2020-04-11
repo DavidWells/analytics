@@ -1,6 +1,6 @@
 ---
 title: Analytics API Reference Documentation
-description: The core analytics API docs for the open source analytics module
+description: The core analytics API docs for the open-source analytics module
 pageTitle: API Reference
 subTitle: Core analytics API
 ---
@@ -12,10 +12,10 @@ The core `analytics` API is exposed once the library is initialized with [config
 **Using analytics**
 
 1. Initialize analytics with [configuration](#configuration)
-2. Export the analytics instance with third party providers (Google Analytics, HubSpot, etc)
+2. Export the analytics instance with third-party providers (Google Analytics, HubSpot, etc.)
 3. Use [`page`](#analyticspage), [`identify`](#analyticsidentify), [`track`](#analyticstrack) in your app
-4. [Add a analytics provider](http://getanalytics.io/tutorials/getting-started/#3-connect-plugins)
-5. [Write your own custom plugin](http://getanalytics.io/plugins/writing-plugins)
+4. [Add an analytics provider](http://getanalytics.io/tutorials/getting-started/#3-connect-plugins)
+5. [Write custom plugins](http://getanalytics.io/plugins/writing-plugins)
 
 <!-- AUTO-GENERATED-CONTENT:START (API_DOCS) -->
 ## Configuration

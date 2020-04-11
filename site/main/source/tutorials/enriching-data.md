@@ -7,7 +7,7 @@ subTitle: Customizing tracking payloads with namespaced plugin methods
 
 Let's say we are sending `track` calls into 3 different analytic tools, [Google analytics](https://getanalytics.io/plugins/google-analytics/), [Customer.io](https://getanalytics.io/plugins/customerio/) and [HubSpot](https://getanalytics.io/plugins/hubspot/).
 
-What if we want to **alter & enrich the data specifically for HubSpot** and not send the same information to Google analytics & Customer.io?
+What if we want to **alter & enrich the data specifically for HubSpot** and not send the same information to Google Analytics & Customer.io?
 
 You can write a plugin to achieve this!
 

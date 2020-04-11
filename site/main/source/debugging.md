@@ -5,13 +5,13 @@ pageTitle: Debug mode
 subTitle: Debug in local development mode
 ---
 
-A huge focus of the `analytics` project is an improved developer experience.
+A huge focus of the `analytics` project is an improved & streamlined developer experience.
 
 The library comes with a powerful suite of [debug tools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en) for local development.
 
-This includes **time travel debugging** so devs can walk through call chains & debug how different plugins are making remote calls & effecting the lifecycle.
+Debug mode includes **time travel debugging** so devs can walk through call chains & debug how different plugins are making remote calls & effecting the lifecycle.
 
-During development you can turn on `debug` mode. This will connect [dev tools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en) for devs to visually see the analytics events passing through the application.
+During development, you can turn on `debug` mode. This will connect [dev tools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en) for devs to visually see the analytics events passing through the application.
 
 ![analytics-debug-tools](https://user-images.githubusercontent.com/532272/61163639-21da2300-a4c4-11e9-8743-b45d3a570271.gif)
 
@@ -33,7 +33,7 @@ const analytics = Analytics({
 
 ## Disabling debug in production
 
-To disable `debug` set to false or omit from the options.
+To disable `debug` set to false or omitted from the options.
 
 ```js
 import Analytics from 'analytics'

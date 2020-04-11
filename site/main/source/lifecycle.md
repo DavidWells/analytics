@@ -4,7 +4,7 @@ pageTitle: Lifecycle Events
 description: Using lifecycle events to add custom functionality
 ---
 
-The `analytics` is library is driven by a series of **lifecycle events**. These events allow developers to extend & customize the library to fit any kind of tracking requirements.
+The `analytics` library is driven by a series of **lifecycle events**. These events allow developers to extend & customize the library to fit any tracking requirements.
 
 Events can be hooked into by [listeners](https://getanalytics.io/using-listeners/) in your app code or by [plugins](https://getanalytics.io/plugins/) included at library [initialization](https://getanalytics.io/api/#configuration).
 
@@ -12,7 +12,7 @@ The lifecycle flows like so 👇, and continues depending on which [methods](htt
 
 ![Analytics Lifecycle](https://user-images.githubusercontent.com/532272/64586657-db813300-d351-11e9-83d8-0d81c6973e49.png)
 
-Below is a list of events exposed by default. To see the events flowing through your setup, turn on [debug mode](https://getanalytics.io/debugging/) or checkout the [demo](https://analytics-demo.netlify.com/).
+Below is a list of events exposed by default. To see the events flowing through your setup, turn on [debug mode](https://getanalytics.io/debugging/) or check out the [demo](https://analytics-demo.netlify.com/).
 
 ## Initialization Events
 
@@ -20,7 +20,7 @@ Below is a list of events exposed by default. To see the events flowing through 
 |:------|:-------|
 | **`bootstrap`** | Fires when analytics library starts up.<br/>This is the first event fired. '.on/once' listeners are not allowed on bootstrap<br/>Plugins can attach logic to this event |
 | **`params`** | Fires when analytics parses URL parameters |
-| **`campaign`** | Fires if params contain "utm" parameters |
+| **`campaign`** | Fires if params contain "UTM" parameters |
 | **`initializeStart`** | Fires before 'initialize', allows for plugins to cancel loading of other plugins |
 | **`initialize`** | Fires when analytics loads plugins |
 | **`initializeEnd`** | Fires after initialize, allows for plugins to run logic after initialization methods run |
