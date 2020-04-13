@@ -73,7 +73,8 @@ export default class App extends Component {
   doTrack = async () => {
     this.clearLogs()
     analytics.track('buttonClicked', {
-      foo: 'bar'
+      foo: 'bar',
+      baz: 'cool'
     }, (lol) => {
       console.log('track callback', lol)
     }).then((what) => {
