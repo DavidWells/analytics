@@ -20,9 +20,10 @@ This analytics plugin will add the FullStory javascript library to your app & se
 
 - [Installation](#installation)
 - [How to use](#how-to-use)
+- [Platforms Supported](#platforms-supported)
 - [Browser usage](#browser-usage)
   * [Browser API](#browser-api)
-- [Platforms Supported](#platforms-supported)
+  * [Configuration options for browser](#configuration-options-for-browser)
 - [Additional examples](#additional-examples)
 - [Formatting payloads](#formatting-payloads)
 
@@ -81,16 +82,23 @@ After initializing `analytics` with the `fullStoryPlugin` plugin, data will be s
 
 See [additional implementation examples](#additional-examples) for more details on using in your project.
 
+## Platforms Supported
+
+The `@analytics/fullstory` package works in [the browser](#browser-usage)
+
 ## Browser usage
 
 The FullStory client side browser plugin works with these analytic api methods:
 
-- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to FullStory
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to FullStory
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to FullStory 
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to FullStory 
 
 ### Browser API
 
 ```js
+import Analytics from 'analytics'
+import fullStoryPlugin from '@analytics/fullstory'
+
 const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
@@ -102,15 +110,12 @@ const analytics = Analytics({
 
 ```
 
-**Initialization arguments**
+### Configuration options for browser
 
-- **pluginConfig** `object` Plugin settings
-- **pluginConfig.org** `string` FullStory account's `org` ID. The `_fs_org` value in settings.
+| Option | description |
+|:---------------------------|:-----------|
+| `org` <br/>**required** - string| FullStory account's `org` ID. The `_fs_org` value in settings. |
 
-
-## Platforms Supported
-
-The `@analytics/fullstory` package works in [the browser](#browser-usage)
 
 ## Additional examples
 

@@ -16,9 +16,9 @@ For more information [see the docs](https://getanalytics.io/plugins/simple-analy
 
 - [Installation](#installation)
 - [How to use](#how-to-use)
+- [Platforms Supported](#platforms-supported)
 - [Browser usage](#browser-usage)
   * [Browser API](#browser-api)
-- [Platforms Supported](#platforms-supported)
 - [Additional examples](#additional-examples)
 
 </details>
@@ -52,6 +52,10 @@ const analytics = Analytics({
 
 See [additional implementation examples](#additional-examples) for more details on using in your project.
 
+## Platforms Supported
+
+The `@analytics/simple-analytics` package works in [the browser](#browser-usage)
+
 ## Browser usage
 
 See below from browser API
@@ -59,16 +63,15 @@ See below from browser API
 ### Browser API
 
 ```js
+import Analytics from 'analytics'
+import exports from '@analytics/simple-analytics'
+
 const analytics = Analytics({
   app: 'awesome-app',
   plugins: [simpleAnalyticsPlugin()]
 })
 
 ```
-
-## Platforms Supported
-
-The `@analytics/simple-analytics` package works in [the browser](#browser-usage)
 
 ## Additional examples
 

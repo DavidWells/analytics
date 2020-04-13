@@ -16,11 +16,14 @@ For more information [see the docs](https://getanalytics.io/plugins/google-tag-m
 
 - [Installation](#installation)
 - [How to use](#how-to-use)
+- [Platforms Supported](#platforms-supported)
 - [Browser usage](#browser-usage)
   * [Browser API](#browser-api)
-- [Platforms Supported](#platforms-supported)
+  * [Configuration options for browser](#configuration-options-for-browser)
 - [Additional examples](#additional-examples)
 - [Configuring GTM](#configuring-gtm)
+- [Using multiple instances of GTM](#using-multiple-instances-of-gtm)
+- [Tracking if JS is disabled](#tracking-if-js-is-disabled)
 
 </details>
 <!-- AUTO-GENERATED-CONTENT:END (TOC) -->
@@ -70,16 +73,23 @@ After initializing `analytics` with the `googleTagManager` plugin, data will be 
 
 See [additional implementation examples](#additional-examples) for more details on using in your project.
 
+## Platforms Supported
+
+The `@analytics/google-tag-manager` package works in [the browser](#browser-usage)
+
 ## Browser usage
 
 The Google Tag Manager client side browser plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Google Tag Manager
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Google Tag Manager
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Google Tag Manager 
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Google Tag Manager 
 
 ### Browser API
 
 ```js
+import Analytics from 'analytics'
+import googleTagManager from '@analytics/google-tag-manager'
+
 const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
@@ -91,15 +101,12 @@ const analytics = Analytics({
 
 ```
 
-**Initialization arguments**
+### Configuration options for browser
 
-- **pluginConfig** `object` Plugin settings
-- **pluginConfig.containerId** `string` The Container ID uniquely identifies the GTM Container.
+| Option | description |
+|:---------------------------|:-----------|
+| `containerId` <br/>**required** - string| The Container ID uniquely identifies the GTM Container. |
 
-
-## Platforms Supported
-
-The `@analytics/google-tag-manager` package works in [the browser](#browser-usage)
 
 ## Additional examples
 

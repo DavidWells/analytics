@@ -14,16 +14,18 @@ This analytics plugin will load google analytics into your application.
 
 - [Installation](#installation)
 - [How to use](#how-to-use)
+- [Platforms Supported](#platforms-supported)
 - [Browser usage](#browser-usage)
   * [Browser API](#browser-api)
+  * [Configuration options for browser](#configuration-options-for-browser)
 - [Server-side usage](#server-side-usage)
   * [Server-side API](#server-side-api)
-- [Platforms Supported](#platforms-supported)
+  * [Configuration options for server-side](#configuration-options-for-server-side)
 - [Additional examples](#additional-examples)
+- [Anonymize Visitor IPs](#anonymize-visitor-ips)
 - [Customizing event payloads](#customizing-event-payloads)
-- [Using as a standalone package](#using-as-a-standalone-package)
-  * [Standalone Installation](#standalone-installation)
-  * [Using in your app](#using-in-your-app)
+- [Using GA Custom Dimensions](#using-ga-custom-dimensions)
+  * [Set the "customDimensions" option](#set-the-customdimensions-option)
 
 </details>
 <!-- AUTO-GENERATED-CONTENT:END -->
@@ -39,7 +41,7 @@ npm install @analytics/google-analytics
 
 ## How to use
 
-The `@analytics/google-analytics` package works in [the browser](#browser-usage) and [server-side in node.js](#server-side-usage). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
+The `@analytics/google-analytics` package works in [the browser](#browser-usage) and [server-side in Node.js](#server-side-usage). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
 
 Below is an example of how to use the browser plugin.
 
@@ -78,6 +80,10 @@ After initializing `analytics` with the `googleAnalytics` plugin, data will be s
 
 See [additional implementation examples](#additional-examples) for more details on using in your project.
 
+## Platforms Supported
+
+The `@analytics/google-analytics` package works in [the browser](#browser-usage) and [server-side in Node.js](#server-side-usage)
+
 ## Browser usage
 
 The Google Analytics client side browser plugin works with these analytic api methods:
@@ -89,6 +95,9 @@ The Google Analytics client side browser plugin works with these analytic api me
 ### Browser API
 
 ```js
+import Analytics from 'analytics'
+import googleAnalytics from '@analytics/google-analytics'
+
 const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
@@ -100,10 +109,16 @@ const analytics = Analytics({
 
 ```
 
-**Initialization arguments**
+### Configuration options for browser
 
-- **pluginConfig** `object` Plugin settings
-- **pluginConfig.trackingId** `string` site tracking Id
+| Option | description |
+|:---------------------------|:-----------|
+| `trackingId` <br/>**required** - string| Google Analytics site tracking Id |
+| `debug` <br/>_optional_ - boolean| Enable Google Analytics debug mode |
+| `anonymizeIp` <br/>_optional_ - boolean| Enable [Anonymizing IP addresses](https://bit.ly/3c660Rd) sent to Google Analytics. [See details below](#anonymize-visitor-ips) |
+| `customDimensions` <br/>_optional_ - object| Map [Custom dimensions](https://bit.ly/3c5de88) to send extra information to Google Analytics. [See details below](#using-ga-custom-dimensions) |
+| `resetCustomDimensionsOnPage` <br/>_optional_ - object| Reset custom dimensions by key on analytics.page() calls. Useful for single page apps. |
+| `setCustomDimensionsToPage` <br/>_optional_ - boolean| Mapped dimensions will be set to the page & sent as properties of all subsequent events on that page. If false, analytics will only pass custom dimensions as part of individual events |
 
 ## Server-side usage
 
@@ -116,6 +131,9 @@ The Google Analytics server-side node.js plugin works with these analytic api me
 ### Server-side API
 
 ```js
+import Analytics from 'analytics'
+import googleAnalytics from '@analytics/google-analytics'
+
 const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
@@ -127,14 +145,11 @@ const analytics = Analytics({
 
 ```
 
-**Initialization arguments**
+### Configuration options for server-side
 
-- **pluginConfig** `object` Plugin settings
-- **pluginConfig.trackingId** `string` site tracking Id
-
-## Platforms Supported
-
-The `@analytics/google-analytics` package works in [the browser](#browser-usage) and [server-side in node.js](#server-side-usage)
+| Option | description |
+|:---------------------------|:-----------|
+| `trackingId` <br/>**required** - string| Google Analytics site tracking Id |
 
 ## Additional examples
 
@@ -320,6 +335,29 @@ Below are additional implementation examples.
 
 <!-- AUTO-GENERATED-CONTENT:END (PLUGIN_DOCS) -->
 
+## Anonymize Visitor IPs
+
+Google analytics allows you to [anonymize visitor IP addresses](https://developers.google.com/analytics/devguides/collection/analyticsjs/ip-anonymization).
+
+To anonymize the IP addresses of your visitors set the `anonymizeIp` configuration option.
+
+```js
+import Analytics from 'analytics'
+import googleAnalytics from '@analytics/google-analytics'
+
+/* initialize analytics */
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    googleAnalytics({
+      trackingId: 'UA-1223141231',
+      /* Anonymize the IP addresses */
+      anonymizeIp: true
+    }),
+  ]
+})
+```
+
 ## Customizing event payloads
 
 To send tracking custom events to Google Analytics with `eventLabel`, `eventCategory`, and `eventValue` [fields](https://developers.google.com/analytics/devguides/collection/analyticsjs/events#event_fields), add the `label`, `category`, and `value` keys to the event properties.
@@ -332,61 +370,60 @@ analytics.track('play', {
 })
 ```
 
-## Using as a standalone package
+## Using GA Custom Dimensions
 
-This package exports Google Analytics helper methods for any project to use.
+To use [Google Analytics custom dimensions](https://developers.google.com/analytics/devguides/collection/analyticsjs/custom-dims-mets), use the `customDimensions` configuration option and map the values to the custom dimension slots.
 
-**Note:** We recommend using the plugin described above with the `analytics` core package.
+### Set the "customDimensions" option
 
-The standalone methods below will send data to Google Analytics but are not attached to the [analytics plugin lifecycle](https://getanalytics.io/lifecycle/).
-
-Use `analytics` + `@analytics/google-analytics` packages together as described above to enable these features:
-
-- automatic library initialization
-- offline retries
-- middleware functionality
-- callbacks
-- listeners
-- etc.
-
-When using `standalone` methods, you will need to handle these edge cases & retries yourself.
-
-### Standalone Installation
-
-Install the `@analytics/google-analytics` package.
-
-```bash
-npm install @analytics/google-analytics
-```
-
-### Using in your app
-
-When using `standalone` mode, you will need to initialize the provider javascript and pass in all the fields needed by said provider.
+When initializing `analytics`, make sure you set `customDimensions` and map your values.
 
 ```js
-// Stand alone functionality
-import {
-  initialize as loadGoogleAnalytics,
-  page as pageView,
-  track as trackEvent,
-  identify as identifyVisitor
-} from '@analytics/google-analytics'
+import Analytics from 'analytics'
+import googleAnalytics from '@analytics/google-analytics'
 
-// Load Google Analytics on page
-loadGoogleAnalytics({ trackingId: 'UA-1234' })
-
-// Track page view
-pageView()
-
-// Track custom event
-trackEvent('buttonClick', {
-  label: 'event label',
-  category: 'event category',
-  value: 'event value'
+/* initialize analytics */
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    googleAnalytics({
+      trackingId: 'UA-1223141231',
+      /* Map your Google Analytics custom dimensions here */
+      customDimensions: {
+        baz: 'dimension1',
+        foo: 'dimension2',
+        flam: 'dimension3',
+      },
+    }),
+  ]
 })
-
-// Identify the visitor
-identifyVisitor('user-123')
 ```
 
-**Tip**: The benefit of using with the `@analytics/google-analytics` as an `analytics` plugin is not having to update many places in your code when adding or removing an analytics tool. This make refactoring and responding to new business requirements much easier.
+The above config will map **baz** to `dimension1`, **foo** to `dimension2`, and **flam** to `dimension3`
+
+When `track`, `page`, or `identify` calls are made the mapped values will automatically set to Google Analytics custom dimensions.
+
+```js
+/* Tracking example */
+analytics.track('buttonClicked', {
+   baz: 'hello', // baz is mapped to GA custom dimension "dimension1"
+   foo: 'cool'   // foo is mapped to GA custom dimension "dimension2"
+})
+```
+
+Under the hood, analytics automatically sets the custom dimensions in Google Analytics like so:
+
+```js
+window.ga('set', {dimension1: 'hello', dimension2: 'cool'})
+```
+
+This also works with page & identify calls.
+
+```js
+/* Identify example */
+analytics.identify('user123', {
+   flam: 'wow' // flam is mapped to GA custom dimension "dimension3"
+})
+
+// This is mapped to window.ga('set', {  dimension3: 'wow' })
+```

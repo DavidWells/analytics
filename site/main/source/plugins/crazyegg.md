@@ -15,9 +15,10 @@ This analytics plugin will load crazy egg into your application.
 
 - [Installation](#installation)
 - [How to use](#how-to-use)
+- [Platforms Supported](#platforms-supported)
 - [Browser usage](#browser-usage)
   * [Browser API](#browser-api)
-- [Platforms Supported](#platforms-supported)
+  * [Configuration options for browser](#configuration-options-for-browser)
 - [Additional examples](#additional-examples)
 - [Usage](#usage)
 
@@ -59,6 +60,10 @@ const analytics = Analytics({
 
 See [additional implementation examples](#additional-examples) for more details on using in your project.
 
+## Platforms Supported
+
+The `@analytics/crazy-egg` package works in [the browser](#browser-usage)
+
 ## Browser usage
 
 See below from browser API
@@ -66,6 +71,9 @@ See below from browser API
 ### Browser API
 
 ```js
+import Analytics from 'analytics'
+import exports from '@analytics/crazy-egg'
+
 const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
@@ -78,14 +86,11 @@ const analytics = Analytics({
 
 ```
 
-**Initialization arguments**
+### Configuration options for browser
 
-- **pluginConfig** `object` Plugin settings
-- **pluginConfig.accountNumber** `string` crazy egg account ID
-
-## Platforms Supported
-
-The `@analytics/crazy-egg` package works in [the browser](#browser-usage)
+| Option | description |
+|:---------------------------|:-----------|
+| `accountNumber` <br/>**required** - string| crazy egg account ID |
 
 ## Additional examples
 

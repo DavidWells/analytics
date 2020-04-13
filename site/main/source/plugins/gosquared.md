@@ -13,9 +13,10 @@ GoSquared provides analytics, live chat, & automation tools to help developers i
 
 - [Installation](#installation)
 - [How to use](#how-to-use)
+- [Platforms Supported](#platforms-supported)
 - [Browser usage](#browser-usage)
   * [Browser API](#browser-api)
-- [Platforms Supported](#platforms-supported)
+  * [Configuration options for browser](#configuration-options-for-browser)
 - [Additional examples](#additional-examples)
 - [Finding your GoSquared projectToken](#finding-your-gosquared-projecttoken)
 - [Running on localHost](#running-on-localhost)
@@ -74,18 +75,25 @@ After initializing `analytics` with the `goSquaredPlugin` plugin, data will be s
 
 See [additional implementation examples](#additional-examples) for more details on using in your project.
 
+## Platforms Supported
+
+The `@analytics/gosquared` package works in [the browser](#browser-usage)
+
 ## Browser usage
 
 The GoSquared client side browser plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into GoSquared
-- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for GoSquared values
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to GoSquared
-- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to GoSquared
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into GoSquared 
+- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for GoSquared values 
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to GoSquared 
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to GoSquared 
 
 ### Browser API
 
 ```js
+import Analytics from 'analytics'
+import goSquaredPlugin from '@analytics/gosquared'
+
 const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
@@ -97,21 +105,18 @@ const analytics = Analytics({
 
 ```
 
-**Initialization arguments**
+### Configuration options for browser
 
-- **pluginConfig** `object` Plugin settings
-- **pluginConfig.projectToken** `string` GoSquared project token for client side tracking
-- **pluginConfig.disableAnonymousTraffic** (optional) `boolean` Disable anonymous events from firing
-- **pluginConfig.trackLocal** (optional) `boolean` Enable tracking on localhost
-- **pluginConfig.anonymizeIP** (optional) `boolean` Prevent the visitors' IP address from being tracked
-- **pluginConfig.cookieDomain** (optional) `string` Override default cookie domain for subdomain tracking
-- **pluginConfig.useCookies** (optional) `boolean` Set to false to disable usage of cookies in the tracker
-- **pluginConfig.trackHash** (optional) `boolean` Whether to track hashes in the page URL
-- **pluginConfig.trackParams** (optional) `boolean` Whether to track URL querystring parameters
-
-## Platforms Supported
-
-The `@analytics/gosquared` package works in [the browser](#browser-usage)
+| Option | description |
+|:---------------------------|:-----------|
+| `projectToken` <br/>**required** - string| GoSquared project token for client side tracking |
+| `disableAnonymousTraffic` <br/>_optional_ - boolean| Disable anonymous events from firing |
+| `trackLocal` <br/>_optional_ - boolean| Enable tracking on localhost |
+| `anonymizeIP` <br/>_optional_ - boolean| Prevent the visitors' IP address from being tracked |
+| `cookieDomain` <br/>_optional_ - string| Override default cookie domain for subdomain tracking |
+| `useCookies` <br/>_optional_ - boolean| Set to false to disable usage of cookies in the tracker |
+| `trackHash` <br/>_optional_ - boolean| Whether to track hashes in the page URL |
+| `trackParams` <br/>_optional_ - boolean| Whether to track URL querystring parameters |
 
 ## Additional examples
 

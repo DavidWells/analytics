@@ -13,9 +13,10 @@ This analytics plugin will load HubSpot's client side tracking script into your 
 
 - [Installation](#installation)
 - [How to use](#how-to-use)
+- [Platforms Supported](#platforms-supported)
 - [Browser usage](#browser-usage)
   * [Browser API](#browser-api)
-- [Platforms Supported](#platforms-supported)
+  * [Configuration options for browser](#configuration-options-for-browser)
 - [Additional examples](#additional-examples)
 - [Using identify](#using-identify)
 
@@ -73,6 +74,10 @@ After initializing `analytics` with the `hubSpotPlugin` plugin, data will be sen
 
 See [additional implementation examples](#additional-examples) for more details on using in your project.
 
+## Platforms Supported
+
+The `@analytics/hubspot` package works in [the browser](#browser-usage)
+
 ## Browser usage
 
 The HubSpot client side browser plugin works with these analytic api methods:
@@ -84,6 +89,9 @@ The HubSpot client side browser plugin works with these analytic api methods:
 ### Browser API
 
 ```js
+import Analytics from 'analytics'
+import hubSpotPlugin from '@analytics/hubspot'
+
 const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
@@ -95,14 +103,11 @@ const analytics = Analytics({
 
 ```
 
-**Initialization arguments**
+### Configuration options for browser
 
-- **pluginConfig** `object` Plugin settings
-- **pluginConfig.portalId** `string` The HubSpot Portal (or Hub) Id of your HubSpot account
-
-## Platforms Supported
-
-The `@analytics/hubspot` package works in [the browser](#browser-usage)
+| Option | description |
+|:---------------------------|:-----------|
+| `portalId` <br/>**required** - string| The HubSpot Portal (or Hub) Id of your HubSpot account |
 
 ## Additional examples
 

@@ -14,11 +14,13 @@ Integration with [customer.io](https://customer.io/) for [analytics](https://www
 
 - [Installation](#installation)
 - [How to use](#how-to-use)
+- [Platforms Supported](#platforms-supported)
 - [Browser usage](#browser-usage)
   * [Browser API](#browser-api)
+  * [Configuration options for browser](#configuration-options-for-browser)
 - [Server-side usage](#server-side-usage)
   * [Server-side API](#server-side-api)
-- [Platforms Supported](#platforms-supported)
+  * [Configuration options for server-side](#configuration-options-for-server-side)
 - [Additional examples](#additional-examples)
 
 </details>
@@ -37,7 +39,7 @@ npm install @analytics/customerio
 
 ## How to use
 
-The `@analytics/customerio` package works in [the browser](#browser-usage) and [server-side in node.js](#server-side-usage). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
+The `@analytics/customerio` package works in [the browser](#browser-usage) and [server-side in Node.js](#server-side-usage). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
 
 Below is an example of how to use the browser plugin.
 
@@ -75,6 +77,10 @@ After initializing `analytics` with the `customerIOPlugin` plugin, data will be 
 
 See [additional implementation examples](#additional-examples) for more details on using in your project.
 
+## Platforms Supported
+
+The `@analytics/customerio` package works in [the browser](#browser-usage) and [server-side in Node.js](#server-side-usage)
+
 ## Browser usage
 
 The Customer.io client side browser plugin works with these analytic api methods:
@@ -87,6 +93,9 @@ The Customer.io client side browser plugin works with these analytic api methods
 ### Browser API
 
 ```js
+import Analytics from 'analytics'
+import customerIOPlugin from '@analytics/customerio'
+
 const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
@@ -98,11 +107,12 @@ const analytics = Analytics({
 
 ```
 
-**Initialization arguments**
+### Configuration options for browser
 
-- **pluginConfig** `object` Plugin settings
-- **pluginConfig.siteId** `string` Customer.io site Id for client side tracking
-- **pluginConfig.disableAnonymousTraffic** (optional) `boolean` Disable anonymous events from firing
+| Option | description |
+|:---------------------------|:-----------|
+| `siteId` <br/>**required** - string| Customer.io site Id for client side tracking |
+| `disableAnonymousTraffic` <br/>_optional_ - boolean| Disable anonymous events from firing |
 
 ## Server-side usage
 
@@ -115,6 +125,9 @@ The Customer.io server-side node.js plugin works with these analytic api methods
 ### Server-side API
 
 ```js
+import Analytics from 'analytics'
+import customerIOServer from '@analytics/customerio'
+
 const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
@@ -127,16 +140,13 @@ const analytics = Analytics({
 
 ```
 
-**Initialization arguments**
+### Configuration options for server-side
 
-- **pluginConfig** `object` Plugin settings
-- **pluginConfig.siteId** `string` Customer.io site Id for server side tracking
-- **pluginConfig.apiKey** `string` Customer.io API key for server side tracking
+| Option | description |
+|:---------------------------|:-----------|
+| `siteId` <br/>**required** - string| Customer.io site Id for server side tracking |
+| `apiKey` <br/>**required** - string| Customer.io API key for server side tracking |
 
-
-## Platforms Supported
-
-The `@analytics/customerio` package works in [the browser](#browser-usage) and [server-side in node.js](#server-side-usage)
 
 ## Additional examples
 
