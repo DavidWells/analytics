@@ -1,19 +1,17 @@
 /* global ga */
 
-const config = {
-  /* Website's Google Analytics Tracking ID */
+const defaultConfig = {
+  /* See description below */
   trackingId: null,
-  /* Turn on google analytics debugging */
+  /* See description below */
   debug: false,
-  /* Anonymizing IP addresses sent to Google Analytics https://bit.ly/3c660Rd */
+  /* See description below */
   anonymizeIp: false,
-  /* Custom dimensions allow you to send extra information to Google Analytics. https://bit.ly/3c5de88 */
+  /* See description below */
   customDimensions: {},
-  /* Reset custom dimensions by key on analytics.page calls. Useful for single page apps */
+  /* See description below */
   resetCustomDimensionsOnPage: [],
-  /* Mapped dimensions will be set to the page & sent as properties of all subsequent events on that page.
-     If false, analytics will only pass custom dimensions as part of individual events
-  */
+  /* See description below */
   setCustomDimensionsToPage: true,
   /* Custom metrics https://bit.ly/3c5de88 */
   // TODO customMetrics: { key: 'metric1' }
@@ -26,8 +24,13 @@ const config = {
  * @link https://getanalytics.io/plugins/google-analytics/
  * @link https://analytics.google.com/analytics/web/
  * @link https://developers.google.com/analytics/devguides/collection/analyticsjs
- * @param {object} pluginConfig - Plugin settings
- * @param {string} pluginConfig.trackingId - site tracking Id
+ * @param {object}  pluginConfig - Plugin settings
+ * @param {string}  pluginConfig.trackingId - Google Analytics site tracking Id
+ * @param {boolean} [pluginConfig.debug] - Enable Google Analytics debug mode
+ * @param {boolean} [pluginConfig.anonymizeIp] - Enable [Anonymizing IP addresses](https://bit.ly/3c660Rd) sent to Google Analytics. [See details below](#anonymize-visitor-ips)
+ * @param {object}  [pluginConfig.customDimensions] - Map [Custom dimensions](https://bit.ly/3c5de88) to send extra information to Google Analytics. [See details below](#using-ga-custom-dimensions)
+ * @param {object}  [pluginConfig.resetCustomDimensionsOnPage] - Reset custom dimensions by key on analytics.page() calls. Useful for single page apps.
+ * @param {boolean} [pluginConfig.setCustomDimensionsToPage] - Mapped dimensions will be set to the page & sent as properties of all subsequent events on that page. If false, analytics will only pass custom dimensions as part of individual events
  * @return {*}
  * @example
  *
@@ -41,7 +44,7 @@ function googleAnalytics(pluginConfig = {}) {
   return {
     NAMESPACE: 'google-analytics',
     config: {
-      ...config,
+      ...defaultConfig,
       ...pluginConfig
     },
     initialize: initialize,

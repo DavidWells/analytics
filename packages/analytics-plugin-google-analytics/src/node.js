@@ -7,7 +7,7 @@ if (!process.browser) {
 /**
  * Serverside Google Analytics plugin
  * @param {object} pluginConfig - Plugin settings
- * @param {string} pluginConfig.trackingId - site tracking Id
+ * @param {string} pluginConfig.trackingId - Google Analytics site tracking Id
  * @return {*}
  * @example
  *
