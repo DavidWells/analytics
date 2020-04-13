@@ -1,6 +1,6 @@
 {
   "name": "@analytics/google-analytics",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Google analytics plugin for 'analytics' module",
   "projectMeta": {
     "provider": {

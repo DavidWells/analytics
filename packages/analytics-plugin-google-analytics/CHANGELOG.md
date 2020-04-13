@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/DavidWells/analytics/compare/@analytics/google-analytics@0.2.2...@analytics/google-analytics@0.3.0) (2020-04-13)
+
+
+### Features
+
+* Add support for Google Analytics Custom dimensions ([50a0bbf](https://github.com/DavidWells/analytics/commit/50a0bbf))
+
+
+
+
+
 ## [0.2.2](https://github.com/DavidWells/analytics/compare/@analytics/google-analytics@0.2.1...@analytics/google-analytics@0.2.2) (2019-10-23)
 
 **Note:** Version bump only for package @analytics/google-analytics
