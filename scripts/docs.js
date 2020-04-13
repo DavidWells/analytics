@@ -173,8 +173,8 @@ ${renderRelevantMethods(data)}
     const name = getPlatformName(y)
     exposedFuncs = getExposedFunctions(y.data)
     const exp = exposedFuncs
-    const jsDoc = renderJsDocs(y.data, y)
     const niceName = (name === 'node.js') ? `server-side` : name
+    const jsDoc = renderJsDocs(y.data, y, niceName)
     const niceText = (name === 'node.js') ? `${niceName} ${name}` : `client side ${niceName}`
     const capsName = capitalizeFirstLetter(niceName)
     const apiMethodsExposed = exp
@@ -214,11 +214,11 @@ ${indentString(formatCode(code), 0)}
 ${whatThisEnablesText(exampleFunctionName, providerName, exposedFuncs)}
 See [additional implementation examples](#additional-examples) for more details on using in your project.
 
-${apiDocs.join('\n')}
-
 ## Platforms Supported
 
 The \`${pkg.name}\` package works in ${renderPlatformSentence(platforms)}
+
+${apiDocs.join('\n')}
 
 ## Additional examples
 
@@ -231,7 +231,7 @@ ${additionalExamples}
 function renderPlatformSentence(platforms) {
   const NICE_NAMES = {
     'Browser': 'the browser',
-    'Node.js': 'server-side in node.js'
+    'Node.js': 'server-side in Node.js'
   }
 
   return platforms.map((x) => {
@@ -294,7 +294,8 @@ function getPlatformName(data) {
   return (data.platform === 'node') ? 'node.js' : data.platform
 }
 
-function renderJsDocs(data, allData) {
+function renderJsDocs(data, allData, platform) {
+  console.log('allData', allData)
   const defaultExport = data.ast.foundExports.find((x) => Boolean(x.isDefault))
   let jsDocForDefaultExport = data.jsdoc.find((x) => x.id === defaultExport.name)
   if (!jsDocForDefaultExport) {
@@ -305,22 +306,26 @@ function renderJsDocs(data, allData) {
       throw new Error(`Missing default export for ${allData.dir}`)
     }
   }
-  const jsdocContent = jsDocFormatArguments(jsDocForDefaultExport.params)
-  const jsDocExample = jsDocRenderExample(jsDocForDefaultExport.examples[0])
+  const jsdocContent = jsDocFormatArguments(jsDocForDefaultExport.params, platform)
+  const jsDocExample = jsDocRenderExample(jsDocForDefaultExport.examples[0], allData)
   return `${jsDocExample}${jsdocContent}`
 }
 
-function jsDocFormatArguments(params) {
+function jsDocFormatArguments(params, platform) {
   if (!params) return ''
-  const theArgs = params.map((param) => {
+  const theArgs = params.filter((param) => {
+    return param.name !== 'pluginConfig'
+  }).map((param) => {
     return jsDocRenderArg(param)
   })
   // console.log('theArgs', theArgs)
   if (theArgs.length) {
     return `
 
-**Initialization arguments**
+### Configuration options for ${platform}
 
+| Option | description |
+|:---------------------------|:-----------|
 ${theArgs.join('\n')}
 `
   }
@@ -328,16 +333,20 @@ ${theArgs.join('\n')}
 }
 
 function jsDocRenderArg(param) {
-  const optionalText = (param.optional) ? '(optional) ' : ''
-  const type = `\`${param.type.names[0]}\``
-  return `- **${param.name}** ${optionalText}${type} ${param.description}`
+  const optionalText = (param.optional) ? '_optional_ - ' : '**required** - '
+  const type = `${param.type.names[0]}`
+  // md += `| **[${param.name} - \``](${data.githubUrl})** <br/> by [${userName}](${profileURL}) <br/>`
+  return `| \`${param.name.replace(/^pluginConfig\./, '')}\` <br/>${optionalText}${type}| ${param.description} |`
 }
 
-function jsDocRenderExample(example) {
+function jsDocRenderExample(example, allData) {
   if (!example) {
     return ''
   }
-  const code = `
+  const main = allData.data.jsdoc.find((doc) => Boolean(doc.examples))
+  const name = main.name
+  const code = `${generateImportStatement(name, allData.pkg.name)}
+
 const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
@@ -393,6 +402,11 @@ After initializing \`analytics\` with the \`${name}\` plugin, data will be sent 
 `
 }
 
+function generateImportStatement(name, pkgName) {
+  return `import Analytics from 'analytics'
+import ${name} from '${pkgName}'`
+}
+
 // ${example.replace(/^\s+|\s+$/g, '')},
 function es6Usage(data, pkg) {
   const main = data.jsdoc.find((doc) => Boolean(doc.examples))
@@ -400,8 +414,7 @@ function es6Usage(data, pkg) {
   const name = main.name
   const exampleCode = main.examples[0]
   const code = `
-import Analytics from 'analytics'
-import ${name} from '${pkg.name}'
+${generateImportStatement(name, pkg.name)}
 
 const analytics = Analytics({
   app: 'awesome-app',
