@@ -57,7 +57,7 @@ const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
     googleAnalytics({
-      trackingId: '123-xyz'
+      trackingId: 'UA-1234567'
     })
   ]
 })
@@ -106,7 +106,7 @@ const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
     googleAnalytics({
-      trackingId: '123-xyz'
+      trackingId: 'UA-1234567'
     })
   ]
 })
@@ -251,7 +251,7 @@ Below are additional implementation examples.
           app: 'my-app-name',
           plugins: [
             analyticsGA.init({
-              trackingId: '123-xyz'
+              trackingId: 'UA-1234567'
             })
           ]
         })
@@ -306,7 +306,7 @@ Below are additional implementation examples.
           debug: true,
           plugins: [
             analyticsGA({
-              trackingId: '123-xyz'
+              trackingId: 'UA-1234567'
             })
             // ... add any other third party analytics plugins
           ]

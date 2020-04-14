@@ -35,7 +35,7 @@ const defaultConfig = {
  * @example
  *
  * googleAnalytics({
- *   trackingId: '123-xyz'
+ *   trackingId: 'UA-1234567'
  * })
  */
 function googleAnalytics(pluginConfig = {}) {
