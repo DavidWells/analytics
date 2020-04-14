@@ -135,6 +135,8 @@ Checkout the [using analytics with react demo](https://analytics-react-example.n
 
 For a larger example see the [kitchen sink example](https://analytics-demo.netlify.com) & it's [source code](https://github.com/DavidWells/analytics/tree/master/examples/demo).
 
+Also checkout the [`useAnalytics`](http://getanalytics.io/utils/react-hooks) react hooks.
+
 ### Gatsby
 
 To use analytics with Gatsby install the [gatsby-plugin-analytics](https://www.gatsbyjs.org/packages/gatsby-plugin-analytics/) plugin.

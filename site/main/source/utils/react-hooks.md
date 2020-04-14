@@ -5,7 +5,22 @@ description: How to use use-analytics react hook
 
 React hooks for [analytics](https://www.npmjs.com/package/analytics). This library adds some convenience methods when working with React & makes it a little easier to passing around the `analytics` instance while instrumenting your application.
 
-Note: When using `analytics` with React, this library, `use-analytics`, hooks library is **not** required. See details below for [using analytics with react without hooks.](#without-hooks)
+Note: When using `analytics` with React, this library, `use-analytics`, hooks library is **not** required. See details below for [using analytics with react without hooks.](https://getanalytics.io/utils/react-hooks/#without-hooks)
+
+<!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
+<details>
+<summary>Click to expand</summary>
+
+- [Installation](#installation)
+- [How to use](#how-to-use)
+- [useAnalytics hook](#useanalytics-hook)
+- [AnalyticsConsumer Functional Component](#analyticsconsumer-functional-component)
+- [withAnalytics higher order component](#withanalytics-higher-order-component)
+- [AnalyticsContext Class Component](#analyticscontext-class-component)
+- [Analytics without hooks](#analytics-without-hooks)
+
+</details>
+<!-- AUTO-GENERATED-CONTENT:END -->
 
 ## Installation
 
@@ -64,7 +79,7 @@ ReactDOM.render((
 ), document.getElementById('root'))
 ```
 
-## useAnalytics hook
+## `useAnalytics` Hook
 
 After the `AnalyticsProvider` is added to your application you can use the `useAnalytics` hook anywhere down the component tree.
 
@@ -90,7 +105,7 @@ const Example = (props) => {
 }
 ```
 
-## AnalyticsConsumer Functional Component
+## `AnalyticsConsumer` Functional Component
 
 Below is an example of using render props and the `AnalyticsConsumer` component and the render props pattern.
 
@@ -135,7 +150,46 @@ ReactDOM.render((
 ), document.getElementById('root'))
 ```
 
-## AnalyticsContext Class Component
+## `withAnalytics` HOC
+
+It's also possible to use `withAnalytics` to wrap components inside the `<AnalyticsProvider />` component.
+
+This will inject the analytics instance into `this.props.analytics`
+
+Below is an example of using `withAnalytics`
+
+```js
+import React, { Component } from 'react'
+import { useAnalytics } from 'use-analytics'
+
+class App extends Component {
+  render() {
+    /* props.analytics contains the analytics API https://getanalytics.io/api/*/
+    const { analytics } = this.props
+    const { track, page, identify } = analytics
+    return (
+      <div className="App">
+        <div>
+          <button onClick={() => track('trackThing')}>
+            Track event
+          </button>
+          <button onClick={() => page()}>
+            Trigger page view
+          </button>
+          <button onClick={() => identify('userID', { email: 'bob@bob.com' })}>
+            Trigger identify visitor
+          </button>
+        </div>
+      </div>
+    )
+  }
+}
+
+export default withAnalytics(App)
+```
+
+
+## `AnalyticsContext` Class Component
 
 If you are using React class components, you can leverage the [static contextType](https://reactjs.org/docs/context.html#classcontexttype) field and set the `AnalyticsContext`.
 
