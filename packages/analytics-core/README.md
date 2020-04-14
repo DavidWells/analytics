@@ -645,6 +645,7 @@ The `analytics` has a robust plugin system. Here is a list of currently availabl
 - [analytics-util-params](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-params) Url Parameter helper functions [npm link](https://www.npmjs.com/package/analytics-util-params).
 - [analytics-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-utils) Analytics utility functions used by 'analytics' module [npm link](https://www.npmjs.com/package/analytics-utils).
 - [gatsby-plugin-analytics](https://github.com/DavidWells/analytics/tree/master/packages/gatsby-plugin-analytics) Easily add analytics to your Gatsby site [npm link](https://www.npmjs.com/package/gatsby-plugin-analytics).
+- [use-analytics](https://github.com/DavidWells/analytics/tree/master/packages/use-analytics) Analytics hooks for React [npm link](https://www.npmjs.com/package/use-analytics).
 - Add yours! 👇
 <!-- AUTO-GENERATED-CONTENT:END -->
 
