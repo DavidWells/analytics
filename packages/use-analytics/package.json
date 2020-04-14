@@ -14,7 +14,10 @@
   "scripts": {
     "build": "microbundle-crl --no-compress --format modern,cjs",
     "watch": "microbundle-crl watch --no-compress --format modern,cjs",
-    "prepublish": "run-s build"
+    "prepublish": "run-s build",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish"
   },
   "dependencies": {
     "hoist-non-react-statics": "^3.3.2",
