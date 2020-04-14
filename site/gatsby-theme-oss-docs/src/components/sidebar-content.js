@@ -36,6 +36,7 @@ function handleToggleCategory(title, expanded) {
 const customSideBarTitles = {
   'Analytics Documentation': 'About',
   'Analytics Plugins': '- Using Plugins',
+  'React hooks for analytics': '- React hooks',
   'Request an analytics integration': <b>{'👋'} Request a plugin</b>,
 }
 
@@ -43,7 +44,7 @@ export default function SidebarContent(props) {
   const sideBarContents = props.contents.reduce((acc, curr) => {
     const newPages = curr.pages.map((x) => {
       // console.log('x', x)
-      const theTitle = x.pageTitle || x.title
+      const theTitle = x.menuTitle || x.pageTitle || x.title
       // check if top level nav for prefix
       const prefix = (!curr.title) ? '' : '- '
       // map custom names

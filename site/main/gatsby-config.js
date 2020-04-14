@@ -42,6 +42,7 @@ module.exports = {
           Utilities: [
             'utils/cookies',
             'utils/forms',
+            'utils/react-hooks',
           ],
           Tutorials: [
             'tutorials/getting-started',
