@@ -295,7 +295,7 @@ function getPlatformName(data) {
 }
 
 function renderJsDocs(data, allData, platform) {
-  console.log('allData', allData)
+  // console.log('allData', allData)
   const defaultExport = data.ast.foundExports.find((x) => Boolean(x.isDefault))
   let jsDocForDefaultExport = data.jsdoc.find((x) => x.id === defaultExport.name)
   if (!jsDocForDefaultExport) {

@@ -19,7 +19,6 @@
   "dependencies": {
     "hoist-non-react-statics": "^3.3.2",
     "mini-create-react-context": "^0.4.0",
-    "prop-types": "^15.7.2",
     "tiny-invariant": "^1.1.0"
   },
   "peerDependencies": {
@@ -34,5 +33,16 @@
   },
   "files": [
     "dist"
+  ],
+  "keywords": [
+    "analytics",
+    "analytics-project",
+    "metrics",
+    "telemetry",
+    "event tracking",
+    "page tracking",
+    "user tracking",
+    "react",
+    "hooks"
   ]
 }

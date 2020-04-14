@@ -9,9 +9,9 @@ export {
   AnalyticsProvider,
   AnalyticsConsumer,
   AnalyticsContext,
-  // HOC
+  // Higher Order Component
   withAnalytics,
-  // Hooks
+  // React Hooks
   useAnalytics,
   useTrack,
   usePage,
