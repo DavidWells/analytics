@@ -1,0 +1,38 @@
+{
+  "name": "use-analytics",
+  "version": "0.0.1",
+  "description": "Analytics hooks for React",
+  "author": "DavidWells",
+  "license": "MIT",
+  "repository": "DavidWells/niceee",
+  "main": "dist/index.js",
+  "module": "dist/index.modern.js",
+  "source": "src/index.js",
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "build": "microbundle-crl --no-compress --format modern,cjs",
+    "watch": "microbundle-crl watch --no-compress --format modern,cjs",
+    "prepublish": "run-s build"
+  },
+  "dependencies": {
+    "hoist-non-react-statics": "^3.3.2",
+    "mini-create-react-context": "^0.4.0",
+    "prop-types": "^15.7.2",
+    "tiny-invariant": "^1.1.0"
+  },
+  "peerDependencies": {
+    "react": ">=15"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.8.3",
+    "babel-eslint": "^10.0.3",
+    "cross-env": "^7.0.2",
+    "microbundle-crl": "^0.13.8",
+    "npm-run-all": "^4.1.5"
+  },
+  "files": [
+    "dist"
+  ]
+}
