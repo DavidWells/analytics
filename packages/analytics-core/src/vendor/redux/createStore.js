@@ -1,16 +1,8 @@
 import isPlainObject from './utils/isPlainObject'
+import { FUNC, UNDEF, ACTION_INIT, REDUCER } from './utils/defs'
 
-const $$observable = /* #__PURE__ */ (() => (typeof Symbol === 'function' && Symbol.observable) || '@@observable')(); // eslint-disable-line
-
-/**
- * These are private action types reserved by Redux.
- * For any unknown actions, you must return the current state.
- * If the current state is undefined, you must return the initial state.
- * Do not reference these action types directly in your code.
- */
-export const ActionTypes = {
-  INIT: '@@redux/INIT'
-}
+// eslint-disable-next-line
+const $$observable = /* #__PURE__ */ (() => (typeof Symbol === FUNC && Symbol.observable) || '@@observable')();
 
 /**
  * Creates a Redux store that holds the state tree.
@@ -37,22 +29,23 @@ export const ActionTypes = {
  * @returns {Store} A Redux store that lets you read the state, dispatch actions
  * and subscribe to changes.
  */
+const msg = ' != ' + FUNC
 export default function createStore(reducer, preloadedState, enhancer) {
-  if (typeof preloadedState === 'function' && typeof enhancer === 'undefined') {
+  if (typeof preloadedState === FUNC && typeof enhancer === UNDEF) {
     enhancer = preloadedState
     preloadedState = undefined
   }
 
-  if (typeof enhancer !== 'undefined') {
-    if (typeof enhancer !== 'function') {
-      throw new Error('Expected the enhancer to be a function.')
+  if (typeof enhancer !== UNDEF) {
+    if (typeof enhancer !== FUNC) {
+      throw new Error('enhancer' + msg)
     }
 
     return enhancer(createStore)(reducer, preloadedState)
   }
 
-  if (typeof reducer !== 'function') {
-    throw new Error('Expected the reducer to be a function.')
+  if (typeof reducer !== FUNC) {
+    throw new Error(REDUCER + msg)
   }
 
   let currentReducer = reducer
@@ -100,8 +93,8 @@ export default function createStore(reducer, preloadedState, enhancer) {
    * @returns {Function} A function to remove this change listener.
    */
   function subscribe(listener) {
-    if (typeof listener !== 'function') {
-      throw new Error('Expected listener to be a function.')
+    if (typeof listener !== FUNC) {
+      throw new Error('Listener' + msg)
     }
 
     let isSubscribed = true
@@ -149,21 +142,15 @@ export default function createStore(reducer, preloadedState, enhancer) {
    */
   function dispatch(action) {
     if (!isPlainObject(action)) {
-      throw new Error(
-        'Actions must be plain objects. ' +
-        'Use custom middleware for async actions.'
-      )
+      throw new Error('Act != obj')
     }
 
-    if (typeof action.type === 'undefined') {
-      throw new Error(
-        'Actions may not have an undefined "type" property. ' +
-        'Have you misspelled a constant?'
-      )
+    if (typeof action.type === UNDEF) {
+      throw new Error('ActType ' + UNDEF)
     }
 
     if (isDispatching) {
-      throw new Error('Reducers may not dispatch actions.')
+      throw new Error('Dispatch in ' + REDUCER)
     }
 
     try {
@@ -193,12 +180,12 @@ export default function createStore(reducer, preloadedState, enhancer) {
    * @returns {void}
    */
   function replaceReducer(nextReducer) {
-    if (typeof nextReducer !== 'function') {
-      throw new Error('Expected the nextReducer to be a function.')
+    if (typeof nextReducer !== FUNC) {
+      throw new Error('next ' + REDUCER + msg)
     }
 
     currentReducer = nextReducer
-    dispatch({ type: ActionTypes.INIT })
+    dispatch({ type: ACTION_INIT })
   }
 
   /**
@@ -220,7 +207,7 @@ export default function createStore(reducer, preloadedState, enhancer) {
        */
       subscribe(observer) {
         if (typeof observer !== 'object') {
-          throw new TypeError('Expected the observer to be an object.')
+          throw new TypeError('Observer != obj')
         }
 
         function observeState() {
@@ -243,7 +230,7 @@ export default function createStore(reducer, preloadedState, enhancer) {
   // When a store is created, an "INIT" action is dispatched so that every
   // reducer returns their initial state. This effectively populates
   // the initial state tree.
-  dispatch({ type: ActionTypes.INIT })
+  dispatch({ type: ACTION_INIT })
 
   return {
     dispatch,

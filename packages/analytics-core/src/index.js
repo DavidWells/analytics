@@ -1,4 +1,4 @@
-import { createStore, combineReducers, applyMiddleware, compose } from './redux'
+import { createStore, combineReducers, applyMiddleware, compose } from './vendor/redux'
 import { paramsParse } from 'analytics-utils'
 // Middleware
 import * as middleware from './middleware'
@@ -64,7 +64,7 @@ function analytics(config = {}) {
       if (plugin.NAMESPACE) plugin.name = plugin.NAMESPACE
       if (!plugin.name) {
         /* Plugins must supply a "name" property. See error url for more details */
-        throw new Error(`${errorUrl}1`)
+        throw new Error(errorUrl + '1')
       }
       // if plugin exposes EVENTS capture available events
       const definedEvents = (plugin.EVENTS) ? Object.keys(plugin.EVENTS).map((k) => {
@@ -81,7 +81,7 @@ function analytics(config = {}) {
       acc.pluginsArray = acc.pluginsArray.concat(plugin)
 
       if (acc.plugins[plugin.name]) {
-        throw new Error(`"${plugin.name}" plugin loaded twice`)
+        throw new Error(plugin.name + ' plugin loaded twice')
       }
       acc.plugins[plugin.name] = plugin
       if (!acc.plugins[plugin.name].loaded) {
@@ -413,7 +413,7 @@ function analytics(config = {}) {
         return false
       }
       if (name === EVENTS.bootstrap) {
-        throw new Error(`.on disabled for ${name}`)
+        throw new Error('.on disabled for ' + name)
       }
       const startRegex = /Start$|Start:/
       if (name === '*') {
@@ -497,7 +497,7 @@ function analytics(config = {}) {
         return false
       }
       if (name === EVENTS.bootstrap) {
-        throw new Error(`.once disabled for ${name}`)
+        throw new Error('.once disabled for ' + name)
       }
       const listener = instance.on(name, ({ payload }) => {
         callback({ // eslint-disable-line
@@ -537,7 +537,7 @@ function analytics(config = {}) {
     dispatch: (action) => {
       const actionData = isString(action) ? { type: action } : action
       if (isReservedAction(actionData.type)) {
-        throw new Error(`reserved action "${actionData.type}"`)
+        throw new Error('reserved action ' + actionData.type)
       }
       const meta = actionData.meta || {}
       const _private = action._ || {}
