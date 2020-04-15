@@ -2,7 +2,7 @@ import cookie from './cookie'
 
 export default function hasCookieSupport() {
   try {
-    const key = '___c'
+    const key = '_c_'
     // Try to set cookie
     cookie(key, '1')
     const valueSet = document.cookie.indexOf(key) !== -1
