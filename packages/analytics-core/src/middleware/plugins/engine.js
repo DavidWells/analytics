@@ -405,7 +405,7 @@ async function processEvent({
       endAction = {
         ...endAction,
         ...{
-          type: `${resolvedAction.type}Aborted`,
+          type: resolvedAction.type + 'Aborted',
         }
       }
     }
@@ -417,8 +417,8 @@ async function processEvent({
 }
 
 function abortDispatch({ data, method, instance, pluginName, store }) {
-  const postFix = (pluginName) ? `:${pluginName}` : ''
-  const abortEvent = `${method}Aborted${postFix}`
+  const postFix = (pluginName) ? ':' + pluginName : ''
+  const abortEvent = method + 'Aborted' + postFix
   store.dispatch({
     ...data,
     type: abortEvent,
@@ -582,7 +582,7 @@ function abortFunction(pluginName, method, abortablePlugins, otherPlugin, action
 
 function notAbortableError(action, method) {
   return () => {
-    throw new Error(`Action ${action.type} not cancellable. Remove abort in ${method}`)
+    throw new Error(action.type + ' action not cancellable. Remove abort in ' + method)
   }
 }
 
@@ -594,9 +594,9 @@ function validateMethod(actionName, pluginName) {
   const methodCallMatchesPluginNamespace = text && (text.name === pluginName)
   if (methodCallMatchesPluginNamespace) {
     const sub = getNameSpacedAction(text.method)
-    const subText = (sub) ? `or ${sub.method}` : ''
-    throw new Error([`Plugin ${pluginName} is calling method [${actionName}]`,
-      `Plugins can't call their own name`,
+    const subText = (sub) ? 'or ' + sub.method : ''
+    throw new Error([ pluginName + ' plugin is calling method ' + actionName,
+      'Plugins can\'t call their own name',
       `Use ${text.method} ${subText} in ${pluginName} plugin instead of ${actionName}`]
       .join('\n')
     )
