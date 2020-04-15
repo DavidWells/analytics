@@ -1,4 +1,4 @@
-import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
+import { createStore, combineReducers, applyMiddleware, compose } from './redux'
 import { paramsParse } from 'analytics-utils'
 // Middleware
 import * as middleware from './middleware'
