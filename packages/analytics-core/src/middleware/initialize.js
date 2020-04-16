@@ -28,10 +28,10 @@ export default function initializeMiddleware(instance) {
             acc.campaign[keyName] = params[key]
           }
           if (key.match(propRegex)) {
-            acc.props[`${key.replace(propRegex, '')}`] = params[key]
+            acc.props[key.replace(propRegex, '')] = params[key]
           }
           if (key.match(traitRegex)) {
-            acc.traits[`${key.replace(traitRegex, '')}`] = params[key]
+            acc.traits[key.replace(traitRegex, '')] = params[key]
           }
           return acc
         }, {
