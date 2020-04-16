@@ -1,8 +1,7 @@
-import { storage, uuid } from 'analytics-utils'
+import { storage, uuid, isObject } from 'analytics-utils'
 import { ANON_ID, USER_ID, USER_TRAITS } from '../constants'
 import { ID, ANONID } from '../utils/_constants'
 import globalContext from '../utils/global'
-import isObject from '../utils/isObject'
 import EVENTS from '../events'
 
 /* user reducer */
@@ -53,7 +52,7 @@ export function getPersistedUserData(params) {
   }
 }
 
-export const tempKey = (key) => `__TEMP__${key}`
+export const tempKey = (key) => '__TEMP__' + key
 
 export function getUserProp(key, instance, payload) {
   /* 1. Try current state */

@@ -1,5 +1,5 @@
+import { isObject } from 'analytics-utils'
 import warning from './utils/warning'
-import isPlainObject from './utils/isPlainObject'
 import { FUNC, UNDEF, REDUCER, ACTION_INIT, ACTION_TEST } from './utils/defs'
 
 function getUndefinedStateErrorMessage(key, action) {
@@ -17,7 +17,7 @@ function getUnexpectedStateShapeWarningMessage(inputState, reducers, action, une
     return ('Store has no valid reducers')
   }
 
-  if (!isPlainObject(inputState)) {
+  if (!isObject(inputState)) {
     return (
       `The ${argumentName} has unexpected type of "` +
       ({}).toString.call(inputState).match(/\s([a-z|A-Z]+)/)[1] +

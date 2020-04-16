@@ -1,7 +1,7 @@
 // Context Reducer.  Follows ducks pattern http://bit.ly/2DnERMc
-import { getBrowserLocale, getTimeZone, uuid } from 'analytics-utils'
+import { getBrowserLocale, getTimeZone, uuid, inBrowser } from 'analytics-utils'
 import EVENTS from '../events'
-import inBrowser from '../utils/inBrowser'
+import { LIBRARY_NAME } from '../utils/_constants'
 import getOSNameNode from '../utils/getOSName/node'
 import getOSNameBrowser from '../utils/getOSName/browser'
 
@@ -31,7 +31,7 @@ const initialState = {
   },
   userAgent: (inBrowser) ? navigator.userAgent : 'node', // https://github.com/bestiejs/platform.js
   library: {
-    name: 'analytics',
+    name: LIBRARY_NAME,
     // TODO fix version number. npm run publish:patch has wrong version
     version: process.env.VERSION
   },

@@ -1,4 +1,4 @@
-import isPlainObject from './utils/isPlainObject'
+import { isObject } from 'analytics-utils'
 import { FUNC, UNDEF, ACTION_INIT, REDUCER } from './utils/defs'
 
 // eslint-disable-next-line
@@ -141,7 +141,7 @@ export default function createStore(reducer, preloadedState, enhancer) {
    * return something else (for example, a Promise you can await).
    */
   function dispatch(action) {
-    if (!isPlainObject(action)) {
+    if (!isObject(action)) {
       throw new Error('Act != obj')
     }
 
