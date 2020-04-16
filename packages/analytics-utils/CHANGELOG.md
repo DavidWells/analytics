@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/DavidWells/analytics/compare/analytics-utils@0.1.2...analytics-utils@0.2.0) (2020-04-16)
+
+
+### Features
+
+* add dlv for dotpot ([f1a2771](https://github.com/DavidWells/analytics/commit/f1a2771))
+* add shared type checking functions ([46729af](https://github.com/DavidWells/analytics/commit/46729af))
+
+
+
+
+
 ## [0.1.2](https://github.com/DavidWells/analytics/compare/analytics-utils@0.1.1...analytics-utils@0.1.2) (2019-10-03)
 
 
