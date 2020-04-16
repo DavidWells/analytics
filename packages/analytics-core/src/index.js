@@ -26,7 +26,7 @@ const { setItem, removeItem, getItem } = middleware
 /**
  * Analytics library configuration
  *
- * After the library is initialized with config, the core API is exposed and ready for use in the application.
+ * After the library is initialized with config, the core API is exposed & ready for use in the application.
  *
  * @param {object} config - analytics core config
  * @param {string} [config.app] - Name of site / app
