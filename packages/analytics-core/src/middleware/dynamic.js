@@ -17,6 +17,7 @@ export default class DynamicMiddleware {
       ...this[position].slice(index + 1),
     ]
   }
+  /* Not currently in use
   resetMiddlewares = (position) => {
     if (!position) {
       this.before = []
@@ -25,6 +26,7 @@ export default class DynamicMiddleware {
       this[position] = []
     }
   }
+  */
   dynamicMiddlewares = (position) => {
     return store => next => action => {
       const middlewareAPI = {
