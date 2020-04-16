@@ -1,7 +1,5 @@
 import fitlerDisabledPlugins from '../../utils/filterDisabled'
-import isFunction from '../../utils/isFunction'
-import isObject from '../../utils/isObject'
-import isString from '../../utils/isString'
+import { isFunction, isObject, isString } from 'analytics-utils'
 
 const endsWithStartRegex = /Start$/
 const bootstrapRegex = /^bootstrap/
