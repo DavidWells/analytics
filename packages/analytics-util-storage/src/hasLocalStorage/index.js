@@ -10,8 +10,8 @@ export default function hasLocalStorage() {
       return false
     }
     // test for safari private
-    localStorage.setItem('__test', '1')
-    localStorage.removeItem('__test')
+    localStorage.setItem('_t_', '1')
+    localStorage.removeItem('_t_')
   } catch (err) {
     return false
   }
