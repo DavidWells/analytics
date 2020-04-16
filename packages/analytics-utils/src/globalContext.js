@@ -5,7 +5,7 @@
 //   this
 //
 // export default context
-
+import inBrowser from './inBrowser'
 /* global self globalThis */
 
 const getGlobal = () => {
@@ -15,11 +15,11 @@ const getGlobal = () => {
   }
   /* eslint-enable */
 
-  if (typeof window !== 'undefined' && window) {
+  if (inBrowser && window) {
     return window
   }
 
-  if (typeof global !== 'undefined' && global) {
+  if (inBrowser && global) {
     return global
   }
 
