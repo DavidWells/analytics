@@ -1,4 +1,4 @@
-import isFunction from './isFunction'
+import { isFunction } from 'analytics-utils'
 
 export default function getCallbackFromArgs() {
   return Array.prototype.slice.call(arguments).reduce((acc, arg) => {

@@ -1,6 +1,6 @@
+import { isFunction } from 'analytics-utils'
 import EVENTS, { nonEvents } from '../../events'
 import waitForReady from '../../utils/waitForReady'
-import isFunction from '../../utils/isFunction'
 import { processQueue } from '../../utils/heartbeat'
 import runPlugins from './engine'
 

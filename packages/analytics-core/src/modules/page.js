@@ -1,5 +1,5 @@
 // Page View Reducer. Follows ducks pattern http://bit.ly/2DnERMc
-import inBrowser from '../utils/inBrowser'
+import { inBrowser } from 'analytics-utils'
 import EVENTS from '../events'
 
 const hashRegex = /#.*$/
@@ -18,7 +18,7 @@ function urlPath(url) {
   const regex = /(http[s]?:\/\/)?([^\/\s]+\/)(.*)/g
   const matches = regex.exec(url)
   const pathMatch = (matches && matches[3]) ? matches[3].split('?')[0].replace(hashRegex, '') : ''
-  return `/${pathMatch}`
+  return '/' + pathMatch
 }
 
 /**
@@ -29,7 +29,7 @@ function urlPath(url) {
 function currentUrl(search) {
   const canonical = canonicalUrl()
   if (!canonical) return window.location.href.replace(hashRegex, '')
-  return canonical.match(/\?/) ? canonical : `${canonical}${search}`
+  return canonical.match(/\?/) ? canonical : canonical + search
 }
 
 /**

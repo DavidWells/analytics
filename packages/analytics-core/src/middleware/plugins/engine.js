@@ -1,7 +1,5 @@
 import fitlerDisabledPlugins from '../../utils/filterDisabled'
-import isFunction from '../../utils/isFunction'
-import isObject from '../../utils/isObject'
-import isString from '../../utils/isString'
+import { isFunction, isObject, isString } from 'analytics-utils'
 
 const endsWithStartRegex = /Start$/
 const bootstrapRegex = /^bootstrap/
@@ -293,7 +291,7 @@ async function processEvent({
         /* Internal data for analytics engine */
         _: {
           called: `queue`,
-          from: 'queueMechanism'
+          from: 'queueMechanism' // for debugging
         }
       })
       return Promise.resolve(currentActionValue)
@@ -405,7 +403,7 @@ async function processEvent({
       endAction = {
         ...endAction,
         ...{
-          type: `${resolvedAction.type}Aborted`,
+          type: resolvedAction.type + 'Aborted',
         }
       }
     }
@@ -417,8 +415,8 @@ async function processEvent({
 }
 
 function abortDispatch({ data, method, instance, pluginName, store }) {
-  const postFix = (pluginName) ? `:${pluginName}` : ''
-  const abortEvent = `${method}Aborted${postFix}`
+  const postFix = (pluginName) ? ':' + pluginName : ''
+  const abortEvent = method + 'Aborted' + postFix
   store.dispatch({
     ...data,
     type: abortEvent,
@@ -582,7 +580,7 @@ function abortFunction(pluginName, method, abortablePlugins, otherPlugin, action
 
 function notAbortableError(action, method) {
   return () => {
-    throw new Error(`Action ${action.type} not cancellable. Remove abort in ${method}`)
+    throw new Error(action.type + ' action not cancellable. Remove abort in ' + method)
   }
 }
 
@@ -594,10 +592,10 @@ function validateMethod(actionName, pluginName) {
   const methodCallMatchesPluginNamespace = text && (text.name === pluginName)
   if (methodCallMatchesPluginNamespace) {
     const sub = getNameSpacedAction(text.method)
-    const subText = (sub) ? `or ${sub.method}` : ''
-    throw new Error([`Plugin ${pluginName} is calling method [${actionName}]`,
-      `Plugins can't call their own name`,
-      `Use ${text.method} ${subText} in ${pluginName} plugin instead of ${actionName}`]
+    const subText = (sub) ? 'or ' + sub.method : ''
+    throw new Error([ pluginName + ' plugin is calling method ' + actionName,
+      'Plugins cant call themselves',
+      `Use ${text.method} ${subText} in ${pluginName} plugin insteadof ${actionName}`]
       .join('\n')
     )
   }

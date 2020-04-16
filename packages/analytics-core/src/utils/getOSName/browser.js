@@ -1,4 +1,4 @@
-import inBrowser from '../inBrowser'
+import { inBrowser } from 'analytics-utils'
 
 export default function getBrowserOS() {
   if (!inBrowser) return false

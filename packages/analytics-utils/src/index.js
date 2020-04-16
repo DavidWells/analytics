@@ -1,10 +1,18 @@
 import storage, { getCookie, setCookie, removeCookie } from '@analytics/storage-utils'
+import dotProp from 'dlv'
+import { isFunction, isString, isObject, isUndefined, isBoolean } from './typeCheck'
 
 export {
   storage,
   getCookie,
   setCookie,
-  removeCookie
+  removeCookie,
+  isFunction,
+  isString,
+  isObject,
+  isUndefined,
+  isBoolean,
+  dotProp
 }
 export { default as decodeUri } from './decodeUri.js'
 export { default as getBrowserLocale } from './getBrowserLocale.js'

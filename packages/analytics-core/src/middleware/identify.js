@@ -1,5 +1,5 @@
+import { isFunction } from 'analytics-utils'
 import { USER_ID, USER_TRAITS, ANON_ID } from '../constants'
-import isFunction from '../utils/isFunction'
 import EVENTS from '../events'
 
 export default function identifyMiddleware(instance) {
