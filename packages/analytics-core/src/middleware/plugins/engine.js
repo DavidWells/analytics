@@ -291,7 +291,7 @@ async function processEvent({
         /* Internal data for analytics engine */
         _: {
           called: `queue`,
-          from: 'queueMechanism'
+          from: 'queueMechanism' // for debugging
         }
       })
       return Promise.resolve(currentActionValue)
@@ -594,8 +594,8 @@ function validateMethod(actionName, pluginName) {
     const sub = getNameSpacedAction(text.method)
     const subText = (sub) ? 'or ' + sub.method : ''
     throw new Error([ pluginName + ' plugin is calling method ' + actionName,
-      'Plugins can\'t call their own name',
-      `Use ${text.method} ${subText} in ${pluginName} plugin instead of ${actionName}`]
+      'Plugins cant call themselves',
+      `Use ${text.method} ${subText} in ${pluginName} plugin insteadof ${actionName}`]
       .join('\n')
     )
   }
