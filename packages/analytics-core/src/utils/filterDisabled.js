@@ -1,4 +1,3 @@
-import { isBoolean } from 'analytics-utils'
 
 export default function fitlerDisabledPlugins(allPlugins, settings = {}, options = {}) {
   return Object.keys(allPlugins).filter((name) => {
