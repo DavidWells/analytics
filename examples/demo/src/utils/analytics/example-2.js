@@ -12,13 +12,13 @@ const analytics = Analytics({
     {
       name: 'hahahaa',
       track: () => {
-        console.log('hi')
+        console.log('hi one')
       }
     },
     {
       NAMESPACE: 'hello',
       track: () => {
-        console.log('hi')
+        console.log('hi two')
       }
     },
     exampleProviderPlugin({
