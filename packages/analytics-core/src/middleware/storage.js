@@ -4,8 +4,8 @@ import EVENTS from '../events'
 
 export default function storageMiddleware() {
   /*
-  Todo: emit events for keys we care about
-  window.addEventListener('storage', (event) => console.log(event));
+    Todo: emit events for keys we care about
+    window.addEventListener('storage', (event) => console.log(event));
   */
   return store => next => action => {
     const { type, key, value, options } = action
