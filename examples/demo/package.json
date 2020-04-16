@@ -30,6 +30,7 @@
     "analytics-plugin-window-events": "file:../../packages/analytics-plugin-window-events",
     "analytics-plugin-event-validation": "file:../../packages/analytics-plugin-event-validation",
     "analytics-utils": "file:../../packages/analytics-utils",
+    "use-analytics": "file:../../packages/use-analytics",
     "outdent": "^0.7.0",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
