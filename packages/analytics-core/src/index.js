@@ -1,5 +1,5 @@
 import { createStore, combineReducers, applyMiddleware, compose } from './vendor/redux'
-import { paramsParse } from 'analytics-utils'
+import { paramsParse, dotProp, isFunction, isObject, isString, inBrowser } from 'analytics-utils'
 // Middleware
 import * as middleware from './middleware'
 import DynamicMiddleware from './middleware/dynamic'
@@ -11,19 +11,14 @@ import track from './modules/track'
 import queue from './modules/queue'
 import user, { getUserProp, tempKey, getPersistedUserData } from './modules/user'
 import * as CONSTANTS from './constants'
-import { ID, ANONID, errorUrl } from './utils/_constants'
+import { ID, ANONID, ERROR_URL } from './utils/_constants'
 import EVENTS, { coreEvents, nonEvents, isReservedAction } from './events'
 // Utils
-import dotProp from './utils/dotProp'
 import timestamp from './utils/timestamp'
-import inBrowser from './utils/inBrowser'
 import { watch } from './utils/handleNetworkEvents'
 import getCallback from './utils/getCallback'
 import { Debug, composeWithDebug } from './utils/debug'
 import globalContext from './utils/global'
-import isFunction from './utils/isFunction'
-import isObject from './utils/isObject'
-import isString from './utils/isString'
 import heartBeat from './utils/heartbeat'
 
 const { setItem, removeItem, getItem } = middleware
@@ -64,7 +59,7 @@ function analytics(config = {}) {
       if (plugin.NAMESPACE) plugin.name = plugin.NAMESPACE
       if (!plugin.name) {
         /* Plugins must supply a "name" property. See error url for more details */
-        throw new Error(errorUrl + '1')
+        throw new Error(ERROR_URL + '1')
       }
       // if plugin exposes EVENTS capture available events
       const definedEvents = (plugin.EVENTS) ? Object.keys(plugin.EVENTS).map((k) => {
@@ -121,7 +116,7 @@ function analytics(config = {}) {
   const { addMiddleware, removeMiddleware, dynamicMiddlewares } = new DynamicMiddleware()
 
   const nonAbortable = () => {
-    // throw new Error(`${errorUrl}3`)
+    // throw new Error(`${ERROR_URL}3`)
     throw new Error('Abort disabled in listener')
   }
 
@@ -207,6 +202,7 @@ function analytics(config = {}) {
           traits: data || {},
           options: opts,
           anonymousId: user.anonymousId,
+          // Add previousId if exists
           ...(user.id && (user.id !== id) && { previousId: user.id }),
           meta: {
             timestamp: timestamp(),
