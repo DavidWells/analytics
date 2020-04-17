@@ -2,7 +2,7 @@
   <img src="https://user-images.githubusercontent.com/532272/61419845-ab1e9a80-a8b4-11e9-8fd1-18b9e743bb6f.png" width="450" />
 </a>
 
-![npm](https://img.shields.io/npm/dw/analytics?style=flat-square) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/analytics?style=flat-square)
+![npm](https://img.shields.io/npm/dw/analytics?style=flat-square) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/analytics?style=flat-square) ![GitHub](https://img.shields.io/github/license/davidwells/analytics?style=flat-square)
 
 A lightweight analytics abstraction library for tracking page views, custom events, & identify visitors. Designed to work with any [third-party analytics tool](https://getanalytics.io/plugins/).
 
@@ -56,6 +56,7 @@ A lightweight analytics abstraction library for tracking page views, custom even
 - [x] Isomorphic. Works in browser & on server
 - [x] Queues events to send when analytic libraries are loaded
 - [x] Works offline
+- [x] TypeScript support
 
 ##  Why
 
@@ -800,6 +801,12 @@ const analytics = Analytics({
   debug: true
 })
 ```
+
+## TypeScript support
+
+Types for analytics and plugins are generated from [JSDoc blocks](https://jsdoc.app/) in the code base via the [tsd-jsdoc](https://www.npmjs.com/package/tsd-jsdoc) package.
+
+We are always looking to improve type support & improve the DX of users. If you see something that can be improved let us know in an issue!
 
 # Contributing
 
