@@ -1,4 +1,5 @@
 import inBrowser from './inBrowser'
+import inReactNative from './inReactNative'
 
 /**
  * Get host domain of url
@@ -10,7 +11,7 @@ import inBrowser from './inBrowser'
  *  > subdomain.my-site.com
  */
 export function getDomainHost(url) {
-  if (!inBrowser) return null
+  if (!inBrowser || inReactNative) return null
   const a = document.createElement('a')
   a.setAttribute('href', url)
   return a.hostname

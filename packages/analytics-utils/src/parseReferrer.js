@@ -2,6 +2,7 @@ import inBrowser from './inBrowser'
 import parseParams from './paramsParse'
 import isExternalReferrer from './isExternalReferrer'
 import { trimTld, getDomainBase } from './url'
+import inReactNative from './inReactNative'
 
 const googleKey = 'google'
 /**
@@ -11,7 +12,7 @@ const googleKey = 'google'
  * @return {Object}     [description]
  */
 export default function parseReferrer(referrer, currentUrl) {
-  if (!inBrowser) return false
+  if (!inBrowser || inReactNative) return false
   // default referral data
   let refData = {
     'source': '(direct)',
@@ -66,7 +67,7 @@ export default function parseReferrer(referrer, currentUrl) {
  * @return {Object}
  */
 function parseDomain(referrer) {
-  if (!referrer || !inBrowser) return false
+  if (!referrer || !inBrowser || inReactNative) return false
 
   let referringDomain = getDomainBase(referrer)
   const a = document.createElement('a')
