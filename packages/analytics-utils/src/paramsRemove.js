@@ -1,6 +1,5 @@
 import inBrowser from './inBrowser'
 import paramsClean from './paramsClean'
-import inReactNative from './inReactNative'
 
 /**
  * Removes params from url in browser
@@ -9,7 +8,7 @@ import inReactNative from './inReactNative'
  * @return {promise}
  */
 export default function paramsRemove(param, callback) {
-  if (!inBrowser || inReactNative) return Promise.resolve()
+  if (!inBrowser) return Promise.resolve()
 
   return new Promise((resolve, reject) => {
     if (window.history && window.history.replaceState) {

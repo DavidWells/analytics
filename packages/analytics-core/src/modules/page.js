@@ -1,11 +1,11 @@
 // Page View Reducer. Follows ducks pattern http://bit.ly/2DnERMc
-import { inBrowser, inReactNative } from 'analytics-utils'
+import { inBrowser } from 'analytics-utils'
 import EVENTS from '../events'
 
 const hashRegex = /#.*$/
 
 function canonicalUrl() {
-  if (!inBrowser || inReactNative) return
+  if (!inBrowser) return
   const tags = document.getElementsByTagName('link')
   for (var i = 0, tag; tag = tags[i]; i++) {
     if (tag.getAttribute('rel') === 'canonical') {
@@ -50,7 +50,7 @@ function currentUrl(search) {
  * @return {PageData} resolved page data
  */
 export const getPageData = (pageData = {}) => {
-  if (!inBrowser || inReactNative) return pageData
+  if (!inBrowser) return pageData
   const { title, referrer } = document
   const { location, innerWidth, innerHeight } = window
   const { hash, search } = location

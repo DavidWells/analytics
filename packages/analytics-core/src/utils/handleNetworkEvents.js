@@ -1,7 +1,7 @@
-import { inBrowser, inReactNative } from 'analytics-utils'
+import { inBrowser } from 'analytics-utils'
 
 function listen(events, func, toAdd) {
-  if (!inBrowser || inReactNative) return false
+  if (!inBrowser) return false
   let fn = window[(toAdd ? 'add' : 'remove') + 'EventListener']
   events.split(' ').forEach(ev => {
     fn(ev, func)

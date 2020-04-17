@@ -1,8 +1,7 @@
 import inBrowser from './inBrowser'
-import inReactNative from './inReactNative'
 
 export default function hasAdblock() {
-  if (!inBrowser || inReactNative) return false
+  if (!inBrowser) return false
   // Create fake ad
   const fakeAd = document.createElement('div')
   fakeAd.innerHTML = '&nbsp;'

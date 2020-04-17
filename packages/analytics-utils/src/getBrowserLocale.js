@@ -1,8 +1,7 @@
 import inBrowser from './inBrowser'
-import inReactNative from './inReactNative'
 
 export default function getBrowserLocale() {
-  if (!inBrowser || inReactNative) return null
+  if (!inBrowser) return null
   const { language, languages, userLanguage } = navigator
   if (languages && languages.length) {
     // latest versions of Chrome and Firefox set this correctly

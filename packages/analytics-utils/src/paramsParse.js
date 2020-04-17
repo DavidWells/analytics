@@ -1,6 +1,5 @@
 import inBrowser from './inBrowser'
 import decode from './decodeUri'
-import inReactNative from './inReactNative'
 
 /**
  * Get search string from given url
@@ -12,7 +11,7 @@ function getSearchString(url) {
     const p = url.match(/\?(.*)/)
     return (p && p[1]) ? p[1].split('#')[0] : ''
   }
-  return (inBrowser && !inReactNative) && window.location.search.substring(1)
+  return inBrowser && window.location.search.substring(1)
 }
 
 /**

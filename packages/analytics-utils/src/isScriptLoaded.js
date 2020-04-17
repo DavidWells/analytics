@@ -6,7 +6,7 @@ import inBrowser from './inBrowser'
  * @return {Boolean} is script loaded
  */
 export default function isScriptLoaded(script) {
-  if (!inBrowser || inReactNative) return true
+  if (!inBrowser) return true
   const scripts = document.getElementsByTagName('script')
   return !!Object.keys(scripts).filter((key) => {
     const { src } = scripts[key]

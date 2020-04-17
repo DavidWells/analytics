@@ -1,9 +1,8 @@
 import inBrowser from './inBrowser'
-import inReactNative from './inReactNative'
 import noOp from './noOp'
 
 export default function onRouteChange(callback = noOp) {
-  if (!inBrowser || inReactNative) return
+  if (!inBrowser) return
   const { addEventListener, history, location } = window
   // Observe native navigation
   addEventListener('popstate', () => {

@@ -1,7 +1,7 @@
-import { inBrowser, inReactNative } from 'analytics-utils'
+import { inBrowser } from 'analytics-utils'
 
 export default function getBrowserOS() {
-  if (!inBrowser || inReactNative) return false
+  if (!inBrowser) return false
   const os = navigator.appVersion
   // ~os bitwise operator to check if in navigator
   if (~os.indexOf('Win')) return 'Windows'

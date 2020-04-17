@@ -2,4 +2,4 @@
  * In browser context
  * @return {Boolean} true if in browser
  */
-export default typeof window !== 'undefined'
+export default typeof document !== 'undefined'
