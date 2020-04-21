@@ -9,7 +9,7 @@ let osName
 let referrer
 let locale
 let timeZone
-if (process.browser) {
+if (inBrowser) {
   osName = getOSNameBrowser()
   referrer = document.referrer
   locale = getBrowserLocale()
