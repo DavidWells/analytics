@@ -55,12 +55,11 @@ function googleAnalytics(pluginConfig = {}) {
     // Load google analytics
     initialize: (pluginApi) => {
       const { config, instance } = pluginApi
-      if (!config.trackingId) throw new Error('No google analytics trackingId defined')
-
+      if (!config.trackingId) throw new Error('No GA trackingId defined')
+      // var to hoist
+      const scriptSrc = config.customScriptSrc || 'https://www.google-analytics.com/analytics.js'
       // Load google analytics script to page
-      if (gaNotLoaded()) {
-        // var to hoist
-        var scriptSrc = config.customScriptSrc || 'https://www.google-analytics.com/analytics.js';
+      if (gaNotLoaded(scriptSrc)) {
         /* eslint-disable */
         (function(i, s, o, g, r, a, m) {
           i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function() {
@@ -83,15 +82,6 @@ function googleAnalytics(pluginConfig = {}) {
         if (instanceName) {
           gaConfig.name = instanceName
         }
-
-        /* eslint-disable */
-        (function(i, s, o, g, r, a, m) {
-          i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function() {
-            (i[r].q = i[r].q || []).push(arguments)
-          }, i[r].l = 1 * new Date(); a = s.createElement(o),
-          m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
-        })(window, document, 'script', scriptSrc, 'ga')
-        /* eslint-enable */
 
         ga('create', config.trackingId, gaConfig)
 
@@ -213,7 +203,10 @@ function googleAnalytics(pluginConfig = {}) {
 
 export default googleAnalytics
 
-function gaNotLoaded() {
+function gaNotLoaded(scriptSrc) {
+  if (scriptSrc) {
+    return !scriptLoaded(scriptSrc)
+  }
   return typeof ga === 'undefined'
 }
 
@@ -359,6 +352,11 @@ export function identifyVisitor(id, traits = {}, conf = {}) {
     const custom = formatObjectIntoDimensions(traits, conf)
     ga(`${instancePrefix}set`, custom)
   }
+}
+
+function scriptLoaded(scriptSrc) {
+  const scripts = document.querySelectorAll('script[src]')
+  return !!Object.keys(scripts).filter((key) => (scripts[key].src || '') === scriptSrc).length
 }
 
 function format(value) {
