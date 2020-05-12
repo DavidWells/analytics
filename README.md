@@ -41,6 +41,7 @@ A lightweight analytics abstraction library for tracking page views, custom even
   * [React to any event](#react-to-any-event)
 - [Plugin Naming Conventions](#plugin-naming-conventions)
 - [Debugging analytics](#debugging-analytics)
+- [TypeScript support](#typescript-support)
 - [Contributing](#contributing)
 - [Setup & Install dependencies](#setup--install-dependencies)
 - [Development](#development)
@@ -200,13 +201,14 @@ Typical usage:
 
 Analytics library configuration
 
-After the library is initialized with config, the core API is exposed and ready for use in the application.
+After the library is initialized with config, the core API is exposed & ready for use in the application.
 
 **Arguments**
 
 - **config** <code>object</code> - analytics core config
 - **[config.app]** (optional) <code>string</code> - Name of site / app
 - **[config.version]** (optional) <code>string</code> - Version of your app
+- **[config.debug]** (optional) <code>boolean</code> - Should analytics run in debug mode
 - **[config.plugins]** (optional) <code>Array</code>.&lt;<code>Object</code>&gt; - Array of analytics plugins
 
 **Example**
