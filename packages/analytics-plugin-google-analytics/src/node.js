@@ -18,7 +18,7 @@ if (!process.browser) {
 function googleAnalytics(pluginConfig = {}) {
   const client = initialize(pluginConfig)
   return {
-    NAMESPACE: 'google-analytics',
+    name: 'google-analytics',
     config: pluginConfig,
     // page view
     page: ({ payload, config }) => {

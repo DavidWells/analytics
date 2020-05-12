@@ -19,6 +19,8 @@ const defaultConfig = {
   // TODO contentGroupings: { key: 'contentGroup1' }
 }
 
+let loadedInstances = {}
+
 /**
  * Google analytics plugin
  * @link https://getanalytics.io/plugins/google-analytics/
@@ -31,6 +33,8 @@ const defaultConfig = {
  * @param {object}  [pluginConfig.customDimensions] - Map [Custom dimensions](https://bit.ly/3c5de88) to send extra information to Google Analytics. [See details below](#using-ga-custom-dimensions)
  * @param {object}  [pluginConfig.resetCustomDimensionsOnPage] - Reset custom dimensions by key on analytics.page() calls. Useful for single page apps.
  * @param {boolean} [pluginConfig.setCustomDimensionsToPage] - Mapped dimensions will be set to the page & sent as properties of all subsequent events on that page. If false, analytics will only pass custom dimensions as part of individual events
+ * @param {string}  [pluginConfig.instanceName] - Custom tracker name for google analytics. Use this if you need multiple googleAnalytics scripts loaded
+ * @param {string}  [pluginConfig.customScriptSrc] - Custom URL for google analytics script, if proxying calls
  * @return {*}
  * @example
  *
@@ -40,14 +44,77 @@ const defaultConfig = {
  */
 function googleAnalytics(pluginConfig = {}) {
   let pageCalledOnce = false
-  // Allow for userland overides of base methods
+  // Allow for multiple google analytics instances
+  const { instanceName, instancePrefix } = getInstanceDetails(pluginConfig)
   return {
-    NAMESPACE: 'google-analytics',
+    name: 'google-analytics',
     config: {
       ...defaultConfig,
       ...pluginConfig
     },
-    initialize: initialize,
+    // Load google analytics
+    initialize: (pluginApi) => {
+      const { config, instance } = pluginApi
+      if (!config.trackingId) throw new Error('No google analytics trackingId defined')
+
+      // Load google analytics script to page
+      if (gaNotLoaded()) {
+        // var to hoist
+        var scriptSrc = config.customScriptSrc || 'https://www.google-analytics.com/analytics.js';
+        /* eslint-disable */
+        (function(i, s, o, g, r, a, m) {
+          i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function() {
+            (i[r].q = i[r].q || []).push(arguments)
+          }, i[r].l = 1 * new Date(); a = s.createElement(o),
+          m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', scriptSrc, 'ga')
+        /* eslint-enable */
+      }
+
+      // Initialize tracker instance on page
+      if (!loadedInstances[instanceName]) {
+        const gaConfig = {
+          cookieDomain: config.domain || 'auto',
+          siteSpeedSampleRate: config.siteSpeedSampleRate || 1,
+          sampleRate: config.sampleRate || 100,
+          allowLinker: true,
+          // useAmpClientId: config.useAmpClientId
+        }
+        if (instanceName) {
+          gaConfig.name = instanceName
+        }
+
+        /* eslint-disable */
+        (function(i, s, o, g, r, a, m) {
+          i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function() {
+            (i[r].q = i[r].q || []).push(arguments)
+          }, i[r].l = 1 * new Date(); a = s.createElement(o),
+          m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', scriptSrc, 'ga')
+        /* eslint-enable */
+
+        ga('create', config.trackingId, gaConfig)
+
+        if (config.debug) {
+          // Disable sends to GA http://bit.ly/2Ro0vTR
+          ga(`${instancePrefix}set`, 'sendHitTask', null)
+          window.ga_debug = { trace: true }
+        }
+
+        if (config.anonymizeIp) {
+          ga(`${instancePrefix}set`, 'anonymizeIp', true)
+        }
+
+        /* set custom dimenions from user traits */
+        const user = instance.user() || {}
+        const traits = user.traits || {}
+        if (Object.keys(traits).length) {
+          const customDimensions = formatObjectIntoDimensions(traits, config)
+          ga(`${instancePrefix}set`, customDimensions)
+        }
+        loadedInstances[instanceName] = true
+      }
+    },
     // Google Analytics page view
     page: ({ payload, config, instance }) => {
       const { properties } = payload
@@ -65,7 +132,7 @@ function googleAnalytics(pluginConfig = {}) {
         }, {})
         if (Object.keys(resetDimensions).length) {
           // Reset custom dimenions
-          ga('set', resetDimensions)
+          ga(`${instancePrefix}set`, resetDimensions)
         }
       }
 
@@ -88,7 +155,7 @@ function googleAnalytics(pluginConfig = {}) {
 
       const campaignData = addCampaignData(campaign)
 
-      const dimensions = setCustomDimenions(properties, config)
+      const dimensions = setCustomDimenions(properties, config, instancePrefix)
 
       /* Dimensions will only be included in the event if config.setCustomDimensionsToPage is false */
       const finalPayload = {
@@ -97,7 +164,7 @@ function googleAnalytics(pluginConfig = {}) {
         ...dimensions
       }
 
-      ga('set', pageData)
+      ga(`${instancePrefix}set`, pageData)
 
       // Remove location for SPA tracking after initial page view
       if (pageCalledOnce) {
@@ -105,7 +172,7 @@ function googleAnalytics(pluginConfig = {}) {
       }
 
       /* send page view to GA */
-      ga('send', 'pageview', finalPayload)
+      ga(`${instancePrefix}send`, 'pageview', finalPayload)
 
       // Set after initial page view
       pageCalledOnce = true
@@ -150,49 +217,12 @@ function gaNotLoaded() {
   return typeof ga === 'undefined'
 }
 
-export function initialize(pluginApi) {
-  const { config, instance } = pluginApi
-  if (!config.trackingId) throw new Error('No google analytics trackingId defined')
-  if (gaNotLoaded()) {
-    /* eslint-disable */
-    (function(i, s, o, g, r, a, m) {
-      i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function() {
-        (i[r].q = i[r].q || []).push(arguments)
-      }, i[r].l = 1 * new Date(); a = s.createElement(o),
-      m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
-    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga')
-    /* eslint-enable */
-    ga('create', config.trackingId, 'auto')
-
-    if (config.debug) {
-      // Disable sends to GA http://bit.ly/2Ro0vTR
-      ga('set', 'sendHitTask', null)
-      window.ga_debug = { trace: true }
-    }
-
-    if (config.anonymizeIp) {
-      ga('set', 'anonymizeIp', true)
-    }
-
-    /* set custom dimenions from user traits */
-    const user = instance.user() || {}
-    const traits = user.traits || {}
-    if (Object.keys(traits).length) {
-      const customDimensions = formatObjectIntoDimensions(traits, config)
-      ga('set', customDimensions)
-    }
+function getInstanceDetails(pluginConfig) {
+  const { instanceName } = pluginConfig
+  return {
+    instancePrefix: (instanceName) ? `${instanceName}.` : '',
+    instanceName: instanceName
   }
-}
-
-/**
- * Send page view to google analytics
- * @param  {string} [urlPath = location.pathname] - path of current path
- */
-export function pageView(urlPath) {
-  if (gaNotLoaded()) return
-  const path = urlPath || document.location.pathname
-  ga('set', 'page', path)
-  ga('send', 'pageview')
 }
 
 /**
@@ -207,7 +237,7 @@ export function pageView(urlPath) {
  */
 export function trackEvent(eventData, opts = {}, payload) {
   if (gaNotLoaded()) return
-
+  const { instancePrefix } = getInstanceDetails(opts)
   const data = {
     // hitType https://bit.ly/2Jab9L1 one of 'pageview', 'screenview', 'event', 'transaction', 'item', 'social', 'exception', 'timing'
     hitType: eventData.hitType || 'event',
@@ -229,7 +259,7 @@ export function trackEvent(eventData, opts = {}, payload) {
   /* Attach campaign data */
   const campaignData = addCampaignData(eventData)
   /* Set Dimensions or return them for payload is config.setCustomDimensionsToPage is false */
-  const dimensions = setCustomDimenions(payload.properties, opts)
+  const dimensions = setCustomDimenions(payload.properties, opts, instancePrefix)
 
   const finalPayload = {
     ...data,
@@ -240,7 +270,7 @@ export function trackEvent(eventData, opts = {}, payload) {
   }
 
   /* Send data to Google Analytics */
-  ga('send', 'event', finalPayload)
+  ga(`${instancePrefix}send`, 'event', finalPayload)
   return finalPayload
 }
 
@@ -303,7 +333,7 @@ function get(obj, key, def, p, undef) {
   return obj === undef ? def : obj
 }
 
-function setCustomDimenions(props = {}, opts) {
+function setCustomDimenions(props = {}, opts, instancePrefix) {
   const customDimensions = formatObjectIntoDimensions(props, opts)
   if (!Object.keys(customDimensions).length) {
     return {}
@@ -313,7 +343,7 @@ function setCustomDimenions(props = {}, opts) {
     return customDimensions
   }
   // Set custom dimensions
-  ga('set', customDimensions)
+  ga(`${instancePrefix}set`, customDimensions)
   return {}
 }
 
@@ -323,10 +353,11 @@ function setCustomDimenions(props = {}, opts) {
  */
 export function identifyVisitor(id, traits = {}, conf = {}) {
   if (gaNotLoaded()) return
-  if (id) ga('set', 'userId', id)
+  const { instancePrefix } = getInstanceDetails(conf)
+  if (id) ga(`${instancePrefix}set`, 'userId', id)
   if (Object.keys(traits).length) {
     const custom = formatObjectIntoDimensions(traits, conf)
-    ga('set', custom)
+    ga(`${instancePrefix}set`, custom)
   }
 }
 
