@@ -3,7 +3,16 @@ import goSquared from '@analytics/gosquared'
 import googleAnalytics from '@analytics/google-analytics'
 import exampleProviderPlugin from './plugins/provider-example'
 
-
+const googleAnalyticsInstanceTwo = {
+  ...googleAnalytics({
+    trackingId: 'UA-126647663-6',
+    instanceName: 'two'
+  }),
+  ...{
+    // rename plugin to avoid namespace collisions
+    name: 'google-analytics-two'
+  }
+}
 /* initialize analytics and load plugins */
 const analytics = Analytics({
   debug: true,
@@ -33,6 +42,7 @@ const analytics = Analytics({
       },
       resetCustomDimensionsOnPage: ['foo']
     }),
+    googleAnalyticsInstanceTwo
   ]
 })
 
