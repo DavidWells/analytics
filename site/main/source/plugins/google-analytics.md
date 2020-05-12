@@ -27,6 +27,7 @@ This analytics plugin will load google analytics into your application.
 - [Using GA Custom Dimensions](#using-ga-custom-dimensions)
   * [Set the "customDimensions" option](#set-the-customdimensions-option)
 - [Using multiple instances](#using-multiple-instances)
+- [Custom Proxy Endpoint](#custom-proxy-endpoint)
 
 </details>
 <!-- AUTO-GENERATED-CONTENT:END -->
@@ -482,3 +483,26 @@ const analytics = Analytics({
 ```
 
 Using the above configuration all tracking, page views, and identify calls will flow into both Google Analytics accounts.
+
+## Custom Proxy Endpoint
+
+In certain [scenarios](https://www.freecodecamp.org/news/save-your-analytics-from-content-blockers-7ee08c6ec7ee/), you might want to load your own version of google analytics to send requests to a proxy.
+
+To do this, you can add the `customScriptSrc` option pointing to your custom Google Analytics script
+
+```js
+import Analytics from 'analytics'
+import googleAnalytics from '@analytics/google-analytics'
+
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    googleAnalytics({
+      trackingId: '123-xyz',
+      customScriptSrc: 'https://my-url.com/to-custom-ga.js'
+    })
+  ]
+})
+```
+
+If using a proxied endpoint, it is recommended to combine this technique to with the [do-not-track](http://localhost:8000/plugins/do-not-track/) plugin to ensure website visitors privacy.
