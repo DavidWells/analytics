@@ -30,6 +30,7 @@ For more information [see the docs](https://getanalytics.io/plugins/google-analy
 - [Customizing event payloads](#customizing-event-payloads)
 - [Using GA Custom Dimensions](#using-ga-custom-dimensions)
   * [Set the "customDimensions" option](#set-the-customdimensions-option)
+- [Using multiple instances](#using-multiple-instances)
 
 </details>
 <!-- AUTO-GENERATED-CONTENT:END -->
@@ -123,6 +124,8 @@ const analytics = Analytics({
 | `customDimensions` <br/>_optional_ - object| Map [Custom dimensions](https://bit.ly/3c5de88) to send extra information to Google Analytics. [See details below](#using-ga-custom-dimensions) |
 | `resetCustomDimensionsOnPage` <br/>_optional_ - object| Reset custom dimensions by key on analytics.page() calls. Useful for single page apps. |
 | `setCustomDimensionsToPage` <br/>_optional_ - boolean| Mapped dimensions will be set to the page & sent as properties of all subsequent events on that page. If false, analytics will only pass custom dimensions as part of individual events |
+| `instanceName` <br/>_optional_ - string| Custom tracker name for google analytics. Use this if you need multiple googleAnalytics scripts loaded |
+| `customScriptSrc` <br/>_optional_ - string| Custom URL for google analytics script, if proxying calls |
 
 ## Server-side usage
 
@@ -434,3 +437,55 @@ analytics.identify('user123', {
 
 // This is mapped to window.ga('set', {  dimension3: 'wow' })
 ```
+
+## Using multiple instances
+
+While not advised, it's possible to use [multiple Google Analytics instances](https://developers.google.com/analytics/devguides/collection/analyticsjs/creating-trackers#working_with_multiple_trackers) on a single site.
+
+To use more than one google analytics instance in an app use the `instanceName` config field and make sure to override the default plugin `name`.
+
+Here is an example of using 2 Google Analytics instances in an app.
+
+```js
+import Analytics from 'analytics'
+import googleAnalytics from '@analytics/google-analytics'
+
+// Normal google analytics instance
+const instanceOne = googleAnalytics({
+  trackingId: '123-xyz',
+})
+
+// Second google analytics instance with override for 'name' field of the plugin
+const instanceTwo = {
+  // initialize the 2nd instance with 'instanceName' field set
+  ...googleAnalytics({
+    trackingId: '567-abc',
+    instanceName: 'two'
+  }),
+  // change 'name' plugin to avoid namespace collisions
+  ...{
+    name: 'google-analytics-two'
+  }
+}
+
+/* Object.assign example
+const instanceTwo = Object.assign({}, googleAnalytics({
+    trackingId: '567-abc',
+    instanceName: 'two'
+  }), {
+    name: 'google-analytics-two'
+  }
+}) */
+
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    // Instance 1 of Google Analytics
+    instanceOne,
+    // Instance 2 of Google Analytics
+    instanceTwo
+  ]
+})
+```
+
+Using the above configuration all tracking, page views, and identify calls will flow into both Google Analytics accounts.
