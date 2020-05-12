@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/DavidWells/analytics/compare/@analytics/google-analytics@0.3.1...@analytics/google-analytics@0.4.0) (2020-05-12)
+
+
+### Features
+
+* add support for multiple instances & custom script source to GA ([c9b2510](https://github.com/DavidWells/analytics/commit/c9b2510))
+
+
+
+
+
 ## [0.3.1](https://github.com/DavidWells/analytics/compare/@analytics/google-analytics@0.3.0...@analytics/google-analytics@0.3.1) (2020-04-16)
 
 **Note:** Version bump only for package @analytics/google-analytics
