@@ -157,7 +157,7 @@ And add to your `gatsby.config.js` file. This will enable automate page tracking
 
 See the [gatsby-plugin-analytics docs](https://www.gatsbyjs.org/packages/gatsby-plugin-analytics/) for more details.
 
-You can also reference the various [react examples](http://localhost:8000/tutorials/getting-started/#usage-in-react) above and directly integrate with a `pushState` listener in your site.
+You can also reference the various [react examples](https://getanalytics.io/tutorials/getting-started/#react) above and directly integrate with a `pushState` listener in your site.
 
 ### Preact
 

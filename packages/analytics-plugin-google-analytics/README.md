@@ -512,4 +512,4 @@ const analytics = Analytics({
 })
 ```
 
-If using a proxied endpoint, it is recommended to combine this technique to with the [do-not-track](http://localhost:8000/plugins/do-not-track/) plugin to ensure website visitors privacy.
+If using a proxied endpoint, it is recommended to combine this technique to with the [do-not-track](https://getanalytics.io/plugins/do-not-track/) plugin to ensure website visitors privacy.
