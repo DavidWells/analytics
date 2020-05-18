@@ -172,26 +172,26 @@ function analytics(config = {}) {
     *   company: 'hello-clicky'
     * })
     *
-    * // Disable identify for specific plugin
-    * analytics.identify('xyz-123', {}, {
-    *  plugins: {
-    *    // disable sending this identify call to segment
-    *    segment: false
-    *  }
-    * })
-    *
-    * // Send data to specific provider only
-    * analytics.identify('xyz-123', {}, {
-    *  plugins: {
-    *    // disable this specific identify in all plugins except customerio
-    *    all: false,
-    *    customerio: true
-    *  }
-    * })
-    *
     * // Fire callback with 2nd or 3rd argument
     * analytics.identify('xyz-123', () => {
     *   console.log('do this after identify')
+    * })
+    *
+    * // Disable sending user data to specific analytic tools
+    * analytics.identify('xyz-123', {}, {
+    *   plugins: {
+    *     // disable sending this identify call to segment
+    *     segment: false
+    *   }
+    * })
+    *
+    * // Send user data to only to specific analytic tools
+    * analytics.identify('xyz-123', {}, {
+    *   plugins: {
+    *     // disable this specific identify in all plugins except customerio
+    *     all: false,
+    *     customerio: true
+    *   }
     * })
     */
     identify: (userId, traits, options, callback) => {
@@ -242,31 +242,31 @@ function analytics(config = {}) {
      *   sku: '1234'
      * })
      *
-     * // Disable specific plugin on track
+     * // Fire callback with 2nd or 3rd argument
+     * analytics.track('newsletterSubscribed', () => {
+     *   console.log('do this after track')
+     * })
+     *
+     * // Disable sending this event to specific analytic tools
      * analytics.track('cartAbandoned', {
      *   items: ['xyz', 'abc']
      * }, {
-     *  plugins: {
-     *    // disable track event for segment
-     *    segment: false
-     *  }
+     *   plugins: {
+     *     // disable track event for segment
+     *     segment: false
+     *   }
      * })
      *
-     * // Send data to a specific provider
+     * // Send event to only to specific analytic tools
      * analytics.track('customerIoOnlyEventExample', {
      *   price: 11,
      *   sku: '1234'
      * }, {
-     *  plugins: {
-     *    // disable this specific track call all plugins except customerio
-     *    all: false,
-     *    customerio: true
-     *  }
-     * })
-     *
-     * // Fire callback with 2nd or 3rd argument
-     * analytics.track('newsletterSubscribed', () => {
-     *   console.log('do this after track')
+     *   plugins: {
+     *     // disable this specific track call all plugins except customerio
+     *     all: false,
+     *     customerio: true
+     *   }
      * })
      */
     track: (eventName, payload, options, callback) => {
@@ -306,31 +306,31 @@ function analytics(config = {}) {
      * // Basic page tracking
      * analytics.page()
      *
-     * // Page tracking with page data overides
+     * // Page tracking with page data overrides
      * analytics.page({
      *   url: 'https://google.com'
-     * })
-     *
-     * // Disable specific plugin page tracking
-     * analytics.page({}, {
-     *  plugins: {
-     *    // disable page tracking event for segment
-     *    segment: false
-     *  }
-     * })
-     *
-     * // Send data to specific provider only
-     * analytics.page({}, {
-     *  plugins: {
-     *    // disable this specific page in all plugins except customerio
-     *    all: false,
-     *    customerio: true
-     *  }
      * })
      *
      * // Fire callback with 1st, 2nd or 3rd argument
      * analytics.page(() => {
      *   console.log('do this after page')
+     * })
+     *
+     * // Disable sending this pageview to specific analytic tools
+     * analytics.page({}, {
+     *   plugins: {
+     *     // disable page tracking event for segment
+     *     segment: false
+     *   }
+     * })
+     *
+     * // Send pageview to only to specific analytic tools
+     * analytics.page({}, {
+     *   plugins: {
+     *     // disable this specific page in all plugins except customerio
+     *     all: false,
+     *     customerio: true
+     *   }
      * })
      */
     page: (data, options, callback) => {
