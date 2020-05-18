@@ -254,8 +254,17 @@ analytics.identify('xyz-123', {
 // Disable identify for specific plugin
 analytics.identify('xyz-123', {}, {
  plugins: {
-   // disable for segment plugin
+   // disable sending this identify call to segment
    segment: false
+ }
+})
+
+// Send data to specific provider only
+analytics.identify('xyz-123', {}, {
+ plugins: {
+   // disable this specific identify in all plugins except customerio
+   all: false,
+   customerio: true
  }
 })
 
@@ -298,6 +307,18 @@ analytics.track('cartAbandoned', {
  }
 })
 
+// Send data to a specific provider
+analytics.track('customerIoOnlyEventExample', {
+  price: 11,
+  sku: '1234'
+}, {
+ plugins: {
+   // disable this specific track call all plugins except customerio
+   all: false,
+   customerio: true
+ }
+})
+
 // Fire callback with 2nd or 3rd argument
 analytics.track('newsletterSubscribed', () => {
   console.log('do this after track')
@@ -330,6 +351,15 @@ analytics.page({}, {
  plugins: {
    // disable page tracking event for segment
    segment: false
+ }
+})
+
+// Send data to specific provider only
+analytics.page({}, {
+ plugins: {
+   // disable this specific page in all plugins except customerio
+   all: false,
+   customerio: true
  }
 })
 

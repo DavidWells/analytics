@@ -47,6 +47,7 @@ module.exports = {
           Tutorials: [
             'tutorials/getting-started',
             'tutorials/handling-campaign-url-parameters',
+            'tutorials/sending-provider-specific-events',
             'tutorials/enriching-data',
             'tutorials/using-reset',
           ],
