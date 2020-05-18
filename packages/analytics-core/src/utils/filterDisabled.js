@@ -10,6 +10,10 @@ export default function fitlerDisabledPlugins(allPlugins, settings = {}, options
     if (pluginsFromOpt[name] === true) {
       return true
     }
+    // If all: false disable everything unless true explicitly set
+    if (pluginsFromOpt.all === false) {
+      return false
+    }
     // else use state.plugin settings
     if (settings[name] && settings[name].enabled === false) {
       return false
