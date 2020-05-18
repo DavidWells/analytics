@@ -20,12 +20,12 @@ const analytics = Analytics({
     customAnalyticsPlugin,
     // Send perfume.js data to GA
     googleAnalytics({
-      trackingId: 'UA-1234567' // <--- your GA ID
+      trackingId: 'UA-126647663-7' // <--- your GA ID
     }),
     // Send perfume.js data to segment
-    segmentPlugin({
-      writeKey: '123-xyz'  // <--- your segment key
-    })
+    // segmentPlugin({
+    //   writeKey: '123-xyz'  // <--- your segment key
+    // })
     // ... etc. Any analytics plugin with `track` call will work https://getanalytics.io/plugins/
   ]
 })
