@@ -20,16 +20,17 @@ The core `analytics` API is exposed once the library is initialized with [config
 <!-- AUTO-GENERATED-CONTENT:START (API_DOCS) -->
 ## Configuration
 
-Analytics library configuration.
+Analytics library configuration
 
-After the library is initialized with config, the core API is exposed and ready for use in the application.
+After the library is initialized with config, the core API is exposed & ready for use in the application.
 
 **Arguments**
 
 - **config** <code>object</code> - analytics core config
 - **[config.app]** (optional) <code>string</code> - Name of site / app
 - **[config.version]** (optional) <code>string</code> - Version of your app
-- **[config.plugins]** (optional) <code>array</code> - Array of analytics plugins
+- **[config.debug]** (optional) <code>boolean</code> - Should analytics run in debug mode
+- **[config.plugins]** (optional) <code>Array</code>.&lt;<code>Object</code>&gt; - Array of analytics plugins
 
 **Example**
 
@@ -71,17 +72,26 @@ analytics.identify('xyz-123', {
   company: 'hello-clicky'
 })
 
-// Disable identify for specific plugin
-analytics.identify('xyz-123', {}, {
- plugins: {
-   // disable for segment plugin
-   segment: false
- }
-})
-
 // Fire callback with 2nd or 3rd argument
 analytics.identify('xyz-123', () => {
   console.log('do this after identify')
+})
+
+// Disable sending user data to specific analytic tools
+analytics.identify('xyz-123', {}, {
+  plugins: {
+    // disable sending this identify call to segment
+    segment: false
+  }
+})
+
+// Send user data to only to specific analytic tools
+analytics.identify('xyz-123', {}, {
+  plugins: {
+    // disable this specific identify in all plugins except customerio
+    all: false,
+    customerio: true
+  }
 })
 ```
 
@@ -108,19 +118,31 @@ analytics.track('itemPurchased', {
   sku: '1234'
 })
 
-// Disable specific plugin on track
-analytics.track('cartAbandoned', {
-  items: ['xyz', 'abc']
-}, {
- plugins: {
-   // disable track event for segment
-   segment: false
- }
-})
-
 // Fire callback with 2nd or 3rd argument
 analytics.track('newsletterSubscribed', () => {
   console.log('do this after track')
+})
+
+// Disable sending this event to specific analytic tools
+analytics.track('cartAbandoned', {
+  items: ['xyz', 'abc']
+}, {
+  plugins: {
+    // disable track event for segment
+    segment: false
+  }
+})
+
+// Send event to only to specific analytic tools
+analytics.track('customerIoOnlyEventExample', {
+  price: 11,
+  sku: '1234'
+}, {
+  plugins: {
+    // disable this specific track call all plugins except customerio
+    all: false,
+    customerio: true
+  }
 })
 ```
 
@@ -130,7 +152,7 @@ Trigger page view. This will trigger `page` calls in any installed plugins
 
 **Arguments**
 
-- **[data]** (optional) <code>String</code> - Page data overrides.
+- **[data]** (optional) <a href="https://github.com/DavidWells/analytics/blob/master/packages/analytics-core/src/modules/page.js#L33">PageData</a> - Page data overrides.
 - **[options]** (optional) <code>Object</code> - Page tracking options
 - **[callback]** (optional) <code>Function</code> - Callback to fire after page view call completes
 
@@ -140,22 +162,31 @@ Trigger page view. This will trigger `page` calls in any installed plugins
 // Basic page tracking
 analytics.page()
 
-// Page tracking with page data overides
+// Page tracking with page data overrides
 analytics.page({
   url: 'https://google.com'
-})
-
-// Disable specific plugin page tracking
-analytics.page({}, {
- plugins: {
-   // disable page tracking event for segment
-   segment: false
- }
 })
 
 // Fire callback with 1st, 2nd or 3rd argument
 analytics.page(() => {
   console.log('do this after page')
+})
+
+// Disable sending this pageview to specific analytic tools
+analytics.page({}, {
+  plugins: {
+    // disable page tracking event for segment
+    segment: false
+  }
+})
+
+// Send pageview to only to specific analytic tools
+analytics.page({}, {
+  plugins: {
+    // disable this specific page in all plugins except customerio
+    all: false,
+    customerio: true
+  }
 })
 ```
 
@@ -165,7 +196,7 @@ Get user data
 
 **Arguments**
 
-- **[key]** (optional) <code>String</code> - dot.prop.path of user data. Example: 'traits.company.name'
+- **[key]** (optional) <code>string</code> - dot.prop.path of user data. Example: 'traits.company.name'
 
 **Example**
 
