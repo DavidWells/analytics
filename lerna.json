@@ -1,21 +1,20 @@
 {
-  "packages": [
-    "packages/*"
-  ],
+  "conventionalCommits": true,
   "version": "independent",
+  "useWorkspaces": true,
+  "npmClient": "yarn",
   "command": {
     "publish": {
       "allowBranch": [
         "master",
         "next"
       ],
-      "conventionalCommits": true,
       "message": "chore(release): :tada: :rocket: [skip ci]"
     }
   },
   "ignoreChanges": [
     "**/CHANGELOG.md",
-    "**/package-lock.json",
+    "**/yarn.lock",
     "**/test/**",
     "lerna.json",
     "package.json",
