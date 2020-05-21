@@ -4,7 +4,7 @@ import { FUNC, UNDEF, ACTION_INIT, REDUCER } from './utils/defs'
 // eslint-disable-next-line
 const $$observable = /* #__PURE__ */ (() => (typeof Symbol === FUNC && Symbol.observable) || '@@observable')();
 
-/**
+/*
  * Creates a Redux store that holds the state tree.
  * The only way to change the data in the store is to call `dispatch()` on it.
  *
@@ -60,7 +60,7 @@ export default function createStore(reducer, preloadedState, enhancer) {
     }
   }
 
-  /**
+  /*
    * Reads the state tree managed by the store.
    *
    * @returns {any} The current state tree of your application.
@@ -69,7 +69,7 @@ export default function createStore(reducer, preloadedState, enhancer) {
     return currentState
   }
 
-  /**
+  /*
    * Adds a change listener. It will be called any time an action is dispatched,
    * and some part of the state tree may potentially have changed. You may then
    * call `getState()` to read the current state tree inside the callback.
@@ -197,7 +197,7 @@ export default function createStore(reducer, preloadedState, enhancer) {
   function observable() {
     const outerSubscribe = subscribe
     return {
-      /**
+      /*
        * The minimal observable subscription method.
        * @param {Object} observer Any object that can be used as an observer.
        * The observer object should have a `next` method.
