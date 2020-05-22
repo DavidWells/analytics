@@ -90,6 +90,7 @@ to Google Analytics and Customer.io 🎉 */
 
 See [additional implementation examples](#additional-examples) for more details on using in your project.
 
+
 ## Configuration options
 
 | Option | description |
@@ -232,3 +233,7 @@ const analytics = Analytics({
   ]
 })
 ```
+
+## Demo Video
+
+<iframe width="700" height="405" src="https://www.youtube.com/embed/9DZAVpAubtQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

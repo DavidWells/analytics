@@ -7,3 +7,5 @@ Using this pattern you can automatically send your apps page performance to your
 [See live example app](https://analytics-perfumejs-example.netlify.app/)
 
 [View the src](./src/App.js)
+
+[Watch the video](https://www.youtube.com/watch?v=9DZAVpAubtQ)
