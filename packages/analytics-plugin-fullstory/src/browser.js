@@ -37,7 +37,7 @@ function fullStoryPlugin(pluginConfig = {}) {
         script.type = 'text/javascript'
         script.async = true
         script.crossOrigin = 'anonymous'
-        script.src = `https://www.fullstory.com/s/fs.js`
+        script.src = `https://edge.fullstory.com/s/fs.js`
 
         /* script.addEventListener('load', () => {
           isLoaded = true
