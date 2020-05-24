@@ -27,6 +27,7 @@ module.exports = {
             'plugins/google-tag-manager',
             'plugins/segment',
             'plugins/customerio',
+            'plugins/snowplow',
             'plugins/hubspot',
             'plugins/fullstory',
             'plugins/crazyegg',
