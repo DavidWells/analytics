@@ -2,23 +2,29 @@
   "name": "root",
   "private": true,
   "scripts": {
-    "setup": "npm install && lerna bootstrap",
+    "setup": "lerna bootstrap",
     "setup-examples": "node ./scripts/installer.js",
     "clean": "rimraf packages/*/dist",
-    "reset": "npm run clean && lerna clean --yes",
+    "reset": "yarn clean && lerna clean --yes",
     "test": "lerna run test",
     "test:watch": "lerna run test:watch --parallel --stream",
     "watch": "lerna run watch --parallel --stream",
     "watch:core": "lerna run watch --stream --scope analytics",
     "develop": "lerna run develop --parallel",
     "prebuild": "lerna run types",
-    "build": "npm run clean && lerna run build",
-    "build:dev": "npm run clean && lerna run build:dev",
+    "build": "yarn clean && lerna run build",
+    "build:dev": "yarn clean && lerna run build:dev",
     "docs": "node ./scripts/docs.js && lerna run docs",
     "verifyOrigin": "git remote get-url origin",
-    "prerelease": "npm run verifyOrigin",
-    "releaseUsageNotes": "run 'npm run release --key=npmtoken'",
+    "prerelease": "yarn verifyOrigin",
+    "releaseUsageNotes": "run 'yarn release --key=npmtoken'",
     "release": "NPM_CONFIG_OTP=$npm_config_key lerna publish"
+  },
+  "workspaces": {
+    "packages": [
+      "packages/*",
+      "examples/*"
+    ]
   },
   "repository": {
     "type": "git",
