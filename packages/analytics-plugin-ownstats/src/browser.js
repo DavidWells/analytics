@@ -79,21 +79,21 @@ export default function ownstatsPlugin(pluginConfig) {
           };
           his.pushState = stateListener('pushState');
           window.addEventListener('pushState', function() {
-            page(true);
+            //page(true);
           });
         }
         // SPA navigation
         if ('onhashchange' in window) {
           window.onhashchange = function() {
-            page(true);
+            //page(true);
           }
         }
         // Signal load
         isLoaded = true;
         // Trigger
-        page();
+        //page();
       } catch (e) {
-        if (con && con.error) con.error('ownstats: ' + e);
+        //console.log(e);
       }
     },
     // See https://github.com/DavidWells/analytics/blob/master/packages/analytics-core/src/index.js#L336
@@ -126,7 +126,7 @@ export default function ownstatsPlugin(pluginConfig) {
       var data = { t: 'pageview', u: url, hn: loc.hostname };
       if (userAgent) data.ua = userAgent;
       if (refs && refs[0]) data.s = refs[0];
-      if (doc.referrer && !isPushState) data.r = doc.referrer;
+      if (doc.referrer) data.r = doc.referrer;
       if (window.innerWidth) data.iw = window.innerWidth;
       if (window.innerWidth) data.ih = window.innerHeight;
       if (sc.width) data.w = sc.width;
