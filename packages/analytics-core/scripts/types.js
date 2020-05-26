@@ -1,5 +1,7 @@
 const fs = require('fs')
 const path = require('path')
+const mkdirp = require('mkdirp')
+
 // https://github.com/englercj/tsd-jsdoc/issues/64#issuecomment-462020832
 
 const TYPES_PATH = path.resolve(__dirname, '../temp-types/types.d.ts')
@@ -19,4 +21,8 @@ export const init = analytics;
 export const Analytics = analytics;
 
 export = analytics;`
-fs.writeFileSync(OUTPUT_PATH, newContent)
+
+mkdirp(path.dirname(OUTPUT_PATH), function (err) {
+  if (err) console.error(err)
+  fs.writeFileSync(OUTPUT_PATH, newContent)
+})
