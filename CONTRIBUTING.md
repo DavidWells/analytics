@@ -26,9 +26,15 @@ brew install watchman
 
 ### Run locally
 
-```sh
-$ npm start
-```
+To run analytics locally follow these steps:
+
+1. Make sure you have run `npm run setup` to install all packages
+2. Run `npm run build` to ensure analytics packages are built
+3. Run watch mode `npm run watch` to have changes reflected live in the demo app.
+4. In a new terminal window, change directories into the [`/examples/demo`](https://github.com/DavidWells/analytics/tree/master/examples/demo) folder & install the demo apps dependencies `npm install`
+5. Finally, you can start the demo app with `npm start`
+
+If you have any questions please ping [@DavidWells](https://twitter.com/davidwells) on Twitter.
 
 ## Available scripts
 
@@ -50,16 +56,6 @@ Watches all `analytics` packages and builds them on change.
 
 ```sh
 $ npm run watch
-```
-
-### `start`
-
-Starts the development server. This task runs both the `setup` and `watch` scripts.
-
-#### Usage
-
-```sh
-$ npm start
 ```
 
 ### `clean`
