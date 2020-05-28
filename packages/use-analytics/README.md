@@ -168,7 +168,7 @@ Below is an example of using `withAnalytics`
 
 ```js
 import React, { Component } from 'react'
-import { useAnalytics } from 'use-analytics'
+import { withAnalytics } from 'use-analytics'
 
 class App extends Component {
   render() {
