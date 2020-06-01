@@ -31,6 +31,8 @@
     "analytics-plugin-tab-events": "file:../../packages/analytics-plugin-tab-events",
     "analytics-plugin-window-events": "file:../../packages/analytics-plugin-window-events",
     "analytics-utils": "file:../../packages/analytics-utils",
+    "install": "^0.13.0",
+    "npm": "^6.14.5",
     "outdent": "^0.7.0",
     "perfume.js": "^5.0.2",
     "react": "^16.7.0",

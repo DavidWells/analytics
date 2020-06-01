@@ -85,7 +85,7 @@ export default function ownstatsPlugin(pluginConfig) {
               if (window.Analytics) window.Analytics.page();
             }
           }
-          // Signal load
+          // Signal readiness
           isLoaded = true;
           // Trigger
           if (window.Analytics) window.Analytics.page();
@@ -93,11 +93,10 @@ export default function ownstatsPlugin(pluginConfig) {
           console.log(e);
         }
       } else {
-        // Signal load
+        // Signal readiness
         isLoaded = true;
       }
     },
-    // See https://github.com/DavidWells/analytics/blob/master/packages/analytics-core/src/index.js#L336
     page: ({ payload, config }) => {
       var nav = window.navigator;
       var loc = window.location;
@@ -155,7 +154,6 @@ export default function ownstatsPlugin(pluginConfig) {
       // Send pageview data
       send(data);
     },
-    // See https://github.com/DavidWells/analytics/blob/master/packages/analytics-core/src/index.js#L272
     track: ({ payload }) => {
       console.log(payload)
       // Metric names
@@ -171,7 +169,6 @@ export default function ownstatsPlugin(pluginConfig) {
       }
       send(data);
     },
-    // See https://github.com/DavidWells/analytics/blob/master/packages/analytics-core/src/index.js#L197
     identify: ({ payload }) => {
       let data = { t: 'id', ts: payload.meta.timestamp, uid: payload.userId, aid: payload.anonymousId, tr: JSON.stringify(payload.traits) };
       send(data);

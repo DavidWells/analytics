@@ -1,45 +1,24 @@
 const https = require('https');
 
-// configuration
-const config = {
-  endpoint: null
-};
-
 class OwnstatsClient {
   constructor (endpoint) {
     this.endpoint = endpoint;
     this.reqUrl = `https://${endpoint}/hello.gif`;
   }
-  flatten (ob, prefix) {
-    const toReturn = {};
-    prefix = prefix ? prefix + '.' : '';
-    for (let i in ob) {
-      if (!ob.hasOwnProperty(i)) continue;
-      if (typeof ob[i] === 'object' && ob[i] !== null) {
-        // Recursion on deeper objects
-        Object.assign(toReturn, flatten(ob[i], prefix + i));
-      } else {
-        toReturn[prefix + i] = ob[i];
-      }
-    }
-    return toReturn;
-  }
   send () {
     const qs = [];
-    // Flatten data
-    const flattenedData = flatten(data);
     // Build querystring
-    for (var property in flattenedData) {
-      if (flattenedData.hasOwnProperty(property)) {
-        qs.push(`${property}=${encodeURIComponent(flattenedData[property].toString())}`);
+    for (var property in data) {
+      if (data.hasOwnProperty(property)) {
+        qs.push(`${property}=${encodeURIComponent(data[property].toString())}`);
       }
     }
     const url = `${this.reqUrl}?${qs.join('&')}`;
     // Send data
     https.get(url, (response) => {
-      let data = '';
+      let responseData = '';
       response.on('data', (chunk) => {
-        data += chunk;
+        responseData += chunk;
       });
       response.on('end', () => {
         return true;
@@ -75,6 +54,7 @@ export default function ownstatsPlugin(pluginConfig) {
     config: ownstatsConfig,
     /* page view */
     page: ({ payload, config }) => {
+      var data = { t: 'pv', u: url, hn: loc.hostname };
       client.send({
         properties: payload.properties
       })
