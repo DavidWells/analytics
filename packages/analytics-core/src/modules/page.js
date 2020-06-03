@@ -1,5 +1,7 @@
 // Page View Reducer. Follows ducks pattern http://bit.ly/2DnERMc
 import { inBrowser } from 'analytics-utils'
+import serialize from '../utils/serialize'
+
 import EVENTS from '../events'
 
 const hashRegex = /#.*$/
@@ -75,13 +77,29 @@ export const getPageData = (pageData = {}) => {
   }
 }
 
-const initialState = getPageData()
+const initialState = {
+  last: {},
+  history: [],
+}
 
 // page reducer
 export default function page(state = initialState, action) {
+  const { properties, options, meta } = action
   switch (action.type) {
     case EVENTS.page:
-      return Object.assign({}, state, action.properties)
+      const viewData = serialize({
+        properties,
+        meta,
+        ...(Object.keys(options).length) && { options: options },
+      })
+      return {
+        ...state,
+        ...{
+          last: viewData,
+          // Todo prevent LARGE arrays https://bit.ly/2MnBwPT
+          history: state.history.concat(viewData)
+        }
+      }
     default:
       return state
   }

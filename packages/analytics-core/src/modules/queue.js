@@ -10,7 +10,7 @@ const initialState = {
 }
 
 export default function queueReducer(state = initialState, action) {
-  const { type, data, timestamp, payload } = action
+  const { type, payload } = action
 
   switch (type) {
     case 'queue':

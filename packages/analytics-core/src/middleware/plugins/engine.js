@@ -91,7 +91,7 @@ export default async function (action, getPlugins, instance, store, eventsInfo) 
    * Example:
    *  This is process 'pageEnd' methods from plugins and update the event to send through
    */
-  // 🔥 Only trigger `eventTypeEnd` if originalAction has Start ending. Verify
+  // Only trigger `eventTypeEnd` if originalAction has Start ending.
   if (originalType.match(endsWithStartRegex)) {
     const afterName = `${updatedType}End`
     const actionAfter = await processEvent({
@@ -177,9 +177,7 @@ async function processEvent({
       addToQueue = !plugins[pluginName].loaded
     }
     /* If offline and its a core method. Add to queue */
-    if (context.offline &&
-       (methodName.match(/^page/) || methodName.match(/^track/) || methodName.match(/^identify/))
-    ) {
+    if (context.offline && (methodName.match(/^(page|track|identify)/))) {
       addToQueue = true
     }
     acc[`${pluginName}`] = addToQueue
@@ -209,7 +207,7 @@ async function processEvent({
             // console.log(`__abort xxx: ${plugins}`)
             // console.log(`__abort otherPlug`, otherPlug)
             return {
-              ...currentAct, // 🔥 todo verify this merge is ok
+              ...currentAct,
               abort: {
                 reason: reason,
                 plugins: plugins || [pname],
