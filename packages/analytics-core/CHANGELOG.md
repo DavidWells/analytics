@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/DavidWells/analytics/compare/analytics@0.4.0...analytics@0.5.0) (2020-06-03)
+
+
+### Features
+
+* add page.last & track.last to state ([c8ce5cc](https://github.com/DavidWells/analytics/commit/c8ce5cc))
+* add perfume.js performance metrics plugin ([2a4b3f2](https://github.com/DavidWells/analytics/commit/2a4b3f2))
+
+
+
+
+
 # [0.4.0](https://github.com/DavidWells/analytics/compare/analytics@0.3.5...analytics@0.4.0) (2020-05-18)
 
 
