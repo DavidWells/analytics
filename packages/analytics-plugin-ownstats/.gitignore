@@ -1,0 +1,12 @@
+dist
+node_modules
+lib
+
+*.log
+
+# IDE stuff
+**/.idea
+
+# OS stuff
+.DS_Store
+.tmp
