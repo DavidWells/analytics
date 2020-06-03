@@ -29,7 +29,7 @@ export default function user(state = {}, action) {
       [ ID, ANONID, 'traits' ].map((key) => {
         globalContext[tempKey(key)] = null
       });
-      [USER_ID, ANON_ID, USER_TRAITS].map((key) => {
+      [ USER_ID, ANON_ID, USER_TRAITS ].map((key) => {
         storage.removeItem(key)
       })
       /* eslint-enable  */
