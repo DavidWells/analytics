@@ -156,7 +156,9 @@ export default function ownstatsPlugin(pluginConfig) {
       send(data);
     },
     // See https://github.com/DavidWells/analytics/blob/master/packages/analytics-core/src/index.js#L272
-    track: ({ payload }) => {
+    track: ({ payload, instance }) => {
+      const currentPageView = instance.getState('page.last')
+      console.log('currentPageView data with timestamp', currentPageView)
       console.log(payload)
       // Metric names
       const perfMetricNames = ['fp', 'fcp', 'lcp', 'lcpFinal', 'fid', 'cls', 'clsFinal', 'tbt', 'tbt10S', 'tbtFinal'];
