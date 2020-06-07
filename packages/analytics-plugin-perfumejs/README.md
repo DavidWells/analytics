@@ -21,6 +21,7 @@ Using perfume.js with `analytics` makes wiring up your performances metrics to a
 - [Configuration options](#configuration-options)
 - [Additional examples](#additional-examples)
 - [Zero config](#zero-config)
+- [Demo Video](#demo-video)
 
 </details>
 <!-- AUTO-GENERATED-CONTENT:END -->
