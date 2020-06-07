@@ -1,31 +1,31 @@
-const https = require('https');
+const https = require('https')
 
 class OwnstatsClient {
   constructor (endpoint) {
-    this.endpoint = endpoint;
-    this.reqUrl = `https://${endpoint}/hello.gif`;
+    this.endpoint = endpoint
+    this.reqUrl = `https://${endpoint}/hello.gif`
   }
   send () {
-    const qs = [];
+    const qs = []
     // Build querystring
     for (var property in data) {
       if (data.hasOwnProperty(property)) {
-        qs.push(`${property}=${encodeURIComponent(data[property].toString())}`);
+        qs.push(`${property}=${encodeURIComponent(data[property].toString())}`)
       }
     }
-    const url = `${this.reqUrl}?${qs.join('&')}`;
+    const url = `${this.reqUrl}?${qs.join('&')}`
     // Send data
     https.get(url, (response) => {
-      let responseData = '';
+      let responseData = ''
       response.on('data', (chunk) => {
-        responseData += chunk;
-      });
+        responseData += chunk
+      })
       response.on('end', () => {
-        return true;
-      });
+        return true
+      })
     }).on("error", (err) => {
-      throw new Error(err.message);
-    });
+      throw new Error(err.message)
+    })
   }
 }
 
@@ -42,27 +42,30 @@ class OwnstatsClient {
  *   endpoint: 'my.ownstats.cloud'
  * })
  */
-export default function ownstatsPlugin(pluginConfig) {
+function ownstatsPlugin(pluginConfig) {
   // Initialize segment client
   const ownstatsConfig = {
     ...pluginConfig
   }
-  const client = new OwnstatsClient(ownstatsConfig.endpoint);
+  const client = new OwnstatsClient(ownstatsConfig.endpoint)
   return {
     NAMESPACE: 'ownstats',
     config: ownstatsConfig,
     /* page view */
     page: ({ payload }) => {
-      let host;
+      let host
       // Derive host (with eventual port number)
-      const hostWithPort = payload.properties.url.replace('https://', '').replace('http://', '').split('/')[0];
+      const hostWithPort = payload.properties.url
+        .replace('https://', '')
+        .replace('http://', '')
+        .split('/')[0]
       // Derive host
       if (hostWithPort.split(':').length === 2) {
-        host = hostWithPort.split(':')[0];
+        host = hostWithPort.split(':')[0]
       } else {
-        host = hostWithPort;
+        host = hostWithPort
       }
-      const data = { 
+      const data = {
         t: 'pv',
         ts: payload.meta.timestamp,
         u: payload.properties.url,
@@ -71,18 +74,10 @@ export default function ownstatsPlugin(pluginConfig) {
         iw: payload.properties.width,
         ih: payload.properties.height,
         ti: payload.properties.title
-      };
-      client.send(data);
-    },
-    /* track event */
-    track: ({ payload }) => {
-      // Not implemented
-      return false;
-    },
-    /* identify user */
-    identify: ({ payload }) => {
-      // Not implemented
-      return false;
+      }
+      client.send(data)
     }
   }
 }
+
+export default ownstatsPlugin
