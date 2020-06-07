@@ -49,8 +49,9 @@ const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
     ownstatsPlugin({
-      /* Use your Ownstats endpoint */
-      endpoint: 'myuniqueid.cloudfront.net'
+      endpoint: 'my.ownstats.cloud',
+      useAutomation: true,
+      debug: true
     })
   ]
 })
@@ -60,7 +61,7 @@ analytics.page()
 
 ```
 
-After initializing `analytics` with the `ownstatsPlugin` plugin, data will be sent into Ownstats whenever [analytics.page](https://getanalytics.io/api/#analyticspage) is called. [analytics.track](https://getanalytics.io/api/#analyticstrack) and [analytics.identify](https://getanalytics.io/api/#analyticsidentify) are not supported by Ownstats.
+After initializing `analytics` with the `ownstatsPlugin` plugin, data will be sent into Ownstats whenever or [analytics.page](https://getanalytics.io/api/#analyticspage) are called.
 
 See [additional implementation examples](#additional-examples) for more details on using in your project.
 
@@ -72,7 +73,7 @@ The `@analytics/ownstats` package works in [the browser](#browser-usage) and [se
 
 The Ownstats client side browser plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Ownstats
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Ownstats 
 
 ### Browser API
 
@@ -84,8 +85,9 @@ const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
     ownstatsPlugin({
-      /* Use your Ownstats endpoint */
-      endpoint: 'myuniqueid.cloudfront.net'
+      endpoint: 'my.ownstats.cloud',
+      useAutomation: true,
+      debug: true
     })
   ]
 })
@@ -96,15 +98,15 @@ const analytics = Analytics({
 
 | Option | description |
 |:---------------------------|:-----------|
-| `endpoint` <br/>**required** - string| Your ownstats endpoint (e.g. `myuniqueid.cloudfront.net`) |
-| `useAutomation` <br/>_optional_ - boolean| Enable automatic page view triggering (default: `false`) |
-| `debug` <br/>_optional_ - boolean| Enable debug mode, will also trigger events when running on `localhost` (default: `false`) |
+| `endpoint` <br/>**required** - string| Your Ownstats endpoint |
+| `useAutomation` <br/>**required** - boolean| Automatically trigger pageviews upon route changes for single page applications |
+| `debug` <br/>**required** - boolena| Debug mode (necessary for localhost testing) |
 
 ## Server-side usage
 
 The Ownstats server-side node.js plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Ownstats
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Ownstats 
 
 ### Server-side API
 
@@ -116,8 +118,7 @@ const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
     ownstatsPlugin({
-      /* Use your Ownstats endpoint */
-      endpoint: 'myuniqueid.cloudfront.net'
+      endpoint: 'my.ownstats.cloud'
     })
   ]
 })
@@ -146,8 +147,7 @@ Below are additional implementation examples.
     app: 'awesome-app',
     plugins: [
       ownstatsPlugin({
-        /* Use your Ownstats endpoint */
-        endpoint: 'myuniqueid.cloudfront.net'
+        endpoint: 'my.ownstats.cloud'
       })
       // ...other plugins
     ]
@@ -173,8 +173,7 @@ Below are additional implementation examples.
     app: 'my-app-name',
     plugins: [
       ownstatsPlugin({
-        /* Use your Ownstats endpoint */
-        endpoint: 'myuniqueid.cloudfront.net'
+        endpoint: 'my.ownstats.cloud'
       })
     ]
   })
@@ -203,9 +202,10 @@ Below are additional implementation examples.
         var Analytics = _analytics.init({
           app: 'my-app-name',
           plugins: [
-            ownstatsPlugin({
-              /* Use your Ownstats endpoint */
-              endpoint: 'myuniqueid.cloudfront.net'
+            analyticsOwnstats({
+              endpoint: 'my.ownstats.cloud',
+              useAutomation: true,
+              debug: true
             })
           ]
         })
@@ -240,15 +240,16 @@ Below are additional implementation examples.
       </script>
       <script type="module">
         import analytics from 'https://unpkg.com/analytics/lib/analytics.browser.es.js?module'
-        import ownstatsPlugin from 'https://unpkg.com/@analytics/ownstats/lib/analytics-plugin-ownstats.browser.es.js?module'
+        import analyticsOwnstats from 'https://unpkg.com/@analytics/ownstats/lib/analytics-plugin-ownstats.browser.es.js?module'
         /* Initialize analytics */
         const Analytics = analytics({
           app: 'analytics-html-demo',
           debug: true,
           plugins: [
-            ownstatsPlugin({
-              /* Use your Ownstats endpoint */
-              endpoint: 'myuniqueid.cloudfront.net'
+            analyticsOwnstats({
+              endpoint: 'my.ownstats.cloud',
+              useAutomation: true,
+              debug: true
             })
             // ... add any other third party analytics plugins
           ]
