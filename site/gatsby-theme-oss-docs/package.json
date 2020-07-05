@@ -7,7 +7,7 @@
     "@analytics/google-analytics": "^0.2.0",
     "@mdx-js/mdx": "^1.0.0-rc.4",
     "@mdx-js/react": "^1.0.0-rc.5",
-    "analytics": "^0.2.4",
+    "analytics": "^0.5.1",
     "gatsby": "^2.3.25",
     "gatsby-mdx": "^0.6.2",
     "gatsby-plugin-analytics": "0.0.3",
