@@ -25,6 +25,17 @@ const pluginTwo = {
   }
 }
 
+/* Disable cookies/localstorage for all storage calls */
+const disableStorage = {
+  name: 'disable-storage',
+  setItemStart: ({ payload, instance }) => {
+    return {
+      ...payload,
+      ...{ options: { storage: 'global' } }
+    }
+  }
+}
+
 
 /* initialize analytics and load plugins */
 const analytics = Analytics({
@@ -32,7 +43,8 @@ const analytics = Analytics({
   app: 'yolo',
   plugins: [
     pluginOne,
-    pluginTwo
+    pluginTwo,
+    disableStorage
   ]
 })
 
