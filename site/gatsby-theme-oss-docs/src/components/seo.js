@@ -35,6 +35,7 @@ export default function SEO({ title, description, siteName, pathname }) {
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css"
       />
+      <script src='https://d26s9dlh9vivqr.cloudfront.net/go.js' type='text/javascript' />
     </Helmet>
   )
 }
