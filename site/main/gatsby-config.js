@@ -32,6 +32,8 @@ module.exports = {
             'plugins/crazyegg',
             'plugins/gosquared',
             'plugins/simple-analytics',
+            'plugins/ownstats',
+            'plugins/perfumejs',
             'plugins/do-not-track',
             'plugins/tab-events',
             'plugins/window-events',

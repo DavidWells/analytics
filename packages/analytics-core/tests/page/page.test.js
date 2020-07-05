@@ -54,3 +54,31 @@ test('should call .page callback', async (t) => {
   t.is(pageCallbackSpy.callCount, 1)
   t.is(pageSpy.callCount, 1)
 })
+
+test('page state should contain .last && .history', async (t) => {
+  const pageSpy = t.context.sandbox.spy()
+  const pageCallbackSpy = t.context.sandbox.spy()
+  const analytics = Analytics({
+    app: 'appname',
+    version: 100,
+    plugins: [
+      {
+        name: 'test-plugin',
+        page: pageSpy
+      }
+    ]
+  })
+
+  analytics.page(pageCallbackSpy)
+  await delay(100)
+
+  const pageState = analytics.getState('page')
+  // var args = pageCallbackSpy.getCalls()[0].args
+  const last = pageState.last
+  t.truthy(last.properties)
+  t.truthy(last.meta)
+
+  const history = pageState.history
+  t.is(Array.isArray(history), true)
+  t.is(history.length, 1)
+})

@@ -70,9 +70,7 @@ export function processQueue(store, getPlugins, instance) {
 
 /* Heartbeat retries queued events */
 export default function heartBeat(store, getPlugins, instance) {
-  return setInterval(() => {
-    processQueue(store, getPlugins, instance)
-  }, 3e3)
+  return setInterval(() => processQueue(store, getPlugins, instance), 3e3)
 }
 
 function fixEmptyValues(obj, objTwo, key) {

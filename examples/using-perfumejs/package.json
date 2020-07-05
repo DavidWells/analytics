@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@analytics/google-analytics": "^0.4.0",
+    "@analytics/perfumejs": "^0.1.0",
     "@analytics/segment": "^0.4.0",
     "analytics": "^0.3.5",
     "perfume.js": "^5.0.2",
@@ -15,7 +16,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "deploy": "netlify deploy -p"
   },
   "eslintConfig": {
     "extends": "react-app"

@@ -2,6 +2,7 @@
 const fs = require('fs')
 const path = require('path')
 const indentString = require('indent-string')
+const mkdirp = require('mkdirp')
 
 const TYPES_PATH = path.resolve(__dirname, '../temp-types/types.d.ts')
 const OUTPUT_PATH = path.resolve(__dirname, '../lib/types.d.ts')
@@ -27,5 +28,7 @@ ${indentString(typesFromJsDocs, 2)}
   export = analytics;
 }`
 
-// Write out to types.d.ts file in /lib
-fs.writeFileSync(OUTPUT_PATH, newContent)
+mkdirp(path.dirname(OUTPUT_PATH), function (err) {
+  if (err) console.error(err)
+  fs.writeFileSync(OUTPUT_PATH, newContent)
+})

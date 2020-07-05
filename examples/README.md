@@ -6,3 +6,4 @@
 - [HTML example](./vanilla-html)
 - [Preact example](./preact)
 - [Vue example](./vue)
+- [Track performance metrics example](./using-perfumejs)

@@ -115,3 +115,31 @@ test.cb('Track plugins & lifecycle fire in correct order', (t) => {
     t.end()
   })
 })
+
+test('track state should contain .last && .history', async (t) => {
+  const trackSpy = t.context.sandbox.spy()
+  const callbackSpy = t.context.sandbox.spy()
+  const analytics = Analytics({
+    app: 'appname',
+    version: 100,
+    plugins: [
+      {
+        name: 'test-plugin',
+        track: trackSpy
+      }
+    ]
+  })
+
+  await analytics.track('testing', { foo: 'bar' }, callbackSpy)
+
+  const trackState = analytics.getState('track')
+  // var args = pageCallbackSpy.getCalls()[0].args
+  const last = trackState.last
+  t.is(last.event, 'testing')
+  t.deepEqual(last.properties, { foo: 'bar' })
+  t.truthy(last.meta)
+
+  const history = trackState.history
+  t.is(Array.isArray(history), true)
+  t.is(history.length, 1)
+})

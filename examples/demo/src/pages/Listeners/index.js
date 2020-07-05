@@ -37,7 +37,7 @@ export default class Listeners extends Component {
       })
     })
 
-    this.pageListener = analytics.on('customEvent', ({ payload }) => {
+    this.customEventListener = analytics.on('customEvent', ({ payload }) => {
       console.log(`page listener ${payload.type}`)
       listenerHistory['customEvent'].push(payload)
       this.setState({
@@ -49,6 +49,7 @@ export default class Listeners extends Component {
     this.listener()
     this.trackListener()
     this.pageListener()
+    this.customEventListener()
   }
 
   doTrack = () => {
