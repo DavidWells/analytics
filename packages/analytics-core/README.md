@@ -657,6 +657,7 @@ The `analytics` has a robust plugin system. Here is a list of currently availabl
 
 <!-- AUTO-GENERATED-CONTENT:START (PLUGINS) -->
 - [@analytics/cookie-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-cookie) Cookie helper functions [npm link](https://www.npmjs.com/package/@analytics/cookie-utils).
+- [@analytics/core](https://github.com/DavidWells/analytics/tree/master/packages/analytics-core) Lightweight analytics library for tracking events, page views, & identifying users. Works with any third party analytics provider via an extendable plugin system. [npm link](https://www.npmjs.com/package/@analytics/core).
 - [@analytics/crazy-egg](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-crazy-egg) Crazy Egg integration for 'analytics' module [npm link](https://www.npmjs.com/package/@analytics/crazy-egg).
 - [@analytics/customerio](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-customerio) Customer.io integration for 'analytics' module [npm link](https://www.npmjs.com/package/@analytics/customerio).
 - [@analytics/form-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-forms) Form utility library for managing HTML form submissions & values [npm link](https://www.npmjs.com/package/@analytics/form-utils).

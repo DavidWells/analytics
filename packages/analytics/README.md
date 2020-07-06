@@ -657,6 +657,7 @@ The `analytics` has a robust plugin system. Here is a list of currently availabl
 
 <!-- AUTO-GENERATED-CONTENT:START (PLUGINS) -->
 - [@analytics/cookie-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-cookie) Cookie helper functions [npm link](https://www.npmjs.com/package/@analytics/cookie-utils).
+- [@analytics/core](https://github.com/DavidWells/analytics/tree/master/packages/analytics-core) Lightweight analytics library for tracking events, page views, & identifying users. Works with any third party analytics provider via an extendable plugin system. [npm link](https://www.npmjs.com/package/@analytics/core).
 - [@analytics/crazy-egg](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-crazy-egg) Crazy Egg integration for 'analytics' module [npm link](https://www.npmjs.com/package/@analytics/crazy-egg).
 - [@analytics/customerio](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-customerio) Customer.io integration for 'analytics' module [npm link](https://www.npmjs.com/package/@analytics/customerio).
 - [@analytics/form-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-forms) Form utility library for managing HTML form submissions & values [npm link](https://www.npmjs.com/package/@analytics/form-utils).
@@ -670,7 +671,6 @@ The `analytics` has a robust plugin system. Here is a list of currently availabl
 - [@analytics/segment](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-segment) Segment integration for 'analytics' module for browser & node [npm link](https://www.npmjs.com/package/@analytics/segment).
 - [@analytics/simple-analytics](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-simple-analytics) Simple analytics plugin for 'analytics' module for browser [npm link](https://www.npmjs.com/package/@analytics/simple-analytics).
 - [@analytics/storage-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-storage) Storage utilities for saving values in browser [npm link](https://www.npmjs.com/package/@analytics/storage-utils).
-- [analytics](https://github.com/DavidWells/analytics/tree/master/packages/analytics) Lightweight analytics library for tracking events, page views, & identifying users. Works with any third party analytics provider via an extendable plugin system. [npm link](https://www.npmjs.com/package/analytics).
 - [analytics-cli](https://github.com/DavidWells/analytics/tree/master/packages/analytics-cli) CLI for `analytics` pkg [npm link](https://www.npmjs.com/package/analytics-cli).
 - [analytics-plugin-do-not-track](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-do-not-track) Disable tracking for opted out visitors plugin for 'analytics' module [npm link](https://www.npmjs.com/package/analytics-plugin-do-not-track).
 - [analytics-plugin-event-validation](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-event-validation) Event validation plugin for analytics [npm link](https://www.npmjs.com/package/analytics-plugin-event-validation).

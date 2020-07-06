@@ -47,7 +47,7 @@ const config = {
       const base = path.resolve('packages')
       const packages = fs.readdirSync(path.resolve('packages'))
         .filter(pkg => !/^\./.test(pkg))
-        .filter(pkg => pkg !== 'analytics-core')
+        .filter(pkg => pkg !== 'analytics')
         .map(pkg => ([pkg, JSON.parse(fs.readFileSync(path.join(base, pkg, 'package.json'), 'utf8'))]))
         .filter(([pkg, json]) => {
           return json.private !== true
