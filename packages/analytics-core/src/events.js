@@ -1,6 +1,4 @@
-/*!
- * Core Analytic Events
- */
+/* Core Analytic Events */
 
 export const coreEvents = [
   /**
@@ -187,9 +185,7 @@ export const coreEvents = [
   'removeItemAborted',
 ]
 
-/*!
- * Keys on a plugin that are not considered events
- */
+/* Keys on a plugin that are not considered events */
 export const nonEvents = ['name', 'EVENTS', 'config', 'loaded']
 
 const pluginEvents = {

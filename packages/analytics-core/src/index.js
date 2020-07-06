@@ -575,7 +575,7 @@ function analytics(config = {}) {
       if (key) return dotProp(state, key)
       return Object.assign({}, state)
     },
-    /*!
+    /*
      * Emit events for other plugins or middleware to react to.
      * @param  {Object} action - event to dispatch
      */
@@ -633,7 +633,7 @@ function analytics(config = {}) {
     disablePlugin: (name, callback) => {
       store.dispatch(disablePlugin(name, callback))
     },
-    /*!
+    /*
      * Load registered analytic providers.
      * @param  {String} namespace - integration namespace
      *
@@ -710,7 +710,7 @@ function analytics(config = {}) {
         store.dispatch(removeItem(key, options))
       },
     },
-    /*!
+    /*
      * Set the anonymous ID of the visitor
      * @param {String} anonymousId - anonymous Id to set
      * @param {Object} [options] - storage options
@@ -723,7 +723,7 @@ function analytics(config = {}) {
     setAnonymousId: (anonymousId, options) => {
       instance.storage.setItem(CONSTANTS.ANON_ID, anonymousId, options)
     },
-    /*!
+    /*
      * Events exposed by core analytics library and all loaded plugins
      * @type {Array}
      */
