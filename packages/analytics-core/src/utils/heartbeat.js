@@ -1,5 +1,5 @@
 import { isFunction } from 'analytics-utils'
-import { ID, ANONID } from './_constants'
+import { ID, ANONID } from './internalConstants'
 
 export function processQueue(store, getPlugins, instance) {
   const pluginMethods = getPlugins()

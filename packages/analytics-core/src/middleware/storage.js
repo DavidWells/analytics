@@ -1,12 +1,7 @@
-import { storage } from 'analytics-utils'
 import timestamp from '../utils/timestamp'
 import EVENTS from '../events'
 
-export default function storageMiddleware() {
-  /*
-    Todo: emit events for keys we care about
-    window.addEventListener('storage', (event) => console.log(event));
-  */
+export default function storageMiddleware(storage) {
   return store => next => action => {
     const { type, key, value, options } = action
     if (type === EVENTS.setItem || type === EVENTS.removeItem) {
@@ -22,10 +17,6 @@ export default function storageMiddleware() {
     }
     return next(action)
   }
-}
-
-export const getItem = (key, opts) => {
-  return storage.getItem(key, opts)
 }
 
 export const setItem = (key, value, opts) => {
@@ -46,3 +37,8 @@ export const removeItem = (key, opts) => {
     options: opts,
   }
 }
+
+/*
+  Todo: emit events for keys we care about
+  window.addEventListener('storage', (event) => console.log(event));
+*/

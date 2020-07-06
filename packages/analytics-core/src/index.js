@@ -1,5 +1,13 @@
+import {
+  paramsParse,
+  dotProp,
+  isFunction,
+  isObject,
+  isString,
+  inBrowser,
+  globalContext
+} from 'analytics-utils'
 import { createStore, combineReducers, applyMiddleware, compose } from './vendor/redux'
-import { paramsParse, dotProp, isFunction, isObject, isString, inBrowser } from 'analytics-utils'
 // Middleware
 import * as middleware from './middleware'
 import DynamicMiddleware from './middleware/dynamic'
@@ -9,19 +17,18 @@ import context, { makeContext } from './modules/context'
 import page, { getPageData } from './modules/page'
 import track from './modules/track'
 import queue from './modules/queue'
-import user, { getUserProp, tempKey, getPersistedUserData } from './modules/user'
+import user, { getUserPropFunc, tempKey, getPersistedUserData } from './modules/user'
 import * as CONSTANTS from './constants'
-import { ID, ANONID, ERROR_URL } from './utils/_constants'
+import { ID, ANONID, ERROR_URL } from './utils/internalConstants'
 import EVENTS, { coreEvents, nonEvents, isReservedAction } from './events'
 // Utils
 import timestamp from './utils/timestamp'
 import { watch } from './utils/handleNetworkEvents'
 import getCallback from './utils/getCallback'
 import { Debug, composeWithDebug } from './utils/debug'
-import globalContext from './utils/global'
 import heartBeat from './utils/heartbeat'
 
-const { setItem, removeItem, getItem } = middleware
+const { setItem, removeItem } = middleware
 
 /**
  * Analytics library configuration
@@ -96,6 +103,15 @@ function analytics(config = {}) {
     events: []
   })
 
+  /* Storage by default is set to global & is not persisted */
+  const storage = (config.storage) ? config.storage : {
+    getItem: (key) => globalContext[key],
+    setItem: (key, value) => globalContext[key] = value,
+    removeItem: (key) => globalContext[key] = undefined
+  }
+
+  const getUserProp = getUserPropFunc(storage)
+
   // mutable intregrations object for dynamic loading
   let customPlugins = parsedOptions.plugins
 
@@ -110,11 +126,13 @@ function analytics(config = {}) {
   const allPluginEvents = pluginEvents.sort()
 
   /* plugin methods(functions) must be kept out of state. thus they live here */
-  const getPlugins = () => {
-    return customPlugins
-  }
+  const getPlugins = () => customPlugins
 
-  const { addMiddleware, removeMiddleware, dynamicMiddlewares } = new DynamicMiddleware()
+  const {
+    addMiddleware,
+    removeMiddleware,
+    dynamicMiddlewares
+  } = new DynamicMiddleware()
 
   const nonAbortable = () => {
     // throw new Error(`${ERROR_URL}3`)
@@ -132,7 +150,7 @@ function analytics(config = {}) {
   // Parse URL parameters
   const params = paramsParse()
   // Initialize visitor information
-  const initialUser = getPersistedUserData(params)
+  const initialUser = getPersistedUserData(params, storage)
 
   /**
    * Analytic instance returned from initialization
@@ -663,7 +681,7 @@ function analytics(config = {}) {
        *
        * analytics.storage.getItem('storage_key')
        */
-      getItem: getItem,
+      getItem: storage.getItem,
       /**
        * Set storage value
        * @typedef {Function} SetItem
@@ -742,7 +760,7 @@ function analytics(config = {}) {
       all: allSystemEvents,
       plugins: allPluginEvents
     }),
-    middleware.storage(),
+    middleware.storage(storage),
     middleware.initialize(instance),
     middleware.identify(instance),
     /* after dynamic middleware */
@@ -752,7 +770,7 @@ function analytics(config = {}) {
   /* Initial analytics state keys */
   const coreReducers = {
     context: context,
-    user: user,
+    user: user(storage),
     page: page,
     track: track,
     plugins: pluginsMiddleware(getPlugins),

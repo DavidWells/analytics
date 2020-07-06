@@ -1,7 +1,7 @@
 // Context Reducer.  Follows ducks pattern http://bit.ly/2DnERMc
 import { getBrowserLocale, getTimeZone, uuid, inBrowser } from 'analytics-utils'
 import EVENTS from '../events'
-import { LIBRARY_NAME } from '../utils/_constants'
+import { LIBRARY_NAME } from '../utils/internalConstants'
 import getOSNameNode from '../utils/getOSName/node'
 import getOSNameBrowser from '../utils/getOSName/browser'
 
@@ -73,10 +73,11 @@ export default function context(state = initialState, action) {
   }
 }
 
+const excludeItems = ['plugins', 'reducers', 'storage']
 // Pull plugins and reducers off intital config
 export function makeContext(config) {
   return Object.keys(config).reduce((acc, current) => {
-    if (current === 'plugins' || current === 'reducers') {
+    if (excludeItems.includes(current)) {
       return acc
     }
     acc[current] = config[current]
