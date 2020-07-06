@@ -7,15 +7,7 @@
     "analytics-project",
     "metrics",
     "telemetry",
-    "tracking",
-    "event tracking",
-    "page tracking",
-    "user tracking",
-    "custom events",
-    "stats",
-    "statistics",
-    "monitoring",
-    "pageviews"
+    "stats"
   ],
   "author": "David Wells <hello@davidwells.io>",
   "license": "MIT",

@@ -1,6 +1,4 @@
-<a href="https://getanalytics.io">
-  <img src="https://user-images.githubusercontent.com/532272/61419845-ab1e9a80-a8b4-11e9-8fd1-18b9e743bb6f.png" width="450" />
-</a>
+# Analytics Core
 
 ![npm](https://img.shields.io/npm/dw/analytics?style=flat-square) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/analytics?style=flat-square) ![GitHub](https://img.shields.io/github/license/davidwells/analytics?style=flat-square)
 
