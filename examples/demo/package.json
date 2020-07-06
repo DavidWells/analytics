@@ -23,7 +23,7 @@
     "@analytics/simple-analytics": "file:../../packages/analytics-plugin-simple-analytics",
     "@analytics/storage-utils": "file:../../packages/analytics-util-storage",
     "@reach/router": "^1.2.1",
-    "analytics": "file:../../packages/analytics-core",
+    "analytics": "file:../../packages/analytics",
     "analytics-plugin-do-not-track": "file:../../packages/analytics-plugin-do-not-track",
     "analytics-plugin-event-validation": "file:../../packages/analytics-plugin-event-validation",
     "analytics-plugin-lifecycle-example": "file:../../packages/analytics-plugin-lifecycle-example",
