@@ -1,0 +1,89 @@
+{
+  "name": "analytics",
+  "version": "0.5.2",
+  "description": "Lightweight analytics library for tracking events, page views, & identifying users. Works with any third party analytics provider via an extendable plugin system.",
+  "keywords": [
+    "analytics",
+    "analytics-project",
+    "metrics",
+    "telemetry",
+    "tracking",
+    "event tracking",
+    "page tracking",
+    "user tracking",
+    "custom events",
+    "stats",
+    "statistics",
+    "monitoring",
+    "pageviews"
+  ],
+  "author": "David Wells <hello@davidwells.io>",
+  "license": "MIT",
+  "main": "lib/analytics.cjs.js",
+  "globalName": {
+    "name": "_analytics"
+  },
+  "jsnext:main": "lib/analytics.es.js",
+  "module": "lib/analytics.es.js",
+  "browser": {
+    "./lib/analytics.cjs.js": "./lib/analytics.browser.cjs.js",
+    "./lib/analytics.es.js": "./lib/analytics.browser.es.js"
+  },
+  "scripts": {
+    "test": "ava -v",
+    "test:watch": "ava -v --watch",
+    "clean": "rimraf lib dist && mkdirp lib dist",
+    "prebuild": "npm run clean && npm run types",
+    "types": "node scripts/sync-types.js",
+    "build": "node ../../scripts/build/index.js",
+    "postbuild": "npm run minify-dist && node scripts/sync-types.js",
+    "watch": "node ../../scripts/build/_watch.js",
+    "minify-dist": "uglifyjs -mc < dist/analytics.js > dist/analytics.min.js",
+    "publish": "git push origin && git push origin --tags",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DavidWells/analytics"
+  },
+  "files": [
+    "dist",
+    "lib",
+    "README.md"
+  ],
+  "typings": "lib/types.d.ts",
+  "dependencies": {
+    "@analytics/core": "^0.5.2",
+    "@analytics/storage-utils": "^0.2.3"
+  },
+  "ava": {
+    "files": [
+      "**/**/*.test.js"
+    ],
+    "require": [
+      "esm",
+      "@babel/register"
+    ],
+    "verbose": true,
+    "failFast": true,
+    "sources": [
+      "**/*.{js,jsx}"
+    ]
+  },
+  "devDependencies": {
+    "@babel/core": "7.5.5",
+    "@babel/plugin-proposal-class-properties": "7.5.5",
+    "@babel/plugin-transform-runtime": "7.5.5",
+    "@babel/preset-env": "7.5.5",
+    "@babel/register": "7.5.5",
+    "@babel/runtime": "7.5.5",
+    "ava": "^2.2.0",
+    "mkdirp": "^0.5.1",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^2.6.3",
+    "sinon": "7.2.3",
+    "uglify-js": "^3.4.9"
+  }
+}
