@@ -1,5 +1,5 @@
 {
-  "name": "analytics",
+  "name": "@analytics/core",
   "version": "0.5.2",
   "description": "Lightweight analytics library for tracking events, page views, & identifying users. Works with any third party analytics provider via an extendable plugin system.",
   "keywords": [
@@ -38,7 +38,7 @@
     "build": "node ../../scripts/build/index.js",
     "postbuild": "npm run minify-dist && node ./scripts/postbuild.js",
     "watch": "node ../../scripts/build/_watch.js",
-    "minify-dist": "uglifyjs -mc < dist/analytics.js > dist/analytics.min.js",
+    "minify-dist": "uglifyjs -mc < dist/@analytics/core.js > dist/@analytics/core.min.js",
     "publish": "git push origin && git push origin --tags",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
