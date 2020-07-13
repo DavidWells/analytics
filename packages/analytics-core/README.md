@@ -27,12 +27,12 @@ A lightweight analytics abstraction library for tracking page views, custom even
   * [analytics.on](#analyticson)
   * [analytics.once](#analyticsonce)
   * [analytics.getState](#analyticsgetstate)
-  * [analytics.enablePlugin](#analyticsenableplugin)
-  * [analytics.disablePlugin](#analyticsdisableplugin)
   * [analytics.storage](#analyticsstorage)
   * [analytics.storage.getItem](#analyticsstoragegetitem)
   * [analytics.storage.setItem](#analyticsstoragesetitem)
   * [analytics.storage.removeItem](#analyticsstorageremoveitem)
+  * [analytics.plugins.enable](#analyticspluginsenable)
+  * [analytics.plugins.disable](#analyticspluginsdisable)
 - [Events](#events)
 - [Analytic plugins](#analytic-plugins)
 - [Creating analytics plugins](#creating-analytics-plugins)
@@ -489,41 +489,6 @@ analytics.getState()
 analytics.getState('context.offline')
 ```
 
-### analytics.enablePlugin
-
-Enable analytics plugin
-
-**Arguments**
-
-- **plugins** <code>String</code>|<code>Array</code> - name of plugins(s) to disable
-- **[callback]** (optional) <code>Function</code> - callback after enable runs
-
-**Example**
-
-```js
-analytics.enablePlugin('google')
-
-// Enable multiple plugins at once
-analytics.enablePlugin(['google', 'segment'])
-```
-
-### analytics.disablePlugin
-
-Disable analytics plugin
-
-**Arguments**
-
-- **name** <code>String</code>|<code>Array</code> - name of integration(s) to disable
-- **callback** <code>Function</code> - callback after disable runs
-
-**Example**
-
-```js
-analytics.disablePlugin('google')
-
-analytics.disablePlugin(['google', 'segment'])
-```
-
 ### analytics.storage
 
 Storage utilities for persisting data.
@@ -589,6 +554,41 @@ Remove storage value
 
 ```js
 analytics.storage.removeItem('storage_key')
+```
+
+### analytics.plugins.enable
+
+Enable analytics plugin
+
+**Arguments**
+
+- **plugins** <code>String</code>|<code>Array</code> - name of plugins(s) to disable
+- **[callback]** (optional) <code>Function</code> - callback after enable runs
+
+**Example**
+
+```js
+analytics.plugins.enable('google')
+
+// Enable multiple plugins at once
+analytics.plugins.enable(['google', 'segment'])
+```
+
+### analytics.plugins.disable
+
+Disable analytics plugin
+
+**Arguments**
+
+- **name** <code>String</code>|<code>Array</code> - name of integration(s) to disable
+- **callback** <code>Function</code> - callback after disable runs
+
+**Example**
+
+```js
+analytics.plugins.disable('google')
+
+analytics.plugins.disable(['google', 'segment'])
 ```
 <!-- AUTO-GENERATED-CONTENT:END -->
 
