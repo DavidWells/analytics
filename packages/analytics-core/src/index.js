@@ -166,21 +166,20 @@ function analytics(config = {}) {
   // Initialize visitor information
   const initialUser = getPersistedUserData(params, storage)
 
+  /**
+   * Management methods for plugins. This is also where [custom methods](https://bit.ly/329vFXy) are loaded into the instance.
+   * @typedef {Object} Plugins
+   * @property {EnablePlugin} enable - Set storage value
+   * @property {DisablePlugin} disable - Remove storage value
+   * @example
+   *
+   * // Enable a plugin by namespace
+   * analytics.plugins.enable('keenio')
+   *
+   * // Disable a plugin by namespace
+   * analytics.plugins.disable('google-analytics')
+   */
   const plugins = {
-    /*
-     * Load registered analytic providers.
-     * @param  {String} plugins - integration namespace
-     *
-     * @example
-     * analytics.plugins.load('segment')
-     */
-    load: (plugins) => {
-      store.dispatch({
-        type: EVENTS.loadPlugin,
-        // Todo handle multiple plugins via array
-        plugins: (plugins) ? [plugins] : Object.keys(getPlugins()),
-      })
-    },
     /**
      * Enable analytics plugin
      * @typedef {Function} EnablePlugin
@@ -209,6 +208,20 @@ function analytics(config = {}) {
      */
     disable: (name, callback) => {
       store.dispatch(disablePlugin(name, callback))
+    },
+    /*
+     * Load registered analytic providers.
+     * @param  {String} plugins - integration namespace
+     *
+     * @example
+     * analytics.plugins.load('segment')
+     */
+    load: (plugins) => {
+      store.dispatch({
+        type: EVENTS.loadPlugin,
+        // Todo handle multiple plugins via array
+        plugins: (plugins) ? [plugins] : Object.keys(getPlugins()),
+      })
     },
     /* @TODO if it stays, state loaded needs to be set. Re PLUGIN_INIT above
     add: (newPlugin) => {
@@ -241,8 +254,7 @@ function analytics(config = {}) {
    * @property {Once} once - Fire callback on analytics lifecycle events once.
    * @property {GetState} getState - Get data about user, activity, or context.
    * @property {Storage} storage - storage methods
-   * @property {EnablePlugin} enablePlugin - Enable plugin
-   * @property {DisablePlugin} disablePlugin - Disable plugin
+   * @property {Plugins} plugins - plugin methods
    */
   const instance = {
     /**
