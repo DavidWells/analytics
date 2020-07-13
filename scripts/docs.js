@@ -657,7 +657,7 @@ ${indentString(formatCode(code, 'html'), 2)}
 }
 
 const storageKeys = ['setItem', 'getItem', 'removeItem']
-var PLUGIN_KEYS = ['enable', 'load', 'disable']
+var PLUGIN_KEYS = ['plugins', 'enable', 'load', 'disable']
 
 const constantKeys = ['CONSTANTS', 'EVENTS']
 // const anyKeyExists = (object, keys) => Object.keys(object).some((key) => keys.includes(key))
@@ -667,8 +667,12 @@ function formatName(name) {
   if (storageKeys.includes(name)) {
     return `${prefix}.storage.${name}`
   }
+  if (storageKeys.includes(name)) {
+    return `${prefix}.storage.${name}`
+  }
   if (PLUGIN_KEYS.includes(name)) {
-    return `${prefix}.plugins.${name}`
+    const postFix = (name === 'plugins') ? '' : `.${name}`
+    return `${prefix}.plugins${postFix}`
   }
   if (constantKeys.includes(name)) {
     return `${name}`
