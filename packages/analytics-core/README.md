@@ -31,12 +31,14 @@ A lightweight analytics abstraction library for tracking page views, custom even
   * [analytics.storage.getItem](#analyticsstoragegetitem)
   * [analytics.storage.setItem](#analyticsstoragesetitem)
   * [analytics.storage.removeItem](#analyticsstorageremoveitem)
+  * [analytics.plugins](#analyticsplugins)
   * [analytics.plugins.enable](#analyticspluginsenable)
   * [analytics.plugins.disable](#analyticspluginsdisable)
 - [Events](#events)
 - [Analytic plugins](#analytic-plugins)
 - [Creating analytics plugins](#creating-analytics-plugins)
   * [React to any event](#react-to-any-event)
+  * [Custom methods](#custom-methods)
 - [Plugin Naming Conventions](#plugin-naming-conventions)
 - [Debugging analytics](#debugging-analytics)
 - [TypeScript support](#typescript-support)
@@ -556,6 +558,20 @@ Remove storage value
 analytics.storage.removeItem('storage_key')
 ```
 
+### analytics.plugins
+
+Management methods for plugins. This is also where [custom methods](https://bit.ly/329vFXy) are loaded into the instance.
+
+**Example**
+
+```js
+// Enable a plugin by namespace
+analytics.plugins.enable('keenio')
+
+// Disable a plugin by namespace
+analytics.plugins.disable('google-analytics')
+```
+
 ### analytics.plugins.enable
 
 Enable analytics plugin
@@ -802,6 +818,76 @@ const analytics = Analytics({
     ...otherPlugins
   ]
 })
+```
+
+### Custom methods
+
+Analytics plugins can provide their own custom functionality via the `methods` key.
+
+```js
+import Analytics from 'analytics'
+
+// Example plugin with custom methods
+const pluginOne = {
+  name: 'one',
+  // ... page, track, etc
+  /* Custom functions to expose to analytics instance */
+  methods: {
+    myCustomThing(one, two, three) {
+      const analyticsInstance = this.instance
+      console.log('Use full analytics instance', analyticsInstance)
+    },
+    otherCustomThing: (one, two, ...args) => {
+      // Arrow functions break this.instance context.
+      // The instance is instead injected as last arg
+      const analyticsInstance = args[args.length - 1]
+      console.log('Use full analytics instance', analyticsInstance)
+    },
+    // Async function examples
+    async fireCustomThing(one, two, three) {
+      const { track } = this.instance
+      console.log(one, two, three)
+      return 'data'
+    },
+    triggerSpecial: async (argOne, argTwo, ...args) => {
+      // Arrow functions break this.instance context.
+      // The instance is instead injected as last arg
+      const analyticsInstance = args[args.length - 1]
+      return argOne + argTwo
+    }
+  }
+}
+
+// Example plugin with custom methods
+const pluginTwo = {
+  name: 'two',
+  page: () => { console.log('page view fired') }
+  // ... page, track, etc
+  /* Custom functions to expose to analytics instance */
+  methods: {
+    cookieBanner(one, two, three) {
+      const analyticsInstance = this.instance
+      console.log('Use full analytics instance', analyticsInstance)
+      const cookieSettings = analyticsInstance.storage.getItem('preferences-set')
+      if (!cookieSettings) {
+        // Show cookie settings
+      }
+    },
+  }
+}
+
+// Initialize analytics instance with plugins
+const analytics = Analytics({
+  app: 'your-app-name',
+  plugins: [
+    pluginOne,
+    pluginTwo
+  ]
+})
+
+// Using custom methods in your code
+analytics.plugins.one.myCustomThing()
+analytics.plugins.two.cookieBanner()
 ```
 
 ##  Plugin Naming Conventions
