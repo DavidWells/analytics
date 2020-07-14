@@ -31,13 +31,9 @@ You can attach your own data collection method via an inline plugin
 
 ## How much bundle size will this add?
 
-The package is [~**13.8kb** minified + gzipped](https://bundlephobia.com/result?p=analytics)
+The [analytics](https://bundlephobia.com/result?p=analytics) package is [~**13.2kb** minified + gzipped](https://bundlephobia.com/result?p=analytics)
 
-If your project is using redux, this will shave off another **~2.6kb**.
-
-This brings the pkg down to **`~11.2kb`** minified + gzipped. Nice! 🎉
-
-Under the hood, redux drives the [analytics plugin architecture](https://getanalytics.io/plugins/writing-plugins/).
+If you are not persisting data in `localStorage` or `cookies`, you can use [@analytics/core](https://bundlephobia.com/result?p=@analytics/core). This brings the pkg down to **`~12.6kb`** minified + gzipped.
 
 ## How is this different than Segment?
 

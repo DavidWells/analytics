@@ -137,6 +137,75 @@ const analytics = Analytics({
 })
 ```
 
+## Adding custom methods
+
+Analytics plugins can provide their own custom functionality via the `methods` key.
+
+```js
+import Analytics from 'analytics'
+
+// Example plugin with custom methods
+const pluginOne = {
+  name: 'one',
+  // ... page, track, etc
+  // Custom functions to expose to analytics instance
+  methods: {
+    myCustomThing(one, two, three) {
+      const analyticsInstance = this.instance
+      console.log('Use full analytics instance', analyticsInstance)
+    },
+    otherCustomThing: (one, two, ...args) => {
+      // Arrow functions break this.instance context.
+      // The instance is instead injected as last arg
+      const analyticsInstance = args[args.length - 1]
+      console.log('Use full analytics instance', analyticsInstance)
+    },
+    // Async function examples
+    async fireCustomThing(one, two, three) {
+      const { track } = this.instance
+      track('customThing')
+      return 'data'
+    },
+    triggerSpecial: async (argOne, argTwo, ...args) => {
+      // Arrow functions break this.instance context.
+      // The instance is instead injected as last arg
+      const analyticsInstance = args[args.length - 1]
+      return argOne + argTwo
+    }
+  }
+}
+
+// Example plugin with custom methods
+const pluginTwo = {
+  name: 'two',
+  page: () => { console.log('page view fired') }
+  // Custom functions to expose to analytics instance
+  methods: {
+    cookieBanner(one, two, three) {
+      const analyticsInstance = this.instance
+      console.log('Use full analytics instance', analyticsInstance)
+      const cookieSettings = analyticsInstance.storage.getItem('preferences-set')
+      if (!cookieSettings) {
+        // Show cookie settings
+      }
+    },
+  }
+}
+
+// Initialize analytics instance with plugins
+const analytics = Analytics({
+  app: 'your-app-name',
+  plugins: [
+    pluginOne,
+    pluginTwo
+  ]
+})
+
+// Using custom methods in your code
+analytics.plugins.one.myCustomThing()
+analytics.plugins.two.cookieBanner()
+```
+
 ## React to any event
 
 Plugins can react to any event flowing through the `analytics` library.
