@@ -1,6 +1,6 @@
 {
   "name": "@analytics/storage-utils",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Storage utilities for saving values in browser",
   "author": "David Wells",
   "license": "MIT",

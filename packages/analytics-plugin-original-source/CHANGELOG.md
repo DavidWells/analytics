@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.3](https://github.com/DavidWells/analytics/compare/analytics-plugin-original-source@0.2.2...analytics-plugin-original-source@0.2.3) (2020-07-14)
+
+**Note:** Version bump only for package analytics-plugin-original-source
+
+
+
+
+
 ## [0.2.2](https://github.com/DavidWells/analytics/compare/analytics-plugin-original-source@0.2.1...analytics-plugin-original-source@0.2.2) (2020-04-21)
 
 **Note:** Version bump only for package analytics-plugin-original-source

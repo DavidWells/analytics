@@ -3,6 +3,61 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.6.0 (2020-07-14)
+
+
+### Bug Fixes
+
+* **core:** disable ‘os’ for node until build fixed ([4610cd0](https://github.com/DavidWells/analytics/commit/4610cd0))
+* **core:** expore devtools when debug set to true ([8dd38b7](https://github.com/DavidWells/analytics/commit/8dd38b7))
+* **core:** fix campaign event ([8df0eaa](https://github.com/DavidWells/analytics/commit/8df0eaa))
+* **core:** fix payload for .once listeners ([4cf07b7](https://github.com/DavidWells/analytics/commit/4cf07b7))
+* **core:** remove async keyword ([6446e72](https://github.com/DavidWells/analytics/commit/6446e72))
+* **core:** save last event & history ([275e89a](https://github.com/DavidWells/analytics/commit/275e89a))
+* **core:** set anonId when setItemEnd occurs for ANON_ID ([5401cda](https://github.com/DavidWells/analytics/commit/5401cda))
+* **core plugins:** run .page .track .identify callbacks when no plugins found ([09dfd78](https://github.com/DavidWells/analytics/commit/09dfd78))
+*  namespaced plugin config values should reflect current plugin ([a3cc443](https://github.com/DavidWells/analytics/commit/a3cc443)), closes [#25](https://github.com/DavidWells/analytics/issues/25)
+* **debug:** support debug enhancer when no dev tools found ([c2a93c7](https://github.com/DavidWells/analytics/commit/c2a93c7))
+* **utils:** fix build for node & testing + add iife build ([20a5021](https://github.com/DavidWells/analytics/commit/20a5021))
+
+
+### Features
+
+* **cli:** add analytics CLI for automate plugin docs & more to come ([297476c](https://github.com/DavidWells/analytics/commit/297476c))
+* **core:** add analytics.reset for clean slate ([f30b83d](https://github.com/DavidWells/analytics/commit/f30b83d))
+* **core:** add browser tab visible and window mouseout events ([ae65b37](https://github.com/DavidWells/analytics/commit/ae65b37))
+* **core:** add debug to plugin action mods ([3c47088](https://github.com/DavidWells/analytics/commit/3c47088))
+* **core:** add debug utilities ([daaef87](https://github.com/DavidWells/analytics/commit/daaef87))
+* **core:** add deeper event log support for debugging ([5a8e810](https://github.com/DavidWells/analytics/commit/5a8e810))
+* **core:** add enable / disable integration ([acc5390](https://github.com/DavidWells/analytics/commit/acc5390))
+* add @analytics/core ([6b00148](https://github.com/DavidWells/analytics/commit/6b00148))
+* add conditional enable/disable on track/page/identify ([d33587b](https://github.com/DavidWells/analytics/commit/d33587b))
+* **core:** Expose setItem, removeItem, EVENTS, & CONSTANTS in api ([808b9ae](https://github.com/DavidWells/analytics/commit/808b9ae))
+* Add methods key for plugins to provide custom methods ([9e0debe](https://github.com/DavidWells/analytics/commit/9e0debe))
+* **core:** add enable/disable integration by array of providers ([ddf596f](https://github.com/DavidWells/analytics/commit/ddf596f))
+* **core:** add getPersistedUserData for initial state ([6620881](https://github.com/DavidWells/analytics/commit/6620881))
+* **core:** add network events ([b2e06b6](https://github.com/DavidWells/analytics/commit/b2e06b6))
+* **core:** add offline handler ([c4e2b11](https://github.com/DavidWells/analytics/commit/c4e2b11))
+* **core:** add querystring API for triggering events + identify calls via utm params ([44d05d5](https://github.com/DavidWells/analytics/commit/44d05d5))
+* **core:** add queuing & heartbeat mechanism for handling load loading analytic scripts ([7058b39](https://github.com/DavidWells/analytics/commit/7058b39))
+* **core:** add storage constants ([04036a1](https://github.com/DavidWells/analytics/commit/04036a1))
+* **core:** add storage middleware to allow for third party plugins to intercept / audit persistance data ([96fb50f](https://github.com/DavidWells/analytics/commit/96fb50f))
+* **core:** add timestamp for track, identify, & page calls ([33d8338](https://github.com/DavidWells/analytics/commit/33d8338))
+* **core:** add timeZone & locale to context ([d627a52](https://github.com/DavidWells/analytics/commit/d627a52))
+* **core:** listen to window events for future session feature ([4acebc5](https://github.com/DavidWells/analytics/commit/4acebc5))
+* **core:** pass state getter to integrations as last arg ([29566d1](https://github.com/DavidWells/analytics/commit/29566d1))
+* **core:** queue track, page, & identify calls if browser offline ([41f7f78](https://github.com/DavidWells/analytics/commit/41f7f78))
+* **fullstory:** add fullstory plugin ([255ce77](https://github.com/DavidWells/analytics/commit/255ce77))
+* **plugin-system:** add new core plugin engine ([e122572](https://github.com/DavidWells/analytics/commit/e122572))
+* **plugins:** refactor plugins to allow for hooking into plugin specific events/methods ([c1c5379](https://github.com/DavidWells/analytics/commit/c1c5379))
+* add page.last & track.last to state ([c8ce5cc](https://github.com/DavidWells/analytics/commit/c8ce5cc))
+* add perfume.js performance metrics plugin ([2a4b3f2](https://github.com/DavidWells/analytics/commit/2a4b3f2))
+* make .track, .page, .identify, .reset return promise for async usage ([4069c03](https://github.com/DavidWells/analytics/commit/4069c03))
+
+
+
+
+
 ## [0.5.2](https://github.com/DavidWells/analytics/compare/analytics@0.5.0...analytics@0.5.2) (2020-07-05)
 
 **Note:** Version bump only for package analytics
