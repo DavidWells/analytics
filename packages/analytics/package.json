@@ -1,5 +1,5 @@
 {
-  "name": "@analytics/core",
+  "name": "analytics",
   "version": "0.5.2",
   "description": "Lightweight analytics library for tracking events, page views, & identifying users. Works with any third party analytics provider via an extendable plugin system.",
   "keywords": [
@@ -7,7 +7,15 @@
     "analytics-project",
     "metrics",
     "telemetry",
-    "stats"
+    "tracking",
+    "event tracking",
+    "page tracking",
+    "user tracking",
+    "custom events",
+    "stats",
+    "statistics",
+    "monitoring",
+    "pageviews"
   ],
   "author": "David Wells <hello@davidwells.io>",
   "license": "MIT",
@@ -26,11 +34,11 @@
     "test:watch": "ava -v --watch",
     "clean": "rimraf lib dist && mkdirp lib dist",
     "prebuild": "npm run clean && npm run types",
-    "types": "../../node_modules/.bin/jsdoc -t ../../node_modules/tsd-jsdoc/dist -r ./src/ -d temp-types && node scripts/types.js",
+    "types": "node scripts/sync-types.js",
     "build": "node ../../scripts/build/index.js",
-    "postbuild": "npm run minify-dist && node ./scripts/postbuild.js",
+    "postbuild": "npm run minify-dist && node scripts/sync-types.js",
     "watch": "node ../../scripts/build/_watch.js",
-    "minify-dist": "uglifyjs -mc < dist/@analytics/core.js > dist/@analytics/core.min.js",
+    "minify-dist": "uglifyjs -mc < dist/analytics.js > dist/analytics.min.js",
     "publish": "git push origin && git push origin --tags",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
@@ -47,7 +55,8 @@
   ],
   "typings": "lib/types.d.ts",
   "dependencies": {
-    "analytics-utils": "^0.2.1"
+    "@analytics/core": "^0.5.2",
+    "@analytics/storage-utils": "^0.2.3"
   },
   "ava": {
     "files": [

@@ -1,6 +1,6 @@
-import globalContext from './global'
+import { globalContext } from 'analytics-utils'
 import { compose } from '../vendor/redux'
-import { LIBRARY_NAME } from './_constants'
+import { LIBRARY_NAME } from './internalConstants'
 
 export function Debug() {
   const config = arguments[0] || {} // eslint-disable-line

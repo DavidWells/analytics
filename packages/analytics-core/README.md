@@ -1,6 +1,4 @@
-<a href="https://getanalytics.io">
-  <img src="https://user-images.githubusercontent.com/532272/61419845-ab1e9a80-a8b4-11e9-8fd1-18b9e743bb6f.png" width="450" />
-</a>
+# Analytics Core
 
 ![npm](https://img.shields.io/npm/dw/analytics?style=flat-square) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/analytics?style=flat-square) ![GitHub](https://img.shields.io/github/license/davidwells/analytics?style=flat-square)
 
@@ -29,16 +27,18 @@ A lightweight analytics abstraction library for tracking page views, custom even
   * [analytics.on](#analyticson)
   * [analytics.once](#analyticsonce)
   * [analytics.getState](#analyticsgetstate)
-  * [analytics.enablePlugin](#analyticsenableplugin)
-  * [analytics.disablePlugin](#analyticsdisableplugin)
   * [analytics.storage](#analyticsstorage)
   * [analytics.storage.getItem](#analyticsstoragegetitem)
   * [analytics.storage.setItem](#analyticsstoragesetitem)
   * [analytics.storage.removeItem](#analyticsstorageremoveitem)
+  * [analytics.plugins](#analyticsplugins)
+  * [analytics.plugins.enable](#analyticspluginsenable)
+  * [analytics.plugins.disable](#analyticspluginsdisable)
 - [Events](#events)
 - [Analytic plugins](#analytic-plugins)
 - [Creating analytics plugins](#creating-analytics-plugins)
   * [React to any event](#react-to-any-event)
+  * [Custom methods](#custom-methods)
 - [Plugin Naming Conventions](#plugin-naming-conventions)
 - [Debugging analytics](#debugging-analytics)
 - [TypeScript support](#typescript-support)
@@ -491,41 +491,6 @@ analytics.getState()
 analytics.getState('context.offline')
 ```
 
-### analytics.enablePlugin
-
-Enable analytics plugin
-
-**Arguments**
-
-- **plugins** <code>String</code>|<code>Array</code> - name of plugins(s) to disable
-- **[callback]** (optional) <code>Function</code> - callback after enable runs
-
-**Example**
-
-```js
-analytics.enablePlugin('google')
-
-// Enable multiple plugins at once
-analytics.enablePlugin(['google', 'segment'])
-```
-
-### analytics.disablePlugin
-
-Disable analytics plugin
-
-**Arguments**
-
-- **name** <code>String</code>|<code>Array</code> - name of integration(s) to disable
-- **callback** <code>Function</code> - callback after disable runs
-
-**Example**
-
-```js
-analytics.disablePlugin('google')
-
-analytics.disablePlugin(['google', 'segment'])
-```
-
 ### analytics.storage
 
 Storage utilities for persisting data.
@@ -592,6 +557,55 @@ Remove storage value
 ```js
 analytics.storage.removeItem('storage_key')
 ```
+
+### analytics.plugins
+
+Management methods for plugins. This is also where [custom methods](https://bit.ly/329vFXy) are loaded into the instance.
+
+**Example**
+
+```js
+// Enable a plugin by namespace
+analytics.plugins.enable('keenio')
+
+// Disable a plugin by namespace
+analytics.plugins.disable('google-analytics')
+```
+
+### analytics.plugins.enable
+
+Enable analytics plugin
+
+**Arguments**
+
+- **plugins** <code>String</code>|<code>Array</code> - name of plugins(s) to disable
+- **[callback]** (optional) <code>Function</code> - callback after enable runs
+
+**Example**
+
+```js
+analytics.plugins.enable('google')
+
+// Enable multiple plugins at once
+analytics.plugins.enable(['google', 'segment'])
+```
+
+### analytics.plugins.disable
+
+Disable analytics plugin
+
+**Arguments**
+
+- **name** <code>String</code>|<code>Array</code> - name of integration(s) to disable
+- **callback** <code>Function</code> - callback after disable runs
+
+**Example**
+
+```js
+analytics.plugins.disable('google')
+
+analytics.plugins.disable(['google', 'segment'])
+```
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 ## Events
@@ -657,6 +671,7 @@ The `analytics` has a robust plugin system. Here is a list of currently availabl
 
 <!-- AUTO-GENERATED-CONTENT:START (PLUGINS) -->
 - [@analytics/cookie-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-cookie) Cookie helper functions [npm link](https://www.npmjs.com/package/@analytics/cookie-utils).
+- [@analytics/core](https://github.com/DavidWells/analytics/tree/master/packages/analytics-core) Lightweight analytics library for tracking events, page views, & identifying users. Works with any third party analytics provider via an extendable plugin system. [npm link](https://www.npmjs.com/package/@analytics/core).
 - [@analytics/crazy-egg](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-crazy-egg) Crazy Egg integration for 'analytics' module [npm link](https://www.npmjs.com/package/@analytics/crazy-egg).
 - [@analytics/customerio](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-customerio) Customer.io integration for 'analytics' module [npm link](https://www.npmjs.com/package/@analytics/customerio).
 - [@analytics/form-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-forms) Form utility library for managing HTML form submissions & values [npm link](https://www.npmjs.com/package/@analytics/form-utils).
@@ -803,6 +818,76 @@ const analytics = Analytics({
     ...otherPlugins
   ]
 })
+```
+
+### Custom methods
+
+Analytics plugins can provide their own custom functionality via the `methods` key.
+
+```js
+import Analytics from 'analytics'
+
+// Example plugin with custom methods
+const pluginOne = {
+  name: 'one',
+  // ... page, track, etc
+  /* Custom functions to expose to analytics instance */
+  methods: {
+    myCustomThing(one, two, three) {
+      const analyticsInstance = this.instance
+      console.log('Use full analytics instance', analyticsInstance)
+    },
+    otherCustomThing: (one, two, ...args) => {
+      // Arrow functions break this.instance context.
+      // The instance is instead injected as last arg
+      const analyticsInstance = args[args.length - 1]
+      console.log('Use full analytics instance', analyticsInstance)
+    },
+    // Async function examples
+    async fireCustomThing(one, two, three) {
+      const { track } = this.instance
+      console.log(one, two, three)
+      return 'data'
+    },
+    triggerSpecial: async (argOne, argTwo, ...args) => {
+      // Arrow functions break this.instance context.
+      // The instance is instead injected as last arg
+      const analyticsInstance = args[args.length - 1]
+      return argOne + argTwo
+    }
+  }
+}
+
+// Example plugin with custom methods
+const pluginTwo = {
+  name: 'two',
+  page: () => { console.log('page view fired') }
+  // ... page, track, etc
+  /* Custom functions to expose to analytics instance */
+  methods: {
+    cookieBanner(one, two, three) {
+      const analyticsInstance = this.instance
+      console.log('Use full analytics instance', analyticsInstance)
+      const cookieSettings = analyticsInstance.storage.getItem('preferences-set')
+      if (!cookieSettings) {
+        // Show cookie settings
+      }
+    },
+  }
+}
+
+// Initialize analytics instance with plugins
+const analytics = Analytics({
+  app: 'your-app-name',
+  plugins: [
+    pluginOne,
+    pluginTwo
+  ]
+})
+
+// Using custom methods in your code
+analytics.plugins.one.myCustomThing()
+analytics.plugins.two.cookieBanner()
 ```
 
 ##  Plugin Naming Conventions

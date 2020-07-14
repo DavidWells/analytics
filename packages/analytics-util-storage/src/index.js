@@ -1,4 +1,9 @@
-import { getCookie, setCookie, removeCookie, hasCookieSupport } from '@analytics/cookie-utils'
+import {
+  getCookie,
+  setCookie,
+  removeCookie,
+  hasCookieSupport
+} from '@analytics/cookie-utils'
 import hasLocalStorageSupport from './hasLocalStorage'
 import parse from './utils/parse'
 import globalContext from './utils/globalContext'
@@ -97,7 +102,7 @@ export function removeItem(key, options = {}) {
     return COOKIE
   }
   /* 3. Fallback to window/global */
-  globalContext[key] = null
+  globalContext[key] = undefined
   return GLOBAL
 }
 
@@ -117,6 +122,7 @@ export {
   getCookie,
   setCookie,
   removeCookie,
+  globalContext,
   hasLocalStorageSupport,
   hasCookieSupport
 }

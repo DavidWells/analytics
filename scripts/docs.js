@@ -47,7 +47,7 @@ const config = {
       const base = path.resolve('packages')
       const packages = fs.readdirSync(path.resolve('packages'))
         .filter(pkg => !/^\./.test(pkg))
-        .filter(pkg => pkg !== 'analytics-core')
+        .filter(pkg => pkg !== 'analytics')
         .map(pkg => ([pkg, JSON.parse(fs.readFileSync(path.join(base, pkg, 'package.json'), 'utf8'))]))
         .filter(([pkg, json]) => {
           return json.private !== true
@@ -115,7 +115,14 @@ const config = {
     },
     API_DOCS(content, options) {
       const fileContents = fs.readFileSync(path.join(__dirname, '..', 'packages/analytics-core/src/index.js'), 'utf-8')
-      const docBlocs = dox.parseComments(fileContents, { raw: true, skipSingleStar: true })
+      const unsortedDocBlocs = dox.parseComments(fileContents, { raw: true, skipSingleStar: true })
+      const end = unsortedDocBlocs.filter((element) => {
+        return PLUGIN_KEYS.includes(element.ctx.name)
+      })
+      const begin = unsortedDocBlocs.filter((element) => {
+        return !PLUGIN_KEYS.includes(element.ctx.name)
+      })
+      const docBlocs = begin.concat(end)
       let updatedContent = ''
       const removeItems = ['analytics.instance', 'analytics.return']
       docBlocs.forEach((data) => {
@@ -650,6 +657,8 @@ ${indentString(formatCode(code, 'html'), 2)}
 }
 
 const storageKeys = ['setItem', 'getItem', 'removeItem']
+var PLUGIN_KEYS = ['plugins', 'enable', 'load', 'disable']
+
 const constantKeys = ['CONSTANTS', 'EVENTS']
 // const anyKeyExists = (object, keys) => Object.keys(object).some((key) => keys.includes(key))
 
@@ -657,6 +666,13 @@ function formatName(name) {
   const prefix = 'analytics'
   if (storageKeys.includes(name)) {
     return `${prefix}.storage.${name}`
+  }
+  if (storageKeys.includes(name)) {
+    return `${prefix}.storage.${name}`
+  }
+  if (PLUGIN_KEYS.includes(name)) {
+    const postFix = (name === 'plugins') ? '' : `.${name}`
+    return `${prefix}.plugins${postFix}`
   }
   if (constantKeys.includes(name)) {
     return `${name}`

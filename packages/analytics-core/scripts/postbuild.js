@@ -1,6 +1,7 @@
-
 const fs = require('fs')
 const path = require('path')
+
+const filePath = path.join(__dirname, '..', 'dist/@analytics/core.min.js')
 
 // TODO map to urls
 const strings = [
@@ -33,7 +34,6 @@ const coreStrings = [
   'Abort not allowed from listener'
 ]
 
-const filePath = path.join(__dirname, '..', 'dist/analytics.min.js')
 const contents = fs.readFileSync(filePath, 'utf-8')
 
 const newContents = strings.reduce((acc, curr) => {

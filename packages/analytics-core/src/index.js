@@ -1,5 +1,13 @@
+import {
+  paramsParse,
+  dotProp,
+  isFunction,
+  isObject,
+  isString,
+  inBrowser,
+  globalContext
+} from 'analytics-utils'
 import { createStore, combineReducers, applyMiddleware, compose } from './vendor/redux'
-import { paramsParse, dotProp, isFunction, isObject, isString, inBrowser } from 'analytics-utils'
 // Middleware
 import * as middleware from './middleware'
 import DynamicMiddleware from './middleware/dynamic'
@@ -9,19 +17,18 @@ import context, { makeContext } from './modules/context'
 import page, { getPageData } from './modules/page'
 import track from './modules/track'
 import queue from './modules/queue'
-import user, { getUserProp, tempKey, getPersistedUserData } from './modules/user'
+import user, { getUserPropFunc, tempKey, getPersistedUserData } from './modules/user'
 import * as CONSTANTS from './constants'
-import { ID, ANONID, ERROR_URL } from './utils/_constants'
+import { ID, ANONID, ERROR_URL, RESERVED_METHOD_NAMES } from './utils/internalConstants'
 import EVENTS, { coreEvents, nonEvents, isReservedAction } from './events'
 // Utils
 import timestamp from './utils/timestamp'
 import { watch } from './utils/handleNetworkEvents'
 import getCallback from './utils/getCallback'
 import { Debug, composeWithDebug } from './utils/debug'
-import globalContext from './utils/global'
 import heartBeat from './utils/heartbeat'
 
-const { setItem, removeItem, getItem } = middleware
+const { setItem, removeItem } = middleware
 
 /**
  * Analytics library configuration
@@ -66,6 +73,19 @@ function analytics(config = {}) {
       const definedEvents = (plugin.EVENTS) ? Object.keys(plugin.EVENTS).map((k) => {
         return plugin.EVENTS[k]
       }) : []
+
+      if (plugin.methods) {
+        if (RESERVED_METHOD_NAMES.includes(plugin.name)) {
+          throw new Error(plugin.name  + ' is reserved plugin name')
+        }
+        acc.methods[plugin.name] = Object.keys(plugin.methods).reduce((a, c) => {
+          // enrich methods with analytics instance
+          a[c] = appendArguments(plugin.methods[c])
+          return a
+        }, {})
+        // Remove additional methods from plugins
+        delete plugin.methods
+      }
       // Convert available methods into events
       const methodsToEvents = Object.keys(plugin)
       // Combine events
@@ -77,7 +97,7 @@ function analytics(config = {}) {
       acc.pluginsArray = acc.pluginsArray.concat(plugin)
 
       if (acc.plugins[plugin.name]) {
-        throw new Error(plugin.name + ' plugin loaded twice')
+        throw new Error(plugin.name + ' already loaded')
       }
       acc.plugins[plugin.name] = plugin
       if (!acc.plugins[plugin.name].loaded) {
@@ -91,10 +111,20 @@ function analytics(config = {}) {
     return acc
   }, {
     plugins: {},
+    methods: {},
     pluginsArray: [],
     middlewares: [],
     events: []
   })
+
+  /* Storage by default is set to global & is not persisted */
+  const storage = (config.storage) ? config.storage : {
+    getItem: (key) => globalContext[key],
+    setItem: (key, value) => globalContext[key] = value,
+    removeItem: (key) => globalContext[key] = undefined
+  }
+
+  const getUserProp = getUserPropFunc(storage)
 
   // mutable intregrations object for dynamic loading
   let customPlugins = parsedOptions.plugins
@@ -110,11 +140,13 @@ function analytics(config = {}) {
   const allPluginEvents = pluginEvents.sort()
 
   /* plugin methods(functions) must be kept out of state. thus they live here */
-  const getPlugins = () => {
-    return customPlugins
-  }
+  const getPlugins = () => customPlugins
 
-  const { addMiddleware, removeMiddleware, dynamicMiddlewares } = new DynamicMiddleware()
+  const {
+    addMiddleware,
+    removeMiddleware,
+    dynamicMiddlewares
+  } = new DynamicMiddleware()
 
   const nonAbortable = () => {
     // throw new Error(`${ERROR_URL}3`)
@@ -132,7 +164,82 @@ function analytics(config = {}) {
   // Parse URL parameters
   const params = paramsParse()
   // Initialize visitor information
-  const initialUser = getPersistedUserData(params)
+  const initialUser = getPersistedUserData(params, storage)
+
+  /**
+   * Management methods for plugins. This is also where [custom methods](https://bit.ly/329vFXy) are loaded into the instance.
+   * @typedef {Object} Plugins
+   * @property {EnablePlugin} enable - Set storage value
+   * @property {DisablePlugin} disable - Remove storage value
+   * @example
+   *
+   * // Enable a plugin by namespace
+   * analytics.plugins.enable('keenio')
+   *
+   * // Disable a plugin by namespace
+   * analytics.plugins.disable('google-analytics')
+   */
+  const plugins = {
+    /**
+     * Enable analytics plugin
+     * @typedef {Function} EnablePlugin
+     * @param  {String|Array} plugins - name of plugins(s) to disable
+     * @param  {Function} [callback] - callback after enable runs
+     * @example
+     *
+     * analytics.plugins.enable('google')
+     *
+     * // Enable multiple plugins at once
+     * analytics.plugins.enable(['google', 'segment'])
+     */
+    enable: (plugins, callback) => {
+      store.dispatch(enablePlugin(plugins, callback))
+    },
+    /**
+     * Disable analytics plugin
+     * @typedef {Function} DisablePlugin
+     * @param  {String|Array} name - name of integration(s) to disable
+     * @param  {Function} callback - callback after disable runs
+     * @example
+     *
+     * analytics.plugins.disable('google')
+     *
+     * analytics.plugins.disable(['google', 'segment'])
+     */
+    disable: (name, callback) => {
+      store.dispatch(disablePlugin(name, callback))
+    },
+    /*
+     * Load registered analytic providers.
+     * @param  {String} plugins - integration namespace
+     *
+     * @example
+     * analytics.plugins.load('segment')
+     */
+    load: (plugins) => {
+      store.dispatch({
+        type: EVENTS.loadPlugin,
+        // Todo handle multiple plugins via array
+        plugins: (plugins) ? [plugins] : Object.keys(getPlugins()),
+      })
+    },
+    /* @TODO if it stays, state loaded needs to be set. Re PLUGIN_INIT above
+    add: (newPlugin) => {
+      if (typeof newPlugin !== 'object') return false
+      // Set on global integration object
+      customPlugins = Object.assign({}, customPlugins, {
+        [`${newPlugin.name}`]: newPlugin
+      })
+      // then add it, and init state key
+      store.dispatch({
+        type: EVENTS.pluginRegister,
+        name: newPlugin.name,
+        plugin: newPlugin
+      })
+    }, */
+    // Merge in custom plugin methods
+    ...parsedOptions.methods
+  }
 
   /**
    * Analytic instance returned from initialization
@@ -147,8 +254,7 @@ function analytics(config = {}) {
    * @property {Once} once - Fire callback on analytics lifecycle events once.
    * @property {GetState} getState - Get data about user, activity, or context.
    * @property {Storage} storage - storage methods
-   * @property {EnablePlugin} enablePlugin - Enable plugin
-   * @property {DisablePlugin} disablePlugin - Disable plugin
+   * @property {Plugins} plugins - plugin methods
    */
   const instance = {
     /**
@@ -557,7 +663,7 @@ function analytics(config = {}) {
       if (key) return dotProp(state, key)
       return Object.assign({}, state)
     },
-    /*!
+    /*
      * Emit events for other plugins or middleware to react to.
      * @param  {Object} action - event to dispatch
      */
@@ -586,49 +692,17 @@ function analytics(config = {}) {
 
       store.dispatch(dispatchData)
     },
-    /**
-     * Enable analytics plugin
-     * @typedef {Function} EnablePlugin
-     * @param  {String|Array} plugins - name of plugins(s) to disable
-     * @param  {Function} [callback] - callback after enable runs
-     * @example
-     *
-     * analytics.enablePlugin('google')
-     *
-     * // Enable multiple plugins at once
-     * analytics.enablePlugin(['google', 'segment'])
-     */
-    enablePlugin: (plugins, callback) => {
-      store.dispatch(enablePlugin(plugins, callback))
-    },
-    /**
-     * Disable analytics plugin
-     * @typedef {Function} DisablePlugin
-     * @param  {String|Array} name - name of integration(s) to disable
-     * @param  {Function} callback - callback after disable runs
-     * @example
-     *
-     * analytics.disablePlugin('google')
-     *
-     * analytics.disablePlugin(['google', 'segment'])
-     */
-    disablePlugin: (name, callback) => {
-      store.dispatch(disablePlugin(name, callback))
-    },
-    /*!
-     * Load registered analytic providers.
-     * @param  {String} namespace - integration namespace
-     *
-     * @example
-     * analytics.loadPlugin('segment')
-     */
-    loadPlugin: (namespace) => {
-      store.dispatch({
-        type: EVENTS.loadPlugin,
-        // Todo handle multiple plugins via array
-        plugins: (namespace) ? [namespace] : Object.keys(getPlugins()),
-      })
-    },
+    // Do not use. Will be removed. Here for Backwards compatiblity.
+    // Moved to analytics.plugins.enable
+    enablePlugin: plugins.enable,
+    /// Do not use. Will be removed. Here for Backwards compatiblity.
+    /// Moved to analytics.plugins.disable
+    disablePlugin: plugins.disable,
+    // Do not use. Will be removed. Here for Backwards compatiblity.
+    // Moved to analytics.plugins.load
+    loadPlugin: plugins.load,
+    // New plugins api
+    plugins: plugins,
     /**
      * Storage utilities for persisting data.
      * These methods will allow you to save data in localStorage, cookies, or to the window.
@@ -663,7 +737,7 @@ function analytics(config = {}) {
        *
        * analytics.storage.getItem('storage_key')
        */
-      getItem: getItem,
+      getItem: storage.getItem,
       /**
        * Set storage value
        * @typedef {Function} SetItem
@@ -692,7 +766,7 @@ function analytics(config = {}) {
         store.dispatch(removeItem(key, options))
       },
     },
-    /*!
+    /*
      * Set the anonymous ID of the visitor
      * @param {String} anonymousId - anonymous Id to set
      * @param {Object} [options] - storage options
@@ -705,7 +779,7 @@ function analytics(config = {}) {
     setAnonymousId: (anonymousId, options) => {
       instance.storage.setItem(CONSTANTS.ANON_ID, anonymousId, options)
     },
-    /*!
+    /*
      * Events exposed by core analytics library and all loaded plugins
      * @type {Array}
      */
@@ -714,24 +788,7 @@ function analytics(config = {}) {
       core: coreEvents,
       plugins: allPluginEvents,
       // byType: (type) => {} @Todo grab logic from engine and give inspectable events
-    },
-    /* @TODO if it stays, state loaded needs to be set. Re PLUGIN_INIT above
-    addPlugin: (newPlugin) => {
-      // validate integration
-      if (typeof newPlugin !== 'object') {
-        return false
-      }
-      // Set on global integration object
-      customPlugins = Object.assign({}, customPlugins, {
-        [`${newPlugin.name}`]: newPlugin
-      })
-      // then add it, and init state key
-      store.dispatch({
-        type: EVENTS.pluginRegister,
-        name: newPlugin.name,
-        plugin: newPlugin
-      })
-    }, */
+    }
   }
 
   const middlewares = parsedOptions.middlewares.concat([
@@ -742,7 +799,7 @@ function analytics(config = {}) {
       all: allSystemEvents,
       plugins: allPluginEvents
     }),
-    middleware.storage(),
+    middleware.storage(storage),
     middleware.initialize(instance),
     middleware.identify(instance),
     /* after dynamic middleware */
@@ -752,7 +809,7 @@ function analytics(config = {}) {
   /* Initial analytics state keys */
   const coreReducers = {
     context: context,
-    user: user,
+    user: user(storage),
     page: page,
     track: track,
     plugins: pluginsMiddleware(getPlugins),
@@ -791,6 +848,7 @@ function analytics(config = {}) {
     }, {}),
     // Todo allow for more userland defined initial state?
   }
+
   /* Create analytics store! */
   const store = createStore(
     // register reducers
@@ -855,6 +913,24 @@ function analytics(config = {}) {
 
     /* Tick heartbeat for queued events */
     heartBeat(store, getPlugins, instance)
+  }
+
+  function appendArguments(fn) {
+    return function () {
+      const originalArgs = Array.prototype.slice.call(arguments)
+      // Pass analytics instance as last arg for arrow functions
+      const argsToPass = Array.apply(null, Array(fn.length))
+        .map(() => {})
+        .map((x, i) => {
+          if (originalArgs[i] || originalArgs[i] === false || originalArgs[i] === null) {
+            return originalArgs[i]
+          }
+        })
+        // Add instance to args
+        .concat(instance)
+      // Set instance on extended methods
+      return fn.apply({ instance }, argsToPass)
+    }
   }
 
   /* Return analytics instance */

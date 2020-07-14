@@ -1,18 +1,30 @@
-import storage, { getCookie, setCookie, removeCookie } from '@analytics/storage-utils'
 import dotProp from 'dlv'
-import { isFunction, isString, isObject, isUndefined, isBoolean } from './typeCheck'
+import storage, {
+  getCookie,
+  setCookie,
+  removeCookie,
+  globalContext
+} from '@analytics/storage-utils'
+import {
+  isFunction,
+  isString,
+  isObject,
+  isUndefined, 
+  isBoolean
+} from './typeCheck'
 
 export {
   storage,
   getCookie,
   setCookie,
+  globalContext,
   removeCookie,
   isFunction,
   isString,
   isObject,
   isUndefined,
   isBoolean,
-  dotProp
+  dotProp,
 }
 export { default as decodeUri } from './decodeUri.js'
 export { default as getBrowserLocale } from './getBrowserLocale.js'
@@ -28,4 +40,3 @@ export { default as paramsRemove } from './paramsRemove.js'
 export { default as parseReferrer } from './parseReferrer.js'
 export { default as url } from './url.js'
 export { default as uuid } from './uuid.js'
-export { default as globalContext } from './globalContext.js'

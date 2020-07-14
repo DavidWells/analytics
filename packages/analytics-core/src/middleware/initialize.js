@@ -1,5 +1,4 @@
 /* eslint-disable camelcase */
-import { storage } from 'analytics-utils'
 import EVENTS from '../events'
 import { ANON_ID } from '../constants'
 
@@ -9,12 +8,14 @@ const traitRegex = /^an_trait_/
 
 // Middleware runs during EVENTS.initialize
 export default function initializeMiddleware(instance) {
+  const { setItem, getItem } = instance.storage
   return store => next => action => {
+    /* Handle bootstrap event */
     if (action.type === EVENTS.bootstrap) {
       const { params, user } = action
       /* 1. Set anonymous ID. TODO move UUID generation to main function. To fix race conditions */
-      if (!storage.getItem(ANON_ID)) {
-        instance.storage.setItem(ANON_ID, user.anonymousId)
+      if (!getItem(ANON_ID)) {
+        setItem(ANON_ID, user.anonymousId)
       }
       /* 2. Parse url params */
       const paramsArray = Object.keys(action.params)
