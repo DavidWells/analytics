@@ -11,8 +11,11 @@ const content = fs.readFileSync(TYPES_PATH, 'utf-8')
 const typesFromJsDocs = content
   // Remove declares
   .replace(/^declare\s/gm, '')
+  // Export analytics instance
+  .replace(/type AnalyticsInstance =/gm, 'export type AnalyticsInstance =')
   // Make promises return void
   .replace(/\@returns \{Promise\}/gm, '@returns {Promise<void>}')
+  .replace(/=> Promise;/gm, '=> Promise<any>;')
   // Fix plugin interface
   .replace(/plugins\?: object\[\]/gm, 'plugins?: Array<AnalyticsPlugin>')
 
