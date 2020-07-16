@@ -84,7 +84,7 @@ You can disable plugins with the `analytics.disablePlugin` method. This will sto
 
 ```js
 // Turn off google-analytics calls
-analytics.disablePlugin(['google-analytics'])
+analytics.plugins.disable(['google-analytics'])
 ```
 
 ## Enable plugins
@@ -93,5 +93,5 @@ You can enable plugins with the `analytics.enablePlugin` method
 
 ```js
 // Turn on google-analytics calls
-analytics.enablePlugin(['google-analytics'])
+analytics.plugins.enable(['google-analytics'])
 ```
