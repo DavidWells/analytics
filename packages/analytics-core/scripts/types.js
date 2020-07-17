@@ -28,7 +28,7 @@ ${indentString(typesFromJsDocs, 2)}
 
   export const Analytics: typeof analytics;
 
-  export = analytics;
+  export default analytics;
 }`
 
 mkdirp(path.dirname(OUTPUT_PATH), function (err) {
