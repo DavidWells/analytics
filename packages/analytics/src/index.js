@@ -2,9 +2,7 @@ import analytics, { EVENTS, CONSTANTS } from '@analytics/core'
 import storage from '@analytics/storage-utils'
 
 export default function analyticsLib(opts = {}) {
-  const defaultSettings = {
-    storage
-  }
+  const defaultSettings = { storage }
   return analytics({
     ...defaultSettings,
     ...opts

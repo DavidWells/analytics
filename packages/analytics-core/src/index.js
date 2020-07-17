@@ -76,7 +76,7 @@ function analytics(config = {}) {
 
       if (plugin.methods) {
         if (RESERVED_METHOD_NAMES.includes(plugin.name)) {
-          throw new Error(plugin.name  + ' is reserved plugin name')
+          throw new Error(plugin.name  + ' is reserved pluginName')
         }
         acc.methods[plugin.name] = Object.keys(plugin.methods).reduce((a, c) => {
           // enrich methods with analytics instance
