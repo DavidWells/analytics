@@ -35,6 +35,7 @@ let loadedInstances = {}
  * @param {boolean} [pluginConfig.setCustomDimensionsToPage] - Mapped dimensions will be set to the page & sent as properties of all subsequent events on that page. If false, analytics will only pass custom dimensions as part of individual events
  * @param {string}  [pluginConfig.instanceName] - Custom tracker name for google analytics. Use this if you need multiple googleAnalytics scripts loaded
  * @param {string}  [pluginConfig.customScriptSrc] - Custom URL for google analytics script, if proxying calls
+ * @param {object}  [pluginConfig.cookieConfig] - Additional cookie properties for configuring the [ga cookie](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#configuring_cookie_field_settings)
  * @return {*}
  * @example
  *
@@ -77,6 +78,7 @@ function googleAnalytics(pluginConfig = {}) {
           siteSpeedSampleRate: config.siteSpeedSampleRate || 1,
           sampleRate: config.sampleRate || 100,
           allowLinker: true,
+          ...config.cookieConfig,
           // useAmpClientId: config.useAmpClientId
         }
         if (instanceName) {
