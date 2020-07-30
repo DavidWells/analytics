@@ -127,6 +127,7 @@ const analytics = Analytics({
 | `setCustomDimensionsToPage` <br/>_optional_ - boolean| Mapped dimensions will be set to the page & sent as properties of all subsequent events on that page. If false, analytics will only pass custom dimensions as part of individual events |
 | `instanceName` <br/>_optional_ - string| Custom tracker name for google analytics. Use this if you need multiple googleAnalytics scripts loaded |
 | `customScriptSrc` <br/>_optional_ - string| Custom URL for google analytics script, if proxying calls |
+| `cookieConfig` <br/>_optional_ - object| Additional cookie properties for configuring the [ga cookie](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#configuring_cookie_field_settings) |
 
 ## Server-side usage
 
@@ -513,3 +514,41 @@ const analytics = Analytics({
 ```
 
 If using a proxied endpoint, it is recommended to combine this technique to with the [do-not-track](https://getanalytics.io/plugins/do-not-track/) plugin to ensure website visitors privacy.
+
+## Cookie Config
+
+Some situtitions require changing the cookie properties of the Google Analytics cookie itself 
+
+Cookie fields that are available are:
+
+| Field Name | Value Type | Default value | Description |
+|:---------------------------|:-----------|:------------------|:---------------------|
+| `cookieName`| text| _ga | Name of the cookie used to store analytics data |
+| `cookieDomain`| text| The result of the following JavaScript expression: *document.location.hostname* | Specifies the domain used to store the analytics cookie. Setting this to 'none' sets the cookie without specifying a domain. |
+| `cookieExpires`| integer| *63072000* (two years, in seconds) | Specifies the cookie expiration, in seconds. |
+| `cookieUpdate`| boolean| true | When cookieUpdate is set to true (the default value), analytics.js will update cookies on each page load. This will update the cookie expiration to be set relative to the most recent visit to the site. |
+| `cookieFlags`| text | | Specifies additional flags to append to the cookie. Flags must be separated by semicolons. |
+
+You can add these properties in the `cookieConfig` on the plugin config
+
+```js
+import Analytics from 'analytics'
+import googleAnalytics from '@analytics/google-analytics'
+
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    googleAnalytics({
+      trackingId: 'UA-1234567',
+      cookieConfig: {
+        cookieName: 'gaCookie',
+        cookieDomain: 'blog.example.co.uk',
+        cookieExpires: 60 * 60 * 24 * 28,  // Time in seconds.
+        cookieUpdate: 'false',
+        cookieFlags: 'SameSite=None; Secure',
+      }
+    })
+  ]
+})
+
+```
