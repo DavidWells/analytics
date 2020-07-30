@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.1](https://github.com/DavidWells/analytics/compare/@analytics/google-analytics@0.4.0...@analytics/google-analytics@0.4.1) (2020-07-30)
+
+**Note:** Version bump only for package @analytics/google-analytics
+
+
+
+
+
 # [0.4.0](https://github.com/DavidWells/analytics/compare/@analytics/google-analytics@0.3.1...@analytics/google-analytics@0.4.0) (2020-05-12)
 
 
