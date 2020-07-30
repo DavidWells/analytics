@@ -32,6 +32,7 @@ For more information [see the docs](https://getanalytics.io/plugins/google-analy
   * [Set the "customDimensions" option](#set-the-customdimensions-option)
 - [Using multiple instances](#using-multiple-instances)
 - [Custom Proxy Endpoint](#custom-proxy-endpoint)
+- [Cookie Config](#cookie-config)
 
 </details>
 <!-- AUTO-GENERATED-CONTENT:END -->
@@ -517,9 +518,9 @@ If using a proxied endpoint, it is recommended to combine this technique to with
 
 ## Cookie Config
 
-Some situtitions require changing the cookie properties of the Google Analytics cookie itself 
+Some situations require changing the [cookie properties](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#configuring_cookie_field_settings) of the Google Analytics cookie itself.
 
-Cookie fields that are available are:
+The GA Cookie fields that are available are:
 
 | Field Name | Value Type | Default value | Description |
 |:---------------------------|:-----------|:------------------|:---------------------|
@@ -550,5 +551,4 @@ const analytics = Analytics({
     })
   ]
 })
-
 ```
