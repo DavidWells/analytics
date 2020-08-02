@@ -44,6 +44,36 @@ export const RequestPlugins = () => {
 
 var tools = [
   {
+    'name': 'google-analytics',
+    'image': 'google-analytics.svg',
+    url: 'https://getanalytics.io/plugins/google-analytics/'
+  },
+  {
+    'name': 'google-tag-manager',
+    'image': 'google-tag-manager.svg',
+    url: 'https://getanalytics.io/plugins/google-tag-manager/'
+  },
+  {
+    name: 'customerio',
+    image: 'customer-io.svg',
+    url: 'https://getanalytics.io/plugins/customerio/'
+  },
+  {
+    name: 'snowplow',
+    image: 'snowplow.svg',
+    url: 'https://getanalytics.io/plugins/snowplow/'
+  },
+  {
+    name: 'fullstory',
+    image: 'fullstory.svg',
+    url: 'https://getanalytics.io/plugins/fullstory/'
+  },
+  {
+    name: 'segment',
+    image: 'segment.svg',
+    url: 'https://getanalytics.io/plugins/segment/'
+  },
+  {
     'name': 'adlearn-open-platform',
     'image': 'adlearn-open-platform.svg'
   },
@@ -120,11 +150,8 @@ var tools = [
     'name': 'custify',
     'image': 'custify.svg'
   },
-  {
-    name: 'customerio',
-    image: 'customer-io.svg',
-    url: 'https://getanalytics.io/plugins/customerio/'
-  },
+
+
   {
     'name': 'customersuccessbox',
     'image': 'customersuccessbox.svg'
@@ -169,11 +196,7 @@ var tools = [
     'name': 'funnelfox',
     'image': 'funnelfox.svg'
   },
-  {
-    name: 'fullstory',
-    image: 'fullstory.svg',
-    url: 'https://getanalytics.io/plugins/fullstory/'
-  },
+
   {
     'name': 'gainsight-px',
     'image': 'gainsight-px.svg'
@@ -189,16 +212,6 @@ var tools = [
   {
     'name': 'goedle.io',
     'image': 'goedle.io.svg'
-  },
-  {
-    'name': 'google-analytics',
-    'image': 'google-analytics.svg',
-    url: 'https://getanalytics.io/plugins/google-analytics/'
-  },
-  {
-    'name': 'google-tag-manager',
-    'image': 'google-tag-manager.svg',
-    url: 'https://getanalytics.io/plugins/google-tag-manager/'
   },
   {
     'name': 'gosquared',
@@ -318,11 +331,7 @@ var tools = [
     'name': 'scopeai',
     'image': 'scopeai.svg'
   },
-  {
-    name: 'segment',
-    image: 'segment.svg',
-    url: 'https://getanalytics.io/plugins/segment/'
-  },
+
   {
     'name': 'serenytics',
     'image': 'serenytics.svg'
