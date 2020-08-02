@@ -36,8 +36,8 @@ import { SupportedPlugins } from 'gatsby-theme-oss-docs';
 
     ```bash
     npm install analytics
-    npm install analytics-plugin-google-tag-manager
-    `"
+    npm install @analytics/google-tag-manager
+    ```
 
 2. **Include analytics in your project**
 
@@ -48,7 +48,7 @@ import { SupportedPlugins } from 'gatsby-theme-oss-docs';
     ```js
     /* analytics.js */
     import Analytics from 'analytics'
-    import googleTagManager from 'analytics-plugin-google-tag-manager'
+    import googleTagManager from '@analytics/google-tag-manager'
 
     // export analytics instance for use in the app
     export default Analytics({
@@ -105,7 +105,7 @@ You can disable plugins with the `analytics.disablePlugin` method. This will sto
 
 ```js
 // Turn off google-analytics calls
-analytics.disablePlugin(['google-analytics'])
+analytics.plugins.disable(['google-analytics'])
 ```
 
 ## Enable plugins
