@@ -21,6 +21,7 @@
     "@analytics/perfumejs": "file:../../packages/analytics-plugin-perfumejs",
     "@analytics/segment": "file:../../packages/analytics-plugin-segment",
     "@analytics/simple-analytics": "file:../../packages/analytics-plugin-simple-analytics",
+    "@analytics/snowplow": "file:../../packages/analytics-plugin-snowplow",
     "@analytics/storage-utils": "file:../../packages/analytics-util-storage",
     "@reach/router": "^1.2.1",
     "analytics": "file:../../packages/analytics",
