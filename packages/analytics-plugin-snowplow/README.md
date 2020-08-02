@@ -72,10 +72,10 @@ analytics.on('initialize:snowplow', ({ instance }) => {
   instance.plugins.snowplow.enableLinkClickTracking()
 })
 
-//Track page
+// Track page
 analytics.page()
 
-//or Track page view with additional entities
+// or Track page view with additional entities
 analytics.page({
   contexts: [
     {
@@ -91,14 +91,14 @@ analytics.page({
 })
 
 /* Track a custom event */
-//Track structured event
+// Track structured event
 analytics.track('playedVideo', {
   category: 'Videos',
   label: 'Fall Campaign',
   value: 42
 })
 
-//or Track Self Describing event
+// or Track Self Describing event
 analytics.track('selfDescribingEvent', {
   schema: 'iglu:com.acme/video_played/jsonschema/1-0-0',
   data: {
@@ -107,7 +107,7 @@ analytics.track('selfDescribingEvent', {
   }
 })
 
-//or Track Self Describing event with additional entities
+// or Track Self Describing event with additional entities
 analytics.track('selfDescribingEvent', {
   schema: 'iglu:com.acme/video_played/jsonschema/1-0-0',
   data: {
@@ -128,7 +128,7 @@ analytics.track('selfDescribingEvent', {
   ]
 })
 
-//or Track Enchanced Ecommerce event with product context
+// or Track Enchanced Ecommerce event with product context
 analytics.track('EnhancedEcommerceProductContext', {
   id: 'P12345',
   name: 'Android Warhol T-Shirt',
@@ -299,10 +299,10 @@ Below are additional implementation examples.
   })
 
   /* Track a page view */
-  //Track page
+  // Track page
   analytics.page()
 
-  //or Track page view with additional entities
+  // or Track page view with additional entities
   analytics.page({
     context: [
       {
@@ -320,14 +320,14 @@ Below are additional implementation examples.
   })
 
   /* Track a custom event */
-  //Track structured event
+  // Track structured event
   analytics.track('playedVideo', {
     category: 'Videos',
     label: 'Fall Campaign',
     value: 42
   })
 
-  //or Track Self Describing event
+  // or Track Self Describing event
   analytics.track('selfDescribingEvent', {
     schema: 'iglu:com.acme/video_played/jsonschema/1-0-0',
     data: {
@@ -336,7 +336,7 @@ Below are additional implementation examples.
     }
   })
 
-  //or Track Self Describing event with additional entities
+  // or Track Self Describing event with additional entities
   analytics.track('selfDescribingEvent', {
     schema: 'iglu:com.acme/video_played/jsonschema/1-0-0',
     data: {
@@ -357,7 +357,7 @@ Below are additional implementation examples.
     ]
   })
 
-  //or Track Enchanced Ecommerce event with product context
+  // or Track Enchanced Ecommerce event with product context
   analytics.track('ScreenView', {
     name: 'Product Page',
     id: 'p-123',
@@ -405,10 +405,10 @@ Below are additional implementation examples.
   })
 
   /* Track a page view */
-  //Track page
+  // Track page
   analytics.page()
 
-  //or Track page view with additional entities
+  // or Track page view with additional entities
   analytics.page({
     context: [
       {
@@ -426,14 +426,14 @@ Below are additional implementation examples.
   })
 
   /* Track a custom event */
-  //Track structured event
+  // Track structured event
   analytics.track('playedVideo', {
     category: 'Videos',
     label: 'Fall Campaign',
     value: 42
   })
 
-  //or Track Self Describing event
+  // or Track Self Describing event
   analytics.track('selfDescribingEvent', {
     schema: 'iglu:com.acme/video_played/jsonschema/1-0-0',
     data: {
@@ -442,7 +442,7 @@ Below are additional implementation examples.
     }
   })
 
-  //or Track Self Describing event with additional entities
+  // or Track Self Describing event with additional entities
   analytics.track('selfDescribingEvent', {
     schema: 'iglu:com.acme/video_played/jsonschema/1-0-0',
     data: {
@@ -463,7 +463,7 @@ Below are additional implementation examples.
     ]
   })
 
-  //or Track Enchanced Ecommerce event with product context
+  // or Track Enchanced Ecommerce event with product context
   analytics.track('ScreenView', {
     name: 'Product Page',
     id: 'p-123',
@@ -529,10 +529,10 @@ Below are additional implementation examples.
           instance.plugins.snowplow.enableLinkClickTracking()
         })
 
-        //Track page
+        // Track page
         analytics.page()
 
-        //or Track page view with additional entities
+        // or Track page view with additional entities
         analytics.page({
           contexts: [
             {
@@ -548,14 +548,14 @@ Below are additional implementation examples.
         })
 
         /* Track a custom event */
-        //Track structured event
+        // Track structured event
         analytics.track('playedVideo', {
           category: 'Videos',
           label: 'Fall Campaign',
           value: 42
         })
 
-        //or Track Self Describing event
+        // or Track Self Describing event
         analytics.track('selfDescribingEvent', {
           schema: 'iglu:com.acme/video_played/jsonschema/1-0-0',
           data: {
@@ -564,7 +564,7 @@ Below are additional implementation examples.
           }
         })
 
-        //or Track Self Describing event with additional entities
+        // or Track Self Describing event with additional entities
         analytics.track('selfDescribingEvent', {
           schema: 'iglu:com.acme/video_played/jsonschema/1-0-0',
           data: {
@@ -585,7 +585,7 @@ Below are additional implementation examples.
           ]
         })
 
-        //or Track Enchanced Ecommerce event with product context
+        // or Track Enchanced Ecommerce event with product context
         analytics.track('EnhancedEcommerceProductContext', {
           id: 'P12345',
           name: 'Android Warhol T-Shirt',
@@ -658,10 +658,10 @@ Below are additional implementation examples.
           instance.plugins.snowplow.enableLinkClickTracking()
         })
 
-        //Track page
+        // Track page
         analytics.page()
 
-        //or Track page view with additional entities
+        // or Track page view with additional entities
         analytics.page({
           contexts: [
             {
@@ -677,14 +677,14 @@ Below are additional implementation examples.
         })
 
         /* Track a custom event */
-        //Track structured event
+        // Track structured event
         analytics.track('playedVideo', {
           category: 'Videos',
           label: 'Fall Campaign',
           value: 42
         })
 
-        //or Track Self Describing event
+        // or Track Self Describing event
         analytics.track('selfDescribingEvent', {
           schema: 'iglu:com.acme/video_played/jsonschema/1-0-0',
           data: {
@@ -693,7 +693,7 @@ Below are additional implementation examples.
           }
         })
 
-        //or Track Self Describing event with additional entities
+        // or Track Self Describing event with additional entities
         analytics.track('selfDescribingEvent', {
           schema: 'iglu:com.acme/video_played/jsonschema/1-0-0',
           data: {
@@ -714,7 +714,7 @@ Below are additional implementation examples.
           ]
         })
 
-        //or Track Enchanced Ecommerce event with product context
+        // or Track Enchanced Ecommerce event with product context
         analytics.track('EnhancedEcommerceProductContext', {
           id: 'P12345',
           name: 'Android Warhol T-Shirt',

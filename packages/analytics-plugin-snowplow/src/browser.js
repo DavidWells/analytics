@@ -47,7 +47,7 @@ let trackerInstances = {};
  * @param {boolean} [pluginConfig.trackerSettings.contexts.geolocation] - Add browser geolocation information
  * @param {boolean} [pluginConfig.trackerSettings.contexts.optimizelyXSummary] - Add browser geolocation information
  * @return {Object} Analytics plugin
- * 
+ *
  * @example
  *
  * // Minimal recommended configuration
@@ -84,11 +84,11 @@ function snowplowPlugin(pluginConfig = {}) {
         };p[i].q=p[i].q||[];n=l.createElement(o);g=l.getElementsByTagName(o)[0];n.async=1;
         n.src=w;g.parentNode.insertBefore(n,g)}}(window,document,'script',scriptSrc,'snowplow'));
       /* eslint-enable */
-      
+
       snowplow(
-        'newTracker', 
-        name, 
-        collectorUrl, 
+        'newTracker',
+        name,
+        collectorUrl,
         trackerSettings
       );
 
@@ -103,17 +103,17 @@ function snowplowPlugin(pluginConfig = {}) {
     /**
      * Snowplow page view event https://bit.ly/36Qvz7t
      * @example
-     * 
+     *
      * // Enable some automatic tracking before page event
      * analytics.on('initialize:snowplow', ({instance}) => {
      *   instance.plugins.snowplow.enableActivityTracking(10,10);
      *   instance.plugins.snowplow.enableLinkClickTracking();
      * });
-     * 
-     * //Track page
+     *
+     * // Track page
      * analytics.page();
-     * 
-     * //or Track page view with additional entities
+     *
+     * // or Track page view with additional entities
      * analytics.page({
      *   contexts: [{
      *     schema: 'iglu:com.acme/blog_post/jsonschema/1-0-0',
@@ -130,10 +130,10 @@ function snowplowPlugin(pluginConfig = {}) {
       const { properties } = payload;
       const { name } = config;
       if (snowplowNotLoaded()) return;
-      
+
       // Use url and referrer values from Analaytics
       snowplow(
-        `setCustomUrl:${name}`, 
+        `setCustomUrl:${name}`,
         properties.url
       );
       snowplow(
@@ -143,9 +143,9 @@ function snowplowPlugin(pluginConfig = {}) {
 
       // Track Page View event
       snowplow(
-        `trackPageView:${name}`, 
-        properties.title, 
-        properties.contexts, 
+        `trackPageView:${name}`,
+        properties.title,
+        properties.contexts,
         properties.dynamicContexts
       );
     },
@@ -168,7 +168,7 @@ function snowplowPlugin(pluginConfig = {}) {
       instance.storage.removeItem(trackerInstances[name].sesCookieName, opts);
 
       snowplow(
-        `setUserId:${name}`, 
+        `setUserId:${name}`,
         undefined
       );
 
@@ -182,14 +182,14 @@ function snowplowPlugin(pluginConfig = {}) {
      * i.e. analytics.track('adImpression', ..., ..., ...);
      * @example
      *
-     * //Track structured event
+     * // Track structured event
      * analytics.track('playedVideo', {
      *   category: 'Videos',
      *   label: 'Fall Campaign',
      *   value: 42
      * })
-     * 
-     * //or Track Self Describing event
+     *
+     * // or Track Self Describing event
      * analytics.track('selfDescribingEvent', {
      *   schema: 'iglu:com.acme/video_played/jsonschema/1-0-0',
      *   data: {
@@ -197,8 +197,8 @@ function snowplowPlugin(pluginConfig = {}) {
      *     title: 'Fall Campaign'
      *   }
      * })
-     * 
-     * //or Track Self Describing event with additional entities
+     *
+     * // or Track Self Describing event with additional entities
      * analytics.track('selfDescribingEvent', {
      *   schema: 'iglu:com.acme/video_played/jsonschema/1-0-0',
      *   data: {
@@ -216,8 +216,8 @@ function snowplowPlugin(pluginConfig = {}) {
      *     }
      *   }]
      * })
-     * 
-     * //or Track Enchanced Ecommerce event with product context
+     *
+     * // or Track Enchanced Ecommerce event with product context
      * analytics.track('EnhancedEcommerceProductContext', {
      *   id: 'P12345',
      *   name: 'Android Warhol T-Shirt',
@@ -241,7 +241,7 @@ function snowplowPlugin(pluginConfig = {}) {
     /**
      * Set Snowplow user_id with setUserId
      * @example
-     * 
+     *
      * analytics.identify('user-id-xyz');
      */
     identify: ({ payload }) => {
@@ -251,7 +251,7 @@ function snowplowPlugin(pluginConfig = {}) {
 
       if (userId) {
         snowplow(
-          `setUserId:${name}`, 
+          `setUserId:${name}`,
           userId
         );
       }
@@ -270,8 +270,8 @@ function snowplowPlugin(pluginConfig = {}) {
       enableActivityTracking(minimumVisitLength, heartbeat) {
         const { name } = config;
         snowplow(
-          `enableActivityTracking:${name}`, 
-          minimumVisitLength, 
+          `enableActivityTracking:${name}`,
+          minimumVisitLength,
           heartbeat
         );
       },
@@ -298,8 +298,8 @@ function snowplowPlugin(pluginConfig = {}) {
       enableFormTracking(formTrackingConfig, contexts) {
         const { name } = config;
         snowplow(
-          `enableFormTracking:${name}`, 
-          formTrackingConfig || {}, 
+          `enableFormTracking:${name}`,
+          formTrackingConfig || {},
           contexts || null
         );
       },
@@ -348,8 +348,8 @@ function snowplowPlugin(pluginConfig = {}) {
       enableErrorTracking(filter, contextAdder) {
         const { name } = config;
         snowplow(
-          `enableErrorTracking:${name}`, 
-          filter || null, 
+          `enableErrorTracking:${name}`,
+          filter || null,
           contextAdder || null
         );
       },
@@ -373,7 +373,7 @@ function snowplowPlugin(pluginConfig = {}) {
       },
       /**
        * Removes global contexts by matching on the schema name
-       * @param {Context[]} globalContexts 
+       * @param {Context[]} globalContexts
        */
       removeGlobalContexts(globalContexts) {
         const { name } = config;
@@ -413,7 +413,7 @@ function track(name, event, properties) {
           {
             schema: properties.schema,
             data: properties.data
-          }, 
+          },
           properties.contexts
         );
         break;
@@ -431,7 +431,7 @@ function track(name, event, properties) {
           `trackAdImpression:${name}`,
           properties.impressionId,
           properties.costModel, // 'cpa', 'cpc', or 'cpm'
-          properties.cost, 
+          properties.cost,
           properties.targetUrl,
           properties.bannerId,
           properties.zoneId,
@@ -521,7 +521,7 @@ function track(name, event, properties) {
           properties.id,
           properties.version,
           properties.name,
-          properties.description, 
+          properties.description,
           properties.expiry,
           properties.contexts
         );
@@ -533,7 +533,7 @@ function track(name, event, properties) {
           properties.id,
           properties.version,
           properties.name,
-          properties.description, 
+          properties.description,
           properties.contexts
         );
         break;
@@ -544,7 +544,7 @@ function track(name, event, properties) {
           properties.filename,
           properties.lineno,
           properties.colno,
-          properties.error, 
+          properties.error,
           properties.contexts
         );
         break;
@@ -605,7 +605,7 @@ function track(name, event, properties) {
         break;
       case 'enhancedecommerceaction':
         snowplow(
-          `trackEnhancedEcommerceAction:${name}`, 
+          `trackEnhancedEcommerceAction:${name}`,
           properties.action
         );
         break;

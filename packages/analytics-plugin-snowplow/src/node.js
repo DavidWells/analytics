@@ -61,10 +61,10 @@ function snowplowPlugin(pluginConfig = {}) {
      * Snowplow page view event https://bit.ly/39wIcFX
      * @example
      *
-     * //Track page
+     * // Track page
      * analytics.page();
      *
-     * //or Track page view with additional entities
+     * // or Track page view with additional entities
      * analytics.page({
      *   context: [{
      *     schema: 'iglu:com.acme/blog_post/jsonschema/1-0-0',
@@ -88,14 +88,14 @@ function snowplowPlugin(pluginConfig = {}) {
      * i.e. analytics.track('adImpression', ..., ..., ...);
      * @example
      *
-     * //Track structured event
+     * // Track structured event
      * analytics.track('playedVideo', {
      *   category: 'Videos',
      *   label: 'Fall Campaign',
      *   value: 42
      * })
      *
-     * //or Track Self Describing event
+     * // or Track Self Describing event
      * analytics.track('selfDescribingEvent', {
      *   schema: 'iglu:com.acme/video_played/jsonschema/1-0-0',
      *   data: {
@@ -104,7 +104,7 @@ function snowplowPlugin(pluginConfig = {}) {
      *   }
      * })
      *
-     * //or Track Self Describing event with additional entities
+     * // or Track Self Describing event with additional entities
      * analytics.track('selfDescribingEvent', {
      *   schema: 'iglu:com.acme/video_played/jsonschema/1-0-0',
      *   data: {
@@ -123,7 +123,7 @@ function snowplowPlugin(pluginConfig = {}) {
      *   }]
      * })
      *
-     * //or Track Enchanced Ecommerce event with product context
+     * // or Track Enchanced Ecommerce event with product context
      * analytics.track('ScreenView', {
      *   name: 'Product Page',
      *   id: 'p-123',
@@ -156,9 +156,9 @@ function snowplowPlugin(pluginConfig = {}) {
             break;
           case 'screenview':
             t.trackScreenView(
-              properties.name, 
-              properties.id, 
-              properties.context, 
+              properties.name,
+              properties.id,
+              properties.context,
               properties.tstamp
             );
             break;
