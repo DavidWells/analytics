@@ -28,6 +28,8 @@ This analytics plugin will load google analytics into your application.
   * [Set the "customDimensions" option](#set-the-customdimensions-option)
 - [Using multiple instances](#using-multiple-instances)
 - [Custom Proxy Endpoint](#custom-proxy-endpoint)
+- [Electron Apps](#electron-apps)
+- [Custom GA Tasks](#custom-ga-tasks)
 - [Cookie Config](#cookie-config)
 
 </details>
@@ -125,6 +127,7 @@ const analytics = Analytics({
 | `instanceName` <br/>_optional_ - string| Custom tracker name for google analytics. Use this if you need multiple googleAnalytics scripts loaded |
 | `customScriptSrc` <br/>_optional_ - string| Custom URL for google analytics script, if proxying calls |
 | `cookieConfig` <br/>_optional_ - object| Additional cookie properties for configuring the [ga cookie](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#configuring_cookie_field_settings) |
+| `tasks` <br/>_optional_ - object| [Set custom google analytic tasks](https://developers.google.com/analytics/devguides/collection/analyticsjs/tasks) |
 
 ## Server-side usage
 
@@ -407,7 +410,7 @@ const analytics = Analytics({
 
 The above config will map **baz** to `dimension1`, **foo** to `dimension2`, and **flam** to `dimension3`
 
-When `track`, `page`, or `identify` calls are made the mapped values will automatically set to Google Analytics custom dimensions.
+When `track`, `page`, or `identify` calls are made, the mapped values will automatically set to Google Analytics custom dimensions.
 
 ```js
 /* Tracking example */
@@ -488,9 +491,9 @@ Using the above configuration all tracking, page views, and identify calls will 
 
 ## Custom Proxy Endpoint
 
-In certain [scenarios](https://www.freecodecamp.org/news/save-your-analytics-from-content-blockers-7ee08c6ec7ee/), you might want to load your own version of google analytics to send requests to a proxy.
+In specific [scenarios](https://www.freecodecamp.org/news/save-your-analytics-from-content-blockers-7ee08c6ec7ee/), you might want to load your own version of google analytics to send requests to a proxy.
 
-To do this, you can add the `customScriptSrc` option pointing to your custom Google Analytics script
+To do this, you can add the `customScriptSrc` option pointing to your custom Google Analytics script.
 
 ```js
 import Analytics from 'analytics'
@@ -507,7 +510,99 @@ const analytics = Analytics({
 })
 ```
 
-If using a proxied endpoint, it is recommended to combine this technique to with the [do-not-track](https://getanalytics.io/plugins/do-not-track/) plugin to ensure website visitors privacy.
+If using a proxied endpoint, it is recommended to combine this technique with the [do-not-track](https://getanalytics.io/plugins/do-not-track/) plugin to ensure website visitors privacy.
+
+## Electron Apps
+
+Electron apps bundle and serve their code from the `file://` extension. This causes [issues](https://github.com/DavidWells/analytics/issues/77) with GA.
+
+To fix this, use the `tasks` configuration option described below and set `checkProtocolTask`, `checkStorageTask`, & `historyImportTask` to `null`.
+
+```js
+import Analytics from 'analytics'
+import googleAnalytics from '@analytics/google-analytics'
+
+/* initialize analytics and load plugins */
+const analytics = Analytics({
+  app: 'my-app',
+  plugins: [
+    googleAnalytics({
+      trackingId: '123-xyz',
+      // Override or disable GA Tasks https://bit.ly/31Xetmg
+      tasks: {
+        // Set checkProtocolTask, checkStorageTask, & historyImportTask for electron apps
+        checkProtocolTask: null,
+        checkStorageTask: null,
+        historyImportTask: null,
+      }
+    }),
+  ]
+})
+```
+
+## Custom GA Tasks
+
+In specific scenarios, you might need to disable or alter the [default Google Analytic Tasks](https://bit.ly/31Xetmg).
+
+For example, you might want to cancel a request or enrich it. You can do this via [analytics plugins](https://getanalytics.io/plugins/writing-plugins/) or use the `tasks` config option on GA plugin for access to the `tracker` instance for GA only.
+
+The tasks that can be hooked into are listed below & in the [GA task docs](https://bit.ly/31Xetmg)
+
+- `customTask` By default, this task does nothing. Override it to provide custom behavior.
+- `previewTask`	Aborts the request if the page is only being rendered to generate a 'Top Sites' thumbnail for Safari.
+- `checkProtocolTask`	Aborts the request if the page protocol is not http or https.
+- `validationTask` Aborts the request if required fields are missing or invalid.
+- `checkStorageTask` Aborts the request if the tracker is configured to use cookies but the user's browser has cookies disabled.
+- `historyImportTask` Imports info from ga.js/urchin.js cookies to preserve history when a site migrates to Universal Analytics.
+- `samplerTask` Samples out visitors based on the sampleRate setting for this tracker.
+- `buildHitTask` Builds a measurement protocol request string and stores it in the hitPayload field.
+- `sendHitTask` Transmits the measurement protocol request stored in the hitPayload field to Google Analytics servers.
+- `timingTask` Automatically generates a site speed timing hit based on the siteSpeedSampleRate setting for this tracker.
+- `displayFeaturesTask` Sends an additional hit if display features is enabled & a previous hit has not been sent within the timeout period set by the advertising features cookie (_gat).
+
+```js
+import Analytics from 'analytics'
+import googleAnalytics from '@analytics/google-analytics'
+
+/* initialize analytics and load plugins */
+const analytics = Analytics({
+  app: 'cool-app',
+  plugins: [
+    googleAnalytics({
+      trackingId: '123-xyz',
+      // Override or disable GA Tasks https://bit.ly/31Xetmg
+      tasks: {
+        // https://developers.google.com/analytics/devguides/collection/analyticsjs/tasks#adding_to_a_task
+        sendHitTask: function (tracker) {
+          // Save original Task
+          var originalTask = tracker.get('sendHitTask')
+          // Modifies sendHitTask to send a copy of the request to a local server after
+          tracker.set('sendHitTask', function (model) {
+            // 1. Send the normal request to www.google-analytics.com/collect.
+            originalTask(model);
+            // 2. Send to local server
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/localhits', true);
+            xhr.send(model.get('hitPayload'));
+          })
+        },
+        // https://developers.google.com/analytics/devguides/collection/analyticsjs/tasks#aborting_task_processing
+        buildHitTask: (tracker) => {
+          // Save original Task
+          const originalBuildHitTask = tracker.get('buildHitTask')
+          // Set custom buildHitTask with abort
+          tracker.set('buildHitTask', function (model) {
+            if (document.cookie.match(/testing=true/)) {
+              throw new Error('Aborted tracking for test user.')
+            }
+            originalBuildHitTask(model);
+          })
+        },
+      }
+    }),
+  ]
+})
+```
 
 ## Cookie Config
 
@@ -523,7 +618,7 @@ The GA Cookie fields that are available are:
 | `cookieUpdate`| boolean| true | When cookieUpdate is set to true (the default value), analytics.js will update cookies on each page load. This will update the cookie expiration to be set relative to the most recent visit to the site. |
 | `cookieFlags`| text | | Specifies additional flags to append to the cookie. Flags must be separated by semicolons. |
 
-You can add these properties in the `cookieConfig` on the plugin config
+You can add these properties in the `cookieConfig` on the plugin config.
 
 ```js
 import Analytics from 'analytics'
