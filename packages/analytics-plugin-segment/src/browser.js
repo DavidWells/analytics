@@ -67,15 +67,8 @@ function segmentPlugin(pluginConfig = {}) {
       }
     },
     /* Remove segment cookies on analytics.reset */
-    reset: ({ instance }) => {
-      const cookies = ['ajs_user_id', 'ajs_anonymous_id', 'ajs_group_id']
-      cookies.forEach((key) => {
-        instance.storage.removeItem(key, 'cookie')
-      })
-      const localStorageItems = cookies.concat(['ajs_group_properties', 'ajs_user_traits'])
-      localStorageItems.forEach((key) => {
-        instance.storage.removeItem(key)
-      })
+    reset: () => {
+      analytics.reset();
     },
     /* Sync id when ready */
     ready: ({ instance, config }) => {
