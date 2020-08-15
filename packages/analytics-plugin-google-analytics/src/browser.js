@@ -36,6 +36,7 @@ let loadedInstances = {}
  * @param {string}  [pluginConfig.instanceName] - Custom tracker name for google analytics. Use this if you need multiple googleAnalytics scripts loaded
  * @param {string}  [pluginConfig.customScriptSrc] - Custom URL for google analytics script, if proxying calls
  * @param {object}  [pluginConfig.cookieConfig] - Additional cookie properties for configuring the [ga cookie](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#configuring_cookie_field_settings)
+ * @param {object}  [pluginConfig.tasks] - [Set custom google analytic tasks](https://developers.google.com/analytics/devguides/collection/analyticsjs/tasks)
  * @return {*}
  * @example
  *
@@ -97,6 +98,31 @@ function googleAnalytics(pluginConfig = {}) {
           ga(`${instancePrefix}set`, 'anonymizeIp', true)
         }
 
+        if (config.tasks) {
+          const taskList = [
+            'customTask',
+            'previewTask',
+            'checkProtocolTask',
+            'validationTask',
+            'checkStorageTask',
+            'historyImportTask',
+            'samplerTask',
+            'buildHitTask',
+            'sendHitTask',
+            'timingTask',
+            'displayFeaturesTask'
+          ]
+          taskList.forEach((taskName) => {
+            if (config.tasks.hasOwnProperty(taskName)) {
+              const task = config.tasks[taskName]
+              if (typeof task === 'function') {
+                ga(config.tasks[taskName])
+              } else if (task === null) {
+                ga(`${instancePrefix}set`, taskName, task)
+              }
+            }
+          })
+        }
         /* set custom dimenions from user traits */
         const user = instance.user() || {}
         const traits = user.traits || {}
