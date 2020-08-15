@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/DavidWells/analytics/compare/@analytics/google-analytics@0.4.1...@analytics/google-analytics@0.5.0) (2020-08-15)
+
+
+### Features
+
+* Add support for custom GA Task overrides for Electron ([72b3e0a](https://github.com/DavidWells/analytics/commit/72b3e0a)), closes [#77](https://github.com/DavidWells/analytics/issues/77)
+
+
+
+
+
 ## [0.4.1](https://github.com/DavidWells/analytics/compare/@analytics/google-analytics@0.4.0...@analytics/google-analytics@0.4.1) (2020-07-30)
 
 **Note:** Version bump only for package @analytics/google-analytics
