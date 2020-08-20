@@ -17,7 +17,7 @@ $ cd analytics
 $ npm run setup
 ```
 
-Because analytics has a large number of packages, we need to also [install watchmen](https://facebook.github.io/watchman/docs/install.html) for better watching.
+Because analytics has a large number of packages, we need to also [install watchman](https://facebook.github.io/watchman/docs/install.html) for better watching.
 
 ```sh
 brew update
