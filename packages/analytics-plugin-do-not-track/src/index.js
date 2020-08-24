@@ -47,7 +47,8 @@ export function doNotTrackEnabled() {
 
 function msTracking() {
   const { external } = window
-  return 'msTrackingProtectionEnabled' in external &&
+  return typeof external !== 'undefined' &&
+  'msTrackingProtectionEnabled' in external &&
   typeof external.msTrackingProtectionEnabled === 'function' &&
   window.external.msTrackingProtectionEnabled()
 }
