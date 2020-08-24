@@ -53,7 +53,7 @@ const analytics = Analytics({
     // Minimal recommended configuration
     snowplowPlugin({
       name: 'snowplow',
-      scriptSrc: '//*.cloudfront.net/2.14.0/sp.js',
+      scriptSrc: '//*.cloudfront.net/2.15.0/sp.js',
       collectorUrl: 'collector.mysite.com',
       trackerSettings: {
         appId: 'myApp',
@@ -176,7 +176,7 @@ const analytics = Analytics({
     // Minimal recommended configuration
     snowplowPlugin({
       name: 'snowplow',
-      scriptSrc: '//*.cloudfront.net/2.14.0/sp.js',
+      scriptSrc: '//*.cloudfront.net/2.15.0/sp.js',
       collectorUrl: 'collector.mysite.com',
       trackerSettings: {
         appId: 'myApp',
@@ -217,9 +217,15 @@ const analytics = Analytics({
 | `trackerSettings.stateStorageStrategy` <br/>_optional_ - string| Use cookies and/or localstorage ("cookieAndLocalStorage" default) |
 | `trackerSettings.maxLocalStorageQueueSize` <br/>_optional_ - number| Maximum numbers of events to buffer in localstorage to prevent filling local storage (1000 default) |
 | `trackerSettings.resetActivityTrackingOnPageView` <br/>_optional_ - boolean| Flag to decide whether to reset page ping timers on virtual page view (true default) |
+| `trackerSettings.connectionTimeout` <br/>_optional_ - boolean| The timeout, in milliseconds, before GET and POST requests will timeout (5000 default) (Snowplow JS 2.15.0+) |
+| `trackerSettings.skippedBrowserFeatures` <br/>_optional_ - Array.<string>| Array to skip browser feature collection ([] default) (Snowplow JS 2.15.0+) |
+| `trackerSettings.anonymousTracking` <br/>_optional_ - Object| Flag to enable anonymous tracking functionality (false default) |
+| `trackerSettings.anonymousTracking.withSessionTracking` <br/>_optional_ - boolean| Flag to enable whether to continue tracking sessions in anonymous tracking mode (false default) |
 | `trackerSettings.contexts` <br/>_optional_ - Object| The auto contexts for each event |
 | `trackerSettings.contexts.webPage` <br/>_optional_ - boolean| The webpage context, containing the page view id. (true default) |
 | `trackerSettings.contexts.performanceTiming` <br/>_optional_ - boolean| Add performance timing information |
+| `trackerSettings.contexts.clientHints` <br/>_optional_ - Object| Add Client Hint information (Snowplow JS 2.15.0+) |
+| `trackerSettings.contexts.clientHints.includeHighEntropy` <br/>_optional_ - boolean| Capture High Entropy Client Hints (Snowplow JS 2.15.0+) |
 | `trackerSettings.contexts.gaCookies` <br/>_optional_ - boolean| Add gaCookie information |
 | `trackerSettings.contexts.geolocation` <br/>_optional_ - boolean| Add browser geolocation information |
 | `trackerSettings.contexts.optimizelyXSummary` <br/>_optional_ - boolean| Add browser geolocation information |
@@ -510,7 +516,7 @@ Below are additional implementation examples.
             // Minimal recommended configuration
             analyticsSnowplow({
               name: 'snowplow',
-              scriptSrc: '//*.cloudfront.net/2.14.0/sp.js',
+              scriptSrc: '//*.cloudfront.net/2.15.0/sp.js',
               collectorUrl: 'collector.mysite.com',
               trackerSettings: {
                 appId: 'myApp',
@@ -638,7 +644,7 @@ Below are additional implementation examples.
             // Minimal recommended configuration
             analyticsSnowplow({
               name: 'snowplow',
-              scriptSrc: '//*.cloudfront.net/2.14.0/sp.js',
+              scriptSrc: '//*.cloudfront.net/2.15.0/sp.js',
               collectorUrl: 'collector.mysite.com',
               trackerSettings: {
                 appId: 'myApp',

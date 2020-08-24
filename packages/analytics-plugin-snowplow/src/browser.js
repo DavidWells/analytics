@@ -10,8 +10,6 @@ const defaultConfig = {
   }
 }
 
-let trackerInstances = {};
-
 /**
  * Snowplow analytics integration
  * @link https://getanalytics.io/plugins/snowplow/
@@ -40,9 +38,15 @@ let trackerInstances = {};
  * @param {string} [pluginConfig.trackerSettings.stateStorageStrategy] - Use cookies and/or localstorage ("cookieAndLocalStorage" default)
  * @param {number} [pluginConfig.trackerSettings.maxLocalStorageQueueSize] - Maximum numbers of events to buffer in localstorage to prevent filling local storage (1000 default)
  * @param {boolean} [pluginConfig.trackerSettings.resetActivityTrackingOnPageView] - Flag to decide whether to reset page ping timers on virtual page view (true default)
+ * @param {boolean} [pluginConfig.trackerSettings.connectionTimeout] - The timeout, in milliseconds, before GET and POST requests will timeout (5000 default) (Snowplow JS 2.15.0+)
+ * @param {string[]} [pluginConfig.trackerSettings.skippedBrowserFeatures] - Array to skip browser feature collection ([] default) (Snowplow JS 2.15.0+)
+ * @param {(Object|boolean)} [pluginConfig.trackerSettings.anonymousTracking] - Flag to enable anonymous tracking functionality (false default)
+ * @param {boolean} [pluginConfig.trackerSettings.anonymousTracking.withSessionTracking] - Flag to enable whether to continue tracking sessions in anonymous tracking mode (false default)
  * @param {Object} [pluginConfig.trackerSettings.contexts] - The auto contexts for each event
  * @param {boolean} [pluginConfig.trackerSettings.contexts.webPage] - The webpage context, containing the page view id. (true default)
  * @param {boolean} [pluginConfig.trackerSettings.contexts.performanceTiming] - Add performance timing information
+ * @param {(Object|boolean)} [pluginConfig.trackerSettings.contexts.clientHints] - Add Client Hint information (Snowplow JS 2.15.0+)
+ * @param {boolean} [pluginConfig.trackerSettings.contexts.clientHints.includeHighEntropy] - Capture High Entropy Client Hints (Snowplow JS 2.15.0+)
  * @param {boolean} [pluginConfig.trackerSettings.contexts.gaCookies] - Add gaCookie information
  * @param {boolean} [pluginConfig.trackerSettings.contexts.geolocation] - Add browser geolocation information
  * @param {boolean} [pluginConfig.trackerSettings.contexts.optimizelyXSummary] - Add browser geolocation information
@@ -53,7 +57,7 @@ let trackerInstances = {};
  * // Minimal recommended configuration
  * snowplowPlugin({
  *   name: 'snowplow',
- *   scriptSrc: '//*.cloudfront.net/2.14.0/sp.js',
+ *   scriptSrc: '//*.cloudfront.net/2.15.0/sp.js',
  *   collectorUrl: 'collector.mysite.com',
  *   trackerSettings: {
  *     appId: 'myApp',
@@ -91,14 +95,6 @@ function snowplowPlugin(pluginConfig = {}) {
         collectorUrl,
         trackerSettings
       );
-
-      snowplow(function() {
-        var tracker = this[name];
-        trackerInstances[name] = {
-          idCookieName: tracker.getCookieName('id'),
-          sesCookieName: tracker.getCookieName('ses'),
-        };
-      });
     },
     /**
      * Snowplow page view event https://bit.ly/36Qvz7t
@@ -154,18 +150,13 @@ function snowplowPlugin(pluginConfig = {}) {
      * Also resets the user_id set with identify and setUserId
      * Also resets all global contexts
      */
-    reset: ({ instance }) => {
-      const { name, trackerSettings } = config;
+    reset: () => {
+      const { name } = config;
       if (snowplowNotLoaded()) return;
 
-      let opts = { storage: 'cookie' };
-
-      if (trackerSettings && trackerSettings.stateStorageStrategy === 'localStorage') {
-        opts = { storage: 'localStorage' };
-      }
-
-      instance.storage.removeItem(trackerInstances[name].idCookieName, opts);
-      instance.storage.removeItem(trackerInstances[name].sesCookieName, opts);
+      snowplow(
+        `clearUserData:${name}`
+      );
 
       snowplow(
         `setUserId:${name}`,
@@ -392,6 +383,33 @@ function snowplowPlugin(pluginConfig = {}) {
         snowplow(
           `clearGlobalContexts:${name}`
         );
+      },
+      /**
+       * Disables Anonymous Tracking
+       * https://bit.ly/3gjZfNy
+       * @param {string} stateStorageStrategy - Use to switch storage strategy, or don't use to leave the same
+       */
+      disableAnonymousTracking(stateStorageStrategy) {
+        const { name } = config;
+
+        snowplow(
+          `disableAnonymousTracking:${name}`,
+          stateStorageStrategy
+        )
+      },
+      /**
+       * Enables Anonymous Tracking
+       * https://bit.ly/3gjZfNy
+       * @param {Object} anonymousTrackingArgs - Configures anonymous tracking features
+       * @param {boolean} anonymousTrackingArgs.withSessionTracking - Enables session tracking when enabling Anonymous Tracking
+       */
+      enableAnonymousTracking(anonymousTrackingArgs) {
+        const { name } = config;
+
+        snowplow(
+          `enableAnonymousTracking:${name}`,
+          anonymousTrackingArgs
+        )
       }
     },
   };
