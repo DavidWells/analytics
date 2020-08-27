@@ -32,7 +32,7 @@ For more information [see the docs](https://getanalytics.io/plugins/google-analy
   * [Set the "customDimensions" option](#set-the-customdimensions-option)
 - [Using multiple instances](#using-multiple-instances)
 - [Custom Proxy Endpoint](#custom-proxy-endpoint)
-- [Electron Apps](#electron-apps)
+- [Electron Apps & Browser Extensions](#electron-apps--browser-extensions)
 - [Custom GA Tasks](#custom-ga-tasks)
 - [Cookie Config](#cookie-config)
 
@@ -519,11 +519,15 @@ const analytics = Analytics({
 
 If using a proxied endpoint, it is recommended to combine this technique with the [do-not-track](https://getanalytics.io/plugins/do-not-track/) plugin to ensure website visitors privacy.
 
-## Electron Apps
+## Electron Apps & Browser Extensions
 
-Electron apps bundle and serve their code from the `file://` extension. This causes [issues](https://github.com/DavidWells/analytics/issues/77) with GA.
+Electron apps bundle and serve their code from the `file://` extension. Likewise, browser extensions serve files from `chrome-extension://`. This causes issues like [this](https://github.com/DavidWells/analytics/issues/77) & [this](https://github.com/DavidWells/analytics/issues/72#issuecomment-681320271) with Google Analytics.
 
-To fix this, use the `tasks` configuration option described below and set `checkProtocolTask`, `checkStorageTask`, & `historyImportTask` to `null`.
+To fix chrome extensions, use the `tasks` configuration and set `checkProtocolTask` to `null`.
+
+To fix electron apps, use the `tasks` configuration option described below and set `checkProtocolTask`, `checkStorageTask`, & `historyImportTask` to `null`.
+
+Here is an example:
 
 ```js
 import Analytics from 'analytics'
