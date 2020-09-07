@@ -48,7 +48,7 @@ if (!process.browser) {
  */
 function googleAnalytics(pluginConfig = {}) {
   const client = initialize(pluginConfig)
-  const customDimensions = pluginConfig.customDimensions || {};
+  var customDimensions = pluginConfig.customDimensions || {};
   return {
     name: 'google-analytics',
     config: pluginConfig,
@@ -91,9 +91,9 @@ export function pageView({ path, href, title }, client) {
   client.pageview(path, href, title).send()
 }
 
-export function trackEvent({ category, event, label, value, properties }, client) {
+export function trackEvent({ category, event, label, value, properties }, client, customDimensions) {
   // Prepare Custom Dimensions to be Reported.
-  const dimensions = formatObjectIntoDimensions(properties, customDimensions);
+  var dimensions = formatObjectIntoDimensions(properties, customDimensions);
 
   // Send Event.
   client.event(category, event, label, value, dimensions).send()
