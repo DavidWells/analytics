@@ -244,6 +244,26 @@ const analytics = Analytics({
 
 This functionality has been [added](https://github.com/DavidWells/analytics/pull/30) by the wonderful [@zobzn](https://github.com/zobzn)!
 
+## Custom name for dataLayer-object
+
+The dataLayer is by default set to window.dataLayer. This can be changed by setting dataLayerName in plugin configuration.
+
+```js
+import Analytics from 'analytics'
+import googleTagManager from '@analytics/google-tag-manager'
+
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    googleTagManager({
+      containerId: 'GTM-123xyz',
+      dataLayerName: 'customDataLayer',
+    })
+  ]
+})
+// dataLayer is initialized to window.customDataLayer
+```
+
 ## Tracking if JS is disabled
 
 The [analytics library](https://github.com/DavidWells/analytics/) will load the Google Tag manager javascript onto the page. This will work for every web site visitor that has javascript enabled.
