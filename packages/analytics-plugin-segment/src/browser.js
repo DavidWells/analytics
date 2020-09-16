@@ -110,7 +110,8 @@ function initialize({ config, instance, payload }) {
     function isScriptLoaded() {
       const scripts = document.getElementsByTagName('script')
       return !!Object.keys(scripts).filter((key) => {
-        const { src } = scripts[key]
+        const scriptInfo = scripts[key] || {}
+        const src = scriptInfo.src || ''
         return src.match(/cdn\.segment\.com\/analytics.js\/v1\//)
       }).length
     }
