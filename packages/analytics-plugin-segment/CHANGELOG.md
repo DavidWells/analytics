@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.2](https://github.com/DavidWells/analytics/compare/@analytics/segment@0.4.1...@analytics/segment@0.4.2) (2020-09-16)
+
+
+### Bug Fixes
+
+* segment plugin src match ([1ee2326](https://github.com/DavidWells/analytics/commit/1ee2326)), closes [#88](https://github.com/DavidWells/analytics/issues/88)
+
+
+
+
+
 ## [0.4.1](https://github.com/DavidWells/analytics/compare/@analytics/segment@0.4.0...@analytics/segment@0.4.1) (2020-08-15)
 
 **Note:** Version bump only for package @analytics/segment
