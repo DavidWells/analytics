@@ -35,7 +35,7 @@ const analytics = Analytics({
     }),
     googleAnalytics({
       trackingId: process.env.REACT_APP_GOOGLE_ANALYTICS_ID,
-      // Custom dimenions mapping example
+      // Custom dimensions mapping example
       customDimensions: {
         baz: 'dimension1',
         foo: 'dimension2',
