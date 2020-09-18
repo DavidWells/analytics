@@ -111,6 +111,7 @@ const analytics = Analytics({
 |:---------------------------|:-----------|
 | `writeKey` <br/>**required** - string| Your segment writeKey |
 | `disableAnonymousTraffic` <br/>_optional_ - boolean| Disable loading segment for anonymous visitors |
+| `snippetDomain` <br/>_optional_ - string| Override the Segment snippet domain, for loading via [custom CDN proxy](https://segment.com/docs/connections/sources/catalog/libraries/website/javascript/custom-proxy/) |
 
 ## Server-side usage
 
