@@ -6,6 +6,7 @@
  * @link https://developers.hubspot.com/docs/methods/tracking_code_api/tracking_code_overview
  * @param {object} pluginConfig - Plugin settings
  * @param {string} pluginConfig.portalId - The HubSpot Portal (or Hub) Id of your HubSpot account
+ * @param {string} pluginConfig.customScriptSrc - Load hubspot script from custom source
  * @return {object} Analytics plugin
  * @example
  *
@@ -21,7 +22,7 @@ function hubSpotPlugin(pluginConfig = {}) {
     NAMESPACE: 'hubspot',
     config: pluginConfig,
     initialize: ({ config }) => {
-      const { portalId } = config
+      const { portalId, customScriptSrc } = config
       if (!portalId) {
         throw new Error('No hubspot portalId defined')
       }
@@ -33,7 +34,8 @@ function hubSpotPlugin(pluginConfig = {}) {
       const https = protocol === 'https:' || protocol === 'chrome-extension:'
       const bustCache = Math.floor(new Date().getTime() / 3600000)
       const prefix = (https) ? 'https:' : 'http:'
-      const src = `${prefix}//js.hs-scripts.com/${portalId}.js?${bustCache}`
+      const scriptLink = customScriptSrc || `${prefix}//js.hs-scripts.com/${portalId}.js`
+      const src = `${scriptLink}?${bustCache}`
 
       // Create script & append to DOM
       let script = document.createElement('script')
