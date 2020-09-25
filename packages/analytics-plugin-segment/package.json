@@ -53,6 +53,6 @@
     "@babel/preset-env": "^7.3.1"
   },
   "dependencies": {
-    "analytics-node": "^3.3.0"
+    "analytics-node": "^3.4.0-beta.2"
   }
 }
