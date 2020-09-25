@@ -19,6 +19,7 @@ Integration with [segment](https://segment.com/) for [analytics](https://www.npm
   * [Server-side API](#server-side-api)
   * [Configuration options for server-side](#configuration-options-for-server-side)
 - [Additional examples](#additional-examples)
+- [Adding .group functionality](#adding-group-functionality)
 
 </details>
 <!-- AUTO-GENERATED-CONTENT:END -->
@@ -80,10 +81,10 @@ The `@analytics/segment` package works in [the browser](#browser-usage) and [ser
 
 The Segment client side browser plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Segment 
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Segment 
-- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Segment 
-- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for Segment values 
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Segment
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Segment
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Segment
+- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for Segment values
 
 ### Browser API
 
@@ -113,9 +114,9 @@ const analytics = Analytics({
 
 The Segment server-side node.js plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Segment 
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Segment 
-- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Segment 
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Segment
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Segment
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Segment
 
 ### Server-side API
 
@@ -324,4 +325,52 @@ Below are additional implementation examples.
 
 <!-- AUTO-GENERATED-CONTENT:END -->
 
-See the [full list of analytics provider plugins](https://getanalytics.io/plugins/) in the main repo.
+## Adding .group functionality
+
+The analytics lib doesn't expose a `.group` call. If you'd like to make `analytics.group` calls to segment you can do so with a custom `method.`. More on custom methods in the [writing a custom plugin doc](https://getanalytics.io/plugins/writing-plugins/#adding-custom-methods)
+
+To achieve the group call, you can extend the base segment plugin and add this method:
+
+```js
+import Analytics from 'analytics'
+import segmentPlugin from '@analytics/segment'
+
+const originalSegmentInstance = segmentPlugin({
+  writeKey: '123-xyz'
+})
+
+// Extend originalSegmentInstance with custom methods
+const enchancedSegmentInstance = Object.assign({}, originalSegmentInstance, {
+  methods: {
+    // add analytics.group method https://segment.com/docs/connections/sources/catalog/libraries/website/javascript/#group
+    group(groupId, traits = {}, options = {}, callback) {
+      const analyticsInstance = this.instance
+
+      // If no segment, return early
+      if (typeof window.analytics === 'undefined') {
+        return
+      }
+
+      // Make group call to segment
+      window.analytics.group(groupId, traits, options, callback)
+    },
+  }
+}
+
+// Initialize analytics instance with plugins
+const analytics = Analytics({
+  app: 'your-app-name',
+  plugins: [
+    enchancedSegmentInstance,
+  ]
+})
+
+// Usage:
+// Now you can call segment.group in your app like so
+analytics.plugins.segment.group('UNIVAC Working Group', {
+  principles: ['Eckert', 'Mauchly'],
+  site: 'Eckert–Mauchly Computer Corporation',
+  statedGoals: 'Develop the first commercial computer',
+  industry: 'Technology'
+})
+```
