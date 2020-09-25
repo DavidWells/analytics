@@ -27,10 +27,23 @@ const config = {
  */
 function segmentPlugin(pluginConfig = {}) {
   return {
-    NAMESPACE: 'segment',
+    name: 'segment',
     config: {
       ...config,
       ...pluginConfig
+    },
+    /* Custom methods to add .group call */
+    methods: {
+      /* Group https://segment.com/docs/connections/sources/catalog/libraries/website/javascript/#group */
+      group(groupId, traits = {}, options = {}, callback) {
+        // const analyticsInstance = this.instance
+        // If no segment, return early
+        if (typeof window.analytics === 'undefined') {
+          return
+        }
+        // Make group call to segment
+        window.analytics.group(groupId, traits, options, callback)
+      },
     },
     bootstrap: ({ config, instance }) => {
       /* Load segment script after userId exists */

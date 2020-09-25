@@ -4,7 +4,7 @@ if (!process.browser) {
   Analytics = require('analytics-node')
 }
 
-const config = {
+const defaultConfig = {
   /* Your segment write key */
   writeKey: null,
   /* Segment sdk flushInterval. Docs https://bit.ly/2H2jJMb */
@@ -12,8 +12,6 @@ const config = {
   /* Disable anonymous MTU */
   disableAnonymousTraffic: false
 }
-
-const NAMESPACE = 'segment'
 
 /**
  * Segment serverside analytics plugin
@@ -31,17 +29,36 @@ const NAMESPACE = 'segment'
  * })
  */
 function segmentPlugin(userConfig = {}) {
-  // Initialize segment client
-  const segmentConfig = {
-    ...config,
+  const config = {
+    ...defaultConfig,
     ...userConfig
   }
-  const client = new Analytics(segmentConfig.writeKey, {
-    flushInterval: segmentConfig.flushInterval
+
+  const client = new Analytics(config.writeKey, {
+    flushInterval: config.flushInterval
   })
+
   return {
-    NAMESPACE: NAMESPACE,
-    config: segmentConfig,
+    name: 'segment',
+    config: config,
+    // Custom segment methods
+    methods: {
+      // Segment group call https://segment.com/docs/connections/sources/catalog/libraries/server/node/#group
+      group(groupId, traits = {}, options = {}, callback) {
+        const analyticsInstance = this.instance
+        const user = analyticsInstance.user()
+        const userId = options.userId || user.userId
+        const anonymousId = options.anonymousId || user.anonymousId
+        client.group({
+          ...(anonymousId ? { anonymousId } : {}),
+          ...(userId ? { userId } : {}),
+          groupId: groupId,
+          traits: traits,
+        }, callback)
+      },
+      // Function for using analytics-node client in other methods
+      getClient: () => client,
+    },
     /* page view */
     page: ({ payload, config }) => {
       client.page({
@@ -77,7 +94,7 @@ function segmentPlugin(userConfig = {}) {
     identify: ({ payload }) => {
       const { userId, traits } = payload
       client.identify({ userId, traits })
-    }
+    },
   }
 }
 

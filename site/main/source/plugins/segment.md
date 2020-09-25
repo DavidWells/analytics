@@ -20,7 +20,9 @@ Integration with [segment](https://segment.com/) for [analytics](https://www.npm
   * [Configuration options for server-side](#configuration-options-for-server-side)
 - [Additional examples](#additional-examples)
 - [Loading script from custom proxy](#loading-script-from-custom-proxy)
-- [Adding analytics.group functionality](#adding-analyticsgroup-functionality)
+- [Making group calls](#making-group-calls)
+  * [Browser Example](#browser-example)
+  * [Server side Example](#server-side-example)
 
 </details>
 <!-- AUTO-GENERATED-CONTENT:END -->
@@ -82,10 +84,10 @@ The `@analytics/segment` package works in [the browser](#browser-usage) and [ser
 
 The Segment client side browser plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Segment
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Segment
-- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Segment
-- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for Segment values
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Segment 
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Segment 
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Segment 
+- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for Segment values 
 
 ### Browser API
 
@@ -116,9 +118,9 @@ const analytics = Analytics({
 
 The Segment server-side node.js plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Segment
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Segment
-- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Segment
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Segment 
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Segment 
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Segment 
 
 ### Server-side API
 
@@ -349,52 +351,64 @@ const analytics = Analytics({
 })
 ```
 
-## Adding analytics.group functionality
+## Making group calls
 
-The analytics lib doesn't expose a `.group` call. If you'd like to make `analytics.group` calls to segment you can do so with a custom `method.`. More on custom methods in the [writing a custom plugin doc](https://getanalytics.io/plugins/writing-plugins/#adding-custom-methods)
+The `.group` call is specific to Segment and the analytics lib doesn't expose this by default. But you are in luck 😃 thanks to [custom methods](https://getanalytics.io/plugins/writing-plugins/#adding-custom-methods) on plugins!
 
-To achieve the group call, you can extend the base segment plugin and add this method:
+To send a group call to Segment run the `analytics.plugins.segment.group()` custom method.
+
+The `analytics.plugins.segment.group` function has the following signature:
+
+```js
+analytics.group(groupId, [traits], [options], [callback]);
+```
+
+### Browser Example
 
 ```js
 import Analytics from 'analytics'
 import segmentPlugin from '@analytics/segment'
 
-const originalSegmentInstance = segmentPlugin({
-  writeKey: '123-xyz'
-})
-
-// Extend originalSegmentInstance with custom methods
-const enchancedSegmentInstance = Object.assign({}, originalSegmentInstance, {
-  methods: {
-    // add analytics.group method https://segment.com/docs/connections/sources/catalog/libraries/website/javascript/#group
-    group(groupId, traits = {}, options = {}, callback) {
-      const analyticsInstance = this.instance
-
-      // If no segment, return early
-      if (typeof window.analytics === 'undefined') {
-        return
-      }
-
-      // Make group call to segment
-      window.analytics.group(groupId, traits, options, callback)
-    },
-  }
-}
-
 // Initialize analytics instance with plugins
 const analytics = Analytics({
   app: 'your-app-name',
   plugins: [
-    enchancedSegmentInstance,
+    segmentPlugin({
+      writeKey: '123-xyz'
+    }),
   ]
 })
 
 // Usage:
 // Now you can call segment.group in your app like so
-analytics.plugins.segment.group('UNIVAC Working Group', {
-  principles: ['Eckert', 'Mauchly'],
-  site: 'Eckert–Mauchly Computer Corporation',
-  statedGoals: 'Develop the first commercial computer',
+analytics.plugins.segment.group('Group ID XYZ', {
+  principles: ['Bill', 'Bob'],
+  site: 'Apple co',
+  statedGoals: 'Do awesome stuff',
+  industry: 'Technology'
+})
+```
+
+### Server side Example
+
+```js
+const analyticsLib = require('analytics').default
+const segmentPlugin = require('@analytics/segment')
+
+// Initialize analytics instance with plugins
+const analytics = Analytics({
+  app: 'your-app-name',
+  plugins: [
+    segmentPlugin({
+      writeKey: '123-xyz'
+    }),
+  ]
+})
+
+analytics.plugins.segment.group('Group ID XYZ', {
+  principles: ['Bill', 'Bob'],
+  site: 'Apple co',
+  statedGoals: 'Do awesome stuff',
   industry: 'Technology'
 })
 ```
