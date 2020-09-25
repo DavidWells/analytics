@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/DavidWells/analytics/compare/@analytics/hubspot@0.2.0...@analytics/hubspot@0.3.0) (2020-09-25)
+
+
+### Features
+
+* add customScriptSrc to hubspot plugin ([3b1d328](https://github.com/DavidWells/analytics/commit/3b1d328))
+
+
+
+
+
 # 0.2.0 (2019-10-14)
 
 
