@@ -1,10 +1,12 @@
-/* global dataLayer */
-
 export const config = {
   debug: false,
   containerId: null,
+  dataLayerName: 'dataLayer',
+  dataLayer: undefined,
   // assumesPageview: true,
 }
+
+let initializedDataLayerName;
 
 /**
  * Google tag manager plugin
@@ -12,6 +14,7 @@ export const config = {
  * @link https://developers.google.com/tag-manager/
  * @param {object} pluginConfig - Plugin settings
  * @param {string} pluginConfig.containerId - The Container ID uniquely identifies the GTM Container.
+ * @param {string} [pluginConfig.dataLayerName=dataLayer] - The optional name for dataLayer-object. Defaults to dataLayer.
  * @return {object} Analytics plugin
  * @example
  *
@@ -28,7 +31,7 @@ function googleTagManager(pluginConfig = {}) {
       ...pluginConfig
     },
     initialize: ({ config }) => {
-      const { containerId } = config
+      const { containerId, dataLayerName } = config
       if (!containerId) {
         throw new Error('No google tag manager containerId defined')
       }
@@ -41,17 +44,19 @@ function googleTagManager(pluginConfig = {}) {
           j.async = true;
           j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
           f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', containerId);
+        })(window, document, 'script', dataLayerName, containerId);
         /* eslint-enable */
+        initializedDataLayerName = dataLayerName;
+        config.dataLayer = window[dataLayerName];
       }
     },
-    page: ({ payload, options, instance }) => {
-      if (typeof dataLayer !== 'undefined') {
-        dataLayer.push(payload.properties)
+    page: ({ payload, options, instance, config }) => {
+      if (typeof config.dataLayer !== 'undefined') {
+        config.dataLayer.push(payload.properties)
       }
     },
     track: ({ payload, options, config }) => {
-      if (typeof dataLayer !== 'undefined') {
+      if (typeof config.dataLayer !== 'undefined') {
         const { anonymousId, userId, properties, category } = payload
         const formattedPayload = properties
         if (userId) {
@@ -69,14 +74,14 @@ function googleTagManager(pluginConfig = {}) {
             ...formattedPayload
           })
         }
-        dataLayer.push({
+        config.dataLayer.push({
           event: payload.event,
           ...formattedPayload
         })
       }
     },
     loaded: () => {
-      const hasDataLayer = !!(window.dataLayer && Array.prototype.push !== window.dataLayer.push)
+      const hasDataLayer = !!initializedDataLayerName && !!(window[initializedDataLayerName] && Array.prototype.push !== window[initializedDataLayerName].push)
       return scriptLoaded(pluginConfig.containerId) && hasDataLayer
     },
   }
