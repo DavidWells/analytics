@@ -23,6 +23,7 @@ For more information [see the docs](https://getanalytics.io/plugins/google-tag-m
 - [Additional examples](#additional-examples)
 - [Configuring GTM](#configuring-gtm)
 - [Using multiple instances of GTM](#using-multiple-instances-of-gtm)
+- [Custom name for dataLayer-object](#custom-name-for-datalayer-object)
 - [Tracking if JS is disabled](#tracking-if-js-is-disabled)
 
 </details>
@@ -106,6 +107,7 @@ const analytics = Analytics({
 | Option | description |
 |:---------------------------|:-----------|
 | `containerId` <br/>**required** - string| The Container ID uniquely identifies the GTM Container. |
+| `dataLayerName` <br/>_optional_ - string| The optional name for dataLayer-object. Defaults to dataLayer. |
 
 
 ## Additional examples

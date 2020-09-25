@@ -20,6 +20,7 @@ This analytics plugin will load google tag manager into your application.
 - [Additional examples](#additional-examples)
 - [Configuring GTM](#configuring-gtm)
 - [Using multiple instances of GTM](#using-multiple-instances-of-gtm)
+- [Custom name for dataLayer-object](#custom-name-for-datalayer-object)
 - [Tracking if JS is disabled](#tracking-if-js-is-disabled)
 
 </details>
@@ -103,6 +104,7 @@ const analytics = Analytics({
 | Option | description |
 |:---------------------------|:-----------|
 | `containerId` <br/>**required** - string| The Container ID uniquely identifies the GTM Container. |
+| `dataLayerName` <br/>_optional_ - string| The optional name for dataLayer-object. Defaults to dataLayer. |
 
 ## Additional examples
 
@@ -238,6 +240,26 @@ const analytics = Analytics({
 ```
 
 This functionality has been [added](https://github.com/DavidWells/analytics/pull/30) by the wonderful [@zobzn](https://github.com/zobzn)!
+
+## Custom name for dataLayer-object
+
+The dataLayer is by default set to window.dataLayer. This can be changed by setting dataLayerName in plugin configuration.
+
+```js
+import Analytics from 'analytics'
+import googleTagManager from '@analytics/google-tag-manager'
+
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    googleTagManager({
+      containerId: 'GTM-123xyz',
+      dataLayerName: 'customDataLayer',
+    })
+  ]
+})
+// dataLayer is initialized to window.customDataLayer
+```
 
 ## Tracking if JS is disabled
 
