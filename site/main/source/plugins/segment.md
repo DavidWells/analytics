@@ -82,10 +82,10 @@ The `@analytics/segment` package works in [the browser](#browser-usage) and [ser
 
 The Segment client side browser plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Segment 
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Segment 
-- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Segment 
-- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for Segment values 
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Segment
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Segment
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Segment
+- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for Segment values
 
 ### Browser API
 
@@ -116,9 +116,9 @@ const analytics = Analytics({
 
 The Segment server-side node.js plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Segment 
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Segment 
-- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Segment 
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Segment
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Segment
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Segment
 
 ### Server-side API
 
@@ -334,18 +334,17 @@ In specific scenarios, you might want to load your own version of segment's anal
 To do this, you can add the `customScriptSrc` option pointing to your custom segment script.
 
 ```js
-import analytics from 'https://unpkg.com/analytics/lib/analytics.browser.es.js?module'
-import analyticsSegment from 'https://unpkg.com/@analytics/segment/lib/analytics-plugin-segment.browser.es.js?module'
-/* Initialize analytics */
-const Analytics = analytics({
-  app: 'analytics-html-demo',
-  debug: true,
+import Analytics from 'analytics'
+import segmentPlugin from '@analytics/segment'
+
+const analytics = Analytics({
+  app: 'awesome-app',
   plugins: [
-    analyticsSegment({
+    segmentPlugin({
       writeKey: '123-xyz',
+      // Load segment's analytics.js from somewhere else
       customScriptSrc: 'https://yoursite.com/my-custom-loader.js'
     })
-    // ... add any other third party analytics plugins
   ]
 })
 ```
