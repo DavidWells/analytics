@@ -123,7 +123,7 @@ function googleAnalytics(pluginConfig = {}) {
             }
           })
         }
-        /* set custom dimenions from user traits */
+        /* set custom dimensions from user traits */
         const user = instance.user() || {}
         const traits = user.traits || {}
         if (Object.keys(traits).length) {
@@ -149,7 +149,7 @@ function googleAnalytics(pluginConfig = {}) {
           return acc
         }, {})
         if (Object.keys(resetDimensions).length) {
-          // Reset custom dimenions
+          // Reset custom dimensions
           ga(`${instancePrefix}set`, resetDimensions)
         }
       }
@@ -173,7 +173,7 @@ function googleAnalytics(pluginConfig = {}) {
 
       const campaignData = addCampaignData(campaign)
 
-      const dimensions = setCustomDimenions(properties, config, instancePrefix)
+      const dimensions = setCustomDimensions(properties, config, instancePrefix)
 
       /* Dimensions will only be included in the event if config.setCustomDimensionsToPage is false */
       const finalPayload = {
@@ -280,7 +280,7 @@ export function trackEvent(eventData, opts = {}, payload) {
   /* Attach campaign data */
   const campaignData = addCampaignData(eventData)
   /* Set Dimensions or return them for payload is config.setCustomDimensionsToPage is false */
-  const dimensions = setCustomDimenions(payload.properties, opts, instancePrefix)
+  const dimensions = setCustomDimensions(payload.properties, opts, instancePrefix)
 
   const finalPayload = {
     ...data,
@@ -354,12 +354,12 @@ function get(obj, key, def, p, undef) {
   return obj === undef ? def : obj
 }
 
-function setCustomDimenions(props = {}, opts, instancePrefix) {
+function setCustomDimensions(props = {}, opts, instancePrefix) {
   const customDimensions = formatObjectIntoDimensions(props, opts)
   if (!Object.keys(customDimensions).length) {
     return {}
   }
-  // If setCustomDimensionsToPage false, don't save custom dimenions from event to page
+  // If setCustomDimensionsToPage false, don't save custom dimensions from event to page
   if (!opts.setCustomDimensionsToPage) {
     return customDimensions
   }
