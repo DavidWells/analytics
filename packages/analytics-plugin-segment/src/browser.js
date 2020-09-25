@@ -6,7 +6,9 @@ const config = {
   /* Disable anonymous MTU */
   disableAnonymousTraffic: false,
   /* Sync segment Anonymous id with `analytics` Anon id */
-  syncAnonymousId: false
+  syncAnonymousId: false,
+  /* Override the Segment snippet domain, for loading via custom CDN proxy */
+  snippetDomain: 'cdn.segment.com'
 }
 
 /**
@@ -94,7 +96,7 @@ export default segmentPlugin
 
 /* Load Segment analytics.js on page */
 function initialize({ config, instance, payload }) {
-  const { disableAnonymousTraffic, writeKey } = config
+  const { disableAnonymousTraffic, writeKey, snippetDomain } = config
   if (!writeKey) {
     throw new Error('No segment writeKey')
   }
@@ -109,10 +111,11 @@ function initialize({ config, instance, payload }) {
 
     function isScriptLoaded() {
       const scripts = document.getElementsByTagName('script')
+      const segmentRE = new RegExp(snippetDomain + "/analytics.js/v1/")
       return !!Object.keys(scripts).filter((key) => {
         const scriptInfo = scripts[key] || {}
         const src = scriptInfo.src || ''
-        return src.match(/cdn\.segment\.com\/analytics.js\/v1\//)
+        return src.match(segmentRE)
       }).length
     }
 
@@ -136,7 +139,7 @@ function initialize({ config, instance, payload }) {
           var n = document.createElement("script");
           n.type = "text/javascript";
           n.async = !0;
-          n.src = "https://cdn.segment.com/analytics.js/v1/" + t + "/analytics.min.js";
+          n.src = "https://" + snippetDomain + "/analytics.js/v1/" + t + "/analytics.min.js";
           n.id = 'segment-io'
           var a = document.getElementsByTagName("script")[0];
           a.parentNode.insertBefore(n, a);
