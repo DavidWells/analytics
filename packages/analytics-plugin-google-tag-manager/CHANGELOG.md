@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/DavidWells/analytics/compare/@analytics/google-tag-manager@0.2.3...@analytics/google-tag-manager@0.3.0) (2020-09-25)
+
+
+### Features
+
+* allow gtm to use custom dataLayer ([27240ae](https://github.com/DavidWells/analytics/commit/27240ae))
+
+
+
+
+
 ## [0.2.3](https://github.com/DavidWells/analytics/compare/@analytics/google-tag-manager@0.2.2...@analytics/google-tag-manager@0.2.3) (2020-03-13)
 
 
