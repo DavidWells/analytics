@@ -7,8 +7,7 @@ const config = {
   disableAnonymousTraffic: false,
   /* Sync segment Anonymous id with `analytics` Anon id */
   syncAnonymousId: false,
-  /* Override the Segment snippet domain, for loading via custom CDN proxy */
-  snippetDomain: 'cdn.segment.com'
+  /* Override the Segment snippet url, for loading via custom CDN proxy */
 }
 
 /**
@@ -18,6 +17,7 @@ const config = {
  * @param {object}  pluginConfig - Plugin settings
  * @param {string}  pluginConfig.writeKey - Your segment writeKey
  * @param {boolean} [pluginConfig.disableAnonymousTraffic] - Disable loading segment for anonymous visitors
+ * @param {boolean} [pluginConfig.customScriptSrc] - Override the Segment snippet url, for loading via custom CDN proxy
  * @return {object} Analytics plugin
  * @example
  *
@@ -44,7 +44,63 @@ function segmentPlugin(pluginConfig = {}) {
       }
     },
     /* Load Segment analytics.js on page */
-    initialize,
+    initialize: ({ config, instance, payload }) => {
+      const { disableAnonymousTraffic, writeKey, customScriptSrc } = config
+      if (!writeKey) {
+        throw new Error('No segment writeKey')
+      }
+      /* Disable segment.com if user is not yet identified. Save on Monthly MTU bill $$$ */
+      const userID = instance.user('userId')
+      if (!userID && disableAnonymousTraffic) {
+        return false
+      }
+      /* eslint-disable */
+      !function() {
+        var analytics = window.analytics = window.analytics || []
+
+        function isScriptLoaded() {
+          const scripts = document.getElementsByTagName('script')
+          const scriptMatch = customScriptSrc || 'cdn.segment.com/analytics.js/v1/'
+          return !!Object.keys(scripts).filter((key) => {
+            const scriptInfo = scripts[key] || {}
+            const src = scriptInfo.src || ''
+            return src.indexOf(scriptMatch) > -1
+          }).length
+        }
+
+        if (!analytics.initialize) {
+          if (!isScriptLoaded()) {
+            analytics.invoked = !0;
+            analytics.methods = ["trackSubmit", "trackClick", "trackLink", "trackForm", "pageview", "identify", "reset", "group", "track", "ready", "alias", "debug", "page", "once", "off", "on"];
+            analytics.factory = function(t) {
+              return function() {
+                var e = Array.prototype.slice.call(arguments);
+                e.unshift(t);
+                analytics.push(e);
+                return analytics
+              }
+            };
+            for (var t = 0; t < analytics.methods.length; t++) {
+              var e = analytics.methods[t];
+              analytics[e] = analytics.factory(e)
+            }
+            analytics.load = function(t, e) {
+              var n = document.createElement("script");
+              n.type = "text/javascript";
+              n.async = !0;
+              n.src = customScriptSrc || "https://cdn.segment.com/analytics.js/v1/" + t + "/analytics.min.js";
+              n.id = 'segment-io'
+              var a = document.getElementsByTagName("script")[0];
+              a.parentNode.insertBefore(n, a);
+              analytics._loadOptions = e
+            };
+            analytics.SNIPPET_VERSION = "4.1.0";
+            analytics.load(writeKey);
+          }
+        }
+      }();
+      /* eslint-enable */
+    },
     /* Trigger Segment page view http://bit.ly/2LSPFr1 */
     page: ({ payload }) => {
       if (typeof analytics === 'undefined') return
@@ -93,62 +149,3 @@ function segmentPlugin(pluginConfig = {}) {
 }
 
 export default segmentPlugin
-
-/* Load Segment analytics.js on page */
-function initialize({ config, instance, payload }) {
-  const { disableAnonymousTraffic, writeKey, snippetDomain } = config
-  if (!writeKey) {
-    throw new Error('No segment writeKey')
-  }
-  /* Disable segment.com if user is not yet identified. Save on Monthly MTU bill $$$ */
-  const userID = instance.user('userId')
-  if (!userID && disableAnonymousTraffic) {
-    return false
-  }
-  /* eslint-disable */
-  !function() {
-    var analytics = window.analytics = window.analytics || []
-
-    function isScriptLoaded() {
-      const scripts = document.getElementsByTagName('script')
-      const segmentRE = new RegExp(snippetDomain + "/analytics.js/v1/")
-      return !!Object.keys(scripts).filter((key) => {
-        const scriptInfo = scripts[key] || {}
-        const src = scriptInfo.src || ''
-        return src.match(segmentRE)
-      }).length
-    }
-
-    if (!analytics.initialize) {
-      if (!isScriptLoaded()) {
-        analytics.invoked = !0;
-        analytics.methods = ["trackSubmit", "trackClick", "trackLink", "trackForm", "pageview", "identify", "reset", "group", "track", "ready", "alias", "debug", "page", "once", "off", "on"];
-        analytics.factory = function(t) {
-          return function() {
-            var e = Array.prototype.slice.call(arguments);
-            e.unshift(t);
-            analytics.push(e);
-            return analytics
-          }
-        };
-        for (var t = 0; t < analytics.methods.length; t++) {
-          var e = analytics.methods[t];
-          analytics[e] = analytics.factory(e)
-        }
-        analytics.load = function(t, e) {
-          var n = document.createElement("script");
-          n.type = "text/javascript";
-          n.async = !0;
-          n.src = "https://" + snippetDomain + "/analytics.js/v1/" + t + "/analytics.min.js";
-          n.id = 'segment-io'
-          var a = document.getElementsByTagName("script")[0];
-          a.parentNode.insertBefore(n, a);
-          analytics._loadOptions = e
-        };
-        analytics.SNIPPET_VERSION = "4.1.0";
-        analytics.load(writeKey);
-      }
-    }
-  }();
-  /* eslint-enable */
-}
