@@ -19,7 +19,8 @@ Integration with [segment](https://segment.com/) for [analytics](https://www.npm
   * [Server-side API](#server-side-api)
   * [Configuration options for server-side](#configuration-options-for-server-side)
 - [Additional examples](#additional-examples)
-- [Adding .group functionality](#adding-group-functionality)
+- [Loading script from custom proxy](#loading-script-from-custom-proxy)
+- [Adding analytics.group functionality](#adding-analyticsgroup-functionality)
 
 </details>
 <!-- AUTO-GENERATED-CONTENT:END -->
@@ -81,10 +82,10 @@ The `@analytics/segment` package works in [the browser](#browser-usage) and [ser
 
 The Segment client side browser plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Segment
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Segment
-- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Segment
-- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for Segment values
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Segment 
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Segment 
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Segment 
+- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for Segment values 
 
 ### Browser API
 
@@ -109,14 +110,15 @@ const analytics = Analytics({
 |:---------------------------|:-----------|
 | `writeKey` <br/>**required** - string| Your segment writeKey |
 | `disableAnonymousTraffic` <br/>_optional_ - boolean| Disable loading segment for anonymous visitors |
+| `customScriptSrc` <br/>_optional_ - boolean| Override the Segment snippet url, for loading via custom CDN proxy |
 
 ## Server-side usage
 
 The Segment server-side node.js plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Segment
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Segment
-- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Segment
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Segment 
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Segment 
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Segment 
 
 ### Server-side API
 
@@ -325,7 +327,30 @@ Below are additional implementation examples.
 
 <!-- AUTO-GENERATED-CONTENT:END -->
 
-## Adding .group functionality
+## Loading script from custom proxy
+
+In specific scenarios, you might want to load your own version of segment's analytics from a different URL.
+
+To do this, you can add the `customScriptSrc` option pointing to your custom segment script.
+
+```js
+import analytics from 'https://unpkg.com/analytics/lib/analytics.browser.es.js?module'
+import analyticsSegment from 'https://unpkg.com/@analytics/segment/lib/analytics-plugin-segment.browser.es.js?module'
+/* Initialize analytics */
+const Analytics = analytics({
+  app: 'analytics-html-demo',
+  debug: true,
+  plugins: [
+    analyticsSegment({
+      writeKey: '123-xyz',
+      customScriptSrc: 'https://yoursite.com/my-custom-loader.js'
+    })
+    // ... add any other third party analytics plugins
+  ]
+})
+```
+
+## Adding analytics.group functionality
 
 The analytics lib doesn't expose a `.group` call. If you'd like to make `analytics.group` calls to segment you can do so with a custom `method.`. More on custom methods in the [writing a custom plugin doc](https://getanalytics.io/plugins/writing-plugins/#adding-custom-methods)
 
