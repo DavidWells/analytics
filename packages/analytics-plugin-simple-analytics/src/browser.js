@@ -17,8 +17,8 @@ export default function simpleAnalyticsPlugin(pluginConfig = {}) {
     config: pluginConfig,
     // https://docs.simpleanalytics.com/script
     initialize: ({ config }) => {
-      const domain = config.customDomain || 'https://cdn.simpleanalytics.io'
-      const src = `${domain}/hello.js`
+      const domain = config.customDomain || 'scripts.simpleanalyticscdn.com'
+      const src = `https://${domain}/latest.js`
       const script = document.createElement('script')
       script.type = 'text/javascript'
       script.async = true
