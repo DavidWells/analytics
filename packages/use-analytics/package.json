@@ -4,7 +4,11 @@
   "description": "Analytics hooks for React",
   "author": "DavidWells",
   "license": "MIT",
-  "repository": "DavidWells/niceee",
+  "homepage": "https://github.com/DavidWells/analytics#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidWells/analytics.git"
+  },
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
   "source": "src/index.js",
