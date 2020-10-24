@@ -29,6 +29,7 @@ module.exports = {
             'plugins/customerio',
             'plugins/snowplow',
             'plugins/hubspot',
+            'plugins/mixpanel',
             'plugins/fullstory',
             'plugins/crazyegg',
             'plugins/gosquared',
