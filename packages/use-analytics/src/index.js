@@ -9,7 +9,7 @@ export {
   AnalyticsProvider,
   AnalyticsConsumer,
   AnalyticsContext,
-  // Higher Order Component
+  // HigherOrder Component
   withAnalytics,
   // React Hooks
   useAnalytics,
