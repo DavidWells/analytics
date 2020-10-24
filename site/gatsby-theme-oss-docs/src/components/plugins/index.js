@@ -74,6 +74,11 @@ var tools = [
     url: 'https://getanalytics.io/plugins/segment/'
   },
   {
+    name: 'mixpanel',
+    image: 'mixpanel.svg',
+    url: 'https://getanalytics.io/plugins/mixpanel/'
+  },
+  {
     'name': 'adlearn-open-platform',
     'image': 'adlearn-open-platform.svg'
   },
@@ -270,10 +275,6 @@ var tools = [
   {
     'name': 'madkudu',
     'image': 'madkudu.svg'
-  },
-  {
-    'name': 'mixpanel',
-    'image': 'mixpanel.svg'
   },
   {
     'name': 'moengage',
