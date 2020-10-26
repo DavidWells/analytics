@@ -11,7 +11,7 @@ export {
   AnalyticsContext,
   // HigherOrder Component
   withAnalytics,
-  // React Hooks
+  // React hooks
   useAnalytics,
   useTrack,
   usePage,
