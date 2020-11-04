@@ -23,7 +23,7 @@ function mixpanelPlugin(pluginConfig = {}) {
       }
 
       // NoOp if mixpanel already loaded by external source or already loaded
-      if (mixpanel || isMixpanelLoaded) {
+      if (window.mixpanel || isMixpanelLoaded) {
         return;
       }
 
