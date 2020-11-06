@@ -11,7 +11,6 @@
  * })
  */
 function mixpanelPlugin(pluginConfig = {}) {
-  let isMixpanelLoaded = false;
   return {
     NAMESPACE: "mixpanel",
     config: pluginConfig,
@@ -23,7 +22,7 @@ function mixpanelPlugin(pluginConfig = {}) {
       }
 
       // NoOp if mixpanel already loaded by external source or already loaded
-      if (mixpanel || isMixpanelLoaded) {
+      if (typeof window.mixpanel !== 'undefined') {
         return;
       }
 
@@ -118,7 +117,6 @@ function mixpanelPlugin(pluginConfig = {}) {
       })(document, window.mixpanel || []);
 
       mixpanel.init(config.token, { batch_requests: true });
-      isMixpanelLoaded = true;
     },
     /**
      * Identify a visitor in mixpanel
@@ -150,8 +148,13 @@ function mixpanelPlugin(pluginConfig = {}) {
       mixpanel.track(payload.event, payload.properties);
     },
     loaded: () => {
-      return isMixpanelLoaded;
+      return !!window.mixpanel;
     },
+    /* Clears super properties and generates a new random distinct_id for this instance. Useful for clearing data when a user logs out. */
+    reset: () => {
+      mixpanel.reset();
+    },
+    /* Custom methods to add .alias call */
     methods: {
       /**
        * The alias method creates an alias which Mixpanel will use to remap one id to another. Multiple aliases can point to the same identifier.
