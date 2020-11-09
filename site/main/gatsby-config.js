@@ -21,6 +21,7 @@ module.exports = {
             'using-listeners',
             'debugging',
             'plugins/writing-plugins',
+            'plugins/extending-plugins',
           ],
           Plugins: [
             'plugins/google-analytics',
