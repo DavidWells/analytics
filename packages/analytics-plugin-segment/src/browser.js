@@ -123,8 +123,8 @@ function segmentPlugin(pluginConfig = {}) {
     /* Track Segment event http://bit.ly/2WLnYkK */
     track: ({ payload }) => {
       if (typeof analytics === 'undefined') return
-
-      analytics.track(payload.event, payload.properties)
+      // TODO map options from https://getanalytics.io/api/#analyticstrack to segment https://bit.ly/3lAfjhH
+      analytics.track(payload.event, payload.properties, payload.options)
     },
     /* Identify Segment user http://bit.ly/2VL45xD */
     identify: ({ payload }) => {
