@@ -61,9 +61,18 @@ function segmentPlugin(userConfig = {}) {
     },
     /* page view */
     page: ({ payload, config }) => {
-      client.page({
-        properties: payload.properties
-      })
+      const { userId, anonymousId } = payload
+      if (!userId && !anonymousId) {
+        throw new Error('Missing userId and anonymousId. You must include one to make segment call')
+      }
+
+      const data = {
+        properties: payload.properties,
+        anonymousId,
+        userId
+      }
+
+      client.page(data)
     },
     /* track event */
     track: ({ payload, config }) => {
