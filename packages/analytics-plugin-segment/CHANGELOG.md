@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.1](https://github.com/DavidWells/analytics/compare/@analytics/segment@0.5.0...@analytics/segment@0.5.1) (2020-11-11)
+
+
+### Bug Fixes
+
+* pass options to segment track call. Close [#108](https://github.com/DavidWells/analytics/issues/108) ([5430775](https://github.com/DavidWells/analytics/commit/5430775))
+
+
+
+
+
 # [0.5.0](https://github.com/DavidWells/analytics/compare/@analytics/segment@0.4.3...@analytics/segment@0.5.0) (2020-09-25)
 
 
