@@ -8,6 +8,10 @@ import browserLoadMixpanel from './browserLoadMixpanel';
   *   example when using a mixpanel npm package.
   * @property {Object} [context] - The context object where mixpanel
   *   instance is found and assigned to when instantiated. Defaults to window.
+  * @property {Object} [config] - Mixpanel config passed to `mixpanel.init()`
+  *   in `initialize` step.
+  *   If mixpanel instance already exists, it is updated with this config
+  *   using `mixpanel.set_config()`.
   */
 
 /**
@@ -44,6 +48,14 @@ const resolveMixpanel = (config = {}) => {
  * mixpanelPlugin({
  *   mixpanel: mixpanel.init('abcdef123'),
  * });
+ *
+ * // Pass mixpanel config
+ * mixpanelPlugin({
+ *   token: 'abcdef123',
+ *   config: {
+ *     api_host: 'https://api-eu.mixpanel.com',
+ *   },
+ * });
  */
 function mixpanelPlugin(pluginConfig = {}) {
   const plugin = {
@@ -54,15 +66,19 @@ function mixpanelPlugin(pluginConfig = {}) {
       const {
         token,
         context = window,
+        config: mixpanelConfig,
       } = config || {};
 
       let mixpanel = resolveMixpanel(config);
 
       const hasMixpanel = Boolean(mixpanel);
+      const shouldApplyConfig = Boolean(mixpanelConfig);
 
       if (hasMixpanel) {
         // NoOp if mixpanel already loaded by external source or already loaded
-        return;
+        if (!shouldApplyConfig) return;
+        // Update mixpanel to config passed to the plugin
+        mixpanel.set_config(mixpanelConfig);
       }
 
       if (!hasMixpanel) {
@@ -71,7 +87,7 @@ function mixpanelPlugin(pluginConfig = {}) {
         }
 
         mixpanel = browserLoadMixpanel(context);
-        mixpanel.init(token, { batch_requests: true });
+        mixpanel.init(token, { batch_requests: true, ...mixpanelConfig });
       }
     },
     /**
