@@ -1,0 +1,32 @@
+{
+  "name": "@analytics/google-gtag",
+  "version": "0.0.0",
+  "description": "Google global site tag (gtag.js) plugin for 'analytics' module",
+  "main": "lib/analytics-plugin-gtag.cjs.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidWells/analytics.git"
+  },
+  "keywords": [
+    "analytics",
+    "analytics-project",
+    "analytics-plugin",
+    "GTAG",
+    "google-analytics",
+    "Google Analytics",
+    "Google Global Site Tag",
+    "google-global-site-tag"
+  ],
+  "author": "Bing Wang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DavidWells/analytics/issues"
+  },
+  "homepage": "https://github.com/DavidWells/analytics#readme",
+  "dependencies": {
+    "typescript": "^4.0.5"
+  }
+}
