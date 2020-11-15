@@ -117,9 +117,7 @@ function mixpanelPlugin(pluginConfig = {}) {
     page: ({ config, payload }) => {
       const mixpanel = resolveMixpanel(config);
       const pageEvent = config.pageEvent || 'page';
-      mixpanel.track(pageEvent, {
-        search: payload.properties.search,
-      });
+      mixpanel.track(pageEvent, payload.properties);
     },
     /* https://developer.mixpanel.com/docs/javascript-full-api-reference#mixpaneltrack */
     track: ({ config, payload }) => {
