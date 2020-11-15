@@ -12,6 +12,9 @@ import browserLoadMixpanel from './browserLoadMixpanel';
   *   in `initialize` step.
   *   If mixpanel instance already exists, it is updated with this config
   *   using `mixpanel.set_config()`.
+  * @property {String} [pageEvent] - Mixpanel doesn't have a 'page'
+  *   function, so we are using the `mixpanel.track()` method. Use this option
+  *   to override the event name. Defaults to `'page'`.
   */
 
 /**
@@ -109,12 +112,12 @@ function mixpanelPlugin(pluginConfig = {}) {
       }
     },
     /**
-     * Mixpanel doesn't have a "page" function, so we are using the track method by sending
-     * the path as tracked event and search parameters as properties
+     * Mixpanel doesn't have a "page" function, so we are using the track method.
      */
     page: ({ config, payload }) => {
       const mixpanel = resolveMixpanel(config);
-      mixpanel.track(payload.properties.path, {
+      const pageEvent = config.pageEvent || 'page';
+      mixpanel.track(pageEvent, {
         search: payload.properties.search,
       });
     },
