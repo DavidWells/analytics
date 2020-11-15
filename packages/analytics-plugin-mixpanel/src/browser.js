@@ -1,14 +1,20 @@
 import browserLoadMixpanel from './browserLoadMixpanel';
 
+// Placeholder for Mixpanel type which is replaced postbuild
+/** @typedef {Object} Mixpanel */
+
+// Placeholder for MixpanelConfig type which is replaced postbuild
+/** @typedef {Object} MixpanelConfig */
+
 /**
   * @typedef {Object} MixpanelPluginConfig - Plugin settings for Mixpanel plugin
   * @property {String} [token] - The mixpanel token associated to a mixpanel project
-  * @property {Object} [mixpanel] - The mixpanel instance - use this
+  * @property {Mixpanel} [mixpanel] - The mixpanel instance - use this
   *   to use the plugin with a mixpanel instance instantiated elsewhere, for
   *   example when using a mixpanel npm package.
   * @property {Object} [context] - The context object where mixpanel
   *   instance is found and assigned to when instantiated. Defaults to window.
-  * @property {Object} [config] - Mixpanel config passed to `mixpanel.init()`
+  * @property {MixpanelConfig} [config] - Mixpanel config passed to `mixpanel.init()`
   *   in `initialize` step.
   *   If mixpanel instance already exists, it is updated with this config
   *   using `mixpanel.set_config()`.
@@ -20,7 +26,7 @@ import browserLoadMixpanel from './browserLoadMixpanel';
 /**
  * Get mixpanel instance from config
  * @param {MixpanelPluginConfig} config
- * @returns {Object} Mixpanel instance
+ * @returns {Mixpanel|undefined} Mixpanel instance
  */
 const resolveMixpanel = (config = {}) => {
   const { context = window, mixpanel: givenMixpanel } = config;
@@ -141,11 +147,16 @@ function mixpanelPlugin(pluginConfig = {}) {
        *
        * @param  {string} [alias] - A unique identifier that you want to use for this user in the future.
        * @param  {string} [original] - The current identifier being used for this user.
+       * @returns {void}
        */
       alias(alias, original) {
         const mixpanel = resolveMixpanel(pluginConfig);
         mixpanel.alias(alias, original);
       },
+      /**
+       * Get currect Mixpanel instance
+       * @returns {Mixpanel|undefined} The Mixpanel instance
+       */
       getMixpanel() {
         return resolveMixpanel(pluginConfig);
       },

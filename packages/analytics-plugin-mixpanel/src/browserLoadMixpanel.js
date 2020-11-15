@@ -2,7 +2,7 @@
  * Try to load mixpanel using `mixpanel-browser` package
  *
  * @param {*} [ctx] Context object where the mixpanel instance should be set
- * @returns {Object|undefined} Mixpanel instance
+ * @returns {Mixpanel|undefined} Mixpanel instance
  */
 const loadMixpanelByImport = (ctx) => {
   let mixpanel;
@@ -22,7 +22,7 @@ const loadMixpanelByImport = (ctx) => {
  * Try to load mixpanel using initialization script
  *
  * @param {*} [ctx] Context object where the mixpanel instance should be set
- * @returns {Object|undefined} Mixpanel instance
+ * @returns {Mixpanel|undefined} Mixpanel instance
  */
 const loadMixpanelByScript = (ctx = window) => {
   // Load mixpanel library
@@ -122,7 +122,7 @@ const loadMixpanelByScript = (ctx = window) => {
  * Try to load mixpanel using either npm package import or initialization script
  *
  * @param {*} [ctx] Context object where the mixpanel instance should be set
- * @returns {Object|undefined} Mixpanel instance
+ * @returns {Mixpanel|undefined} Mixpanel instance
  */
 const loadMixpanel = (ctx) => {
   return loadMixpanelByImport(ctx) || loadMixpanelByScript(ctx);
