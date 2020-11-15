@@ -3,6 +3,9 @@ import browserLoadMixpanel from './browserLoadMixpanel';
 /**
   * @typedef {Object} MixpanelPluginConfig - Plugin settings for Mixpanel plugin
   * @property {String} [token] - The mixpanel token associated to a mixpanel project
+  * @property {Object} [mixpanel] - The mixpanel instance - use this
+  *   to use the plugin with a mixpanel instance instantiated elsewhere, for
+  *   example when using a mixpanel npm package.
   * @property {Object} [context] - The context object where mixpanel
   *   instance is found and assigned to when instantiated. Defaults to window.
   */
@@ -13,8 +16,8 @@ import browserLoadMixpanel from './browserLoadMixpanel';
  * @returns {Object} Mixpanel instance
  */
 const resolveMixpanel = (config = {}) => {
-  const { context = window } = config;
-  return context.mixpanel;
+  const { context = window, mixpanel: givenMixpanel } = config;
+  return givenMixpanel || context.mixpanel;
 }
 
 /**
@@ -36,6 +39,11 @@ const resolveMixpanel = (config = {}) => {
  *   context: myContext,
  * });
  *
+ * // Use existing mixpanel instance
+ * import mixpanel from 'mixpanel-browser';
+ * mixpanelPlugin({
+ *   mixpanel: mixpanel.init('abcdef123'),
+ * });
  */
 function mixpanelPlugin(pluginConfig = {}) {
   const plugin = {
