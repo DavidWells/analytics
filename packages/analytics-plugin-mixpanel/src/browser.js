@@ -146,6 +146,9 @@ function mixpanelPlugin(pluginConfig = {}) {
         const mixpanel = resolveMixpanel(pluginConfig);
         mixpanel.alias(alias, original);
       },
+      getMixpanel() {
+        return resolveMixpanel(pluginConfig);
+      },
     },
   };
   return plugin;
