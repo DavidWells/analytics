@@ -1,4 +1,24 @@
 /**
+ * Try to load mixpanel using `mixpanel-browser` package
+ *
+ * @param {*} [ctx] Context object where the mixpanel instance should be set
+ * @returns {Object|undefined} Mixpanel instance
+ */
+const loadMixpanelByImport = (ctx) => {
+  let mixpanel;
+  try {
+    mixpanel = require('mixpanel-browser');
+  } catch (er) {
+    /* noop */
+  }
+
+  if (mixpanel && ctx) {
+    ctx.mixpanel = mixpanel;
+  }
+  return mixpanel;
+};
+
+/**
  * Try to load mixpanel using initialization script
  *
  * @param {*} [ctx] Context object where the mixpanel instance should be set
@@ -105,7 +125,7 @@ const loadMixpanelByScript = (ctx = window) => {
  * @returns {Object|undefined} Mixpanel instance
  */
 const loadMixpanel = (ctx) => {
-  return loadMixpanelByScript(ctx);
+  return loadMixpanelByImport(ctx) || loadMixpanelByScript(ctx);
 };
 
-export { loadMixpanel as default, loadMixpanelByScript };
+export { loadMixpanel as default, loadMixpanelByImport, loadMixpanelByScript };

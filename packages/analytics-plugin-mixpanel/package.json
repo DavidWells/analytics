@@ -50,5 +50,13 @@
   "devDependencies": {
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.3.1"
+  },
+  "peerDependencies": {
+    "mixpanel-browser": "^2.0.0"
+  },
+  "peerDependenciesMeta": {   
+    "mixpanel-browser": {     
+      "optional": true   
+    }
   }
 }
