@@ -97,6 +97,7 @@ export default function createReducer(getPlugins) {
 }
 
 export const enablePlugin = (name, callback) => {
+  /** @type {EnablePluginPayload} */
   return {
     type: EVENTS.enablePlugin,
     name: name,
@@ -108,6 +109,7 @@ export const enablePlugin = (name, callback) => {
 }
 
 export const disablePlugin = (name, callback) => {
+  /** @type {EnablePluginPayload} */
   return {
     type: EVENTS.disablePlugin,
     name: name,
