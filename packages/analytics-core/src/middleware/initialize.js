@@ -21,7 +21,7 @@ export default function initializeMiddleware(instance) {
       const paramsArray = Object.keys(action.params)
       if (paramsArray.length) {
         const { an_uid, an_event } = params
-        const groupedParams = paramsArray.reduce((acc, key) => {
+        const { campaign, props, traits } = paramsArray.reduce((acc, key) => {
           // match utm params & dclid (display) & gclid (cpc)
           if (key.match(utmRegex) || key.match(/^(d|g)clid/)) {
             const cleanName = key.replace(utmRegex, '')
@@ -41,31 +41,37 @@ export default function initializeMiddleware(instance) {
           traits: {}
         })
 
-        store.dispatch({
+        /** @type {ParamsPayload} */
+        const paramsPayload = {
           type: EVENTS.params,
           raw: params,
-          ...groupedParams,
+          campaign,
+          props,
+          traits,
           ...(an_uid ? { userId: an_uid } : {}),
-        })
+        };
+        store.dispatch(paramsPayload);
 
         /* If userId set, call identify */
         if (an_uid) {
           // timeout to debounce and make sure integration is registered. Todo refactor
-          setTimeout(() => instance.identify(an_uid, groupedParams.traits), 0)
+          setTimeout(() => instance.identify(an_uid, traits), 0)
         }
 
         /* If tracking event set, call track */
         if (an_event) {
           // timeout to debounce and make sure integration is registered. Todo refactor
-          setTimeout(() => instance.track(an_event, groupedParams.props), 0)
+          setTimeout(() => instance.track(an_event, props), 0)
         }
 
         // if url has utm params
         if (Object.keys(groupedParams.campaign).length) {
-          store.dispatch({
+          /** @type {CampaignPayload} */
+          const campaignPayload = {
             type: EVENTS.campaign,
-            campaign: groupedParams.campaign
-          })
+            campaign,
+          };
+          store.dispatch(campaignPayload);
         }
       }
     }

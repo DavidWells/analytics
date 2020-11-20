@@ -33,6 +33,7 @@
     "dox": "^0.9.0",
     "indent-string": "^4.0.0",
     "jsdoc": "^3.6.3",
+    "jsdoc-plugin-intersection": "^1.0.4",
     "lerna": "^3.10.7",
     "markdown-magic": "^0.1.25",
     "mkdirp": "^0.5.1",

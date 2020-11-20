@@ -19,22 +19,24 @@ export default function storageMiddleware(storage) {
   }
 }
 
-export const setItem = (key, value, opts) => {
+export const setItem = (key, value, options) => {
+  /** @type {SetItemPayload} */
   return {
     type: EVENTS.setItemStart,
     timestamp: timestamp(),
-    key: key,
-    value: value,
-    options: opts,
+    key,
+    value,
+    options,
   }
 }
 
-export const removeItem = (key, opts) => {
+export const removeItem = (key, options) => {
+  /** @type {RemoveItemPayload} */
   return {
     type: EVENTS.removeItemStart,
     timestamp: timestamp(),
-    key: key,
-    options: opts,
+    key,
+    options,
   }
 }
 
