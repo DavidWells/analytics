@@ -116,13 +116,17 @@ const config = {
     API_DOCS(content, options) {
       const fileContents = fs.readFileSync(path.join(__dirname, '..', 'packages/analytics-core/src/index.js'), 'utf-8')
       const unsortedDocBlocs = dox.parseComments(fileContents, { raw: true, skipSingleStar: true })
+
       const end = unsortedDocBlocs.filter((element) => {
+        // console.log('element', element)
         return PLUGIN_KEYS.includes(element.ctx.name)
       })
       const begin = unsortedDocBlocs.filter((element) => {
         return !PLUGIN_KEYS.includes(element.ctx.name)
       })
-      const docBlocs = begin.concat(end)
+      const docBlocs = begin.concat(end).filter((element) => {
+        return !element.ctx.name.match(/(Payload|Context)$/)
+      })
       let updatedContent = ''
       const removeItems = ['analytics.instance', 'analytics.return']
       docBlocs.forEach((data) => {
