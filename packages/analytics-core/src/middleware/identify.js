@@ -29,8 +29,7 @@ export default function identifyMiddleware(instance) {
       const currentTraits = getItem(USER_TRAITS) || {}
 
       if (currentId && (currentId !== userId)) {
-        /** @type {UserIdChangedPayload} */
-        const userIdChangedPayload = {
+        store.dispatch({
           type: EVENTS.userIdChanged,
           old: {
             userId: currentId,
@@ -41,8 +40,7 @@ export default function identifyMiddleware(instance) {
             traits
           },
           options: options,
-        };
-        store.dispatch(userIdChangedPayload);
+        })
       }
 
       /* Save user id */

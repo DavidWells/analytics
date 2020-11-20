@@ -30,7 +30,6 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
         acc[curr] = allPlugins[curr]
         return acc
       }, {})
-      /** @type {InitializePayload} */
       const initializeAction = {
         type: EVENTS.initializeStart,
         plugins: action.plugins
@@ -83,13 +82,11 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
         // setTimeout to ensure runs after 'page'
         setTimeout(() => {
           if (pluginsArray.length === allCalls.length) {
-            /** @type {ReadyPayload} */
-            const readyPayload = {
+            store.dispatch({
               type: EVENTS.ready,
               plugins: completed,
               failed: failed
-            };
-            store.dispatch(readyPayload);
+            })
           }
         }, 0)
       })

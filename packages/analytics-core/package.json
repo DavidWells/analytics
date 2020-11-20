@@ -26,7 +26,7 @@
     "test:watch": "ava -v --watch",
     "clean": "rimraf lib dist && mkdirp lib dist",
     "prebuild": "npm run clean && npm run types",
-    "types": "../../node_modules/.bin/jsdoc -c ../../jsdoc.config.js -t ../../node_modules/tsd-jsdoc/dist -r ./src/ -d temp-types && node scripts/types.js",
+    "types": "../../node_modules/.bin/jsdoc -t ../../node_modules/tsd-jsdoc/dist -r ./src/ -d temp-types && node scripts/types.js",
     "build": "node ../../scripts/build/index.js",
     "postbuild": "npm run minify-dist && node ./scripts/postbuild.js",
     "watch": "node ../../scripts/build/_watch.js",
