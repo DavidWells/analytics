@@ -31,20 +31,15 @@ import heartBeat from './utils/heartbeat'
 const { setItem, removeItem } = middleware
 
 /**
- * Core Analytic constants. These are exposed for third party plugins & listeners
- * @typedef {Object} AnalyticsInstanceConfig
- * @property {string} [app] - Name of site / app
- * @property {string} [version] - Version of your app
- * @property {boolean} [debug] - Should analytics run in debug mode
- * @property {Array.<AnalyticsPlugin>}  [plugins] - Array of analytics plugins
- */
-
-/**
  * Analytics library configuration
  *
  * After the library is initialized with config, the core API is exposed & ready for use in the application.
  *
- * @param {AnalyticsInstanceConfig} [config] - Analytics core config
+ * @param {object} config - analytics core config
+ * @param {string} [config.app] - Name of site / app
+ * @param {string} [config.version] - Version of your app
+ * @param {boolean} [config.debug] - Should analytics run in debug mode
+ * @param {Array.<AnalyticsPlugin>}  [config.plugins] - Array of analytics plugins
  * @return {AnalyticsInstance} Analytics Instance
  * @example
  *

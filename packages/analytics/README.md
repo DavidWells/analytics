@@ -211,7 +211,7 @@ After the library is initialized with config, the core API is exposed & ready fo
 - **[config.app]** (optional) <code>string</code> - Name of site / app
 - **[config.version]** (optional) <code>string</code> - Version of your app
 - **[config.debug]** (optional) <code>boolean</code> - Should analytics run in debug mode
-- **[config.plugins]** (optional) <code>Array</code>.&lt;<code>Object</code>&gt; - Array of analytics plugins
+- **[config.plugins]** (optional) <code>Array</code>.&lt;<a href="https://getanalytics.io/plugins">AnalyticsPlugin</a>&gt; - Array of analytics plugins
 
 **Example**
 
@@ -649,7 +649,7 @@ Below is a list of the current available events
 | **`identifyStart`** | Called before the 'identify' events fires.<br/>This allows for dynamic page view cancellation based on current state of user or options passed in. |
 | **`identify`** | Core analytics hook for user identification.<br/> If your plugin or integration identifies users or user traits, this is the event to fire on. |
 | **`identifyEnd`** | Fires after all registered 'identify' events fire from plugins. |
-| **`identifyAborted`** | Fires if 'track' call is cancelled by a plugin |
+| **`identifyAborted`** | Fires if 'identify' call is cancelled by a plugin |
 | **`userIdChanged`** | Fires when a user id is updated |
 | **`registerPlugins`** | Fires when analytics is registering plugins |
 | **`enablePlugin`** | Fires when 'analytics.enablePlugin()' is called |

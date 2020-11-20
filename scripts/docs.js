@@ -19,7 +19,8 @@ const SRC_LINKS = {
   track: 'https://getanalytics.io/api/#analyticstrack',
   page: 'https://getanalytics.io/api/#analyticspage',
   identify: 'https://getanalytics.io/api/#analyticsidentify',
-  reset: 'https://getanalytics.io/api/#analyticsreset'
+  reset: 'https://getanalytics.io/api/#analyticsreset',
+  'Array.<AnalyticsPlugin>': 'https://getanalytics.io/plugins',
 }
 
 const cache = {}
@@ -118,7 +119,6 @@ const config = {
       const unsortedDocBlocs = dox.parseComments(fileContents, { raw: true, skipSingleStar: true })
 
       const end = unsortedDocBlocs.filter((element) => {
-        // console.log('element', element)
         return PLUGIN_KEYS.includes(element.ctx.name)
       })
       const begin = unsortedDocBlocs.filter((element) => {
@@ -723,8 +723,11 @@ function renderArg(tag) {
   }
   let typesDescription = tag.typesDescription
   // Remove link from description
-  if (tag.typesDescription.match((/^<a/))) {
+  if (tag.typesDescription.match((/<a href/))) {
+    // console.log('tag.typesDescription', tag.typesDescription)
+    // console.log('tag.types[0]', tag.types[0])
     const realLink = SRC_LINKS[tag.types[0]]
+    // console.log('realLink', realLink)
     if (realLink) {
       typesDescription = tag.typesDescription.replace(/href="(.*?)"/, `href="${realLink}"`)
     }
