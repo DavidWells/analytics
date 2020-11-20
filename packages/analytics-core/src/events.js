@@ -106,7 +106,7 @@ export const coreEvents = [
    */
   'identifyEnd',
   /**
-   * `identifyAborted` - Fires if 'identify' call is cancelled by a plugin
+   * `identifyAborted` - Fires if 'track' call is cancelled by a plugin
    */
   'identifyAborted',
   /**

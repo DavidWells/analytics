@@ -31,20 +31,15 @@ import heartBeat from './utils/heartbeat'
 const { setItem, removeItem } = middleware
 
 /**
- * Core Analytic constants. These are exposed for third party plugins & listeners
- * @typedef {Object} AnalyticsInstanceConfig
- * @property {string} [app] - Name of site / app
- * @property {string} [version] - Version of your app
- * @property {boolean} [debug] - Should analytics run in debug mode
- * @property {Array.<AnalyticsPlugin>}  [plugins] - Array of analytics plugins
- */
-
-/**
  * Analytics library configuration
  *
  * After the library is initialized with config, the core API is exposed & ready for use in the application.
  *
- * @param {AnalyticsInstanceConfig} [config] - Analytics core config
+ * @param {object} config - analytics core config
+ * @param {string} [config.app] - Name of site / app
+ * @param {string} [config.version] - Version of your app
+ * @param {boolean} [config.debug] - Should analytics run in debug mode
+ * @param {Array.<Object>}  [config.plugins] - Array of analytics plugins
  * @return {AnalyticsInstance} Analytics Instance
  * @example
  *
@@ -198,9 +193,7 @@ function analytics(config = {}) {
      * analytics.plugins.enable(['google', 'segment'])
      */
     enable: (plugins, callback) => {
-      /** @type {EnablePluginPayload} */
-      const enablePluginPayload = enablePlugin(plugins, callback);
-      store.dispatch(enablePluginPayload);
+      store.dispatch(enablePlugin(plugins, callback))
     },
     /**
      * Disable analytics plugin
@@ -214,9 +207,7 @@ function analytics(config = {}) {
      * analytics.plugins.disable(['google', 'segment'])
      */
     disable: (name, callback) => {
-      /** @type {EnablePluginPayload} */
-      const disablePluginPayload = disablePlugin(name, callback);
-      store.dispatch(disablePluginPayload);
+      store.dispatch(disablePlugin(name, callback))
     },
     /*
      * Load registered analytic providers.
@@ -226,13 +217,11 @@ function analytics(config = {}) {
      * analytics.plugins.load('segment')
      */
     load: (plugins) => {
-      /** @type {EnablePluginPayload} */
-      const loadPluginPayload = {
+      store.dispatch({
         type: EVENTS.loadPlugin,
         // Todo handle multiple plugins via array
         plugins: (plugins) ? [plugins] : Object.keys(getPlugins()),
-      };
-      store.dispatch(loadPluginPayload);
+      })
     },
     /* @TODO if it stays, state loaded needs to be set. Re PLUGIN_INIT above
     add: (newPlugin) => {
@@ -323,8 +312,7 @@ function analytics(config = {}) {
       const resolvedId = id || data.userId || getUserProp(ID, instance, data)
 
       return new Promise((resolve, reject) => {
-        /** @type {IdentifyPayload} */
-        const identifyPayload = {
+        store.dispatch({
           type: EVENTS.identifyStart,
           userId: resolvedId,
           traits: data || {},
@@ -336,8 +324,7 @@ function analytics(config = {}) {
             timestamp: timestamp(),
             callback: resolvePromise(resolve, getCallback(traits, options, callback))
           },
-        };
-        store.dispatch(identifyPayload);
+        })
       })
     },
     /**
@@ -397,8 +384,7 @@ function analytics(config = {}) {
       const opts = isObject(options) ? options : {}
 
       return new Promise((resolve, reject) => {
-        /** @type {TrackPayload} */
-        const trackPayload = {
+        store.dispatch({
           type: EVENTS.trackStart,
           event: name,
           properties: data,
@@ -409,8 +395,7 @@ function analytics(config = {}) {
             timestamp: timestamp(),
             callback: resolvePromise(resolve, getCallback(payload, options, callback))
           },
-        };
-        store.dispatch(trackPayload);
+        })
       })
     },
     /**
@@ -459,8 +444,7 @@ function analytics(config = {}) {
       const opts = isObject(options) ? options : {}
 
       return new Promise((resolve, reject) => {
-        /** @type {PagePayload} */
-        const pagePayload = {
+        store.dispatch({
           type: EVENTS.pageStart,
           properties: getPageData(d),
           options: opts,
@@ -470,8 +454,7 @@ function analytics(config = {}) {
             timestamp: timestamp(),
             callback: resolvePromise(resolve, getCallback(data, options, callback))
           },
-        };
-        store.dispatch(pagePayload);
+        })
       })
     },
     /**
@@ -514,13 +497,11 @@ function analytics(config = {}) {
      */
     reset: (callback) => {
       return new Promise((resolve, reject) => {
-        /** @type {ResetPayload} */
-        const resetPayload = {
+        store.dispatch({
           type: EVENTS.resetStart,
           timestamp: timestamp(),
           callback: resolvePromise(resolve, callback)
-        };
-        store.dispatch(resetPayload);
+        })
       })
     },
     /**
@@ -895,25 +876,15 @@ function analytics(config = {}) {
   })
 
   /* Register analytic plugins */
-  /** @type {RegisterPluginsPayload} */
-  const registerPluginsPayload = {
+  store.dispatch({
     type: EVENTS.registerPlugins,
     plugins: pluginKeys,
-  };
-  store.dispatch(registerPluginsPayload);
+  })
 
   parsedOptions.pluginsArray.map((plugin, i) => { // eslint-disable-line
     const { bootstrap, config } = plugin
     if (bootstrap && isFunction(bootstrap)) {
-      /** @type {BootstrapContext} */
-      const bootstrapContext = {
-        hello: plugin.name,
-        instance,
-        config,
-        payload: plugin,
-      };
-      // Call EVENTS.bootstrap
-      bootstrap(bootstrapContext);
+      bootstrap({ instance, config, payload: plugin })
     }
     const lastCall = parsedOptions.pluginsArray.length === (i + 1)
     /* Register plugins */
@@ -925,23 +896,19 @@ function analytics(config = {}) {
 
     /* All plugins registered initialize */
     if (lastCall) {
-      /** @type {InitializePayload} */
-      const initializeStartPayload = {
+      store.dispatch({
         type: EVENTS.initializeStart,
         plugins: pluginKeys
-      }
-      store.dispatch(initializeStartPayload);
+      })
     }
   })
 
   if (process.browser) {
     /* Watch for network events */
     watch(offline => {
-      /** @type {EmptyPayload} */
-      const networkPayload = {
+      store.dispatch({
         type: (offline) ? EVENTS.offline : EVENTS.online,
-      };
-      store.dispatch(networkPayload);
+      })
     })
 
     /* Tick heartbeat for queued events */
