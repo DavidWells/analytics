@@ -647,7 +647,7 @@ Below is a list of the current available events
 | **`identifyStart`** | Called before the 'identify' events fires.<br/>This allows for dynamic page view cancellation based on current state of user or options passed in. |
 | **`identify`** | Core analytics hook for user identification.<br/> If your plugin or integration identifies users or user traits, this is the event to fire on. |
 | **`identifyEnd`** | Fires after all registered 'identify' events fire from plugins. |
-| **`identifyAborted`** | Fires if 'identify' call is cancelled by a plugin |
+| **`identifyAborted`** | Fires if 'track' call is cancelled by a plugin |
 | **`userIdChanged`** | Fires when a user id is updated |
 | **`registerPlugins`** | Fires when analytics is registering plugins |
 | **`enablePlugin`** | Fires when 'analytics.enablePlugin()' is called |
