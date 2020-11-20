@@ -19,7 +19,8 @@ const SRC_LINKS = {
   track: 'https://getanalytics.io/api/#analyticstrack',
   page: 'https://getanalytics.io/api/#analyticspage',
   identify: 'https://getanalytics.io/api/#analyticsidentify',
-  reset: 'https://getanalytics.io/api/#analyticsreset'
+  reset: 'https://getanalytics.io/api/#analyticsreset',
+  'Array.<AnalyticsPlugin>': 'https://getanalytics.io/plugins',
 }
 
 const cache = {}
@@ -116,13 +117,16 @@ const config = {
     API_DOCS(content, options) {
       const fileContents = fs.readFileSync(path.join(__dirname, '..', 'packages/analytics-core/src/index.js'), 'utf-8')
       const unsortedDocBlocs = dox.parseComments(fileContents, { raw: true, skipSingleStar: true })
+
       const end = unsortedDocBlocs.filter((element) => {
         return PLUGIN_KEYS.includes(element.ctx.name)
       })
       const begin = unsortedDocBlocs.filter((element) => {
         return !PLUGIN_KEYS.includes(element.ctx.name)
       })
-      const docBlocs = begin.concat(end)
+      const docBlocs = begin.concat(end).filter((element) => {
+        return !element.ctx.name.match(/(Payload|Context)$/)
+      })
       let updatedContent = ''
       const removeItems = ['analytics.instance', 'analytics.return']
       docBlocs.forEach((data) => {
@@ -719,8 +723,11 @@ function renderArg(tag) {
   }
   let typesDescription = tag.typesDescription
   // Remove link from description
-  if (tag.typesDescription.match((/^<a/))) {
+  if (tag.typesDescription.match((/<a href/))) {
+    // console.log('tag.typesDescription', tag.typesDescription)
+    // console.log('tag.types[0]', tag.types[0])
     const realLink = SRC_LINKS[tag.types[0]]
+    // console.log('realLink', realLink)
     if (realLink) {
       typesDescription = tag.typesDescription.replace(/href="(.*?)"/, `href="${realLink}"`)
     }

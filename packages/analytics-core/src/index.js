@@ -39,7 +39,7 @@ const { setItem, removeItem } = middleware
  * @param {string} [config.app] - Name of site / app
  * @param {string} [config.version] - Version of your app
  * @param {boolean} [config.debug] - Should analytics run in debug mode
- * @param {Array.<Object>}  [config.plugins] - Array of analytics plugins
+ * @param {Array.<AnalyticsPlugin>}  [config.plugins] - Array of analytics plugins
  * @return {AnalyticsInstance} Analytics Instance
  * @example
  *
