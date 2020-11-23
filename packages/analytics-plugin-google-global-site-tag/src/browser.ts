@@ -1,4 +1,11 @@
+import { AnalyticsInstance } from "analytics";
+
 /* global, window */
+enum PropertyScope {
+  Global = 'global',
+  Page = 'page',
+}
+
 interface ICookieConfig {
   cookie_expires?: number,
   cookie_prefix?: string,
@@ -12,28 +19,37 @@ interface ILinkerConfig {
 }
 
 interface IPluginConfig {
-  tracking_id?: string,
-  instance_name?: string,
-  custom_script_src?: string,
+  trackingId?: string,
+  instanceName?: string,
+  customScriptSrc?: string,
   domain?: string,
-  cookie_config?: ICookieConfig,
+  cookieConfig?: ICookieConfig,
   linker?: ILinkerConfig,
-
-  send_page_view?: boolean,
+  sendPageView?: boolean,
+  customDimensions?: { [key: string]: unknown },
+  resetCustomDimensionsOnPage?: string[],
+  setCustomDimensionsToPage?: boolean,
 }
 
 interface IPluginApiProps {
-  instance: string,
+  instance: AnalyticsInstance,
   config: IPluginConfig,
 }
 
 interface IIdentifyPayload {
-
+  userId: string,
+  traits: { [key: string]: unknown },
 }
 
 interface IIdentifyProps {
   payload: IIdentifyPayload,
   config: IPluginConfig,
+}
+
+interface IPageProps {
+  payload: { [key: string]: unknown },
+  config: IPluginConfig,
+  instance: AnalyticsInstance,
 }
 
 declare global {
@@ -44,34 +60,35 @@ declare global {
 }
 
 const defaultConfig = {
-  tracking_id: null,
-  send_page_view: true,
+  trackingId: null,
+  sendPageView: true,
+  customDimensions: {},
 }
 
 let loadedInstances: { [key: string]: boolean } = {};
 
 const googleGtagAnalytics = (pluginConfig: IPluginConfig = {}) => {
   // Allow for multiple google analytics instances
-  const { instance_name, instance_prefix } = getInstanceDetails(pluginConfig)
+  const { instanceName } = getInstanceDetails(pluginConfig)
 
-  const trackingId = pluginConfig.tracking_id;
+  const trackingId = pluginConfig.trackingId;
 
   return {
     name: 'googlt-gtag-analytics',
     config: {
       ...defaultConfig,
-      ...pluginConfig,
+      ...pluginConfig
     },
     
     // Load gtag.js and define gtag
-    // gtag does not need to be global and defined on window object
     initialize: (pluginApi: IPluginApiProps) => {
       const { config, instance } = pluginApi;
       if (!trackingId) throw new Error('No GA trackingId defined');
 
-      const scriptSrc = config.custom_script_src || `https://www.googletagmanager.com/gtag/js?id=${trackingId}`;
+      const gtagScriptSource = 'https://www.googletagmanager.com/gtag/js';
+      const scriptSrc = config.customScriptSrc || `${gtagScriptSource}?id=${trackingId}`;
 
-      if (gtagNotLoaded(scriptSrc)) {
+      if (!gtagNotLoaded(config.customScriptSrc || gtagScriptSource)) {
         injectScript(scriptSrc);
       }
 
@@ -80,38 +97,101 @@ const googleGtagAnalytics = (pluginConfig: IPluginConfig = {}) => {
       }
 
       // Initialize tracker instance on page
-      if (!loadedInstances[instance_name]) {
+      if (!loadedInstances[instanceName]) {
         let gtagConfig = {
           cookie_domain: config.domain || 'auto',
-          send_page_view: config.send_page_view ? config.send_page_view : true,
+          send_page_view: config.sendPageView ? config.sendPageView : true,
           linker: config.linker ? config.linker : undefined,
-          ...config.cookie_config,
+          ...config.cookieConfig,
         }
 
-        window.gtag('config', trackingId, gtagConfig);
+        /* set custom dimensions from user traits */
+        const user = instance.user() || {}
+        const traits = user.traits || {}
+
+        if (Object.keys(traits).length) {
+          const customDimensions = formateCustomDimensionsIntoCustomMap(config);
+
+          window.gtag('set', {
+            custom_map: customDimensions,
+            ...traits,
+          });
+        }
+        const trackingConfig = {
+          'send_page_view': config.sendPageView,
+        }
+        window.gtag('config', trackingId, trackingConfig);
+        loadedInstances[instanceName] = true
       }
+    },
+
+    identify: (props: IIdentifyProps) => {
+      const { payload, config } = props;
+      identifyVisitor(payload.userId, payload.traits, config)
     },
   }
 }
 
+/**
+ * Changes format of custom dimensions from:
+ * { traitOne: 'dimension1', traitTwo: 'dimension2' }
+ * to:
+ * { dimension1: traitOne, dimension2: traitTwo }
+ */
+const formateCustomDimensionsIntoCustomMap = (plugin: IPluginConfig) => {
+  const { customDimensions } = plugin;
+  return customDimensions && Object.entries(customDimensions).reduce((acc, entry) => {
+    const [key, value] = entry;
+    // @ts-ignore
+    acc[value] = key;
+    return acc;
+  }, {});
+}
+
+export const identifyVisitor = (
+  id: string | undefined,
+  traits: { [key: string]: unknown } = {},
+  config: IPluginConfig = {},
+) => {
+  const trackingId = config.trackingId;
+  if (!window.gtag || !trackingId) return;
+
+  if (Object.keys(traits).length) {
+    const customDimensions = formateCustomDimensionsIntoCustomMap(config);
+
+    window.gtag('set', {
+      custom_map: customDimensions,
+      ...traits,
+    });
+
+    const trackingConfig = {
+      'send_page_view': config.sendPageView,
+    }
+  
+    window.gtag('config', trackingId, trackingConfig);
+  }
+}
+
 const getInstanceDetails = (pluginConfig: IPluginConfig) => {
-  const { instance_name } = pluginConfig;
+  const { instanceName } = pluginConfig;
 
   return {
-    instance_prefix: instance_name ? `${instance_name}.` : '',
-    instance_name: `gtag_${instance_name}`,
+    instancePrefix: instanceName ? `${instanceName}.` : '',
+    instanceName: `gtag_${instanceName}`,
   }
 }
 
 const gtagNotLoaded = (scriptSrc: string) => {
-  return !scriptLoaded(scriptSrc)
+  return scriptLoaded(scriptSrc)
 }
 
 const scriptLoaded = (scriptSrc: string) => {
-  const scripts = document.querySelectorAll('script[src]')
-
-  // return Boolean(Object.values(scripts as NodeListOf<HTMLScriptElement>).filter((value) => (value.src || '') === scriptSource).length);
-  return !!Object.keys(scripts).filter((key) => (scripts[key].src || '') === scriptSrc).length
+  const scripts = document.querySelectorAll('script[src]');
+  const regex = new RegExp(`^${scriptSrc}`);
+  return Boolean(Object.keys(scripts).filter(
+    // @ts-ignore
+    (key) => regex.test(scripts[key].src)
+  ).length);
 }
 
 const injectScript = (scriptSrc: string) => {
@@ -126,8 +206,9 @@ const setUpWindowGtag = () => {
   window.dataLayer = window.dataLayer || [];
 
   function gtagHelper(method: 'js', date: Date): void;
+  function gtagHelper(method: 'set', data: { [key: string]: unknown }): void;
   function gtagHelper(
-    method: 'set' | 'config' | 'event',
+    method: 'config' | 'event',
     data: string,
     config?: { [key: string]: unknown }
   ): void;
@@ -143,3 +224,5 @@ const setUpWindowGtag = () => {
 };
 
 export {};
+
+export default googleGtagAnalytics;
