@@ -3,6 +3,7 @@
  * @link https://getanalytics.io/plugins/mixpanel/
  * @param {object} pluginConfig - Plugin settings
  * @param {string} pluginConfig.token - The mixpanel token associated to a mixpanel project
+ * @param {string} [pluginConfig.customScriptSrc] - Load mixpanel script from custom source
  * @return {object} Analytics plugin
  * @example
  *
@@ -16,13 +17,13 @@ function mixpanelPlugin(pluginConfig = {}) {
     config: pluginConfig,
     /* https://developer.mixpanel.com/docs/javascript-full-api-reference#mixpanelinit */
     initialize: ({ config }) => {
-      const { token } = config;
+      const { token, customScriptSrc } = config;
       if (!token) {
         throw new Error("No mixpanel token defined");
       }
 
       // NoOp if mixpanel already loaded by external source or already loaded
-      if (typeof window.mixpanel !== 'undefined') {
+      if (typeof window.mixpanel !== "undefined") {
         return;
       }
 
@@ -104,13 +105,14 @@ function mixpanelPlugin(pluginConfig = {}) {
           b = c.createElement("script");
           b.type = "text/javascript";
           b.async = !0;
-          b.src =
-            "undefined" !== typeof MIXPANEL_CUSTOM_LIB_URL
-              ? MIXPANEL_CUSTOM_LIB_URL
-              : "file:" === c.location.protocol &&
-                "//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)
-              ? "https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js"
-              : "//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";
+          b.src = customScriptSrc
+            ? customScriptSrc
+            : "undefined" !== typeof MIXPANEL_CUSTOM_LIB_URL
+            ? MIXPANEL_CUSTOM_LIB_URL
+            : "file:" === c.location.protocol &&
+              "//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)
+            ? "https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js"
+            : "//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";
           d = c.getElementsByTagName("script")[0];
           d.parentNode.insertBefore(b, d);
         }
