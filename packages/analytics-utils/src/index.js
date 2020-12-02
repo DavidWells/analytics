@@ -9,7 +9,7 @@ import {
   isFunction,
   isString,
   isObject,
-  isUndefined, 
+  isUndefined,
   isBoolean
 } from './typeCheck'
 
@@ -40,3 +40,4 @@ export { default as paramsRemove } from './paramsRemove.js'
 export { default as parseReferrer } from './parseReferrer.js'
 export { default as url } from './url.js'
 export { default as uuid } from './uuid.js'
+export { default as throttle } from './throttle.js'

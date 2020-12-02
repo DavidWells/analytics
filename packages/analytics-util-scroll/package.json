@@ -1,0 +1,49 @@
+{
+  "name": "@analytics/scroll-utils",
+  "version": "0.0.1",
+  "description": "Scroll utility library to fire events on scroll",
+  "author": "David Wells",
+  "license": "MIT",
+  "homepage": "https://github.com/DavidWells/analytics#readme",
+  "keywords": [
+    "analytics",
+    "analytics-project",
+    "analytics-util",
+    "scroll"
+  ],
+  "main": "lib/analytics-util-scroll.cjs.js",
+  "globalName": "analyticsUtilScroll",
+  "jsnext:main": "lib/analytics-util-scroll.es.js",
+  "module": "lib/analytics-util-scroll.es.js",
+  "browser": {
+    "./lib/analytics-util-scroll.cjs.js": "./lib/analytics-util-scroll.browser.cjs.js",
+    "./lib/analytics-util-scroll.es.js": "./lib/analytics-util-scroll.browser.es.js"
+  },
+  "scripts": {
+    "serve": "cd dist examples && http-server",
+    "build": "node ../../scripts/build/index.js",
+    "watch": "node ../../scripts/build/_watch.js",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish",
+    "es": "../../node_modules/.bin/babel-node ./testBabel.js"
+  },
+  "files": [
+    "lib",
+    "dist",
+    "package.json",
+    "package-lock.json",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidWells/analytics.git"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5"
+  },
+  "dependencies": {
+    "analytics-utils": "^0.2.2"
+  }
+}
