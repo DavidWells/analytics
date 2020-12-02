@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/DavidWells/analytics/compare/analytics-utils@0.2.2...analytics-utils@0.3.0) (2020-12-02)
+
+
+### Features
+
+* add scroll util ([eb6aa1a](https://github.com/DavidWells/analytics/commit/eb6aa1a))
+
+
+
+
+
 ## [0.2.2](https://github.com/DavidWells/analytics/compare/analytics-utils@0.2.1...analytics-utils@0.2.2) (2020-07-14)
 
 **Note:** Version bump only for package analytics-utils
