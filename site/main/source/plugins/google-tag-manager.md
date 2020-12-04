@@ -79,8 +79,8 @@ The `@analytics/google-tag-manager` package works in [the browser](#browser-usag
 
 The Google Tag Manager client side browser plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Google Tag Manager 
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Google Tag Manager 
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Google Tag Manager
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Google Tag Manager
 
 ### Browser API
 
@@ -105,6 +105,7 @@ const analytics = Analytics({
 |:---------------------------|:-----------|
 | `containerId` <br/>**required** - string| The Container ID uniquely identifies the GTM Container. |
 | `dataLayerName` <br/>_optional_ - string| The optional name for dataLayer-object. Defaults to dataLayer. |
+| `customScriptSrc` <br/>_optional_ - string| Load Google Tag Manager script from a custom source |
 
 ## Additional examples
 
