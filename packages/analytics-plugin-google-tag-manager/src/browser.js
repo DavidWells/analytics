@@ -31,8 +31,8 @@ function googleTagManager(pluginConfig = {}) {
       ...config,
       ...pluginConfig
     },
-    initialize: ({ config, customScriptSrc }) => {
-      const { containerId, dataLayerName } = config
+    initialize: ({ config }) => {
+      const { containerId, dataLayerName, customScriptSrc } = config
       if (!containerId) {
         throw new Error('No google tag manager containerId defined')
       }
