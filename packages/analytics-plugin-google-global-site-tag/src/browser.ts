@@ -47,7 +47,7 @@ interface IIdentifyProps {
 }
 
 interface IPageProps {
-  payload: { [key: string]: unknown },
+  payload: { [key: string]: any },
   config: IPluginConfig,
   instance: AnalyticsInstance,
 }
@@ -68,6 +68,7 @@ const defaultConfig = {
 let loadedInstances: { [key: string]: boolean } = {};
 
 const googleGtagAnalytics = (pluginConfig: IPluginConfig = {}) => {
+  let pageCalledOnce = false
   // Allow for multiple google analytics instances
   const { instanceName } = getInstanceDetails(pluginConfig)
 
@@ -117,10 +118,8 @@ const googleGtagAnalytics = (pluginConfig: IPluginConfig = {}) => {
             ...traits,
           });
         }
-        const trackingConfig = {
-          'send_page_view': config.sendPageView,
-        }
-        window.gtag('config', trackingId, trackingConfig);
+
+        window.gtag('config', trackingId, gtagConfig);
         loadedInstances[instanceName] = true
       }
     },
@@ -129,7 +128,151 @@ const googleGtagAnalytics = (pluginConfig: IPluginConfig = {}) => {
       const { payload, config } = props;
       identifyVisitor(payload.userId, payload.traits, config)
     },
+
+    page: ({ payload, config, instance }: IPageProps) => {
+      const { properties } = payload;
+      const { resetCustomDimensionsOnPage, customDimensions } = config;
+      const campaign = instance.getState('context.campaign');
+
+      if (!window.gtag || !config.trackingId) return;
+
+      /* If dimensions are specifiied to reset, clear them before page view */
+      if (resetCustomDimensionsOnPage && resetCustomDimensionsOnPage.length && customDimensions) {
+        const resetDimensions = resetCustomDimensionsOnPage.reduce((acc, key) => {
+          if (customDimensions[key]) {
+            // @ts-ignore
+            acc[key] = null // { 'dimension_name': null } etc
+          }
+          return acc
+        }, {})
+
+        if (Object.keys(resetDimensions).length) {
+          window.gtag('set', resetDimensions);
+        }
+      }
+
+      const path = properties.path || document.location.pathname;
+      const pageView = {
+        page_path: path,
+        page_title: properties.title,
+        page_location: properties.url,
+        send_page_view: config.sendPageView || true,
+      }
+
+      let pageData: { [key: string]: unknown } = {
+        page_path: path,
+        page_title: properties.title,
+        send_page_view: config.sendPageView || true,
+      };
+
+      // allow referrer override if referrer was manually set
+      if (properties.referrer !== document.referrer) {
+        pageData.referrer = properties.referrer;
+      }
+
+      window.gtag('set', pageData);
+
+      const campaignData = addCampaignData(campaign);
+
+      /* Set Dimensions or return them for payload is config.setCustomDimensionsToPage is false */
+      const dimensions = setCustomDimensions(properties, config);
+
+      /* Dimensions will only be included in the event if config.setCustomDimensionsToPage is false */
+      const finalPayload = {
+        send_to: config.trackingId,
+        ...pageView,
+        ...campaignData,
+        ...dimensions
+      }
+
+      // Remove location for SPA tracking after initial page view
+      if (pageCalledOnce) {
+        delete finalPayload.page_location
+      }
+
+      window.gtag('event', 'page_view', finalPayload);
+
+      // Set after initial page view
+      pageCalledOnce = true
+    },
+
+    loaded: () => {
+      return Boolean(window.gtag);
+    }
   }
+}
+
+// from props pick out the keys that exist in config.customDimensions
+const setCustomDimensions = (properties: { [key: string]: unknown } = {}, opts: IPluginConfig) => {
+  const { customDimensions } = opts;
+  if (!customDimensions) return {};
+
+  const customDimensionsValue = Object.keys(customDimensions).reduce((acc, key) => {
+    let value = get(properties, key) || properties[key];
+    if (typeof value === 'boolean') {
+      value = value.toString()
+    }
+    if (value || value === 0) {
+      // @ts-ignore
+      acc[key] = value
+      return acc
+    }
+    return acc
+  }, {});
+
+  if (!Object.keys(customDimensionsValue).length) return {};
+
+  if (!opts.setCustomDimensionsToPage) {
+    return customDimensionsValue;
+  }
+
+  window.gtag('set', customDimensionsValue);
+  return {};
+}
+
+function get(obj: { [key: string]: unknown }, key: string) {
+  const keys = key.split ? key.split('.') : key;
+  let object = undefined;
+  for (let p = 0; p < keys.length; p++) {
+    object = obj ? obj[keys[p]] : undefined;
+  }
+  return object;
+}
+
+interface ICampaignDataProps {
+  name?: string,
+  source?: string,
+  medium?: string,
+  content?: string,
+  keyword?: string,
+}
+
+interface ICampaign {
+  campaignName?: string,
+  campaignSource?: string,
+  campaignMedium?: string,
+  campaignContent?: string,
+  campaignKeyword?: string,
+}
+
+/**
+ * Add campaign data to GA payload https://bit.ly/34qFCPn
+ * @param {Object} [campaignData={}] [description]
+ * @param {String} [campaignData.campaignName] - Name of campaign
+ * @param {String} [campaignData.campaignSource] - Source of campaign
+ * @param {String} [campaignData.campaignMedium] - Medium of campaign
+ * @param {String} [campaignData.campaignContent] - Content of campaign
+ * @param {String} [campaignData.campaignKeyword] - Keyword of campaign
+ */
+function addCampaignData(campaignData: ICampaignDataProps = {}) {
+  let campaign: ICampaign = {};
+  const { name, source, medium, content, keyword } = campaignData;
+  if (name) campaign.campaignName = name;
+  if (source) campaign.campaignSource = source;
+  if (medium) campaign.campaignMedium = medium;
+  if (content) campaign.campaignContent = content;
+  if (keyword) campaign.campaignKeyword = keyword;
+  return campaign;
 }
 
 /**
