@@ -1,6 +1,8 @@
 # Analytics Original Source Plugin
 
-> Track the initial traffic source of visitors to your site
+> Notice: Package has moved to [@analytics/original-source](https://www.npmjs.com/package/@analytics/original-source)
+
+Track the initial traffic source of visitors to your site
 
 This plugin will save the original `__user_original_source` & `__user_original_landing_page` to localStorage and on the user properties.
 
@@ -17,19 +19,19 @@ This data is handy when assigning attribution metrics.
 
 ```bash
 npm install analytics
-npm install analytics-plugin-original-source
+npm install @analytics/original-source
 ```
 
 ```js
 import Analytics from 'analytics'
-import originalSrc from 'analytics-plugin-original-source'
+import originalSourcePlugin from '@analytics/original-source'
 
 const analytics = Analytics({
   app: 'my-app',
   version: 100,
   debug: true,
   plugins: [
-    originalSrc(),
+    originalSourcePlugin(),
   ]
 })
 ```

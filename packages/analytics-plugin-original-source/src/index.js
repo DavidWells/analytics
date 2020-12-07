@@ -21,7 +21,7 @@ const CONFIG = {
  */
 export default function originalSourcePlugin(pluginConfig = {}) {
   return {
-    NAMESPACE: 'original-source',
+    name: 'original-source',
     EVENTS: events,
     config: {
       ...CONFIG,
@@ -46,7 +46,9 @@ export function getOriginalSource(opts = {}) {
   const config = Object.assign({}, CONFIG, opts)
   const { referrer, originalSourceKey } = config
   // 1. try first source browser storage
-  const originalSrc = storage.getItem(originalSourceKey, { storage: config.storage })
+  const originalSrc = storage.getItem(originalSourceKey, {
+    storage: config.storage
+  })
   if (originalSrc) {
     return parsePipeString(originalSrc)
   }
