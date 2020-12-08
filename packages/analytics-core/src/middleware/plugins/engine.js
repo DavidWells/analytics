@@ -317,7 +317,7 @@ async function processEvent({
 
     /* Run the plugin function */
     const val = await currentPlugin[method]({
-      hello: pluginName,
+      // currentPlugin: pluginName,
       abort: funcArgs.abort,
       // Send in original action value or scope payload
       payload: payloadValue,
