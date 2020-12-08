@@ -1,6 +1,6 @@
 {
-  "name": "analytics-plugin-original-source",
-  "version": "0.2.5",
+  "name": "@analytics/original-source-plugin",
+  "version": "0.2.6",
   "description": "Save original referral source of visitor plugin for 'analytics' pkg",
   "keywords": [
     "analytics",

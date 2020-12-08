@@ -1,10 +1,8 @@
 # Analytics Original Source Plugin
 
-> Notice: Package has moved to [@analytics/original-source-plugin](https://www.npmjs.com/package/@analytics/original-source-plugin)
+Track the initial traffic source of visitors to your site.
 
-Track the initial traffic source of visitors to your site
-
-This plugin will save the original `__user_original_source` & `__user_original_landing_page` to localStorage and on the user properties.
+This plugin will save the original `__user_original_source` & `__user_original_landing_page` to localStorage and on the user properties in the sessions context.
 
 **Example:**
 
@@ -35,3 +33,5 @@ const analytics = Analytics({
   ]
 })
 ```
+
+Replaces deprecated [analytics-plugin-original-source](https://www.npmjs.com/package/analytics-plugin-original-source) package.
