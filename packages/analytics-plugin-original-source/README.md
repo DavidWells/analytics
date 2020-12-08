@@ -1,6 +1,6 @@
 # Analytics Original Source Plugin
 
-> Notice: Package has moved to [@analytics/original-source](https://www.npmjs.com/package/@analytics/original-source)
+> Notice: Package has moved to [@analytics/original-source-plugin](https://www.npmjs.com/package/@analytics/original-source-plugin)
 
 Track the initial traffic source of visitors to your site
 
@@ -19,12 +19,12 @@ This data is handy when assigning attribution metrics.
 
 ```bash
 npm install analytics
-npm install @analytics/original-source
+npm install @analytics/original-source-plugin
 ```
 
 ```js
 import Analytics from 'analytics'
-import originalSourcePlugin from '@analytics/original-source'
+import originalSourcePlugin from '@analytics/original-source-plugin'
 
 const analytics = Analytics({
   app: 'my-app',
