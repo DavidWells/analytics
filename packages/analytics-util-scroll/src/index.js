@@ -229,7 +229,7 @@ function onScrollChange(handlers = {}) {
           handlers[match]({
             trigger: match,
             direction: direction,
-            scrollMax: scrollDistanceMin,
+            scrollMin: scrollDistanceMin,
             scrollMax: scrollDistanceMax,
             range: [ scrollDistanceMin, scrollDistanceMax ]
           })
@@ -245,7 +245,7 @@ function onScrollChange(handlers = {}) {
         handlers[singleFunction]({
           trigger: singleFunction,
           direction: direction,
-          scrollMax: scrollDistanceMin,
+          scrollMin: scrollDistanceMin,
           scrollMax: scrollDistanceMax,
           range: [ scrollDistanceMin, scrollDistanceMax ]
         })
