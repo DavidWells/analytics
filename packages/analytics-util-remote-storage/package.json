@@ -1,0 +1,53 @@
+{
+  "name": "@analytics/remote-storage-utils",
+  "version": "0.0.5",
+  "description": "Storage utilities for cross domain localStorage access, with permissions",
+  "author": "David Wells",
+  "license": "MIT",
+  "homepage": "https://github.com/DavidWells/analytics#readme",
+  "keywords": [
+    "analytics",
+    "analytics-project",
+    "analytics-util",
+    "storage",
+    "remote",
+    "cross-domain",
+    "localStorage",
+    "persistance"
+  ],
+  "main": "lib/analytics-util-remote-storage.cjs.js",
+  "globalName": "analyticsUtilRemoteStorage",
+  "jsnext:main": "lib/analytics-util-remote-storage.es.js",
+  "module": "lib/analytics-util-remote-storage.es.js",
+  "browser": {
+    "./lib/analytics-util-remote-storage.cjs.js": "./lib/analytics-util-remote-storage.browser.cjs.js",
+    "./lib/analytics-util-remote-storage.es.js": "./lib/analytics-util-remote-storage.browser.es.js"
+  },
+  "scripts": {
+    "build": "node ../../scripts/build/index.js",
+    "postbuild": "cp generate-page.js lib",
+    "watch": "node ../../scripts/build/_watch.js",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish",
+    "es": "../../node_modules/.bin/babel-node ./testBabel.js"
+  },
+  "files": [
+    "lib",
+    "dist",
+    "package.json",
+    "package-lock.json",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidWells/analytics.git"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5"
+  },
+  "dependencies": {
+    "cross-storage": "^1.0.0"
+  }
+}
