@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.3.0 (2020-12-09)
+
+
+### Features
+
+* **original-source-plugin:** save initial landing page & make analytics plugin instead of middleware ([3e50a93](https://github.com/DavidWells/analytics/commit/3e50a93))
+* **original-src:** add standalone browser build ([f7f7837](https://github.com/DavidWells/analytics/commit/f7f7837))
+* **original-src:** clear localstorage values on analytics.reset() ([2ad36b8](https://github.com/DavidWells/analytics/commit/2ad36b8))
+* **plugins:** add original source plugin ([1662c82](https://github.com/DavidWells/analytics/commit/1662c82))
+
+
+
+
+
 ## [0.2.4](https://github.com/DavidWells/analytics/compare/analytics-plugin-original-source@0.2.3...analytics-plugin-original-source@0.2.4) (2020-12-02)
 
 **Note:** Version bump only for package analytics-plugin-original-source

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/DavidWells/analytics/compare/analytics-utils@0.3.0...analytics-utils@0.4.0) (2020-12-09)
+
+
+### Features
+
+* add throttle util ([22af474](https://github.com/DavidWells/analytics/commit/22af474))
+
+
+
+
+
 # [0.3.0](https://github.com/DavidWells/analytics/compare/analytics-utils@0.2.2...analytics-utils@0.3.0) (2020-12-02)
 
 
