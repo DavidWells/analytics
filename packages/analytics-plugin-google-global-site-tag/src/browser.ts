@@ -36,20 +36,40 @@ interface IPluginApiProps {
   config: IPluginConfig,
 }
 
-interface IIdentifyPayload {
+interface IPayload {
   userId: string,
   traits: { [key: string]: unknown },
+  properties: ITrackProps & IPageProps & { [key: string]: unknown },
+  event: string,
 }
 
-interface IIdentifyProps {
-  payload: IIdentifyPayload,
-  config: IPluginConfig,
+interface ITrackProps {
+  label?: string, 
+  value?: number, 
+  category?: string, 
+  nonInteraction?: boolean,
 }
 
 interface IPageProps {
-  payload: { [key: string]: any },
+  path?: string,
+  title?: string,
+  url?: string,
+  referrer?: string,
+}
+
+interface IProps {
+  payload: IPayload,
   config: IPluginConfig,
   instance: AnalyticsInstance,
+}
+
+interface ITrackEventProps {
+  event: string,
+  label?: string,
+  category: string,
+  value?: number,
+  nonInteraction?: boolean,
+  campaign?: ICampaignDataProps,
 }
 
 declare global {
@@ -97,12 +117,15 @@ const googleGtagAnalytics = (pluginConfig: IPluginConfig = {}) => {
         setUpWindowGtag();
       }
 
+      const customDimensions = formateCustomDimensionsIntoCustomMap(config);
+
       // Initialize tracker instance on page
       if (!loadedInstances[instanceName]) {
         let gtagConfig = {
           cookie_domain: config.domain || 'auto',
           send_page_view: config.sendPageView ? config.sendPageView : true,
           linker: config.linker ? config.linker : undefined,
+          custom_map: customDimensions,
           ...config.cookieConfig,
         }
 
@@ -111,25 +134,20 @@ const googleGtagAnalytics = (pluginConfig: IPluginConfig = {}) => {
         const traits = user.traits || {}
 
         if (Object.keys(traits).length) {
-          const customDimensions = formateCustomDimensionsIntoCustomMap(config);
-
-          window.gtag('set', {
-            custom_map: customDimensions,
-            ...traits,
-          });
+          window.gtag('set', traits);
         }
 
         window.gtag('config', trackingId, gtagConfig);
-        loadedInstances[instanceName] = true
+        loadedInstances[instanceName] = true;
       }
     },
 
-    identify: (props: IIdentifyProps) => {
+    identify: (props: IProps) => {
       const { payload, config } = props;
       identifyVisitor(payload.userId, payload.traits, config)
     },
 
-    page: ({ payload, config, instance }: IPageProps) => {
+    page: ({ payload, config, instance }: IProps) => {
       const { properties } = payload;
       const { resetCustomDimensionsOnPage, customDimensions } = config;
       const campaign = instance.getState('context.campaign');
@@ -198,8 +216,56 @@ const googleGtagAnalytics = (pluginConfig: IPluginConfig = {}) => {
 
     loaded: () => {
       return Boolean(window.gtag);
-    }
+    },
+
+    track: ({ payload, config, instance}: IProps) => {
+      const { properties, event } = payload;
+      const { label, value, category, nonInteraction } = properties;
+      const campaign = instance.getState('context.campaign');
+
+      trackEvent({
+        event,
+        label,
+        category: category || 'All',
+        value,
+        nonInteraction,
+        campaign,
+      }, config, payload);
+    },
   }
+}
+
+const trackEvent = (eventData: ITrackEventProps, opts: IPluginConfig = {}, payload: IPayload) => {
+  if (!window.gtag) return;
+
+  const data: { [key: string]: unknown } = {
+    event_label: eventData.label,
+    event_category: eventData.category || 'All',
+    non_interaction: (eventData.nonInteraction !== undefined) ? Boolean(eventData.nonInteraction) : false,
+  }
+
+  if (eventData.value) {
+    /* set value of the action */
+    data.value = eventData.value >= 0 ? eventData.value : 0;
+  }
+
+  /* Attach campaign data */
+  const campaignData = addCampaignData(eventData.campaign);
+
+  /* Set Dimensions or return them for payload is config.setCustomDimensionsToPage is false */
+  const dimensions = setCustomDimensions(payload.properties, opts);
+
+  const finalPayload = {
+    ...data,
+    /* Attach campaign data, if exists */
+    ...campaignData,
+    /* Dimensions will only be included in the event if config.setCustomDimensionsToPage is false */
+    ...dimensions
+  };
+
+  /* Send data to Google Analytics */
+  window.gtag('event', eventData.event, finalPayload)
+  return finalPayload;
 }
 
 // from props pick out the keys that exist in config.customDimensions
@@ -300,16 +366,15 @@ export const identifyVisitor = (
   if (!window.gtag || !trackingId) return;
 
   if (Object.keys(traits).length) {
+    window.gtag('set', traits);
+
     const customDimensions = formateCustomDimensionsIntoCustomMap(config);
-
-    window.gtag('set', {
+    const trackingConfig: { [key: string]: unknown }  = {
+      send_page_view: config.sendPageView,
       custom_map: customDimensions,
-      ...traits,
-    });
-
-    const trackingConfig = {
-      'send_page_view': config.sendPageView,
     }
+
+    if (id) trackingConfig.user_id = id;
   
     window.gtag('config', trackingId, trackingConfig);
   }
