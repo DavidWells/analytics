@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.1](https://github.com/DavidWells/analytics/compare/@analytics/google-tag-manager@0.3.0...@analytics/google-tag-manager@0.3.1) (2020-12-12)
+
+
+### Bug Fixes
+
+* use properties.categories for google tag manager ([b52c6f7](https://github.com/DavidWells/analytics/commit/b52c6f7)), closes [#127](https://github.com/DavidWells/analytics/issues/127)
+
+
+
+
+
 # [0.3.0](https://github.com/DavidWells/analytics/compare/@analytics/google-tag-manager@0.2.3...@analytics/google-tag-manager@0.3.0) (2020-09-25)
 
 
