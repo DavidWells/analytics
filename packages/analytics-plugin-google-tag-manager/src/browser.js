@@ -57,7 +57,7 @@ function googleTagManager(pluginConfig = {}) {
     },
     track: ({ payload, options, config }) => {
       if (typeof config.dataLayer !== 'undefined') {
-        const { anonymousId, userId, properties, category } = payload
+        const { anonymousId, userId, properties } = payload
         const formattedPayload = properties
         if (userId) {
           formattedPayload.userId = userId
@@ -65,7 +65,7 @@ function googleTagManager(pluginConfig = {}) {
         if (anonymousId) {
           formattedPayload.anonymousId = anonymousId
         }
-        if (!category) {
+        if (!properties.category) {
           formattedPayload.category = 'All'
         }
         if (config.debug) {
