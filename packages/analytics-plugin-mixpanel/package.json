@@ -23,6 +23,7 @@
   "scripts": {
     "docs": "node ../analytics-cli/bin/run docs",
     "build": "node ../../scripts/build/index.js",
+    "types": "../../node_modules/.bin/jsdoc -t ../../node_modules/tsd-jsdoc/dist -r ./src/ -d temp-types && node ./scripts/types.js",
     "watch": "node ../../scripts/build/_watch.js",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
@@ -47,8 +48,19 @@
     "type": "git",
     "url": "git+https://github.com/DavidWells/analytics.git"
   },
+  "dependencies": {
+    "analytics": "^0.5.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.3.1"
+  },
+  "peerDependencies": {
+    "mixpanel-browser": "^2.0.0"
+  },
+  "peerDependenciesMeta": {   
+    "mixpanel-browser": {     
+      "optional": true   
+    }
   }
 }
