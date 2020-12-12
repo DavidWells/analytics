@@ -111,6 +111,7 @@ const analytics = Analytics({
 | Option | description |
 |:---------------------------|:-----------|
 | `token` <br/>**required** - string| The mixpanel token associated to a mixpanel project |
+| `customScriptSrc` <br/>_optional_ - string| Load mixpanel script from custom source |
 
 
 ## Additional examples
