@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/DavidWells/analytics/compare/@analytics/google-tag-manager@0.3.1...@analytics/google-tag-manager@0.4.0) (2020-12-13)
+
+
+### Features
+
+* **google-tag-manager:** allow customScriptSrc ([78659c6](https://github.com/DavidWells/analytics/commit/78659c6))
+* **google-tag-manager:** allow customScriptSrc - use custom script src from the config ([cc81706](https://github.com/DavidWells/analytics/commit/cc81706))
+
+
+
+
+
 ## [0.3.1](https://github.com/DavidWells/analytics/compare/@analytics/google-tag-manager@0.3.0...@analytics/google-tag-manager@0.3.1) (2020-12-12)
 
 
