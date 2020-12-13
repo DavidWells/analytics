@@ -1,14 +1,17 @@
 {
-  "name": "@analytics/google-gtag",
+  "name": "@analytics/google-gtag-analytics",
   "version": "0.0.0",
   "description": "Google global site tag (gtag.js) plugin for 'analytics' module",
-  "main": "lib/analytics-plugin-gtag.cjs.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/DavidWells/analytics.git"
+  "projectMeta": {
+    "provider": {
+      "name": "Google Global Site Tag",
+      "url": "https://analytics.google.com/analytics/web/"
+    },
+    "windowGlobal": "analyticsGtag",
+    "platforms": {
+      "browser": "./src/browser.ts",
+      "node": "./src/node.js"
+    }
   },
   "keywords": [
     "analytics",
@@ -22,11 +25,32 @@
   ],
   "author": "Bing Wang",
   "license": "MIT",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm run build:types && npm run build:js",
+    "build:js": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline"
+  },
+  "main": "lib/browser.js",
+  "globalName": "analyticsGtag",
+  "browser": {
+    "./lib/browser.js": "./lib/browser.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidWells/analytics.git"
+  },
   "bugs": {
     "url": "https://github.com/DavidWells/analytics/issues"
   },
   "homepage": "https://github.com/DavidWells/analytics#readme",
   "dependencies": {
+    "analytics": "^0.6.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.10",
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.10",
+    "@babel/preset-typescript": "^7.12.7",
     "typescript": "^4.0.5"
   }
 }
