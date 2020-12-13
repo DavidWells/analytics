@@ -110,6 +110,7 @@ const analytics = Analytics({
 | `dataLayerName` <br/>_optional_ - string| The optional name for dataLayer-object. Defaults to dataLayer. |
 | `customScriptSrc` <br/>_optional_ - string| Load Google Tag Manager script from a custom source |
 
+
 ## Additional examples
 
 Below are additional implementation examples.

@@ -84,6 +84,7 @@ The Mixpanel client side browser plugin works with these analytic api methods:
 - **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Mixpanel
 - **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Mixpanel
 - **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Mixpanel
+- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for Mixpanel values
 
 ### Browser API
 
@@ -107,6 +108,7 @@ const analytics = Analytics({
 | Option | description |
 |:---------------------------|:-----------|
 | `token` <br/>**required** - string| The mixpanel token associated to a mixpanel project |
+| `customScriptSrc` <br/>_optional_ - string| Load mixpanel script from custom source |
 
 ## Additional examples
 

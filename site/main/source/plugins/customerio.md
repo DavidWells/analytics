@@ -82,10 +82,10 @@ The `@analytics/customerio` package works in [the browser](#browser-usage) and [
 
 The Customer.io client side browser plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Customer.io 
-- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for Customer.io values 
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Customer.io 
-- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Customer.io 
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Customer.io
+- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for Customer.io values
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Customer.io
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Customer.io
 
 ### Browser API
 
@@ -115,9 +115,9 @@ const analytics = Analytics({
 
 The Customer.io server-side node.js plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Customer.io 
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Customer.io 
-- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Customer.io 
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Customer.io
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Customer.io
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Customer.io
 
 ### Server-side API
 

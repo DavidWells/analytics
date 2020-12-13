@@ -85,9 +85,9 @@ The `@analytics/hubspot` package works in [the browser](#browser-usage)
 
 The HubSpot client side browser plugin works with these analytic api methods:
 
-- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to HubSpot 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into HubSpot 
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to HubSpot 
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to HubSpot
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into HubSpot
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to HubSpot
 
 ### Browser API
 

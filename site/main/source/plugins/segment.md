@@ -84,10 +84,10 @@ The `@analytics/segment` package works in [the browser](#browser-usage) and [ser
 
 The Segment client side browser plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Segment 
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Segment 
-- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Segment 
-- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for Segment values 
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Segment
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Segment
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Segment
+- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for Segment values
 
 ### Browser API
 
@@ -118,9 +118,9 @@ const analytics = Analytics({
 
 The Segment server-side node.js plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Segment 
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Segment 
-- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Segment 
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Segment
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Segment
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Segment
 
 ### Server-side API
 

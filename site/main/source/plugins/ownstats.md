@@ -70,7 +70,7 @@ The `@analytics/ownstats` package works in [the browser](#browser-usage) and [se
 
 The Ownstats client side browser plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Ownstats 
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Ownstats
 
 ### Browser API
 
@@ -103,7 +103,7 @@ const analytics = Analytics({
 
 The Ownstats server-side node.js plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Ownstats 
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Ownstats
 
 ### Server-side API
 

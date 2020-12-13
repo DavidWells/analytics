@@ -193,7 +193,7 @@ ${renderRelevantMethods(data)}
       .map((x) => {
         const link = SRC_LINKS[x]
         const linkText = (link) ? `[analytics.${x}](${link})` : x
-        return `- **${linkText}** - ${ABOUT_METHODS[x]} `
+        return `- **${linkText}** - ${ABOUT_METHODS[x]}`
       }).join('\n')
     // console.log('apiMethodsExposed', apiMethodsExposed)
     let renderMethods = 'See below from browser API'

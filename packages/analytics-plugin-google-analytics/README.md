@@ -97,9 +97,9 @@ The `@analytics/google-analytics` package works in [the browser](#browser-usage)
 
 The Google Analytics client side browser plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Google Analytics 
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Google Analytics 
-- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Google Analytics 
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Google Analytics
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Google Analytics
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Google Analytics
 
 ### Browser API
 
@@ -137,9 +137,9 @@ const analytics = Analytics({
 
 The Google Analytics server-side node.js plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Google Analytics 
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Google Analytics 
-- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Google Analytics 
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Google Analytics
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Google Analytics
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Google Analytics
 
 ### Server-side API
 

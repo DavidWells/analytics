@@ -83,10 +83,10 @@ The `@analytics/gosquared` package works in [the browser](#browser-usage)
 
 The GoSquared client side browser plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into GoSquared 
-- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for GoSquared values 
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to GoSquared 
-- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to GoSquared 
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into GoSquared
+- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for GoSquared values
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to GoSquared
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to GoSquared
 
 ### Browser API
 

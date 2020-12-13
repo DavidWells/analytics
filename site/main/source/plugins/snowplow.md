@@ -156,10 +156,10 @@ The `@analytics/snowplow` package works in [the browser](#browser-usage) and [se
 
 The Snowplow Analytics client side browser plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Snowplow Analytics 
-- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for Snowplow Analytics values 
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Snowplow Analytics 
-- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Snowplow Analytics 
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Snowplow Analytics
+- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for Snowplow Analytics values
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Snowplow Analytics
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Snowplow Analytics
 
 ### Browser API
 
@@ -231,9 +231,9 @@ const analytics = Analytics({
 
 The Snowplow Analytics server-side node.js plugin works with these analytic api methods:
 
-- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Snowplow Analytics 
-- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Snowplow Analytics 
-- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Snowplow Analytics 
+- **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into Snowplow Analytics
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Snowplow Analytics
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to Snowplow Analytics
 
 ### Server-side API
 
