@@ -137,9 +137,8 @@ const googleGtagAnalytics = (pluginConfig: IPluginConfig = {}) => {
        */
       let newCookieConfig: { [key: string]: unknown} = {};
       if (config.cookieConfig !== undefined) {
-        Object.keys(config.cookieConfig).forEach((key: string) => {
-          // @ts-ignore
-          newCookieConfig[camelToSnakeCase(key)] = config.cookieConfig ? config.cookieConfig[key] : null;
+        Object.entries(config.cookieConfig).forEach(([key, value]) => {
+          newCookieConfig[camelToSnakeCase(key)] = value;
         })
       }
 
@@ -189,9 +188,8 @@ const googleGtagAnalytics = (pluginConfig: IPluginConfig = {}) => {
 
       /* If dimensions are specified to reset, clear them before page view */
       if (resetCustomDimensionsOnPage && resetCustomDimensionsOnPage.length && customDimensions) {
-        const resetDimensions = resetCustomDimensionsOnPage.reduce((acc, key) => {
+        const resetDimensions = resetCustomDimensionsOnPage.reduce((acc: { [key: string]: unknown }, key: string) => {
           if (customDimensions[key]) {
-            // @ts-ignore
             acc[key] = null // { 'dimension_name': null } etc
           }
           return acc
@@ -223,9 +221,8 @@ const googleGtagAnalytics = (pluginConfig: IPluginConfig = {}) => {
        */
       const pageRelatedProperties = ['title', 'url', 'path', 'sendPageView', 'referrer'];
       const customDimensionKeys = (customDimensions && Object.keys(customDimensions)) || [];
-      const otherProperties = Object.keys(properties).reduce((acc, key) => {
+      const otherProperties = Object.keys(properties).reduce((acc: { [key: string]: unknown }, key: string) => {
         if (!pageRelatedProperties.includes(key) && !customDimensionKeys.includes(key)) {
-          // @ts-ignore
           acc[key] = properties[key];
         }
         return acc;
@@ -319,9 +316,8 @@ const trackEvent = (eventData: ITrackEventProps, config: IPluginConfig = {}, pay
    */
   const pageRelatedProperties = ['label', 'category', 'nonInteraction', 'value'];
   const customDimensionKeys = (config.customDimensions && Object.keys(config.customDimensions)) || [];
-  const otherProperties = Object.keys(payload.properties).reduce((acc, key) => {
+  const otherProperties = Object.keys(payload.properties).reduce((acc: { [key: string]: unknown }, key: string) => {
     if (!pageRelatedProperties.includes(key) && !customDimensionKeys.includes(key)) {
-      // @ts-ignore
       acc[key] = payload.properties[key];
     }
     return acc;
@@ -396,9 +392,8 @@ function addCampaignData(campaignData: ICampaignDataProps = {}) {
  */
 const formatCustomDimensionsIntoCustomMap = (plugin: IPluginConfig) => {
   const { customDimensions } = plugin;
-  return customDimensions && Object.entries(customDimensions).reduce((acc, entry) => {
+  return customDimensions && Object.entries(customDimensions as { [key: string]: string }).reduce((acc: { [key: string]: string }, entry: [string, string]) => {
     const [key, value] = entry;
-    // @ts-ignore
     acc[value] = key;
     return acc;
   }, {});
@@ -409,13 +404,12 @@ const setCustomDimensions = (properties: { [key: string]: unknown } = {}, config
   const { customDimensions } = config;
   if (!customDimensions) return {};
 
-  const customDimensionsValue = Object.keys(customDimensions).reduce((acc, key) => {
+  const customDimensionsValue = Object.keys(customDimensions as { [key: string]: string }).reduce((acc: { [key: string]: unknown }, key: string) => {
     let value = get(properties, key) || properties[key];
     if (typeof value === 'boolean') {
       value = value.toString()
     }
     if (value || value === 0) {
-      // @ts-ignore
       acc[key] = value
       return acc
     }
@@ -454,11 +448,10 @@ const gtagLoaded = (scriptSrc: string) => {
 }
 
 const scriptLoaded = (scriptSrc: string) => {
-  const scripts = document.querySelectorAll('script[src]');
+  const scripts = document.querySelectorAll('script[src]') as NodeListOf<HTMLScriptElement>;
   const regex = new RegExp(`^${scriptSrc}`);
-  return Boolean(Object.keys(scripts).filter(
-    // @ts-ignore
-    (key) => regex.test(scripts[key].src)
+  return Boolean(Object.values(scripts).filter(
+    (value) => regex.test(value.src)
   ).length);
 }
 
