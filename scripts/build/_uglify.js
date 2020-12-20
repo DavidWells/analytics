@@ -1,14 +1,14 @@
 const fs = require('fs')
 const UglifyJS = require('uglify-js')
+const { minify } = require("terser");
+
 
 module.exports = function shrink(filePath, destination) {
   return new Promise(async (resolve, reject) => {
     const contents = await readFile(filePath)
-    // Hack for Build error JS_Parse_Error [SyntaxError]: Unexpected token: keyword (const) in aws-point
-    if (filePath.match(/@analytics\/aws-pinpoint\.js$/)) {
-      return resolve()
-    }
-    const result = UglifyJS.minify(contents)
+  
+    const result = await minify(contents)
+    // const result = UglifyJS.minify(contents)
     if (result.error) {
       console.log('UglifyJS error', result.error)
       return reject(result.error)
