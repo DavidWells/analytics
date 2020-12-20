@@ -20,6 +20,7 @@ interface ILinkerConfig {
 
 interface IPluginConfig {
   trackingId?: string,
+  anonymizeIp?: boolean,
   instanceName?: string,
   customScriptSrc?: string,
   domain?: string,
@@ -28,7 +29,15 @@ interface IPluginConfig {
   sendPageView?: boolean,
   customDimensions?: { [key: string]: unknown },
   resetCustomDimensionsOnPage?: string[],
+  /**
+   * `gtag.js` has three levels of property scopes. See:
+   * https://developers.google.com/gtagjs/reference/api#parameter_scope
+   * If `setCustomDimensionsToPage` is set true, `custom_dimensions`
+   * would be set with the `config` method.
+   */
   setCustomDimensionsToPage?: boolean,
+  allowGoogleSignals?: boolean,
+  allowAdPersonalizationSignals?: boolean,
 }
 
 interface IPluginApiProps {
@@ -80,9 +89,11 @@ declare global {
 }
 
 const defaultConfig = {
-  trackingId: null,
   sendPageView: true,
   customDimensions: {},
+  anonymizeIp: false,
+  allowGoogleSignals: true,
+  allowAdPersonalizationSignals: true,
 }
 
 let loadedInstances: { [key: string]: boolean } = {};
@@ -90,18 +101,19 @@ let loadedInstances: { [key: string]: boolean } = {};
 const googleGtagAnalytics = (pluginConfig: IPluginConfig = {}) => {
   let pageCalledOnce = false
   // Allow for multiple google analytics instances
-  const { instanceName } = getInstanceDetails(pluginConfig)
+  const instanceName = pluginConfig.instanceName ? pluginConfig.instanceName : '';
 
   const trackingId = pluginConfig.trackingId;
 
   return {
-    name: 'googlt-gtag-analytics',
+    name: 'google-gtag-analytics',
     config: {
       ...defaultConfig,
       ...pluginConfig
     },
     
     // Load gtag.js and define gtag
+    // Set parameter scope at user level with 'set' method
     initialize: (pluginApi: IPluginApiProps) => {
       const { config, instance } = pluginApi;
       if (!trackingId) throw new Error('No GA trackingId defined');
@@ -109,7 +121,7 @@ const googleGtagAnalytics = (pluginConfig: IPluginConfig = {}) => {
       const gtagScriptSource = 'https://www.googletagmanager.com/gtag/js';
       const scriptSrc = config.customScriptSrc || `${gtagScriptSource}?id=${trackingId}`;
 
-      if (!gtagNotLoaded(config.customScriptSrc || gtagScriptSource)) {
+      if (!gtagLoaded(config.customScriptSrc || gtagScriptSource)) {
         injectScript(scriptSrc);
       }
 
@@ -117,16 +129,34 @@ const googleGtagAnalytics = (pluginConfig: IPluginConfig = {}) => {
         setUpWindowGtag();
       }
 
-      const customDimensions = formateCustomDimensionsIntoCustomMap(config);
+      const customDimensions = formatCustomDimensionsIntoCustomMap(config);
+
+      /**
+       * Convert keys to snake cases, because Gtag config object's keys use
+       * snake case instead of camel case. 
+       */
+      let newCookieConfig: { [key: string]: unknown} = {};
+      if (config.cookieConfig !== undefined) {
+        Object.keys(config.cookieConfig).forEach((key: string) => {
+          // @ts-ignore
+          newCookieConfig[camelToSnakeCase(key)] = config.cookieConfig ? config.cookieConfig[key] : null;
+        })
+      }
 
       // Initialize tracker instance on page
       if (!loadedInstances[instanceName]) {
-        let gtagConfig = {
+        let gtagConfig: { [key: string]: unknown } = {
           cookie_domain: config.domain || 'auto',
           send_page_view: config.sendPageView ? config.sendPageView : true,
-          linker: config.linker ? config.linker : undefined,
+          allow_google_signals: config.allowGoogleSignals,
+          allow_ad_personalization_signals: config.allowAdPersonalizationSignals,
           custom_map: customDimensions,
-          ...config.cookieConfig,
+          anonymize_ip: config.anonymizeIp,
+          ...newCookieConfig,
+        }
+
+        if (config.linker) {
+          gtagConfig.linker = config.linker;
         }
 
         /* set custom dimensions from user traits */
@@ -138,23 +168,26 @@ const googleGtagAnalytics = (pluginConfig: IPluginConfig = {}) => {
         }
 
         window.gtag('config', trackingId, gtagConfig);
+
         loadedInstances[instanceName] = true;
       }
     },
 
+    // Set parameter scope at user level with 'set' method
     identify: (props: IProps) => {
       const { payload, config } = props;
       identifyVisitor(payload.userId, payload.traits, config)
     },
 
+    // Set parameter scope at page level with 'config' method
     page: ({ payload, config, instance }: IProps) => {
+      if (!window.gtag || !config.trackingId) return;
+
       const { properties } = payload;
       const { resetCustomDimensionsOnPage, customDimensions } = config;
       const campaign = instance.getState('context.campaign');
 
-      if (!window.gtag || !config.trackingId) return;
-
-      /* If dimensions are specifiied to reset, clear them before page view */
+      /* If dimensions are specified to reset, clear them before page view */
       if (resetCustomDimensionsOnPage && resetCustomDimensionsOnPage.length && customDimensions) {
         const resetDimensions = resetCustomDimensionsOnPage.reduce((acc, key) => {
           if (customDimensions[key]) {
@@ -165,42 +198,55 @@ const googleGtagAnalytics = (pluginConfig: IPluginConfig = {}) => {
         }, {})
 
         if (Object.keys(resetDimensions).length) {
+          // Reset custom dimensions
           window.gtag('set', resetDimensions);
         }
       }
 
+      /* Set dimensions or return them for `config` if config.setCustomDimensionsToPage is false */
+      const customDimensionValues = setCustomDimensions(properties, config);
+
+      /**
+       * Create pageview-related properties
+       */
       const path = properties.path || document.location.pathname;
       const pageView = {
         page_path: path,
         page_title: properties.title,
         page_location: properties.url,
-        send_page_view: config.sendPageView || true,
+        // allow referrer override if referrer was manually set
+        referrer: properties.referrer !== document.referrer ? properties.referrer : undefined,
       }
 
-      let pageData: { [key: string]: unknown } = {
-        page_path: path,
-        page_title: properties.title,
-        send_page_view: config.sendPageView || true,
-      };
-
-      // allow referrer override if referrer was manually set
-      if (properties.referrer !== document.referrer) {
-        pageData.referrer = properties.referrer;
-      }
-
-      window.gtag('set', pageData);
+      /**
+       * Create user properties for `config` method that are not part of custom dimensions
+       */
+      const pageRelatedProperties = ['title', 'url', 'path', 'sendPageView', 'referrer'];
+      const customDimensionKeys = (customDimensions && Object.keys(customDimensions)) || [];
+      const otherProperties = Object.keys(properties).reduce((acc, key) => {
+        if (!pageRelatedProperties.includes(key) && !customDimensionKeys.includes(key)) {
+          // @ts-ignore
+          acc[key] = properties[key];
+        }
+        return acc;
+      }, {});
 
       const campaignData = addCampaignData(campaign);
-
-      /* Set Dimensions or return them for payload is config.setCustomDimensionsToPage is false */
-      const dimensions = setCustomDimensions(properties, config);
+      const convertedCustomDimensions = formatCustomDimensionsIntoCustomMap(config);
 
       /* Dimensions will only be included in the event if config.setCustomDimensionsToPage is false */
+      window.gtag('config', config.trackingId, {
+        // Every time a `pageview` is sent, we need to pass custom_map again into the configuration
+        custom_map: convertedCustomDimensions,
+        send_page_view: config.sendPageView || true,
+        ...customDimensionValues,
+        ...otherProperties,
+      });
+
       const finalPayload = {
         send_to: config.trackingId,
         ...pageView,
         ...campaignData,
-        ...dimensions
       }
 
       // Remove location for SPA tracking after initial page view
@@ -218,6 +264,7 @@ const googleGtagAnalytics = (pluginConfig: IPluginConfig = {}) => {
       return Boolean(window.gtag);
     },
 
+    // Set parameter scope at event level with 'event' method
     track: ({ payload, config, instance}: IProps) => {
       const { properties, event } = payload;
       const { label, value, category, nonInteraction } = properties;
@@ -235,9 +282,24 @@ const googleGtagAnalytics = (pluginConfig: IPluginConfig = {}) => {
   }
 }
 
-const trackEvent = (eventData: ITrackEventProps, opts: IPluginConfig = {}, payload: IPayload) => {
-  if (!window.gtag) return;
+const trackEvent = (eventData: ITrackEventProps, config: IPluginConfig = {}, payload: IPayload) => {
+  if (!window.gtag || !config.trackingId) return;
 
+  /* Set Dimensions or return them for payload if config.setCustomDimensionsToPage is false */
+  const customDimensionValues = setCustomDimensions(payload.properties, config);
+
+  const convertedCustomDimensions = formatCustomDimensionsIntoCustomMap(config);
+  /**
+   * You have to re`config` custom_map for events if new values are `set` for a user
+   */
+  window.gtag('config', config.trackingId, {
+    send_page_view: config.sendPageView || true,
+    custom_map: convertedCustomDimensions,
+  });
+
+  /**
+   * Create event-related properties
+   */
   const data: { [key: string]: unknown } = {
     event_label: eventData.label,
     event_category: eventData.category || 'All',
@@ -252,51 +314,36 @@ const trackEvent = (eventData: ITrackEventProps, opts: IPluginConfig = {}, paylo
   /* Attach campaign data */
   const campaignData = addCampaignData(eventData.campaign);
 
-  /* Set Dimensions or return them for payload is config.setCustomDimensionsToPage is false */
-  const dimensions = setCustomDimensions(payload.properties, opts);
+  /**
+   * Create user properties for `config` method that are not part of custom dimensions
+   */
+  const pageRelatedProperties = ['label', 'category', 'nonInteraction', 'value'];
+  const customDimensionKeys = (config.customDimensions && Object.keys(config.customDimensions)) || [];
+  const otherProperties = Object.keys(payload.properties).reduce((acc, key) => {
+    if (!pageRelatedProperties.includes(key) && !customDimensionKeys.includes(key)) {
+      // @ts-ignore
+      acc[key] = payload.properties[key];
+    }
+    return acc;
+  }, {});
 
   const finalPayload = {
+    ...otherProperties,
     ...data,
     /* Attach campaign data, if exists */
     ...campaignData,
     /* Dimensions will only be included in the event if config.setCustomDimensionsToPage is false */
-    ...dimensions
+    ...customDimensionValues
   };
 
   /* Send data to Google Analytics */
-  window.gtag('event', eventData.event, finalPayload)
+  window.gtag('event', eventData.event, finalPayload);
   return finalPayload;
 }
 
-// from props pick out the keys that exist in config.customDimensions
-const setCustomDimensions = (properties: { [key: string]: unknown } = {}, opts: IPluginConfig) => {
-  const { customDimensions } = opts;
-  if (!customDimensions) return {};
+const camelToSnakeCase = (key: string) => key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
 
-  const customDimensionsValue = Object.keys(customDimensions).reduce((acc, key) => {
-    let value = get(properties, key) || properties[key];
-    if (typeof value === 'boolean') {
-      value = value.toString()
-    }
-    if (value || value === 0) {
-      // @ts-ignore
-      acc[key] = value
-      return acc
-    }
-    return acc
-  }, {});
-
-  if (!Object.keys(customDimensionsValue).length) return {};
-
-  if (!opts.setCustomDimensionsToPage) {
-    return customDimensionsValue;
-  }
-
-  window.gtag('set', customDimensionsValue);
-  return {};
-}
-
-function get(obj: { [key: string]: unknown }, key: string) {
+const get = (obj: { [key: string]: unknown }, key: string) => {
   const keys = key.split ? key.split('.') : key;
   let object = undefined;
   for (let p = 0; p < keys.length; p++) {
@@ -347,7 +394,7 @@ function addCampaignData(campaignData: ICampaignDataProps = {}) {
  * to:
  * { dimension1: traitOne, dimension2: traitTwo }
  */
-const formateCustomDimensionsIntoCustomMap = (plugin: IPluginConfig) => {
+const formatCustomDimensionsIntoCustomMap = (plugin: IPluginConfig) => {
   const { customDimensions } = plugin;
   return customDimensions && Object.entries(customDimensions).reduce((acc, entry) => {
     const [key, value] = entry;
@@ -357,6 +404,34 @@ const formateCustomDimensionsIntoCustomMap = (plugin: IPluginConfig) => {
   }, {});
 }
 
+// from props pick out the keys that exist in config.customDimensions
+const setCustomDimensions = (properties: { [key: string]: unknown } = {}, config: IPluginConfig) => {
+  const { customDimensions } = config;
+  if (!customDimensions) return {};
+
+  const customDimensionsValue = Object.keys(customDimensions).reduce((acc, key) => {
+    let value = get(properties, key) || properties[key];
+    if (typeof value === 'boolean') {
+      value = value.toString()
+    }
+    if (value || value === 0) {
+      // @ts-ignore
+      acc[key] = value
+      return acc
+    }
+    return acc
+  }, {});
+
+  if (!Object.keys(customDimensionsValue).length) return {};
+
+  if (!config.setCustomDimensionsToPage) {
+    return customDimensionsValue;
+  }
+
+  window.gtag('set', customDimensionsValue);
+  return {};
+}
+
 export const identifyVisitor = (
   id: string | undefined,
   traits: { [key: string]: unknown } = {},
@@ -364,32 +439,17 @@ export const identifyVisitor = (
 ) => {
   const trackingId = config.trackingId;
   if (!window.gtag || !trackingId) return;
+  
+  if (id) {
+    window.gtag('set', { user_id: id });
+  }
 
   if (Object.keys(traits).length) {
     window.gtag('set', traits);
-
-    const customDimensions = formateCustomDimensionsIntoCustomMap(config);
-    const trackingConfig: { [key: string]: unknown }  = {
-      send_page_view: config.sendPageView,
-      custom_map: customDimensions,
-    }
-
-    if (id) trackingConfig.user_id = id;
-  
-    window.gtag('config', trackingId, trackingConfig);
   }
 }
 
-const getInstanceDetails = (pluginConfig: IPluginConfig) => {
-  const { instanceName } = pluginConfig;
-
-  return {
-    instancePrefix: instanceName ? `${instanceName}.` : '',
-    instanceName: `gtag_${instanceName}`,
-  }
-}
-
-const gtagNotLoaded = (scriptSrc: string) => {
+const gtagLoaded = (scriptSrc: string) => {
   return scriptLoaded(scriptSrc)
 }
 
