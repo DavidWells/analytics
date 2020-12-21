@@ -23,7 +23,7 @@
     "Google Global Site Tag",
     "google-global-site-tag"
   ],
-  "author": "Bing Wang",
+  "author": "Bing Wang, David Wells",
   "license": "MIT",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

@@ -29,15 +29,16 @@ interface IPluginConfig {
   sendPageView?: boolean,
   customDimensions?: { [key: string]: unknown },
   resetCustomDimensionsOnPage?: string[],
-  /**
-   * `gtag.js` has three levels of property scopes. See:
-   * https://developers.google.com/gtagjs/reference/api#parameter_scope
-   * If `setCustomDimensionsToPage` is set true, `custom_dimensions`
-   * would be set with the `config` method.
-   */
   setCustomDimensionsToPage?: boolean,
   allowGoogleSignals?: boolean,
   allowAdPersonalizationSignals?: boolean,
+  /**
+   * `ga4` properties have three levels of paramter scopes. See:
+   * https://developers.google.com/gtagjs/reference/api#parameter_scope
+   */
+  globalProperties?: string[], // Define parameter values with the `set` command
+  userProperties?: string[], // Define parameter values with the `config` command
+  eventProperties?: string[], // Define parameter values with the `event` command
 }
 
 interface IPluginApiProps {
@@ -113,7 +114,7 @@ const googleGtagAnalytics = (pluginConfig: IPluginConfig = {}) => {
     },
     
     // Load gtag.js and define gtag
-    // Set parameter scope at user level with 'set' method
+    // Set custom dimensions (ua properties) and parameters (ga4 properties)
     initialize: (pluginApi: IPluginApiProps) => {
       const { config, instance } = pluginApi;
       if (!trackingId) throw new Error('No GA trackingId defined');
@@ -129,11 +130,14 @@ const googleGtagAnalytics = (pluginConfig: IPluginConfig = {}) => {
         setUpWindowGtag();
       }
 
+      /**
+       * Covert custom dimensions to:
+       * { dimension1: traitOne, dimension2: traitTwo }
+       */
       const customDimensions = formatCustomDimensionsIntoCustomMap(config);
 
       /**
-       * Convert keys to snake cases, because Gtag config object's keys use
-       * snake case instead of camel case. 
+       * Convert `cookieConfig`'s keys from camel case to snake cases
        */
       let newCookieConfig: { [key: string]: unknown} = {};
       if (config.cookieConfig !== undefined) {
@@ -201,9 +205,6 @@ const googleGtagAnalytics = (pluginConfig: IPluginConfig = {}) => {
         }
       }
 
-      /* Set dimensions or return them for `config` if config.setCustomDimensionsToPage is false */
-      const customDimensionValues = setCustomDimensions(properties, config);
-
       /**
        * Create pageview-related properties
        */
@@ -212,23 +213,30 @@ const googleGtagAnalytics = (pluginConfig: IPluginConfig = {}) => {
         page_path: path,
         page_title: properties.title,
         page_location: properties.url,
-        // allow referrer override if referrer was manually set
-        referrer: properties.referrer !== document.referrer ? properties.referrer : undefined,
       }
 
-      /**
-       * Create user properties for `config` method that are not part of custom dimensions
-       */
-      const pageRelatedProperties = ['title', 'url', 'path', 'sendPageView', 'referrer'];
-      const customDimensionKeys = (customDimensions && Object.keys(customDimensions)) || [];
-      const otherProperties = Object.keys(properties).reduce((acc: { [key: string]: unknown }, key: string) => {
-        if (!pageRelatedProperties.includes(key) && !customDimensionKeys.includes(key)) {
-          acc[key] = properties[key];
-        }
-        return acc;
-      }, {});
-
       const campaignData = addCampaignData(campaign);
+      /**
+       * Creates property dimensions for global scope
+       */
+      const globalProperties = getProperties(properties, config.globalProperties);
+
+      const pageData = {
+        page: path,
+        title: properties.title,
+        // allow referrer override if referrer was manually set
+        referrer: properties.referrer !== document.referrer ? properties.referrer : undefined,
+        ...globalProperties,
+      }
+      window.gtag('set', pageData);
+
+      /* Set dimensions or return them for `config` if config.setCustomDimensionsToPage is false */
+      const customDimensionValues = setCustomDimensions(properties, config);
+
+      /**
+       * Creates property dimensions for user scope
+       */
+      const userProperties = getProperties(properties, config.userProperties);
       const convertedCustomDimensions = formatCustomDimensionsIntoCustomMap(config);
 
       /* Dimensions will only be included in the event if config.setCustomDimensionsToPage is false */
@@ -236,14 +244,29 @@ const googleGtagAnalytics = (pluginConfig: IPluginConfig = {}) => {
         // Every time a `pageview` is sent, we need to pass custom_map again into the configuration
         custom_map: convertedCustomDimensions,
         send_page_view: config.sendPageView || true,
-        ...customDimensionValues,
-        ...otherProperties,
+        ...userProperties,
       });
 
+      /**
+       * Create user properties for `config` method that are not part of custom dimensions
+       */
+      const pageRelatedProperties = ['title', 'url', 'path', 'sendPageView', 'referrer'];
+      const customDimensionKeys = (customDimensions && Object.keys(customDimensions)) || [];
+      const selfDefinedPageProperties = Object.keys(properties).reduce((acc: { [key: string]: unknown }, key: string) => {
+        if (!pageRelatedProperties.includes(key) && !customDimensionKeys.includes(key) && !(config.globalProperties &&config.globalProperties.includes(key)) && !(config.userProperties &&config.userProperties.includes(key))) {
+          acc[key] = properties[key];
+        }
+        return acc;
+      }, {});
+
+      /* Dimensions will only be included in the event if config.setCustomDimensionsToPage is false */
       const finalPayload = {
         send_to: config.trackingId,
         ...pageView,
         ...campaignData,
+        ...customDimensionValues,
+        ...pageRelatedProperties,
+        ...selfDefinedPageProperties,
       }
 
       // Remove location for SPA tracking after initial page view
@@ -279,7 +302,7 @@ const googleGtagAnalytics = (pluginConfig: IPluginConfig = {}) => {
   }
 }
 
-const trackEvent = (eventData: ITrackEventProps, config: IPluginConfig = {}, payload: IPayload) => {
+const trackEvent = (eventData: ITrackEventProps & { [key: string]: unknown }, config: IPluginConfig = {}, payload: IPayload) => {
   if (!window.gtag || !config.trackingId) return;
 
   /* Set Dimensions or return them for payload if config.setCustomDimensionsToPage is false */
@@ -312,24 +335,23 @@ const trackEvent = (eventData: ITrackEventProps, config: IPluginConfig = {}, pay
   const campaignData = addCampaignData(eventData.campaign);
 
   /**
-   * Create user properties for `config` method that are not part of custom dimensions
-   */
-  const pageRelatedProperties = ['label', 'category', 'nonInteraction', 'value'];
-  const customDimensionKeys = (config.customDimensions && Object.keys(config.customDimensions)) || [];
-  const otherProperties = Object.keys(payload.properties).reduce((acc: { [key: string]: unknown }, key: string) => {
-    if (!pageRelatedProperties.includes(key) && !customDimensionKeys.includes(key)) {
+   * Creates self-defined event property values
+   */ 
+  const gaEventProperties = ['label', 'category', 'nonInteraction', 'value'];
+  const selfDefinedEventProperties = Object.keys(payload.properties).reduce((acc: { [key: string]: unknown }, key: string) => {
+    if (!gaEventProperties.includes(key)) {
       acc[key] = payload.properties[key];
     }
     return acc;
   }, {});
 
   const finalPayload = {
-    ...otherProperties,
     ...data,
     /* Attach campaign data, if exists */
     ...campaignData,
     /* Dimensions will only be included in the event if config.setCustomDimensionsToPage is false */
-    ...customDimensionValues
+    ...customDimensionValues,
+    ...selfDefinedEventProperties,
   };
 
   /* Send data to Google Analytics */
@@ -399,7 +421,24 @@ const formatCustomDimensionsIntoCustomMap = (plugin: IPluginConfig) => {
   }, {});
 }
 
-// from props pick out the keys that exist in config.customDimensions
+/**
+ * Create parameter value object based on given key values.
+ * */
+const getProperties = (properties: { [key: string]: unknown } = {}, propertyKeys: string[] = []) => {
+  return propertyKeys.reduce((acc: { [key: string]: unknown }, key: string) => {
+    if (properties[key]) {
+      acc[key] = properties[key];
+    }
+    return acc;
+  }, {});
+}
+
+/**
+ * Create custom dimension value object with keys that exist in
+ * config.customDimensions. If `config.setCustomDimensionsToPage`
+ * is true, set custom dimension values with the `set` command.
+ * Otherwise, return object for `config`.
+ * */
 const setCustomDimensions = (properties: { [key: string]: unknown } = {}, config: IPluginConfig) => {
   const { customDimensions } = config;
   if (!customDimensions) return {};
