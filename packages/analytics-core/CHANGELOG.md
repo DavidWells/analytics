@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/DavidWells/analytics/compare/@analytics/core@0.8.0...@analytics/core@0.9.0) (2020-12-23)
+
+
+### Features
+
+* allow all plugins to have ‘enable’ option ([9d03087](https://github.com/DavidWells/analytics/commit/9d03087))
+
+
+
+
+
 # [0.8.0](https://github.com/DavidWells/analytics/compare/@analytics/core@0.7.2...@analytics/core@0.8.0) (2020-12-23)
 
 
