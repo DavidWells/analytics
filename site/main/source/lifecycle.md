@@ -84,7 +84,6 @@ Below is a list of events exposed by default. To see the events flowing through 
 | **`registerPlugins`** | Fires when analytics is registering plugins |
 | **`enablePlugin`** | Fires when 'analytics.plugins.enable()' is called |
 | **`disablePlugin`** | Fires when 'analytics.plugins.disable()' is called |
-| **`loadPlugin`** | Fires when 'analytics.loadPlugin()' is called |
 
 ## Example using Listeners
 
