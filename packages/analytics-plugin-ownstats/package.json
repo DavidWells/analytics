@@ -1,6 +1,6 @@
 {
   "name": "@analytics/ownstats",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Ownstats integration for 'analytics' module for browser & node",
   "projectMeta": {
     "provider": {

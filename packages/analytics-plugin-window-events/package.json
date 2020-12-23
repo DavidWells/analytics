@@ -1,6 +1,6 @@
 {
   "name": "analytics-plugin-window-events",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Expose window events plugin for 'analytics' module",
   "author": "David Wells",
   "license": "MIT",
