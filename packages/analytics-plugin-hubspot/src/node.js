@@ -4,17 +4,17 @@
 
 const config = {}
 
-const NAMESPACE = 'hubspot'
+const name = 'hubspot'
 
 const logMessage = () => {
-  console.log(`${NAMESPACE} not available in node.js yet. Todo implement https://www.npmjs.com/package/hubspot`)
+  console.log(`${name} not available in node.js yet. Todo implement https://www.npmjs.com/package/hubspot`)
 }
 
 /* Export the integration */
 function hubSpotPlugin(userConfig = {}) {
   // Allow for userland overides of base methods
   return {
-    NAMESPACE: NAMESPACE,
+    name: name,
     config: {
       ...config,
       ...userConfig

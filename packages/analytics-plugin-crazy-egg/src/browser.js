@@ -16,7 +16,7 @@
  */
 export default function crazyEgg(pluginConfig = {}) {
   return {
-    NAMESPACE: 'crazy-egg',
+    name: 'crazy-egg',
     config: pluginConfig,
     initialize: ({ config }) => {
       const { accountNumber } = config

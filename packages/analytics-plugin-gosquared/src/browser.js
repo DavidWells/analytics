@@ -41,7 +41,7 @@ const config = {
  */
 function goSquaredPlugin(pluginConfig = {}) {
   return {
-    NAMESPACE: 'gosquared',
+    name: 'gosquared',
     config: pluginConfig,
     config: {
       ...config,

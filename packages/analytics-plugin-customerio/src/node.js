@@ -30,7 +30,7 @@ function customerIOServer(pluginConfig = {}) {
   }
   const client = new CustomerIO(pluginConfig.siteId, pluginConfig.apiKey)
   return {
-    NAMESPACE: 'customerio',
+    name: 'customerio',
     config: pluginConfig,
     // page view
     page: ({ payload }) => {

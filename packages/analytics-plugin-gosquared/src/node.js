@@ -1,7 +1,7 @@
 
 export default function goSquared(pluginConfig) {
   return {
-    NAMESPACE: 'gosquared',
+    name: 'gosquared',
     initialize: ({ config }) => {
       console.log('GoSquared has no server implementation')
     }

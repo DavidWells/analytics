@@ -19,7 +19,7 @@ function hubSpotPlugin(pluginConfig = {}) {
   let initialPageViewFired = false
   // Allow for userland overides of base methods
   return {
-    NAMESPACE: 'hubspot',
+    name: 'hubspot',
     config: pluginConfig,
     initialize: ({ config }) => {
       const { portalId, customScriptSrc } = config

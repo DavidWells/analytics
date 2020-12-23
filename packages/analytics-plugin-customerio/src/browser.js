@@ -19,7 +19,7 @@ function customerIOPlugin(pluginConfig = {}) {
   // We need to ignore the first .page() call
   let initialPageViewFired = false
   return {
-    NAMESPACE: 'customerio',
+    name: 'customerio',
     config: pluginConfig,
     initialize: ({ config }) => {
       const { siteId } = config

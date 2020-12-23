@@ -1,7 +1,7 @@
 
 export default function crazyEgg(pluginConfig) {
   return {
-    NAMESPACE: 'crazy-egg',
+    name: 'crazy-egg',
     initialize: ({ config }) => {
       console.log('Crazy egg has no server implementation')
     }

@@ -22,7 +22,7 @@ const defaultConfig = {
 function fullStoryPlugin(pluginConfig = {}) {
   const source = 'analytics'
   return {
-    NAMESPACE: 'fullstory',
+    name: 'fullstory',
     config: {
       ...defaultConfig,
       ...pluginConfig

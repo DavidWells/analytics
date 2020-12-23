@@ -2,7 +2,7 @@
 // Todo design API for doNotTrack to allow for fine grained permissions
 export default function doNotTrackPlugin(userConfig = {}) {
   return {
-    NAMESPACE: 'do-not-track',
+    name: 'do-not-track',
     config: Object.assign({}, userConfig),
     initializeStart: ({ abort, config }) => {
       if (doNotTrackEnabled()) {

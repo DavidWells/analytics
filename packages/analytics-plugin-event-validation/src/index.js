@@ -20,7 +20,7 @@ const defaultConfig = {
  */
 export default function eventValidationPlugin(pluginConfig = {}) {
   return {
-    NAMESPACE: 'event-validation',
+    name: 'event-validation',
     config: {
       ...defaultConfig,
       ...pluginConfig
