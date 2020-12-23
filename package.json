@@ -9,7 +9,7 @@
     "test": "lerna run test",
     "test:watch": "lerna run test:watch --parallel --stream",
     "watch": "lerna run watch --parallel --stream",
-    "watch:core": "lerna run watch --stream --scope analytics",
+    "watch:core": "npm run watch -- --scope analytics --scope @analytics/core",
     "develop": "lerna run develop --parallel",
     "build": "npm run clean && lerna run build",
     "postbuild": "lerna run types",

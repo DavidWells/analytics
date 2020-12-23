@@ -1,4 +1,5 @@
 import {
+  uuid,
   paramsParse,
   dotProp,
   isFunction,
@@ -12,7 +13,7 @@ import { createStore, combineReducers, applyMiddleware, compose } from './vendor
 import * as middleware from './middleware'
 import DynamicMiddleware from './middleware/dynamic'
 // Modules
-import pluginsMiddleware, { enablePlugin, disablePlugin } from './modules/plugins'
+import pluginsMiddleware from './modules/plugins'
 import context, { makeContext } from './modules/context'
 import page, { getPageData } from './modules/page'
 import track from './modules/track'
@@ -27,6 +28,8 @@ import { watch } from './utils/handleNetworkEvents'
 import getCallback from './utils/getCallback'
 import { Debug, composeWithDebug } from './utils/debug'
 import heartBeat from './utils/heartbeat'
+import { stack } from './utils/callback-stack'
+import ensureArray from './utils/ensureArray'
 
 const { setItem, removeItem } = middleware
 
@@ -62,61 +65,65 @@ function analytics(config = {}) {
 
   /* Parse plugins array */
   const parsedOptions = (config.plugins || []).reduce((acc, plugin) => {
-    if (!isFunction(plugin)) {
-      // Legacy plugin with Namespace
-      if (plugin.NAMESPACE) plugin.name = plugin.NAMESPACE
-      if (!plugin.name) {
-        /* Plugins must supply a "name" property. See error url for more details */
-        throw new Error(ERROR_URL + '1')
-      }
-      // if plugin exposes EVENTS capture available events
-      const definedEvents = (plugin.EVENTS) ? Object.keys(plugin.EVENTS).map((k) => {
-        return plugin.EVENTS[k]
-      }) : []
-
-      if (plugin.methods) {
-        if (RESERVED_METHOD_NAMES.includes(plugin.name)) {
-          throw new Error(plugin.name  + ' is reserved pluginName')
-        }
-        acc.methods[plugin.name] = Object.keys(plugin.methods).reduce((a, c) => {
-          // enrich methods with analytics instance
-          a[c] = appendArguments(plugin.methods[c])
-          return a
-        }, {})
-        // Remove additional methods from plugins
-        delete plugin.methods
-      }
-      // Convert available methods into events
-      const methodsToEvents = Object.keys(plugin)
-      // Combine events
-      const allEvents = methodsToEvents.concat(definedEvents)
-      // Dedupe events list
-      const allEventsUnique = new Set(acc.events.concat(allEvents))
-      acc.events = Array.from(allEventsUnique)
-
-      acc.pluginsArray = acc.pluginsArray.concat(plugin)
-
-      if (acc.plugins[plugin.name]) {
-        throw new Error(plugin.name + ' already loaded')
-      }
-      acc.plugins[plugin.name] = plugin
-      if (!acc.plugins[plugin.name].loaded) {
-        // set default loaded func
-        acc.plugins[plugin.name].loaded = () => { return true }
-      }
+    if (isFunction(plugin)) {
+      /* Custom redux middleware */
+      acc.middlewares = acc.middlewares.concat(plugin)
       return acc
     }
-    /* Custom redux middleware */
-    acc.middlewares = acc.middlewares.concat(plugin)
+    // Legacy plugin with name
+    if (plugin.NAMESPACE) plugin.name = plugin.NAMESPACE
+    if (!plugin.name) {
+      /* Plugins must supply a "name" property. See error url for more details */
+      throw new Error(ERROR_URL + '1')
+    }
+    // if plugin exposes EVENTS capture available events
+    const definedEvents = (plugin.EVENTS) ? Object.keys(plugin.EVENTS).map((k) => {
+      return plugin.EVENTS[k]
+    }) : []
+
+    acc.pluginEnabled[plugin.name] = !(plugin.enabled === false)
+    delete plugin.enabled
+
+    if (plugin.methods) {
+      if (RESERVED_METHOD_NAMES.includes(plugin.name)) {
+        throw new Error(plugin.name  + ' is reserved pluginName')
+      }
+      acc.methods[plugin.name] = Object.keys(plugin.methods).reduce((a, c) => {
+        // enrich methods with analytics instance
+        a[c] = appendArguments(plugin.methods[c])
+        return a
+      }, {})
+      // Remove additional methods from plugins
+      delete plugin.methods
+    }
+    // Convert available methods into events
+    const methodsToEvents = Object.keys(plugin)
+    // Combine events
+    const allEvents = methodsToEvents.concat(definedEvents)
+    // Dedupe events list
+    const allEventsUnique = new Set(acc.events.concat(allEvents))
+    acc.events = Array.from(allEventsUnique)
+
+    acc.pluginsArray = acc.pluginsArray.concat(plugin)
+
+    if (acc.plugins[plugin.name]) {
+      throw new Error(plugin.name + ' already loaded')
+    }
+    acc.plugins[plugin.name] = plugin
+    if (!acc.plugins[plugin.name].loaded) {
+      // set default loaded func
+      acc.plugins[plugin.name].loaded = () => true
+    }
     return acc
   }, {
     plugins: {},
+    pluginEnabled: {},
     methods: {},
     pluginsArray: [],
     middlewares: [],
     events: []
   })
-
+  
   /* Storage by default is set to global & is not persisted */
   const storage = (config.storage) ? config.storage : {
     getItem: (key) => globalContext[key],
@@ -167,7 +174,9 @@ function analytics(config = {}) {
   const initialUser = getPersistedUserData(params, storage)
 
   /**
-   * Management methods for plugins. This is also where [custom methods](https://bit.ly/329vFXy) are loaded into the instance.
+   * Async Management methods for plugins. 
+   * 
+   * This is also where [custom methods](https://bit.ly/329vFXy) are loaded into the instance.
    * @typedef {Object} Plugins
    * @property {EnablePlugin} enable - Set storage value
    * @property {DisablePlugin} disable - Remove storage value
@@ -185,29 +194,57 @@ function analytics(config = {}) {
      * @typedef {Function} EnablePlugin
      * @param  {String|Array} plugins - name of plugins(s) to disable
      * @param  {Function} [callback] - callback after enable runs
+     * @returns {Promise}
      * @example
      *
-     * analytics.plugins.enable('google')
+     * analytics.plugins.enable('google-analytics').then(() => {
+     *   console.log('do stuff')
+     * })
      *
      * // Enable multiple plugins at once
-     * analytics.plugins.enable(['google', 'segment'])
+     * analytics.plugins.enable(['google-analytics', 'segment']).then(() => {
+     *   console.log('do stuff')
+     * })
      */
     enable: (plugins, callback) => {
-      store.dispatch(enablePlugin(plugins, callback))
+      const time = uuid()
+      return new Promise((resolve) => {
+        stack[time] = resolvePromise(resolve, callback)
+        store.dispatch({
+          type: EVENTS.enablePlugin,
+          plugins: ensureArray(plugins),
+          ts: time,
+          _: { originalAction: EVENTS.enablePlugin }
+        })
+      })
     },
     /**
      * Disable analytics plugin
      * @typedef {Function} DisablePlugin
-     * @param  {String|Array} name - name of integration(s) to disable
+     * @param  {String|Array} plugins - name of integration(s) to disable
      * @param  {Function} callback - callback after disable runs
+     * @returns {Promise}
      * @example
      *
-     * analytics.plugins.disable('google')
+     * analytics.plugins.disable('google').then(() => {
+     *   console.log('do stuff')
+     * })
      *
-     * analytics.plugins.disable(['google', 'segment'])
+     * analytics.plugins.disable(['google', 'segment']).then(() => {
+     *   console.log('do stuff')
+     * })
      */
-    disable: (name, callback) => {
-      store.dispatch(disablePlugin(name, callback))
+    disable: (plugins, callback) => {
+      const time = uuid()
+      return new Promise((resolve) => {
+        stack[time] = resolvePromise(resolve, callback)
+        store.dispatch({
+          type: EVENTS.disablePlugin,
+          plugins: ensureArray(plugins),
+          ts: time,
+          _: { originalAction: EVENTS.disablePlugin }
+        })
+      })
     },
     /*
      * Load registered analytic providers.
@@ -831,21 +868,24 @@ function analytics(config = {}) {
   }
 
   const initialConfig = makeContext(config)
-  // console.log('initialUser', initialUser)
+
+  const intialPluginState = parsedOptions.pluginsArray.reduce((acc, plugin) => {
+    const { name, config, loaded } = plugin
+    const isEnabled = parsedOptions.pluginEnabled[name]
+    acc[name] = {
+      enabled: isEnabled,
+      // If plugin enabled & has no initialize method, set initialized to true, else false
+      initialized: (isEnabled) ? Boolean(!plugin.initialize) : false,
+      loaded: Boolean(loaded()),
+      config: config || {}
+    }
+    return acc
+  }, {})
+  
   const initialState = {
     context: initialConfig,
     user: initialUser,
-    plugins: parsedOptions.pluginsArray.reduce((acc, plugin) => {
-      const { name, config, loaded } = plugin
-      acc[name] = {
-        enabled: true,
-        // If plugin has no initialize method, set initialized to true
-        initialized: Boolean(!plugin.initialize),
-        loaded: Boolean(loaded()),
-        config: config || {}
-      }
-      return acc
-    }, {}),
+    plugins: intialPluginState,
     // Todo allow for more userland defined initial state?
   }
 
@@ -875,42 +915,47 @@ function analytics(config = {}) {
     user: initialUser
   })
 
+  const enabledPlugins = pluginKeys.filter((name) => parsedOptions.pluginEnabled[name])
+  const disabledPlugins = pluginKeys.filter((name) => !parsedOptions.pluginEnabled[name])
+ 
   /* Register analytic plugins */
   store.dispatch({
     type: EVENTS.registerPlugins,
     plugins: pluginKeys,
+    enabled: parsedOptions.pluginEnabled,
   })
 
-  parsedOptions.pluginsArray.map((plugin, i) => { // eslint-disable-line
-    const { bootstrap, config } = plugin
+  /* dispatch register for individual plugins */
+  parsedOptions.pluginsArray.map((plugin, i) => {
+    const { bootstrap, config, name } = plugin
     if (bootstrap && isFunction(bootstrap)) {
       bootstrap({ instance, config, payload: plugin })
     }
-    const lastCall = parsedOptions.pluginsArray.length === (i + 1)
     /* Register plugins */
     store.dispatch({
-      type: EVENTS.registerPluginType(plugin.name),
-      name: plugin.name,
+      type: EVENTS.registerPluginType(name),
+      name: name,
+      enabled: parsedOptions.pluginEnabled[name],
       plugin: plugin
     })
 
-    /* All plugins registered initialize */
-    if (lastCall) {
+    /* All plugins registered initialize, is last loop */
+    if (parsedOptions.pluginsArray.length === (i + 1)) {
       store.dispatch({
         type: EVENTS.initializeStart,
-        plugins: pluginKeys
+        plugins: enabledPlugins,
+        disabled: disabledPlugins
       })
     }
   })
 
   if (process.browser) {
     /* Watch for network events */
-    watch(offline => {
+    watch((offline) => {
       store.dispatch({
         type: (offline) ? EVENTS.offline : EVENTS.online,
       })
     })
-
     /* Tick heartbeat for queued events */
     heartBeat(store, getPlugins, instance)
   }

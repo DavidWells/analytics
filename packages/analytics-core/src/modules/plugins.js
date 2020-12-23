@@ -1,46 +1,47 @@
 // Integrations Reducer. Follows ducks pattern http://bit.ly/2DnERMc
 import EVENTS from '../events'
 
-const initialState = {}
-
 export default function createReducer(getPlugins) {
-  return function plugins(state = initialState, action) {
+  return function plugins(state = {}, action) {
     let newState = {}
     if (action.type === 'initialize:aborted') {
       return state
     }
     if (/^registerPlugin:([^:]*)$/.test(action.type)) {
-      const name = action.type.split(':')[1]
-      const pluginInstance = getPlugins()[name]
-      if (!pluginInstance || !name) {
+      const name = getNameFromEventType(action.type, 'registerPlugin')
+      const plugin = getPlugins()[name]
+      if (!plugin || !name) {
         return state
       }
+      const isEnabled = action.enabled
       newState[name] = {
-        enabled: true,
+        enabled: isEnabled,
         /* if no initialization method. Set initialized true */
-        initialized: (pluginInstance.initialize) ? false : true, // eslint-disable-line
-        loaded: Boolean(pluginInstance.loaded()),
-        config: pluginInstance.config || {}
+        initialized: (isEnabled) ? Boolean(!plugin.initialize) : false,
+        /* If plugin enabled === false, set loaded to false, else check plugin.loaded function */
+        loaded: (isEnabled) ? Boolean(plugin.loaded()) : false,
+        config: plugin.config || {}
       }
       return { ...state, ...newState }
     }
     if (/^initialize:([^:]*)$/.test(action.type)) {
-      const name = action.type.split(':')[1]
-      const pluginInstance = getPlugins()[name]
-      if (!pluginInstance || !name) {
+      const name = getNameFromEventType(action.type, EVENTS.initialize)
+      const plugin = getPlugins()[name]
+      if (!plugin || !name) {
         return state
       }
       newState[name] = {
         ...state[name],
         ...{
           initialized: true,
-          loaded: Boolean(pluginInstance.loaded())
+          /* check plugin.loaded function */
+          loaded: Boolean(plugin.loaded())
         }
       }
       return { ...state, ...newState }
     }
     if (/^ready:([^:]*)$/.test(action.type)) {
-      // @TODO name missing from this fix
+      // const name = getNameFromEventType(action.type, 'ready')
       newState[action.name] = {
         ...state[action.name],
         ...{ loaded: true }
@@ -56,64 +57,36 @@ export default function createReducer(getPlugins) {
         }
         return { ...state, ...newState }
       */
+      /* When analytics.plugins.disable called */
       case EVENTS.disablePlugin:
-        // handle array of integrations ['vanilla', 'google']
-        if (Array.isArray(action.name)) {
-          newState = action.name.reduce((acc, curr) => {
-            acc[curr] = {
-              ...state[curr],
-              ...{ enabled: false }
-            }
-            return acc
-          }, state)
-          return {...state, ...newState}
+        return { 
+          ...state,
+          ...togglePluginStatus(action.plugins, false, state)
         }
-        newState[action.name] = {
-          ...state[action.name],
-          ...{ enabled: false }
-        }
-        return {...state, ...newState}
+      /* When analytics.plugins.enable called */
       case EVENTS.enablePlugin:
-        // handle array of integrations ['vanilla', 'google']
-        if (Array.isArray(action.name)) {
-          newState = action.name.reduce((acc, curr) => {
-            acc[curr] = {
-              ...state[curr],
-              ...{ enabled: true }
-            }
-            return acc
-          }, state)
-          return {...state, ...newState}
+        return {
+          ...state, 
+          ...togglePluginStatus(action.plugins, true, state)
         }
-        newState[action.name] = {
-          ...state[action.name],
-          ...{ enabled: true }
-        }
-        return {...state, ...newState}
       default:
         return state
     }
   }
 }
 
-export const enablePlugin = (name, callback) => {
-  return {
-    type: EVENTS.enablePlugin,
-    name: name,
-    callback: callback,
-    _: {
-      originalAction: EVENTS.enablePlugin,
-    }
-  }
+function getNameFromEventType(type, baseName) {
+  return type.substring(baseName.length + 1, type.length)
 }
 
-export const disablePlugin = (name, callback) => {
-  return {
-    type: EVENTS.disablePlugin,
-    name: name,
-    callback: callback,
-    _: {
-      originalAction: EVENTS.disablePlugin,
+function togglePluginStatus(plugins, status, currentState) {
+  return plugins.reduce((acc, pluginKey) => {
+    acc[pluginKey] = {
+      ...currentState[pluginKey],
+      ...{ 
+        enabled: status 
+      }
     }
-  }
+    return acc
+  }, currentState)
 }

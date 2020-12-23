@@ -1,3 +1,4 @@
+import EVENTS from '../../events'
 import fitlerDisabledPlugins from '../../utils/filterDisabled'
 import { isFunction, isObject, isString } from 'analytics-utils'
 
@@ -18,12 +19,23 @@ export default async function (action, getPlugins, instance, store, eventsInfo) 
 
   const state = instance.getState()
   /* Remove plugins that are disabled by options or by settings */
-  const activePlugins = fitlerDisabledPlugins(pluginObject, state.plugins, action.options)
-  // console.log('activePlugins', activePlugins)
+  let activePlugins = fitlerDisabledPlugins(pluginObject, state.plugins, action.options)
+
+  /* If analytics.plugin.enable calls do special behavior */
+  if (originalType === EVENTS.initializeStart && action.fromEnable) {
+    // Return list of all enabled plugins that have NOT been initialized yet
+    activePlugins = Object.keys(state.plugins).filter((name) => {
+      const info = state.plugins[name]
+      return action.plugins.includes(name) && !info.initialized
+    }).map((name) => pluginObject[name])
+  }
+  // console.log(`engine activePlugins ${action.type}`, activePlugins)
+
   const allActivePluginKeys = activePlugins.map((p) => p.name)
   // console.log('allActivePluginKeys', allActivePluginKeys)
   const allMatches = getAllMatchingCalls(originalType, activePlugins, pluginObject)
   // console.log('allMatches', allMatches)
+
   /* @TODO cache matches and purge on enable/disable/add plugin */
 
   /**

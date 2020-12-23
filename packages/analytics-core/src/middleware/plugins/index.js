@@ -1,38 +1,48 @@
-import { isFunction } from 'analytics-utils'
+import { isFunction, isString } from 'analytics-utils'
 import EVENTS, { nonEvents } from '../../events'
+import { runCallback } from '../../utils/callback-stack'
 import waitForReady from '../../utils/waitForReady'
 import { processQueue } from '../../utils/heartbeat'
 import runPlugins from './engine'
 
 export default function pluginMiddleware(instance, getPlugins, systemEvents) {
-  const called = {}
+  const isReady = {}
   return store => next => async action => {
-    const { type, name, callback } = action
+    const { type, abort, plugins } = action
     let updatedAction = action
 
-    if (action.abort) {
+    if (abort) {
       return next(action)
     }
 
-    if (type === EVENTS.disablePlugin || type === EVENTS.enablePlugin) {
-      // TODO run initialize if not loaded
-      if (isFunction(callback)) {
-        callback(name)
-      }
+    /* Analytics.plugins.enable called, we need to init the plugins */
+    if (type === EVENTS.enablePlugin) {
+      store.dispatch({
+        type: EVENTS.initializeStart,
+        plugins: plugins,
+        disabled: [],
+        fromEnable: true,
+        ts: action.ts
+      })
+    }
+    
+    if (type === EVENTS.disablePlugin) {
+      // If cached called, resolve promise/run callback
+      runCallback(action.ts)
     }
 
     if (type === EVENTS.loadPlugin) {
       // Rerun initialize calls in plugins
       const allPlugins = getPlugins()
       const pluginsToLoad = Object.keys(allPlugins).filter((name) => {
-        return action.plugins.includes(name)
+        return plugins.includes(name)
       }).reduce((acc, curr) => {
         acc[curr] = allPlugins[curr]
         return acc
       }, {})
       const initializeAction = {
         type: EVENTS.initializeStart,
-        plugins: action.plugins
+        plugins: plugins
       }
       const updated = await runPlugins(initializeAction, pluginsToLoad, instance, store, systemEvents)
       return next(updated)
@@ -42,18 +52,20 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
     if (type === EVENTS.initializeEnd) {
       const allPlugins = getPlugins()
       const pluginsArray = Object.keys(allPlugins)
-      const allInitialized = pluginsArray.filter((name) => {
-        return action.plugins.includes(name)
+      const allRegisteredPlugins = pluginsArray.filter((name) => {
+        return plugins.includes(name)
       }).map((name) => {
         return allPlugins[name]
       })
       let completed = []
       let failed = []
-      const allCalls = allInitialized.map((plugin) => {
+      let disabled = action.disabled
+      // console.log('allRegisteredPlugins', allRegisteredPlugins)
+      const waitForPluginsToLoad = allRegisteredPlugins.map((plugin) => {
         const { loaded, name } = plugin
-        // 1e4 === 10000 MS
+        /* Plugins will abort trying to load after 10 seconds. 1e4 === 10000 MS */
         return waitForReady(plugin, loaded, 1e4).then((d) => {
-          if (!called[name]) {
+          if (!isReady[name]) {
             // only dispatch namespaced rdy once
             store.dispatch({
               type: EVENTS.pluginReadyType(name), // `ready:${name}`
@@ -62,9 +74,11 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
                 return !nonEvents.includes(name)
               })
             })
-            called[name] = true
+            isReady[name] = true
           }
           completed = completed.concat(name)
+
+          return plugin
           // It's loaded! run the command
         }).catch((e) => {
           // Timeout Add to queue
@@ -78,16 +92,22 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
         })
       })
 
-      Promise.all(allCalls).then((calls) => {
+      Promise.all(waitForPluginsToLoad).then((calls) => {
         // setTimeout to ensure runs after 'page'
+        const payload = {
+          plugins: completed,
+          failed: failed,
+          disabled: disabled
+        }
         setTimeout(() => {
-          if (pluginsArray.length === allCalls.length) {
+          if (pluginsArray.length === (waitForPluginsToLoad.length + disabled.length)) {
             store.dispatch({
-              type: EVENTS.ready,
-              plugins: completed,
-              failed: failed
+              ...{ type: EVENTS.ready },
+              ...payload
             })
           }
+          // If cached called, resolve promise/run callback
+          runCallback(action.ts, payload)
         }, 0)
       })
     }
