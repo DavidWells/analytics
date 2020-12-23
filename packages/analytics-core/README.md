@@ -560,7 +560,9 @@ analytics.storage.removeItem('storage_key')
 
 ### analytics.plugins
 
-Management methods for plugins. This is also where [custom methods](https://bit.ly/329vFXy) are loaded into the instance.
+Async Management methods for plugins. 
+
+This is also where [custom methods](https://bit.ly/329vFXy) are loaded into the instance.
 
 **Example**
 
@@ -584,10 +586,14 @@ Enable analytics plugin
 **Example**
 
 ```js
-analytics.plugins.enable('google')
+analytics.plugins.enable('google-analytics').then(() => {
+  console.log('do stuff')
+})
 
 // Enable multiple plugins at once
-analytics.plugins.enable(['google', 'segment'])
+analytics.plugins.enable(['google-analytics', 'segment']).then(() => {
+  console.log('do stuff')
+})
 ```
 
 ### analytics.plugins.disable
@@ -596,15 +602,19 @@ Disable analytics plugin
 
 **Arguments**
 
-- **name** <code>String</code>|<code>Array</code> - name of integration(s) to disable
+- **plugins** <code>String</code>|<code>Array</code> - name of integration(s) to disable
 - **callback** <code>Function</code> - callback after disable runs
 
 **Example**
 
 ```js
-analytics.plugins.disable('google')
+analytics.plugins.disable('google').then(() => {
+  console.log('do stuff')
+})
 
-analytics.plugins.disable(['google', 'segment'])
+analytics.plugins.disable(['google', 'segment']).then(() => {
+  console.log('do stuff')
+})
 ```
 <!-- AUTO-GENERATED-CONTENT:END -->
 
