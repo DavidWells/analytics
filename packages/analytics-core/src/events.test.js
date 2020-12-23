@@ -33,7 +33,7 @@ test('coreEvents should contain all events as array', (t) => {
     'registerPlugins',
     'enablePlugin',
     'disablePlugin',
-    'loadPlugin',
+    // 'loadPlugin',
     'online',
     'offline',
     'setItemStart',
@@ -78,7 +78,7 @@ test('EVENTS should contain all events', (t) => {
     registerPlugins: 'registerPlugins',
     enablePlugin: 'enablePlugin',
     disablePlugin: 'disablePlugin',
-    loadPlugin: 'loadPlugin',
+    // loadPlugin: 'loadPlugin', @todo implement
     online: 'online',
     offline: 'offline',
     setItemStart: 'setItemStart',

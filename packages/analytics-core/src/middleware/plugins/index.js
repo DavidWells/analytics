@@ -34,6 +34,7 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
       }, 0)
     }
 
+    /* @TODO implement
     if (type === EVENTS.loadPlugin) {
       // Rerun initialize calls in plugins
       const allPlugins = getPlugins()
@@ -50,6 +51,7 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
       const updated = await runPlugins(initializeAction, pluginsToLoad, instance, store, systemEvents)
       return next(updated)
     }
+    */
 
     //*  || type.match(/^initializeAbort:/)
     if (type === EVENTS.initializeEnd) {

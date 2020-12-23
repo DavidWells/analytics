@@ -121,17 +121,17 @@ export const coreEvents = [
    */
   'registerPlugins',
   /**
-   * `enablePlugin` - Fires when 'analytics.enablePlugin()' is called
+   * `enablePlugin` - Fires when 'analytics.plugins.enable()' is called
    */
   'enablePlugin',
   /**
-   * `disablePlugin` - Fires when 'analytics.disablePlugin()' is called
+   * `disablePlugin` - Fires when 'analytics.plugins.disable()' is called
    */
   'disablePlugin',
-  /**
+  /*
    * `loadPlugin` - Fires when 'analytics.loadPlugin()' is called
    */
-  'loadPlugin',
+  // 'loadPlugin',
   /******************
    * Browser activity events
    ******************/
