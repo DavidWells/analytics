@@ -13,7 +13,7 @@ export default function simpleAnalyticsPlugin(pluginConfig = {}) {
   let isLoaded = false
   // Allow for userland overides of base methods
   return {
-    NAMESPACE: 'simple-analytics',
+    name: 'simple-analytics',
     config: pluginConfig,
     // https://docs.simpleanalytics.com/script
     initialize: ({ config }) => {

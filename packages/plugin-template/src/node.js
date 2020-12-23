@@ -17,7 +17,7 @@ const config = {
 export default function analyticPlugin(userConfig) {
   // Allow for userland overides of base methods
   return {
-    NAMESPACE: 'plugin-name',
+    name: 'plugin-name',
     config: {
       ...config,
       ...userConfig

@@ -73,7 +73,7 @@ function snowplowPlugin(pluginConfig = {}) {
     ...pluginConfig,
   };
   return {
-    NAMESPACE: config.name,
+    name: config.name,
     initialize: () => {
       const { scriptSrc, collectorUrl, name, trackerSettings } = config;
       if (!scriptSrc) {

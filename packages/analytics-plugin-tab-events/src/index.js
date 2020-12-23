@@ -16,7 +16,7 @@ export default function tabEventsPlugin(pluginConfig = {}) {
     tabVisible: 'tabVisible'
   }
   return {
-    NAMESPACE: 'tab-events',
+    name: 'tab-events',
     EVENTS: events,
     config: pluginConfig,
     bootstrap: ({ instance }) => {

@@ -13,7 +13,7 @@
  */
 function mixpanelPlugin(pluginConfig = {}) {
   return {
-    NAMESPACE: "mixpanel",
+    name: "mixpanel",
     config: pluginConfig,
     /* https://developer.mixpanel.com/docs/javascript-full-api-reference#mixpanelinit */
     initialize: ({ config }) => {

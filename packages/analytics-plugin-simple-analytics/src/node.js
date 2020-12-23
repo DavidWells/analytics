@@ -9,7 +9,7 @@ const noOp = () => console.log(`No ${pluginName} node implementation`)
 export default function simpleAnalyticsPlugin(userConfig) {
   // Allow for userland overides of base methods
   return {
-    NAMESPACE: pluginName,
+    name: pluginName,
     config: {},
     initialize: noOp,
   }

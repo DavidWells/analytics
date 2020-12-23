@@ -49,7 +49,7 @@ function ownstatsPlugin(pluginConfig) {
   }
   const client = new OwnstatsClient(ownstatsConfig.endpoint)
   return {
-    NAMESPACE: 'ownstats',
+    name: 'ownstats',
     config: ownstatsConfig,
     /* page view */
     page: ({ payload }) => {

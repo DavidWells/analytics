@@ -4,17 +4,17 @@
 
 const config = {}
 
-const NAMESPACE = 'mixpanel'
+const name = 'mixpanel'
 
 const logMessage = () => {
-  console.log(`${NAMESPACE} not available in node.js yet. Todo implement https://github.com/mixpanel/mixpanel-node`)
+  console.log(`${name} not available in node.js yet. Todo implement https://github.com/mixpanel/mixpanel-node`)
 }
 
 /* Export the integration */
 function mixpanelPlugin(userConfig = {}) {
   // Allow for userland overides of base methods
   return {
-    NAMESPACE: NAMESPACE,
+    name: name,
     config: {
       ...config,
       ...userConfig

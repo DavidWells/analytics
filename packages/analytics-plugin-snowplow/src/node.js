@@ -55,7 +55,7 @@ function snowplowPlugin(pluginConfig = {}) {
   );
   const t = tracker([e], name, pluginConfig.appId, false);
   return {
-    NAMESPACE: name,
+    name: name,
     config: pluginConfig,
     /**
      * Snowplow page view event https://bit.ly/39wIcFX

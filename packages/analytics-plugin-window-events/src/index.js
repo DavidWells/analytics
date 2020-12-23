@@ -13,7 +13,7 @@ const EVENTS = {
 
 export default function windowEventsPlugin(userConfig = {}) {
   return {
-    NAMESPACE: 'window-events',
+    name: 'window-events',
     EVENTS: EVENTS,
     config: userConfig,
     bootstrap: ({ instance }) => {

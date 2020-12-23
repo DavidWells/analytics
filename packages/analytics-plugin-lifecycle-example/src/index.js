@@ -3,7 +3,7 @@
  */
 
 export default {
-  NAMESPACE: 'lifecycle-example',
+  name: 'lifecycle-example',
   bootstrap: ({ abort, config, instance }) => {
     instance.on('pageStart', () => { // <== disabled b/c action fires after 'page' & 'pageEnd'
       console.log('on("pageStart") handler')
