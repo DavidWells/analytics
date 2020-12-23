@@ -10,7 +10,8 @@ import {
   isString,
   isObject,
   isUndefined,
-  isBoolean
+  isBoolean,
+  isArray
 } from './typeCheck'
 
 export {
@@ -21,6 +22,7 @@ export {
   removeCookie,
   isFunction,
   isString,
+  isArray,
   isObject,
   isUndefined,
   isBoolean,

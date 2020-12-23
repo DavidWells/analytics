@@ -14,6 +14,10 @@ export function isBoolean(x) {
   return typeof x === 'boolean'
 }
 
+export function isArray(x) {
+  return Array.isArray(x)
+}
+
 export function isObject(obj) {
   if (typeof obj !== 'object' || obj === null) return false
 
