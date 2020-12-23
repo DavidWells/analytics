@@ -81,7 +81,10 @@ function analytics(config = {}) {
       return plugin.EVENTS[k]
     }) : []
 
-    acc.pluginEnabled[plugin.name] = !(plugin.enabled === false)
+    const enabledFromMerge = !(plugin.enabled === false)
+    const enabledFromPluginConfig = !(plugin.config && plugin.config.enabled === false)
+    // top level { enabled: false } takes presidence over { config: enabled: false }
+    acc.pluginEnabled[plugin.name] = enabledFromMerge && enabledFromPluginConfig
     delete plugin.enabled
 
     if (plugin.methods) {
@@ -252,7 +255,7 @@ function analytics(config = {}) {
      *
      * @example
      * analytics.plugins.load('segment')
-     */
+     @TODO implement
     load: (plugins) => {
       store.dispatch({
         type: EVENTS.loadPlugin,
@@ -260,6 +263,7 @@ function analytics(config = {}) {
         plugins: (plugins) ? [plugins] : Object.keys(getPlugins()),
       })
     },
+    */
     /* @TODO if it stays, state loaded needs to be set. Re PLUGIN_INIT above
     add: (newPlugin) => {
       if (typeof newPlugin !== 'object') return false
@@ -737,7 +741,7 @@ function analytics(config = {}) {
     disablePlugin: plugins.disable,
     // Do not use. Will be removed. Here for Backwards compatiblity.
     // Moved to analytics.plugins.load
-    loadPlugin: plugins.load,
+    // loadPlugin: plugins.load,
     // New plugins api
     plugins: plugins,
     /**
