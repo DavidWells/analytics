@@ -1,6 +1,6 @@
 {
   "name": "@analytics/fullstory",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "FullStory plugin for 'analytics' module",
   "projectMeta": {
     "provider": {
@@ -65,8 +65,8 @@
   "devDependencies": {
     "@babel/core": "7.5.5",
     "@babel/preset-env": "7.5.5",
-    "@babel/runtime": "7.5.5",
-    "@babel/register": "^7.5.5"
+    "@babel/register": "^7.5.5",
+    "@babel/runtime": "7.5.5"
   },
   "dependencies": {
     "camelcase": "^5.3.1"
