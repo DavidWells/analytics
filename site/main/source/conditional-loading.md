@@ -81,62 +81,53 @@ const analytics = Analytics({
 
 ```js
 import Analytics from 'analytics'
-import googleAnalytics from '@analytics/google-analytics'
+import googleAnalyticsPlugin from '@analytics/google-analytics'
+import hubspotPlugin from '@analytics/hubspot'
 
-/* initialize analytics and load plugins */
+
 const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
-    // Google analytics will only load if 
-    // analytics.plugins.enable('google-analytics') is called
-    googleAnalytics({
-      trackingId: 'ua-111-22222',
+    googleAnalyticsPlugin({
+      trackingId: 'UA-xyz-123',
+      // Disable GA from loading until `analytics.plugins.enable` called 
       enabled: false,
     }),
-    {
-      name: 'plugin-1',
-      enabled: true, // <= default
-      initialize: () => {
-        // setup logic, load scripts etc
-      },
-      page: ({ payload }) => console.log('plugin-x page view', payload),
-      // ... other methods
-    },
-    {
-      name: 'plugin-2',
-      enabled: false, // <= plugin is disabled. 
-      initialize: () => {
-        // This will fire when analytics.plugins.enable('plugin-2') is called
-        console.log('initialization logic will only run once I am loaded')
-      },
-      page: ({ payload }) => {
-        console.log('plugin-2 page view', payload)
-      },
-    },
-    {
-      name: 'plugin-3',
-      page: ({ payload }) => {
-        console.log('plugin-3 page view', payload)
-      },
-    },
+    hubSpotPlugin({
+      portalId: '234576',
+      // Disable HubSpot from loading `analytics.plugins.enable` called
+      enabled: false,
+    })
   ]
 })
 
-/* Later in your app code... */
+/* Because no analytic plugin is enabled, all calls will noOp & not load any third party JS */
+analytics.page() // NoOp
+analytics.track(...) // NoOp
+analytics.identify(...) // NoOp
 
-// Send page view to all enabled plugins
-analytics.page()
+/**
+ * Later in your app after getting user permission to load analytics tools...
+ */
 
-// Enable google analytics based on user input...
-analytics.plugins.enable('google-analytics').then(() => {
-  // Send page view to all enabled plugins including Google analytics
+/* User opted in, enable analytics plugins */
+analytics.plugins.enable(['google-analytics', 'hubspot']).then(() => {
+  /* Plugins are now loaded into the page */
+
+  /* Track a page view */
   analytics.page()
-})
 
-// You can also disable plugins dynamically
-analytics.plugins.disable(['plugin-1', 'plugin-3']).then(() => {
-  // Send tracking event to all enabled plugins 
-  analytics.track('buttonClicked', { price: 100 })
+  /* Track a custom event */
+  analytics.track('cartCheckout', {
+    item: 'pink socks',
+    price: 20
+  })
+
+  /* Identify a visitor */
+  analytics.identify('userId123', {
+    name: 'bob',
+    email: 'bob@bob.com'
+  })
 })
 ```
 
