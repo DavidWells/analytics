@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/DavidWells/analytics/compare/@analytics/core@0.7.2...@analytics/core@0.8.0) (2020-12-23)
+
+
+### Features
+
+* Add enable feature to initial plugins loading ([a72276c](https://github.com/DavidWells/analytics/commit/a72276c))
+
+
+
+
+
 ## [0.7.2](https://github.com/DavidWells/analytics/compare/@analytics/core@0.7.1...@analytics/core@0.7.2) (2020-12-09)
 
 **Note:** Version bump only for package @analytics/core
