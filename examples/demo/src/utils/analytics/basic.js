@@ -3,6 +3,7 @@ import googleAnalytics from '@analytics/google-analytics'
 
 const customGA = googleAnalytics({
   trackingId: process.env.REACT_APP_GOOGLE_ANALYTICS_ID,
+  enabled: true
 })
 
 /* initialize analytics and load plugins */
@@ -12,7 +13,6 @@ const analytics = Analytics({
   plugins: [
     {
       ...customGA,
-      enabled: false,
     },
     {
       name: 'plugin-x',
