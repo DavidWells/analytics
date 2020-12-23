@@ -52,7 +52,6 @@ test('Analytics should contain all API methods', (t) => {
   t.is(typeof analytics.once, 'function')
   t.is(typeof analytics.enablePlugin, 'function')
   t.is(typeof analytics.disablePlugin, 'function')
-  t.is(typeof analytics.loadPlugin, 'function')
   t.is(typeof analytics.events, 'object')
 
   // Plugins should be empty
