@@ -56,6 +56,7 @@ A lightweight analytics abstraction library for tracking page views, custom even
 - [x] Add functionality/modify tracking calls with baked in lifecycle hooks
 - [x] Isomorphic. Works in browser & on server
 - [x] Queues events to send when analytic libraries are loaded
+- [x] Conditionally load third party scripts
 - [x] Works offline
 - [x] TypeScript support
 
