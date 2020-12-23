@@ -22,6 +22,7 @@ module.exports = {
             'debugging',
             'plugins/writing-plugins',
             'plugins/extending-plugins',
+            'conditional-loading',
           ],
           Plugins: [
             'plugins/google-analytics',
