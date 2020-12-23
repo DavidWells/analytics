@@ -51,6 +51,7 @@ test('Plugin with [x]Start should enrich [x]Start payloads', async (t) => {
   t.deepEqual(secondPayload, {
     type: 'initializeStart',
     plugins: [ 'plugin-one', 'plugin-two', 'plugin-three' ],
+    disabled: [],
     foo: 'baz'
   })
 
@@ -58,7 +59,8 @@ test('Plugin with [x]Start should enrich [x]Start payloads', async (t) => {
     type: 'initializeStart',
     plugins: [ 'plugin-one', 'plugin-two', 'plugin-three' ],
     foo: 'baz',
-    fizz: 'pop'
+    fizz: 'pop',
+    disabled: [],
   })
 })
 

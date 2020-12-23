@@ -7,7 +7,7 @@ test.beforeEach((t) => {
   t.context.sandbox = sinon.createSandbox()
 })
 
-test.only('Plugin Methods should fire correct order', async (t) => {
+test('Plugin Methods should fire correct order', async (t) => {
   const { context } = t
   let instanceTestOne, instanceTestTwo, argsToPass, argsToPassTwo
   const customMethodFunc = context.sandbox.spy()
