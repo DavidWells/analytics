@@ -21,24 +21,25 @@ Setting `enabled: false` will cause the analytics plugin `initialize` function t
 
 ## Disabling initial loading
 
+The easiest way is setting `enabled` to false in the plugin config.
+
 ```js
 import Analytics from 'analytics'
 import googleAnalytics from '@analytics/google-analytics'
 
-/* initialize analytics and load plugins */
 const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
-    ...{
-      ...googleAnalytics({
-        trackingId: 'ua-111-22222',
-      }),
+    googleAnalytics({
+      trackingId: 'ua-111-22222',
       // Disable GA from loading 
-      // until analytics.plugins.enable('google-analytics') called in app
-      ...{ enabled: false }
-    }
+      enabled: false,
+    }),
   ]
 })
+
+// Google Analytics will not load unless
+// analytics.plugins.enable('google-analytics') is called
 ```
 
 ## Enabling & Disabling plugins
@@ -54,22 +55,33 @@ analytics.plugins.enable('google-analytics')
 analytics.plugins.disable(['plugin-1', 'plugin-3'])
 ```
 
+## Using with Do Not Track
+
+You can combine the `enabled` flag with the [Do not track utility](https://getanalytics.io/plugins/do-not-track/)
+
+```js
+import Analytics from 'analytics'
+import googleAnalytics from '@analytics/google-analytics'
+import { doNotTrackEnabled } from 'analytics-plugin-do-not-track'
+
+const dontTrack = doNotTrackEnabled()
+
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    googleAnalytics({
+      trackingId: 'ua-111-22222',
+      enabled: !dontTrack
+    })
+  ]
+})
+```
+
 ## Full Example
 
 ```js
 import Analytics from 'analytics'
 import googleAnalytics from '@analytics/google-analytics'
-
-/* Plugin is inert until analytics boots up */
-const GAPlugin = googleAnalytics({
-  trackingId: 'ua-111-22222',
-})
-
-/* Because plugins are just javascript objects, we can enhance it with a new key */
-const conditionallyLoadedGA = {
-  ...customGA,
-  enabled: false, // <== Set enabled to false to stop the plugin from automatically injected the script in
-}
 
 /* initialize analytics and load plugins */
 const analytics = Analytics({
@@ -77,7 +89,10 @@ const analytics = Analytics({
   plugins: [
     // Google analytics will only load if 
     // analytics.plugins.enable('google-analytics') is called
-    conditionallyLoadedGA,
+    googleAnalytics({
+      trackingId: 'ua-111-22222',
+      enabled: false,
+    }),
     {
       name: 'plugin-1',
       enabled: true, // <= default
