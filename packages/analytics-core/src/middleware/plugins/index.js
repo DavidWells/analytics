@@ -27,8 +27,11 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
     }
     
     if (type === EVENTS.disablePlugin) {
-      // If cached called, resolve promise/run callback
-      runCallback(action.ts)
+      // debounced to fix race condition
+      setTimeout(() => {
+        // If cached called, resolve promise/run callback
+        runCallback(action.ts)
+      }, 0)
     }
 
     if (type === EVENTS.loadPlugin) {
