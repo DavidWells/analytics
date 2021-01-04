@@ -32,32 +32,28 @@ export default function parseReferrer(referrer, currentUrl) {
   // Read URI params and use set utm params
   const params = parseParams(currentUrl)
   const paramKeys = Object.keys(params)
-  if (paramKeys.length) {
-    // set campaign params off matches
-    const gaParams = paramKeys.reduce((acc, key) => {
-      // match utm params & dclid (display) & gclid (cpc)
-      if (key.match(/^utm_/)) {
-        acc[`${key.replace(/^utm_/, '')}`] = params[key]
-      }
-      // https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
-      // dclid - cpc Cost-Per-Thousand Impressions
-      // gclid - cpc Cost per Click
-      if (key.match(/^(d|g)clid/)) {
-        acc['source'] = googleKey
-        acc['medium'] = (params.gclid) ? 'cpc' : 'cpm'
-        acc[key] = params[key]
-      }
-      return acc
-    }, {})
-
-    refData = Object.assign({}, refData, gaParams)
-
-    if (params.dclid || params.gclid) {
-      refData['source'] = googleKey
-      refData['medium'] = (params.gclid) ? 'cpc' : 'cpm'
-    }
+  if (!paramKeys.length) {
+    return refData
   }
-  return refData
+
+  // set campaign params off GA matches
+  const gaParams = paramKeys.reduce((acc, key) => {
+    // match utm params & dclid (display) & gclid (cpc)
+    if (key.match(/^utm_/)) {
+      acc[`${key.replace(/^utm_/, '')}`] = params[key]
+    }
+    // https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
+    // dclid - cpc Cost-Per-Thousand Impressions
+    // gclid - cpc Cost per Click
+    if (key.match(/^(d|g)clid/)) {
+      acc['source'] = googleKey
+      acc['medium'] = (params.gclid) ? 'cpc' : 'cpm'
+      acc[key] = params[key]
+    }
+    return acc
+  }, {})
+
+  return Object.assign({}, refData, gaParams)
 }
 
 /**
@@ -113,7 +109,6 @@ const searchEngines = {
   'msn.com': Q,
   'aol.com': Q,
   'ask.com': Q,
-  'about.com': 'terms',
   'baidu.com': 'wd',
   'yandex.com': 'text',
   'rambler.ru': 'words',
