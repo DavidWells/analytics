@@ -20,8 +20,7 @@ function getSearchString(url) {
  * @return {object} parsed url parameters
  */
 export default function paramsParse(url) {
-  const searchString = getSearchString(url)
-  return (searchString) ? getParamsAsObject(searchString) : {}
+  return getParamsAsObject(getSearchString(url))
 }
 
 /*
@@ -30,30 +29,26 @@ https://random.url.com?Target=Report&Method=getStats&fields%5B%5D=Offer.name&fie
 https://random.url.com?Target=Offer&Method=findAll&filters%5Bhas_goals_enabled%5D%5BTRUE%5D=1&filters%5Bstatus%5D=active&fields%5B%5D=id&fields%5B%5D=name&fields%5B%5D=default_goal_name
 http://localhost:3000/?Target=Offer&Method=findAll&filters[has_goals_enabled][TRUE]=1&filters[status]=active&filters[wow]arr[]=yaz&filters[wow]arr[]=naz&fields[]=id&fields[]=name&fields[]=default_goal_name */
 function getParamsAsObject(query) {
-  const re = /([^&=]+)=?([^&]*)/g
   let params = {}
-  let e
-  while (e = re.exec(query)) { // eslint-disable-line
-    var k = decode(e[1]); var v = decode(e[2])
+  let temp
+  const re = /([^&=]+)=?([^&]*)/g
+
+  while (temp = re.exec(query)) {
+    var k = decode(temp[1])
+    var v = decode(temp[2])
     if (k.substring(k.length - 2) === '[]') {
       k = k.substring(0, k.length - 2);
       (params[k] || (params[k] = [])).push(v)
     } else {
-      var val = (v === '') ? true : v
-      params[k] = val
+      params[k] = (v === '') ? true : v
     }
   }
 
   for (var prop in params) {
-    var structure = prop.split('[')
-    if (structure.length > 1) {
-      var levels = []
-      structure.forEach((item, i) => { // eslint-disable-line
-        var key = item.replace(/[?[\]\\ ]/g, '')
-        levels.push(key)
-      })
-      assign(params, levels, params[prop])
-      delete (params[prop])
+    var arr = prop.split('[')
+    if (arr.length > 1) {
+      assign(params, arr.map((x) => x.replace(/[?[\]\\ ]/g, '')), params[prop])
+      delete params[prop]
     }
   }
   return params
@@ -63,8 +58,31 @@ function assign(obj, keyPath, value) {
   var lastKeyIndex = keyPath.length - 1
   for (var i = 0; i < lastKeyIndex; ++i) {
     var key = keyPath[i]
-    if (!(key in obj)) { obj[key] = {} }
+    if (!(key in obj)) { 
+      obj[key] = {} 
+    }
     obj = obj[key]
   }
   obj[keyPath[lastKeyIndex]] = value
 }
+
+
+/*
+https://github.com/choojs/nanoquery/blob/791cbdfe49cc380f0b2f93477572128946171b46/browser.js
+var reg = /([^?=&]+)(=([^&]*))?/g
+
+function qs (url) {
+  var obj = {}
+  url.replace(/^.*\?/, '').replace(reg, function (a0, a1, a2, a3) {
+    var value = decodeURIComponent(a3)
+    var key = decodeURIComponent(a1)
+    if (obj.hasOwnProperty(key)) {
+      if (Array.isArray(obj[key])) obj[key].push(value)
+      else obj[key] = [obj[key], value]
+    } else {
+      obj[key] = value
+    }
+  })
+  return obj
+}
+*/
