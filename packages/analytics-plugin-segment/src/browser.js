@@ -20,6 +20,7 @@ const config = {
  * @param {string}  pluginConfig.writeKey - Your segment writeKey
  * @param {boolean} [pluginConfig.disableAnonymousTraffic] - Disable loading segment for anonymous visitors
  * @param {boolean} [pluginConfig.customScriptSrc] - Override the Segment snippet url, for loading via custom CDN proxy
+ * @param {object}  [pluginConfig.integrations] - Enable/disable segment destinations https://bit.ly/38nRBj3
  * @return {object} Analytics plugin
  * @example
  *
