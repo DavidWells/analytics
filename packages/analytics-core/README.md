@@ -661,9 +661,8 @@ Below is a list of the current available events
 | **`identifyAborted`** | Fires if 'track' call is cancelled by a plugin |
 | **`userIdChanged`** | Fires when a user id is updated |
 | **`registerPlugins`** | Fires when analytics is registering plugins |
-| **`enablePlugin`** | Fires when 'analytics.enablePlugin()' is called |
-| **`disablePlugin`** | Fires when 'analytics.disablePlugin()' is called |
-| **`loadPlugin`** | Fires when 'analytics.loadPlugin()' is called |
+| **`enablePlugin`** | Fires when 'analytics.plugins.enable()' is called |
+| **`disablePlugin`** | Fires when 'analytics.plugins.disable()' is called |
 | **`online`** | Fires when browser network goes online.<br/>This fires only when coming back online from an offline state. |
 | **`offline`** | Fires when browser network goes offline. |
 | **`setItemStart`** | Fires when analytics.storage.setItem is initialized.<br/>This event gives plugins the ability to intercept keys & values and alter them before they are persisted. |
