@@ -20,7 +20,7 @@ import track from './modules/track'
 import queue from './modules/queue'
 import user, { getUserPropFunc, tempKey, getPersistedUserData } from './modules/user'
 import * as CONSTANTS from './constants'
-import { ID, ANONID, ERROR_URL, RESERVED_METHOD_NAMES } from './utils/internalConstants'
+import { ID, ANONID, ERROR_URL } from './utils/internalConstants'
 import EVENTS, { coreEvents, nonEvents, isReservedAction } from './events'
 // Utils
 import timestamp from './utils/timestamp'
@@ -88,9 +88,6 @@ function analytics(config = {}) {
     delete plugin.enabled
 
     if (plugin.methods) {
-      if (RESERVED_METHOD_NAMES.includes(plugin.name)) {
-        throw new Error(plugin.name  + ' is reserved pluginName')
-      }
       acc.methods[plugin.name] = Object.keys(plugin.methods).reduce((a, c) => {
         // enrich methods with analytics instance
         a[c] = appendArguments(plugin.methods[c])
