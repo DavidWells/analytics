@@ -604,7 +604,7 @@ function validateMethod(actionName, pluginName) {
     const sub = getNameSpacedAction(text.method)
     const subText = (sub) ? 'or ' + sub.method : ''
     throw new Error([ pluginName + ' plugin is calling method ' + actionName,
-      'Plugins cant call themselves',
+      'Plugins cant call self',
       `Use ${text.method} ${subText} in ${pluginName} plugin insteadof ${actionName}`]
       .join('\n')
     )
