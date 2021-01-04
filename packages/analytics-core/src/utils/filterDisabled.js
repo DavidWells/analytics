@@ -1,17 +1,14 @@
+import { isBoolean } from 'analytics-utils'
 
 export default function fitlerDisabledPlugins(allPlugins, settings = {}, options = {}) {
   return Object.keys(allPlugins).filter((name) => {
-    const { plugins } = options
-    const pluginsFromOpt = plugins || {}
-    if (pluginsFromOpt[name] === false) {
-      return false
-    }
-    // If enabled by options. Overide settings
-    if (pluginsFromOpt[name] === true) {
-      return true
+    const fromCallOptions = options.plugins || {}
+    // If enabled/disabled by options. Override settings
+    if (isBoolean(fromCallOptions[name])) {
+      return fromCallOptions[name]
     }
     // If all: false disable everything unless true explicitly set
-    if (pluginsFromOpt.all === false) {
+    if (fromCallOptions.all === false) {
       return false
     }
     // else use state.plugin settings
