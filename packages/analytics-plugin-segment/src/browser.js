@@ -7,6 +7,8 @@ const config = {
   disableAnonymousTraffic: false,
   /* Sync segment Anonymous id with `analytics` Anon id */
   syncAnonymousId: false,
+  /* Enable/disable segment destinations https://bit.ly/38nRBj3 */
+  integrations: {}
   /* Override the Segment snippet url, for loading via custom CDN proxy */
 }
 
@@ -115,26 +117,39 @@ function segmentPlugin(pluginConfig = {}) {
       /* eslint-enable */
     },
     /* Trigger Segment page view http://bit.ly/2LSPFr1 */
-    page: ({ payload }) => {
+    page: ({ payload, config }) => {
       if (typeof analytics === 'undefined') return
 
-      analytics.page(payload.properties)
+      analytics.page(payload.properties, {
+        integrations: config.integrations,
+        ...payload.options,
+      })
     },
     /* Track Segment event http://bit.ly/2WLnYkK */
-    track: ({ payload }) => {
+    track: ({ payload, config }) => {
       if (typeof analytics === 'undefined') return
-      // TODO map options from https://getanalytics.io/api/#analyticstrack to segment https://bit.ly/3lAfjhH
-      analytics.track(payload.event, payload.properties, payload.options)
+
+      analytics.track(payload.event, payload.properties, {
+        integrations: config.integrations,
+        ...payload.options,
+      })
     },
     /* Identify Segment user http://bit.ly/2VL45xD */
-    identify: ({ payload }) => {
+    identify: ({ payload, config }) => {
       if (typeof analytics === 'undefined') return
-      const { userId, traits } = payload
+
+      const { userId, traits, options } = payload
 
       if (typeof userId === 'string') {
-        analytics.identify(userId, traits)
+        analytics.identify(userId, traits, {
+          integrations: config.integrations,
+          ...options,
+        })
       } else {
-        analytics.identify(traits)
+        analytics.identify(traits, {
+          integrations: config.integrations,
+          ...options,
+        })
       }
     },
     /* Remove segment cookies on analytics.reset */
