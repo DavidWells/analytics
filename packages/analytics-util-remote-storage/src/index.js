@@ -106,6 +106,7 @@ async function setRemoteItem(storageKey, storageValue, opts = {}, instance) {
  * @return {Promise} - resolved value
  */
 function getRemoteItemRaw(key, instance) {
+  if (!inBrowser) return
   return instance.onConnect().then(() => instance.get(key))
     // Swallow errors. @TODO make option
     .catch(e => {})
@@ -118,7 +119,7 @@ function getRemoteItemRaw(key, instance) {
  * @return {Promise}
  */
 async function setRemoteItemRaw(key, value, instance) {
-  if (typeof value === 'undefined') return
+  if (typeof value === 'undefined' || !inBrowser) return
   return instance.onConnect().then(() => instance.set(key, value))
     // Swallow errors. @TODO make option
     .catch(e => {})
