@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.1](https://github.com/DavidWells/analytics/compare/@analytics/remote-storage-utils@0.2.0...@analytics/remote-storage-utils@0.2.1) (2021-01-05)
+
+
+### Bug Fixes
+
+* SSR support ([caa2971](https://github.com/DavidWells/analytics/commit/caa2971))
+
+
+
+
+
 # [0.2.0](https://github.com/DavidWells/analytics/compare/@analytics/remote-storage-utils@0.1.0...@analytics/remote-storage-utils@0.2.0) (2021-01-05)
 
 
