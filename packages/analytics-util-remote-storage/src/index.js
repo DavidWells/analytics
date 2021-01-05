@@ -1,8 +1,9 @@
+import { isBrowser } from 'analytics-utils'
 import { CrossStorageClient, CrossStorageHub } from 'cross-storage'
 
 class RemoteStorage {
   constructor(url) {
-    this.storage = new CrossStorageClient(url)
+    if (isBrowser) this.storage = new CrossStorageClient(url)
   }
   getItem(keys) {
     return getRemoteItem(keys, this.storage)
