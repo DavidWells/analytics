@@ -53,7 +53,7 @@ const analytics = Analytics({
     // Minimal recommended configuration
     snowplowPlugin({
       name: 'snowplow',
-      scriptSrc: '//*.cloudfront.net/2.15.0/sp.js',
+      scriptSrc: '//*.cloudfront.net/2.17.0/sp.js',
       collectorUrl: 'collector.mysite.com',
       trackerSettings: {
         appId: 'myApp',
@@ -176,7 +176,7 @@ const analytics = Analytics({
     // Minimal recommended configuration
     snowplowPlugin({
       name: 'snowplow',
-      scriptSrc: '//*.cloudfront.net/2.15.0/sp.js',
+      scriptSrc: '//*.cloudfront.net/2.17.0/sp.js',
       collectorUrl: 'collector.mysite.com',
       trackerSettings: {
         appId: 'myApp',
@@ -221,6 +221,7 @@ const analytics = Analytics({
 | `trackerSettings.skippedBrowserFeatures` <br/>_optional_ - Array.<string>| Array to skip browser feature collection ([] default) (Snowplow JS 2.15.0+) |
 | `trackerSettings.anonymousTracking` <br/>_optional_ - Object| Flag to enable anonymous tracking functionality (false default) |
 | `trackerSettings.anonymousTracking.withSessionTracking` <br/>_optional_ - boolean| Flag to enable whether to continue tracking sessions in anonymous tracking mode (false default) |
+| `trackerSettings.anonymousTracking.withServerAnonymisation` <br/>_optional_ - boolean| Flag which prevents collector from returning and capturing cookies and capturing ip address (false default) |
 | `trackerSettings.contexts` <br/>_optional_ - Object| The auto contexts for each event |
 | `trackerSettings.contexts.webPage` <br/>_optional_ - boolean| The webpage context, containing the page view id. (true default) |
 | `trackerSettings.contexts.performanceTiming` <br/>_optional_ - boolean| Add performance timing information |
@@ -264,10 +265,11 @@ const analytics = Analytics({
 | `collectorUrl` <br/>**required** - string| The URL to a Snowplow collector |
 | `appId` <br/>**required** - string| The appId to identify this application |
 | `name` <br/>_optional_ - string| The name to identify this instance of the tracker ('snowplow' default) |
-| `protocol` <br/>_optional_ - string| http or https (https default) |
-| `port` <br/>_optional_ - string| collector port (80 default) |
-| `method` <br/>_optional_ - string| The method to send events to collector, POST or GET (POST default) |
+| `protocol` <br/>_optional_ - string| 'http' or 'https' ('https' default) |
+| `port` <br/>_optional_ - string| collector port (80 or 443 default) |
+| `method` <br/>_optional_ - string| The method to send events to collector, 'post' or 'get' ('post' default) |
 | `bufferSize` <br/>_optional_ - string| Only send events once n are buffered. Defaults to 1 for GET requests and 10 for POST requests. |
+| `retries` <br/>_optional_ - string| The number of times the tracker will try to resend an event. Defaults to 5. |
 | `maxSockets` <br/>_optional_ - string| Node.js agentOptions object to tune performance (6 default) |
 | `platform` <br/>_optional_ - string| Sets the platform https://bit.ly/302dSQy ('srv' default) |
 | `screenResolution` <br/>_optional_ - object| Sets device screen resolution if available |
@@ -516,7 +518,7 @@ Below are additional implementation examples.
             // Minimal recommended configuration
             analyticsSnowplow({
               name: 'snowplow',
-              scriptSrc: '//*.cloudfront.net/2.15.0/sp.js',
+              scriptSrc: '//*.cloudfront.net/2.17.0/sp.js',
               collectorUrl: 'collector.mysite.com',
               trackerSettings: {
                 appId: 'myApp',
@@ -644,7 +646,7 @@ Below are additional implementation examples.
             // Minimal recommended configuration
             analyticsSnowplow({
               name: 'snowplow',
-              scriptSrc: '//*.cloudfront.net/2.15.0/sp.js',
+              scriptSrc: '//*.cloudfront.net/2.17.0/sp.js',
               collectorUrl: 'collector.mysite.com',
               trackerSettings: {
                 appId: 'myApp',
