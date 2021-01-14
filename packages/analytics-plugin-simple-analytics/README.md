@@ -19,6 +19,7 @@ For more information [see the docs](https://getanalytics.io/plugins/simple-analy
 - [Platforms Supported](#platforms-supported)
 - [Browser usage](#browser-usage)
   * [Browser API](#browser-api)
+  * [Configuration options for browser](#configuration-options-for-browser)
 - [Additional examples](#additional-examples)
 
 </details>
@@ -72,6 +73,13 @@ const analytics = Analytics({
 })
 
 ```
+
+### Configuration options for browser
+
+| Option | description |
+|:---------------------------|:-----------|
+| `customDomain` <br/>_optional_ - boolean| Custom domain for simple analytics script.  https://docs.simpleanalytics.com/script |
+
 
 ## Additional examples
 

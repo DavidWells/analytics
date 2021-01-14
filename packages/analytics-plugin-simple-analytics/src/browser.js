@@ -3,7 +3,9 @@
 /**
  * Simple Analytics plugin
  * @link https://getanalytics.io/plugins/simple-analytics/
- * @link https://simpleanalytics.com/
+ * @link https://docs.simpleanalytics.com/
+ * @param {object}  [pluginConfig] - Plugin settings
+ * @param {boolean} [pluginConfig.customDomain] - Custom domain for simple analytics script.  https://docs.simpleanalytics.com/script
  * @return {object} Analytics plugin
  * @example
  *
