@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.3](https://github.com/DavidWells/analytics/compare/@analytics/snowplow@0.2.2...@analytics/snowplow@0.2.3) (2021-01-14)
+
+**Note:** Version bump only for package @analytics/snowplow
+
+
+
+
+
 ## [0.2.2](https://github.com/DavidWells/analytics/compare/@analytics/snowplow@0.2.1...@analytics/snowplow@0.2.2) (2020-12-23)
 
 **Note:** Version bump only for package @analytics/snowplow
