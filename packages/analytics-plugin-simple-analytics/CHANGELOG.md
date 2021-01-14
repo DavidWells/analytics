@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/DavidWells/analytics/compare/@analytics/simple-analytics@0.2.0...@analytics/simple-analytics@0.3.0) (2021-01-14)
+
+
+### Bug Fixes
+
+* 🐛 use latest simple analytics script ([ec8579b](https://github.com/DavidWells/analytics/commit/ec8579b2a48767a99fa43e58ea633010cc69e065))
+
+
+### Features
+
+* 🎸 add custom domain support to simple analytics ([00e6ee0](https://github.com/DavidWells/analytics/commit/00e6ee05b45adc33e4cc916368765cb29b158184))
+
+
+
+
+
 # 0.2.0 (2020-12-23)
 
 
