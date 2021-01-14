@@ -8,7 +8,7 @@ const analytics = Analytics({
   plugins: [
     snowplowPlugin({
       name: 'snowplow',
-      scriptSrc: 'assets/hyRDadRR.js',
+      scriptSrc: 'https://cdn.jsdelivr.net/gh/snowplow/sp-js-assets@2.17.0/sp.js',
       collectorUrl: 'localhost:9090', //Consider using Snowplow Micro for easy testing
       trackerSettings: {
         appId: 'myApp',

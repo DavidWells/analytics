@@ -1,8 +1,8 @@
 /* import serverside SDK */
-let snowplow, emitter, tracker;
+let snowplow, gotEmitter, tracker;
 if (!process.browser) {
   snowplow = require('snowplow-tracker');
-  emitter = snowplow.emitter;
+  gotEmitter = snowplow.gotEmitter;
   tracker = snowplow.tracker;
 }
 
@@ -14,10 +14,11 @@ if (!process.browser) {
  * @param {string} pluginConfig.collectorUrl - The URL to a Snowplow collector
  * @param {string} pluginConfig.appId - The appId to identify this application
  * @param {string} [pluginConfig.name] - The name to identify this instance of the tracker ('snowplow' default)
- * @param {string} [pluginConfig.protocol] - http or https (https default)
- * @param {string} [pluginConfig.port] - collector port (80 default)
- * @param {string} [pluginConfig.method] - The method to send events to collector, POST or GET (POST default)
+ * @param {string} [pluginConfig.protocol] - 'http' or 'https' ('https' default)
+ * @param {string} [pluginConfig.port] - collector port (80 or 443 default)
+ * @param {string} [pluginConfig.method] - The method to send events to collector, 'post' or 'get' ('post' default)
  * @param {string} [pluginConfig.bufferSize] - Only send events once n are buffered. Defaults to 1 for GET requests and 10 for POST requests.
+ * @param {string} [pluginConfig.retries] - The number of times the tracker will try to resend an event. Defaults to 5.
  * @param {string} [pluginConfig.maxSockets] - Node.js agentOptions object to tune performance (6 default)
  * @param {string} [pluginConfig.platform] - Sets the platform https://bit.ly/302dSQy ('srv' default)
  * @param {object} [pluginConfig.screenResolution] - Sets device screen resolution if available
@@ -44,14 +45,18 @@ function snowplowPlugin(pluginConfig = {}) {
     throw new Error('snowplow collector url missing');
   }
   const name = pluginConfig.name || 'snowplow';
-  const e = emitter(
+  const e = gotEmitter(
     pluginConfig.collectorUrl,
-    pluginConfig.protocol || 'https',
+    pluginConfig.protocol.toLowerCase() || 'https',
     pluginConfig.port,
-    pluginConfig.method || 'POST',
+    pluginConfig.method.toLowerCase() || 'post',
     pluginConfig.bufferSize,
+    pluginConfig.retries || 5,
     null,
-    { maxSockets: pluginConfig.maxSockets || 6 } // Node.js agentOptions object to tune performance
+    { 
+      http: new http.Agent({ maxSockets: pluginConfig.maxSockets || 6 }),
+      https: new https.Agent({ maxSockets: pluginConfig.maxSockets || 6 })
+    }
   );
   const t = tracker([e], name, pluginConfig.appId, false);
   return {

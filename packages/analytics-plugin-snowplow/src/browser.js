@@ -42,6 +42,7 @@ const defaultConfig = {
  * @param {string[]} [pluginConfig.trackerSettings.skippedBrowserFeatures] - Array to skip browser feature collection ([] default) (Snowplow JS 2.15.0+)
  * @param {(Object|boolean)} [pluginConfig.trackerSettings.anonymousTracking] - Flag to enable anonymous tracking functionality (false default)
  * @param {boolean} [pluginConfig.trackerSettings.anonymousTracking.withSessionTracking] - Flag to enable whether to continue tracking sessions in anonymous tracking mode (false default)
+ * @param {boolean} [pluginConfig.trackerSettings.anonymousTracking.withServerAnonymisation] - Flag which prevents collector from returning and capturing cookies and capturing ip address (false default)
  * @param {Object} [pluginConfig.trackerSettings.contexts] - The auto contexts for each event
  * @param {boolean} [pluginConfig.trackerSettings.contexts.webPage] - The webpage context, containing the page view id. (true default)
  * @param {boolean} [pluginConfig.trackerSettings.contexts.performanceTiming] - Add performance timing information
@@ -57,7 +58,7 @@ const defaultConfig = {
  * // Minimal recommended configuration
  * snowplowPlugin({
  *   name: 'snowplow',
- *   scriptSrc: '//*.cloudfront.net/2.15.0/sp.js',
+ *   scriptSrc: '//*.cloudfront.net/2.17.0/sp.js',
  *   collectorUrl: 'collector.mysite.com',
  *   trackerSettings: {
  *     appId: 'myApp',
@@ -402,6 +403,7 @@ function snowplowPlugin(pluginConfig = {}) {
        * https://bit.ly/3gjZfNy
        * @param {Object} anonymousTrackingArgs - Configures anonymous tracking features
        * @param {boolean} anonymousTrackingArgs.withSessionTracking - Enables session tracking when enabling Anonymous Tracking
+       * @param {boolean} anonymousTrackingArgs.withServerAnonymisation - Prevents collector from returning cookies and capturing ip address
        */
       enableAnonymousTracking(anonymousTrackingArgs) {
         const { name } = config;
