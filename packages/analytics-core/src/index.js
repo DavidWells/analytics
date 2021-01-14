@@ -33,6 +33,7 @@ import ensureArray from './utils/ensureArray'
 
 const { setItem, removeItem } = middleware
 
+
 /**
  * Analytics library configuration
  *
