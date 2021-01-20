@@ -14,7 +14,6 @@ export default function userReducer(storage) {
       }
       // Set userId if changed by storage.setItem
       if (action.key === USER_ID) {
-        console.log('set USER_ID in state', action.value)
         return { ...state, ...{ userId: action.value }}
       }
     }
