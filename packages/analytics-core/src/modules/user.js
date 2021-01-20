@@ -5,12 +5,18 @@ import EVENTS from '../events'
 
 /* user reducer */
 export default function userReducer(storage) {
-  return function user(state = {}, action) {
-    // Set anonymousId
-    if (action && action.type === EVENTS.setItemEnd && action.key === ANON_ID) {
-      return Object.assign({}, state, {
-        anonymousId: action.value,
-      })
+  return function user(state = {}, action = {}) {
+
+    if (action.type === EVENTS.setItemEnd) {
+      // Set anonymousId if changed by storage.setItem
+      if (action.key === ANON_ID) {
+        return { ...state, ...{ anonymousId: action.value }}
+      }
+      // Set userId if changed by storage.setItem
+      if (action.key === USER_ID) {
+        console.log('set USER_ID in state', action.value)
+        return { ...state, ...{ userId: action.value }}
+      }
     }
 
     switch (action.type) {
