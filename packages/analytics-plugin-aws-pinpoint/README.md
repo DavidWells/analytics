@@ -21,8 +21,6 @@ Amazon Pinpoint is a flexible and scalable outbound and inbound marketing commun
   * [Browser API](#browser-api)
   * [Configuration options for browser](#configuration-options-for-browser)
 - [Additional examples](#additional-examples)
-- [Finding your AWS Pinpoint projectToken](#finding-your-aws-pinpoint-projecttoken)
-- [Running on localHost](#running-on-localhost)
 
 </details>
 <!-- AUTO-GENERATED-CONTENT:END -->
