@@ -1,4 +1,3 @@
-import timestamp from '../utils/timestamp'
 import EVENTS from '../events'
 
 export default function storageMiddleware(storage) {
@@ -16,25 +15,6 @@ export default function storageMiddleware(storage) {
       }
     }
     return next(action)
-  }
-}
-
-export const setItem = (key, value, opts) => {
-  return {
-    type: EVENTS.setItemStart,
-    timestamp: timestamp(),
-    key: key,
-    value: value,
-    options: opts,
-  }
-}
-
-export const removeItem = (key, opts) => {
-  return {
-    type: EVENTS.removeItemStart,
-    timestamp: timestamp(),
-    key: key,
-    options: opts,
   }
 }
 

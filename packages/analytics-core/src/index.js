@@ -31,8 +31,6 @@ import heartBeat from './utils/heartbeat'
 import { stack } from './utils/callback-stack'
 import ensureArray from './utils/ensureArray'
 
-const { setItem, removeItem } = middleware
-
 
 /**
  * Analytics library configuration
@@ -108,7 +106,7 @@ function analytics(config = {}) {
     acc.pluginsArray = acc.pluginsArray.concat(plugin)
 
     if (acc.plugins[plugin.name]) {
-      throw new Error(plugin.name + ' already loaded')
+      throw new Error(plugin.name + ' alreadyLoaded')
     }
     acc.plugins[plugin.name] = plugin
     if (!acc.plugins[plugin.name].loaded) {
@@ -158,7 +156,7 @@ function analytics(config = {}) {
 
   const nonAbortable = () => {
     // throw new Error(`${ERROR_URL}3`)
-    throw new Error('Abort disabled in listener')
+    throw new Error('Abort disabled inListener')
   }
 
   // Async promise resolver
@@ -166,6 +164,14 @@ function analytics(config = {}) {
     return (payload) => {
       if (cb) cb(payload)
       resolver(payload)
+    }
+  }
+
+  function generateMeta(resolve, args) {
+    return {
+      rid: uuid(),
+      ts: timestamp(),
+      ...resolve ? { callback: resolvePromise(resolve, getCallback(...args)) } : {}
     }
   }
 
@@ -279,7 +285,7 @@ function analytics(config = {}) {
     // Merge in custom plugin methods
     ...parsedOptions.methods
   }
-
+  
   /**
    * Analytic instance returned from initialization
    * @typedef {Object} AnalyticsInstance
@@ -359,10 +365,7 @@ function analytics(config = {}) {
           anonymousId: user.anonymousId,
           // Add previousId if exists
           ...(user.id && (user.id !== id) && { previousId: user.id }),
-          meta: {
-            timestamp: timestamp(),
-            callback: resolvePromise(resolve, getCallback(traits, options, callback))
-          },
+          meta: generateMeta(resolve, [traits, options, callback])
         })
       })
     },
@@ -417,7 +420,7 @@ function analytics(config = {}) {
     track: (eventName, payload, options, callback) => {
       const name = isObject(eventName) ? eventName.event : eventName
       if (!name || !isString(name)) {
-        throw new Error('Event missing')
+        throw new Error('EventMissing')
       }
       const data = isObject(eventName) ? eventName : (payload || {})
       const opts = isObject(options) ? options : {}
@@ -430,10 +433,7 @@ function analytics(config = {}) {
           options: opts,
           userId: getUserProp(ID, instance, payload),
           anonymousId: getUserProp(ANONID, instance, payload),
-          meta: {
-            timestamp: timestamp(),
-            callback: resolvePromise(resolve, getCallback(payload, options, callback))
-          },
+          meta: generateMeta(resolve, [payload, options, callback])
         })
       })
     },
@@ -489,10 +489,7 @@ function analytics(config = {}) {
           options: opts,
           userId: getUserProp(ID, instance, d),
           anonymousId: getUserProp(ANONID, instance, d),
-          meta: {
-            timestamp: timestamp(),
-            callback: resolvePromise(resolve, getCallback(data, options, callback))
-          },
+          meta: generateMeta(resolve, [data, options, callback])
         })
       })
     },
@@ -538,8 +535,8 @@ function analytics(config = {}) {
       return new Promise((resolve, reject) => {
         store.dispatch({
           type: EVENTS.resetStart,
-          timestamp: timestamp(),
-          callback: resolvePromise(resolve, callback)
+          callback: resolvePromise(resolve, callback),
+          meta: generateMeta()
         })
       })
     },
@@ -671,7 +668,7 @@ function analytics(config = {}) {
       if (name === EVENTS.bootstrap) {
         throw new Error('.once disabled for ' + name)
       }
-      const listener = instance.on(name, ({ payload }) => {
+      const detachListener = instance.on(name, ({ payload }) => {
         callback({ // eslint-disable-line
           payload: payload,
           instance: instance,
@@ -679,9 +676,9 @@ function analytics(config = {}) {
           abort: nonAbortable
         })
         // detach listener after its called once
-        listener()
+        detachListener()
       })
-      return listener
+      return detachListener
     },
     /**
      * Get data about user, activity, or context. Access sub-keys of state with `dot.prop` syntax.
@@ -719,7 +716,7 @@ function analytics(config = {}) {
       const dispatchData = {
         ...actionData,
         meta: {
-          timestamp: timestamp(),
+          ...generateMeta(),
           ...meta,
         },
         _: {
@@ -728,7 +725,6 @@ function analytics(config = {}) {
         }
         // type: `${autoPrefixType}`
       }
-
       store.dispatch(dispatchData)
     },
     // Do not use. Will be removed. Here for Backwards compatiblity.
@@ -789,7 +785,13 @@ function analytics(config = {}) {
        * analytics.storage.setItem('storage_key', 'value')
        */
       setItem: (key, value, options) => {
-        store.dispatch(setItem(key, value, options))
+        store.dispatch({
+          type: EVENTS.setItemStart,
+          key: key,
+          value: value,
+          options: options,
+          meta: generateMeta()
+        })
       },
       /**
        * Remove storage value
@@ -802,7 +804,12 @@ function analytics(config = {}) {
        * analytics.storage.removeItem('storage_key')
        */
       removeItem: (key, options) => {
-        store.dispatch(removeItem(key, options))
+        store.dispatch({
+          type: EVENTS.removeItemStart,
+          key: key,
+          options: options,
+          meta: generateMeta()
+        })
       },
     },
     /*

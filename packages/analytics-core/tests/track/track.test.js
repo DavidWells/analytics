@@ -16,7 +16,7 @@ test('Track throws on malformed event', t => {
   const error = t.throws(() => {
     analytics.track()
   })
-  t.is(error.message, 'Event missing')
+  t.is(error.message, 'EventMissing')
 })
 
 test('Track returns promise', async (t) => {
