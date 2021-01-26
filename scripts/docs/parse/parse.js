@@ -23,6 +23,7 @@ async function getPluginInfo(filePath) {
   let jsDocData
   let ast
   try {
+    // console.log('filePath', filePath)
     jsDocData = await getJSDocInfo(filePath)
     ast = parseCode(code)
   } catch (err) {
@@ -184,6 +185,8 @@ function getReturnStatment(body) {
 }
 
 function getName(node) {
+  // Throwing on export { EVENTS } ¯\_(ツ)_/¯
+  if (!node) return 
   if (node.type === 'ExportDefaultDeclaration') {
     return node.declaration.name || node.declaration.id.name
   }
