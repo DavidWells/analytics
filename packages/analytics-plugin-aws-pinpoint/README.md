@@ -6,7 +6,7 @@ description: Using the AWS Pinpoint plugin
 
 Integration with [AWS Pinpoint](https://aws.amazon.com/pinpoint/) for [analytics](https://www.npmjs.com/package/analytics)
 
-AWS Pinpoint provides analytics, live chat, & automation tools to help developers identify areas of improvement in their application flows & to help convert users.
+Amazon Pinpoint is a flexible and scalable outbound and inbound marketing communications service. You can connect with customers over channels like email, SMS, push, or voice.
 
 [View the docs](https://getanalytics.io/plugins/aws-pinpoint/).
 
@@ -234,33 +234,3 @@ Below are additional implementation examples.
 
 
 <!-- AUTO-GENERATED-CONTENT:END (PLUGIN_DOCS) -->
-
-## Finding your AWS Pinpoint projectToken
-
-Inside of the AWS Pinpoint admin panel you can find your tracking ID in the URL of the dashboard.
-
-![image](https://user-images.githubusercontent.com/532272/70370383-9a7abb00-187b-11ea-8fc7-97584d5ba8c2.png)
-
-It's also visible in the tracking code
-
-![image](https://user-images.githubusercontent.com/532272/70370401-b7af8980-187b-11ea-9f2b-dfac31b427af.png)
-
-Take the `projectToken` value and use it in the initialization of the plugin
-
-## Running on localHost
-
-By default this plugin does not send data when running locally. This helps prevent local development from polluting your stats.
-
-To turn on localhost tracking, set the `trackLocal` configuration setting to true.
-
-```js
-const analytics = Analytics({
-  app: 'awesome-app',
-  plugins: [
-    awsPinpointPlugin({
-      projectToken: 'GSN-123456-A',
-      trackLocal: true
-    })
-  ]
-})
-```
