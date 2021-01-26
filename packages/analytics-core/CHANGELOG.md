@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0](https://github.com/DavidWells/analytics/compare/@analytics/core@0.9.3...@analytics/core@0.10.0) (2021-01-26)
+
+
+### Features
+
+* add AWS pinpoint ([909c950](https://github.com/DavidWells/analytics/commit/909c950))
+
+
+
+
+
 ## [0.9.3](https://github.com/DavidWells/analytics/compare/@analytics/core@0.9.2...@analytics/core@0.9.3) (2021-01-20)
 
 **Note:** Version bump only for package @analytics/core
