@@ -92,6 +92,8 @@ function awsPinpointPlugin(pluginConfig = {}) {
             pageSession,
             subSessionId,
             subSessionStart,
+            sessionKey: config.sessionKey,
+            pageViewKey: config.pageViewKey,
             // scrollDepth: scrollDepthNow,
             // scrollDepthMax
           }

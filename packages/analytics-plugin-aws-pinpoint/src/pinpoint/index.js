@@ -2,7 +2,6 @@ import deepmerge from 'deepmerge'
 import { uuid } from 'analytics-utils'
 import { AwsClient } from 'aws4fetch'
 import { CHANNEL_TYPES, EVENTS } from './constants'
-
 import getClientInfo from './client-info'
 
 // TODO use beacon
@@ -270,15 +269,7 @@ function makeRecordFunction(config = {}) {
 }
 
 function createSendEvents(config = {}) {
-	const { 
-		pinpointRegion, 
-		pinpointEndpoint,
-		pinpointAppId,
-		credentials,
-		getCredentials,
-		getEndpointId,
-		debug
-	} = config
+	const { getEndpointId, debug } = config
 
 	return async function sentDataToPinpoint(endpoint = {}) {
 		// console.log(`flushEvents called ${counter++} EVENTS_QUEUE.length ${EVENTS_QUEUE.length}`)
@@ -286,26 +277,6 @@ function createSendEvents(config = {}) {
 			if (debug) console.log('No events, return early')
 			return
 		}
-
-		let creds = credentials
-    /* Use custom creds function */
-    if (!Object.keys(creds).length && getCredentials) {
-      try {
-        creds = await getCredentials()
-      } catch (err) {
-        throw new Error(err)
-      }
-    }
-		/*
-		console.log('credentials in plugin', creds)
-		console.log('credentials.identityId', creds.identityId)
-		/**/
-
-		const aws = new AwsClient({
-			accessKeyId: creds.accessKeyId,
-			secretAccessKey: creds.secretAccessKey,
-			sessionToken: creds.sessionToken,
-		})
 		// console.log('aws', aws)
 	
 		let endpointData = endpoint
@@ -378,9 +349,8 @@ function createSendEvents(config = {}) {
 		}
 		
 		// const endpointId = endpointId.replace(`${COGNITO_REGION}:`, '' )
-
 		// Build events request object.
-		const EventsRequest = {
+		const eventsRequest = {
 			BatchItem: {
 				[endpointId]: {
 					Endpoint: Endpoint,
@@ -398,41 +368,8 @@ function createSendEvents(config = {}) {
 			}, []))
 			console.log('Metrics', Endpoint.Metrics)
 			/**/
-
-			// @TODO wire up pinpointEndpoint if provided
-			const PINPOINT_BASE = `https://pinpoint.${pinpointRegion}.amazonaws.com/v1/apps`
-			const data = await aws.fetch(`${PINPOINT_BASE}/${pinpointAppId}/events`, {
-				body: JSON.stringify(EventsRequest),
-			}).then((d) => d.json())
-			// console.log('pinpoint response', data)
-
-			if (data && data.Results) {
-				// Process api responses
-				const responses = Object.keys(data.Results).map((eventId) => data.Results[eventId])
-
-				responses.forEach((resp) => {
-					const { EndpointItemResponse, EventsItemResponse } = resp
-					if (Object.keys(EndpointItemResponse).length) {
-						if (debug) console.log('EndpointItemResponse', EndpointItemResponse)
-						
-						if (ACCEPTED_CODES.includes(EndpointItemResponse.StatusCode)) {
-							// console.log('endpoint update success.')
-						} else if (RETRYABLE_CODES.includes(EndpointItemResponse.StatusCode)) {
-							// console.log('endpoint update failed retry')
-						} else {
-							// Try to handle error
-							handleEndpointUpdateBadRequest(EndpointItemResponse, Endpoint)
-						}
-					}
-					const events = Object.keys(EventsItemResponse)
-					if (events.length) {
-						if (debug) console.log('EventsResponse', EventsItemResponse)
-						events.forEach((eventId) => {
-							// console.log(`[req "${Endpoint.RequestId}"] Event id ${eventId}`, EventsItemResponse[eventId])
-						})
-					}
-				})
-			}
+			const data = await callAWS(eventsRequest, config)
+			// console.log('data', data)
 		} catch (err) {
 			console.log('callPinPoint err', err)
 		}
@@ -442,6 +379,79 @@ function createSendEvents(config = {}) {
 		// console.log('After', EVENTS_QUEUE)
 		return endpointData
 	}
+}
+
+async function callAWS(eventsRequest, config) {
+		const { 
+		pinpointRegion, 
+		pinpointEndpoint,
+		pinpointAppId,
+		lambdaArn,
+		lambdaRegion,
+		credentials,
+		getCredentials,
+		debug
+	} = config
+
+	let creds = credentials
+	/* Use custom creds function */
+	if (!Object.keys(creds).length && getCredentials) {
+		try {
+			creds = await getCredentials()
+		} catch (err) {
+			throw new Error(err)
+		}
+	}
+	/*
+	console.log('credentials in plugin', creds)
+	console.log('credentials.identityId', creds.identityId)
+	/**/
+
+	const aws = new AwsClient({
+		// Support amplify and raw client auth params
+		accessKeyId: creds.accessKeyId || creds.AccessKeyId,
+		secretAccessKey: creds.secretAccessKey || creds.SecretKey,
+		sessionToken: creds.sessionToken || creds.SessionToken,
+	})
+	const lambda_region = lambdaRegion || pinpointRegion
+	const pinpoint_region = pinpointRegion || lambdaRegion
+  const LAMBDA_FN = `https://lambda.${lambda_region}.amazonaws.com/2015-03-31/functions/${lambdaArn}/invocations`
+	const PINPOINT_URL = `https://pinpoint.${pinpoint_region}.amazonaws.com/v1/apps/${pinpointAppId}/events`
+	const endpointUrl = (lambdaArn) ? LAMBDA_FN : PINPOINT_URL
+	const data = await aws.fetch(endpointUrl, {
+		body: JSON.stringify(eventsRequest),
+	}).then((d) => d.json())
+	// console.log('pinpoint response', data)
+
+	if (data && data.Results) {
+		// Process api responses
+		const responses = Object.keys(data.Results).map((eventId) => data.Results[eventId])
+
+		responses.forEach((resp) => {
+			const EndpointItemResponse = resp.EndpointItemResponse || {}
+			const EventsItemResponse = resp.EventsItemResponse || {}
+			if (Object.keys(EndpointItemResponse).length) {
+				if (debug) console.log('EndpointItemResponse', EndpointItemResponse)
+				
+				if (ACCEPTED_CODES.includes(EndpointItemResponse.StatusCode)) {
+					// console.log('endpoint update success.')
+				} else if (RETRYABLE_CODES.includes(EndpointItemResponse.StatusCode)) {
+					// console.log('endpoint update failed retry')
+				} else {
+					// Try to handle error
+					handleEndpointUpdateBadRequest(EndpointItemResponse, Endpoint)
+				}
+			}
+			const events = Object.keys(EventsItemResponse)
+			if (events.length) {
+				if (debug) console.log('EventsResponse', EventsItemResponse)
+				events.forEach((eventId) => {
+					// console.log(`[req "${Endpoint.RequestId}"] Event id ${eventId}`, EventsItemResponse[eventId])
+				})
+			}
+		})
+	}
+	return data
 }
 
 function handleEndpointUpdateBadRequest(error, endpoint) {
@@ -577,22 +587,30 @@ async function mergeEndpointData(endpoint = {}, context = {}) {
 	endpoint.Metrics = await prepareMetrics(endpoint.Metrics)
 	// console.log('endpoint.Metrics', endpoint.Metrics)
 
+	let sessionKey = 'sessions'
+	if (context.sessionKey) {
+		sessionKey = context.sessionKey()
+	}
+	let pageKey = 'pageViews'
+	if (context.pageViewKey) {
+		pageKey = context.pageViewKey()
+	}
 	// Add session and page view counts to endpoint.
 	if (!endpoint.Attributes.lastSession) {
 		endpoint.Attributes.lastSession = [getSessionID()]
 		endpoint.Attributes.lastPageSession = [pageSession]
-		endpoint.Metrics.sessions = 1.0
-		endpoint.Metrics.pageViews = 1.0
+		endpoint.Metrics[sessionKey] = 1.0
+		endpoint.Metrics[pageKey] = 1.0
 	} else {
 		// Increment sessions.
 		if (endpoint.Attributes.lastSession[0] !== getSessionID()) {
 			endpoint.Attributes.lastSession = [getSessionID()]
-			endpoint.Metrics.sessions += 1.0
+			endpoint.Metrics[sessionKey] += 1.0
 		}
 		// Increment pageViews.
 		if (endpoint.Attributes.lastPageSession[0] !== pageSession) {
 			endpoint.Attributes.lastPageSession = [pageSession]
-			endpoint.Metrics.pageViews += 1.0
+			endpoint.Metrics[pageKey] += 1.0
 		}
 	}
 
