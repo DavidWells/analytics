@@ -31,12 +31,14 @@ const config = {
  * })
  */
 function awsPinpointPlugin(pluginConfig = {}) {
-  const pageSession = uuid()
 
   let recordEvent 
   let updateEndpoint
   let tabListener
   let elapsedSessionTime = 0
+
+  /* Page-session (on route changes) */
+  let pageSession = uuid()
 
   /* Sub-session (visibility changes) */
   let subSessionId = uuid()
@@ -158,8 +160,10 @@ function awsPinpointPlugin(pluginConfig = {}) {
         console.log('Pinpoint not loaded')
         return 
       }
-      // console.log('fire', EVENTS.pageView)
-      recordEvent(EVENTS.PAGE_VIEW, false)
+      // Fire page view and update pageSession Id
+      recordEvent(EVENTS.PAGE_VIEW, false).then(() =>{
+        pageSession = uuid()
+      })
     },
     reset: ({ instance }) => {
       storage.removeItem(ENDPOINT_KEY)

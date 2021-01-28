@@ -142,7 +142,7 @@ function makeRecordFunction(config = {}) {
 		// console.log('contextInfo', contextInfo)
 		const { pageSession, subSessionId, subSessionStart, elapsed } = contextInfo
     // Merge endpoint data.
-    if (Object.entries(endpoint).length) {
+    if (Object.entries(endpoint).length || type === EVENTS.PAGE_VIEW) {
       endpoint = await mergeEndpointData(endpoint, contextInfo)
     }
 		
@@ -402,10 +402,7 @@ async function callAWS(eventsRequest, config) {
 			throw new Error(err)
 		}
 	}
-	/*
-	console.log('credentials in plugin', creds)
-	console.log('credentials.identityId', creds.identityId)
-	/**/
+	// console.log('credentials', creds)
 
 	const aws = new AwsClient({
 		// Support amplify and raw client auth params
@@ -413,9 +410,10 @@ async function callAWS(eventsRequest, config) {
 		secretAccessKey: creds.secretAccessKey || creds.SecretKey,
 		sessionToken: creds.sessionToken || creds.SessionToken,
 	})
+	
 	const lambda_region = lambdaRegion || pinpointRegion
 	const pinpoint_region = pinpointRegion || lambdaRegion
-  const LAMBDA_FN = `https://lambda.${lambda_region}.amazonaws.com/2015-03-31/functions/${lambdaArn}/invocations`
+	const LAMBDA_FN = `https://lambda.${lambda_region}.amazonaws.com/2015-03-31/functions/${lambdaArn}/invocations`
 	const PINPOINT_URL = `https://pinpoint.${pinpoint_region}.amazonaws.com/v1/apps/${pinpointAppId}/events`
 	const endpointUrl = (lambdaArn) ? LAMBDA_FN : PINPOINT_URL
 	const data = await aws.fetch(endpointUrl, {
@@ -608,9 +606,12 @@ async function mergeEndpointData(endpoint = {}, context = {}) {
 			endpoint.Metrics[sessionKey] += 1.0
 		}
 		// Increment pageViews.
+		// console.log('[pageViews] lastPageSession', endpoint.Attributes.lastPageSession[0])
+		// console.log('[pageViews] pageSession', pageSession)
 		if (endpoint.Attributes.lastPageSession[0] !== pageSession) {
 			endpoint.Attributes.lastPageSession = [pageSession]
 			endpoint.Metrics[pageKey] += 1.0
+			// console.log('[pageViews] Its different increment page views. New Count', endpoint.Metrics[pageKey])
 		}
 	}
 
