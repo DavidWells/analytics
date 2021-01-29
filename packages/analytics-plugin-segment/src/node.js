@@ -33,7 +33,6 @@ function segmentPlugin(userConfig = {}) {
     ...defaultConfig,
     ...userConfig
   }
-
   const client = new Analytics(config.writeKey, {
     flushInterval: config.flushInterval
   })
