@@ -35,7 +35,11 @@ export function processQueue(store, getPlugins, instance) {
         if (method && isFunction(method)) {
           /* enrich queued payload with userId / anon id if missing */
           /* TODO hoist enrich into where action queued? */
+          // console.log('before', processAction.payload)
           const enrichedPayload = enrich(processAction.payload, user)
+          // console.log('user.userId', user.userId)
+          // console.log('user.anonymousId', user.anonymousId)
+          // console.log('after enrich', enrichedPayload)
           method({
             payload: enrichedPayload,
             config: plugins[currentPlugin].config,
@@ -70,22 +74,17 @@ export function processQueue(store, getPlugins, instance) {
 
 /* Heartbeat retries queued events */
 export default function heartBeat(store, getPlugins, instance) {
+  // 3e3 === 3000 ms
   return setInterval(() => processQueue(store, getPlugins, instance), 3e3)
 }
 
-function fixEmptyValues(obj, objTwo, key) {
-  if (obj.hasOwnProperty(key) && !obj[key] && objTwo[key]) {
-    // console.log('enrich', key)
-    return Object.assign({}, obj, {
-      [`${key}`]: objTwo[key]
-    })
-  }
-  return obj
-}
-
 // Assign userId && anonymousId values if present in payload but null
-function enrich(payload, user = {}) {
+function enrich(payload = {}, user = {}) {
   return [ ID, ANONID ].reduce((acc, key) => {
-    return fixEmptyValues(acc, user, key)
+    if (payload.hasOwnProperty(key) && user[key] && (user[key] !== payload[key])) {
+      // console.log(`${key} stale update with ${user[key]}`)
+      acc[key] = user[key]
+    }
+    return acc
   }, payload)
 }
