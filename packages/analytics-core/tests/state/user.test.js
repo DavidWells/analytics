@@ -61,14 +61,44 @@ test('analytics.reset() clears user details', async (t) => {
   t.is(analytics.user('traits.color'), 'blue')
   t.is(analytics.user('traits.level'), 'pro')
 
+  // const user = analytics.user()
+  // console.log('before user', user)
   await analytics.reset()
+  // console.log('after user', analytics.user())
 
+  const userState = analytics.user()
+
+  t.falsy(userState.userId)
+  t.falsy(userState.anonymousId)
+  /*
+  console.log('userState userId', userState.userId)
+  console.log('userState anonymousId', userState.anonymousId)
+  /***/
+
+  const state = analytics.getState()
+  /*
+  console.log('state userId', state.user.userId)
+  console.log('state anonymousId', state.user.anonymousId)
+  /** */
+  t.falsy(state.user.userId)
+  t.falsy(state.user.anonymousId)
+  /** */
   // Verify values are removed
-  t.falsy(analytics.user('userId'))
-  t.falsy(analytics.user('anonymousId'))
+  const userId = analytics.user('userId')
+  const anonymousId = analytics.user('anonymousId')
+
+  /*
+  console.log('userId', userId)
+  console.log('anonymousId', anonymousId)
+  /** */
+ 
+  t.falsy(userId)
+  t.falsy(anonymousId)
   t.deepEqual(analytics.user('traits'), {})
   t.falsy(analytics.user('traits.color'))
   t.falsy(analytics.user('traits.level'))
+
+  
 
   // Set values again
   await analytics.identify('abc123', {
@@ -76,6 +106,7 @@ test('analytics.reset() clears user details', async (t) => {
     color: 'red'
   })
 
+  t.truthy(analytics.user(anonymousId))
   t.is(analytics.user('userId'), 'abc123')
   t.is(analytics.user('traits.level'), 'basic')
   t.is(analytics.user('traits.color'), 'red')
