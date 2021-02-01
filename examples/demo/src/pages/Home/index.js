@@ -23,11 +23,16 @@ function sortByTimeStamp(a, b) {
   return 0
 }
 
+if (typeof window.__analytics__ === 'undefined') {
+  window.__analytics__ = []
+}
+
+
 export default class App extends Component {
   constructor (props, context) {
     super(props, context)
     this.state = {
-      history: window.__analytics__ || []
+      history: window.__analytics__
     }
   }
   componentDidMount() {

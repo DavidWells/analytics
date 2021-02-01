@@ -1,5 +1,7 @@
 import getCallback from './getCallback'
 import { stack } from './callback-stack'
+import timestamp from './timestamp'
+import { uuid } from 'analytics-utils'
 
 // Async promise resolver
 function deferredPromiseResolver(resolver, callback) {
