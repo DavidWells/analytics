@@ -1,6 +1,6 @@
 import { isFunction, isString } from 'analytics-utils'
 import EVENTS, { nonEvents } from '../../events'
-import { runCallback } from '../../utils/callback-stack'
+import { runCallback, stack } from '../../utils/callback-stack'
 import waitForReady from '../../utils/waitForReady'
 import { processQueue } from '../../utils/heartbeat'
 import runPlugins from './engine'
@@ -22,16 +22,13 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
         plugins: plugins,
         disabled: [],
         fromEnable: true,
-        ts: action.ts
+        meta: action.meta
       })
     }
     
     if (type === EVENTS.disablePlugin) {
-      // debounced to fix race condition
-      setTimeout(() => {
-        // If cached called, resolve promise/run callback
-        runCallback(action.ts)
-      }, 0)
+      // If cached callback, resolve promise/run callback. debounced to fix race condition
+      setTimeout(() => runCallback(action.meta.rid, { payload: action }), 0)
     }
 
     /* @TODO implement
@@ -108,11 +105,10 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
           if (pluginsArray.length === (waitForPluginsToLoad.length + disabled.length)) {
             store.dispatch({
               ...{ type: EVENTS.ready },
-              ...payload
+              ...payload,
+              
             })
           }
-          // If cached called, resolve promise/run callback
-          runCallback(action.ts, payload)
         }, 0)
       })
     }

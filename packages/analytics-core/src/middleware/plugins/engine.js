@@ -1,6 +1,7 @@
 import EVENTS from '../../events'
 import fitlerDisabledPlugins from '../../utils/filterDisabled'
 import { isFunction, isObject, isString } from 'analytics-utils'
+import { runCallback } from '../../utils/callback-stack'
 
 const endsWithStartRegex = /Start$/
 const bootstrapRegex = /^bootstrap/
@@ -125,25 +126,19 @@ export default async function (action, getPlugins, instance, store, eventsInfo) 
     // console.log('____ actionAfter', actionAfter)
 
     /* Fire callback if supplied */
-    const cb = getCallback(actionAfter)
-    // console.log(`cb ${updatedType}`, cb)
-    if (cb) {
-      /** @TODO figure out exact args calls and .on will get */
-      // TODO make err, payload so promisfy utilities will work
-      cb({ payload: actionAfter }) // eslint-disable-line
+    if (actionAfter.meta && actionAfter.meta.hasCallback) {
+      /*
+      console.log('End of engine action has callback')
+      console.log(actionAfter.meta)
+      console.log('stack', stack)
+      /** */
+
+      // @TODO figure out exact args calls and .on will get
+      runCallback(actionAfter.meta.rid, { payload: actionAfter })
     }
   }
 
   return actionBefore
-}
-
-function getCallback(action) {
-  if (!action.meta) return false
-  return Object.keys(action.meta).reduce((acc, key) => {
-    const thing = action.meta[key]
-    if (isFunction(thing)) return thing
-    return acc
-  }, false)
 }
 
 /**

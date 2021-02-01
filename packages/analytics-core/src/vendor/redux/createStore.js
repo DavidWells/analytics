@@ -141,6 +141,20 @@ export default function createStore(reducer, preloadedState, enhancer) {
    * return something else (for example, a Promise you can await).
    */
   function dispatch(action) {
+    /* // add default info to actions... 
+    console.log('dispatch before', _action)
+    const action = {
+      ..._action,
+      ...{
+        action: {
+          ..._action.action,
+          ...{ customInfo: 'yoooo'} 
+        }
+      }
+    }
+    console.log('dispatch after', action)
+    /** */
+
     if (!isObject(action)) {
       throw new Error('Act != obj')
     }

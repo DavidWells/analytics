@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import EVENTS from '../events'
-import { ANON_ID } from '../constants'
+import { ANON_ID, USER_ID } from '../constants'
 
 const utmRegex = /^utm_/
 const propRegex = /^an_prop_/
@@ -12,12 +12,16 @@ export default function initializeMiddleware(instance) {
   return store => next => action => {
     /* Handle bootstrap event */
     if (action.type === EVENTS.bootstrap) {
-      const { params, user } = action
-      /* 1. Set anonymous ID. TODO move UUID generation to main function. To fix race conditions */
-      if (!getItem(ANON_ID)) {
+      const { params, user, persistedUser } = action
+      /* 1. Set anonymous ID */
+      if (persistedUser.anonymousId !== user.anonymousId) {
         setItem(ANON_ID, user.anonymousId)
       }
-      /* 2. Parse url params */
+      /* 2. Set userId */
+      if (persistedUser.userId !== user.userId) {
+        setItem(USER_ID, user.userId)
+      }
+      /* 3. Parse url params */
       const paramsArray = Object.keys(action.params)
       if (paramsArray.length) {
         const { an_uid, an_event } = params

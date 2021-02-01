@@ -3,6 +3,8 @@ node_modules
 temp-types
 package-lock.json
 
+node-test.js
+
 *.log
 
 # IDE stuff

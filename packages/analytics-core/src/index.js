@@ -23,13 +23,11 @@ import * as CONSTANTS from './constants'
 import { ID, ANONID, ERROR_URL } from './utils/internalConstants'
 import EVENTS, { coreEvents, nonEvents, isReservedAction } from './events'
 // Utils
-import timestamp from './utils/timestamp'
 import { watch } from './utils/handleNetworkEvents'
-import getCallback from './utils/getCallback'
 import { Debug, composeWithDebug } from './utils/debug'
 import heartBeat from './utils/heartbeat'
-import { stack } from './utils/callback-stack'
 import ensureArray from './utils/ensureArray'
+import enrichMeta from './utils/enrichMeta'
 
 
 /**
@@ -61,7 +59,10 @@ import ensureArray from './utils/ensureArray'
  */
 function analytics(config = {}) {
   const customReducers = config.reducers || {}
-
+  const initialUser = config.initialUser || {}
+  // @TODO add custom value reolvers for userId and anonId
+  // const resolvers = config.resolvers || {}
+  
   /* Parse plugins array */
   const parsedOptions = (config.plugins || []).reduce((acc, plugin) => {
     if (isFunction(plugin)) {
@@ -106,7 +107,7 @@ function analytics(config = {}) {
     acc.pluginsArray = acc.pluginsArray.concat(plugin)
 
     if (acc.plugins[plugin.name]) {
-      throw new Error(plugin.name + ' alreadyLoaded')
+      throw new Error(plugin.name + 'AlreadyLoaded')
     }
     acc.plugins[plugin.name] = plugin
     if (!acc.plugins[plugin.name].loaded) {
@@ -159,26 +160,21 @@ function analytics(config = {}) {
     throw new Error('Abort disabled inListener')
   }
 
-  // Async promise resolver
-  const resolvePromise = (resolver, cb) => {
-    return (payload) => {
-      if (cb) cb(payload)
-      resolver(payload)
-    }
-  }
-
-  function generateMeta(resolve, args) {
-    return {
-      rid: uuid(),
-      ts: timestamp(),
-      ...resolve ? { callback: resolvePromise(resolve, getCallback(...args)) } : {}
-    }
-  }
-
   // Parse URL parameters
   const params = paramsParse()
   // Initialize visitor information
-  const initialUser = getPersistedUserData(params, storage)
+  const persistedUser = getPersistedUserData(storage)
+  const visitorInfo = {
+    ...persistedUser,
+    ...initialUser,
+    ...(!params.an_uid) ? {} : { userId: params.an_uid },
+    ...(!params.an_aid) ? {} : { anonymousId: params.an_aid },
+  }
+  // If no anon id set, create one
+  if (!visitorInfo.anonymousId) {
+    visitorInfo.anonymousId = uuid()
+  }
+  // TODO merge and set traits
 
   /**
    * Async Management methods for plugins. 
@@ -214,15 +210,12 @@ function analytics(config = {}) {
      * })
      */
     enable: (plugins, callback) => {
-      const time = uuid()
       return new Promise((resolve) => {
-        stack[time] = resolvePromise(resolve, callback)
         store.dispatch({
           type: EVENTS.enablePlugin,
           plugins: ensureArray(plugins),
-          ts: time,
-          _: { originalAction: EVENTS.enablePlugin }
-        })
+          _: { originalAction: EVENTS.enablePlugin },
+        }, resolve, [ callback ])
       })
     },
     /**
@@ -242,15 +235,12 @@ function analytics(config = {}) {
      * })
      */
     disable: (plugins, callback) => {
-      const time = uuid()
       return new Promise((resolve) => {
-        stack[time] = resolvePromise(resolve, callback)
         store.dispatch({
           type: EVENTS.disablePlugin,
           plugins: ensureArray(plugins),
-          ts: time,
-          _: { originalAction: EVENTS.disablePlugin }
-        })
+          _: { originalAction: EVENTS.disablePlugin },
+        }, resolve, [callback])
       })
     },
     /*
@@ -345,7 +335,7 @@ function analytics(config = {}) {
     *   }
     * })
     */
-    identify: (userId, traits, options, callback) => {
+    identify: async (userId, traits, options, callback) => {
       const id = isString(userId) ? userId : null
       const data = isObject(userId) ? userId : traits
       const opts = options || {}
@@ -356,7 +346,7 @@ function analytics(config = {}) {
 
       const resolvedId = id || data.userId || getUserProp(ID, instance, data)
 
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         store.dispatch({
           type: EVENTS.identifyStart,
           userId: resolvedId,
@@ -365,8 +355,7 @@ function analytics(config = {}) {
           anonymousId: user.anonymousId,
           // Add previousId if exists
           ...(user.id && (user.id !== id) && { previousId: user.id }),
-          meta: generateMeta(resolve, [traits, options, callback])
-        })
+        }, resolve, [traits, options, callback])
       })
     },
     /**
@@ -417,7 +406,7 @@ function analytics(config = {}) {
      *   }
      * })
      */
-    track: (eventName, payload, options, callback) => {
+    track: async (eventName, payload, options, callback) => {
       const name = isObject(eventName) ? eventName.event : eventName
       if (!name || !isString(name)) {
         throw new Error('EventMissing')
@@ -425,7 +414,7 @@ function analytics(config = {}) {
       const data = isObject(eventName) ? eventName : (payload || {})
       const opts = isObject(options) ? options : {}
 
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         store.dispatch({
           type: EVENTS.trackStart,
           event: name,
@@ -433,8 +422,7 @@ function analytics(config = {}) {
           options: opts,
           userId: getUserProp(ID, instance, payload),
           anonymousId: getUserProp(ANONID, instance, payload),
-          meta: generateMeta(resolve, [payload, options, callback])
-        })
+        }, resolve, [payload, options, callback])
       })
     },
     /**
@@ -478,9 +466,17 @@ function analytics(config = {}) {
      *   }
      * })
      */
-    page: (data, options, callback) => {
+    page: async (data, options, callback) => {
       const d = isObject(data) ? data : {}
       const opts = isObject(options) ? options : {}
+
+      /*
+      // @TODO add custom value reolvers for userId and anonId
+      if (resolvers.getUserId) {
+        const asyncUserId = await resolvers.getUserId()
+        console.log('x', x)
+      }
+      */
 
       return new Promise((resolve, reject) => {
         store.dispatch({
@@ -489,8 +485,7 @@ function analytics(config = {}) {
           options: opts,
           userId: getUserProp(ID, instance, d),
           anonymousId: getUserProp(ANONID, instance, d),
-          meta: generateMeta(resolve, [data, options, callback])
-        })
+        }, resolve, [data, options, callback])
       })
     },
     /**
@@ -512,12 +507,12 @@ function analytics(config = {}) {
      */
     user: (key) => {
       if (key === ID || key === 'id') {
-        const findId = getUserProp(ID, instance)
-        return findId
+        return getUserProp(ID, instance)
       }
-
+      if (key === ANONID || key === 'anonId') {
+        return getUserProp(ANONID, instance)
+      }
       const user = instance.getState('user')
-
       if (!key) return user
       return dotProp(user, key)
     },
@@ -534,10 +529,8 @@ function analytics(config = {}) {
     reset: (callback) => {
       return new Promise((resolve, reject) => {
         store.dispatch({
-          type: EVENTS.resetStart,
-          callback: resolvePromise(resolve, callback),
-          meta: generateMeta()
-        })
+          type: EVENTS.resetStart
+        }, resolve, callback)
       })
     },
     /**
@@ -708,17 +701,12 @@ function analytics(config = {}) {
       if (isReservedAction(actionData.type)) {
         throw new Error('reserved action ' + actionData.type)
       }
-      const meta = actionData.meta || {}
       const _private = action._ || {}
       // Dispatch actionStart
-      // const autoPrefixType = `${theAction.type.replace(/Start$/, '')}Start`
+      // const autoPrefixType = `${actionData.type.replace(/Start$/, '')}Start`
 
       const dispatchData = {
         ...actionData,
-        meta: {
-          ...generateMeta(),
-          ...meta,
-        },
         _: {
           originalAction: actionData.type,
           ..._private
@@ -734,8 +722,6 @@ function analytics(config = {}) {
     /// Moved to analytics.plugins.disable
     disablePlugin: plugins.disable,
     // Do not use. Will be removed. Here for Backwards compatiblity.
-    // Moved to analytics.plugins.load
-    // loadPlugin: plugins.load,
     // New plugins api
     plugins: plugins,
     /**
@@ -789,8 +775,7 @@ function analytics(config = {}) {
           type: EVENTS.setItemStart,
           key: key,
           value: value,
-          options: options,
-          meta: generateMeta()
+          options: options
         })
       },
       /**
@@ -807,8 +792,7 @@ function analytics(config = {}) {
         store.dispatch({
           type: EVENTS.removeItemStart,
           key: key,
-          options: options,
-          meta: generateMeta()
+          options: options
         })
       },
     },
@@ -823,6 +807,8 @@ function analytics(config = {}) {
      * analytics.setAnonymousId('1234567')
      */
     setAnonymousId: (anonymousId, options) => {
+      /* sets temporary in memory id. Not to be relied on */
+      // globalContext[tempKey(ANONID)] = anonymousId
       instance.storage.setItem(CONSTANTS.ANON_ID, anonymousId, options)
     },
     /*
@@ -836,8 +822,14 @@ function analytics(config = {}) {
       // byType: (type) => {} @Todo grab logic from engine and give inspectable events
     }
   }
-
+  const enrichMiddleware = storeAPI => next => action => {
+    if (!action.meta) {
+      action.meta = enrichMeta()
+    }
+    return next(action)
+  }
   const middlewares = parsedOptions.middlewares.concat([
+    enrichMiddleware,
     /* Core analytics middleware */
     dynamicMiddlewares(before), // Before dynamic middleware <-- fixed pageStart .on listener
     /* Plugin engine */
@@ -847,7 +839,7 @@ function analytics(config = {}) {
     }),
     middleware.storage(storage),
     middleware.initialize(instance),
-    middleware.identify(instance),
+    middleware.identify(instance, storage),
     /* after dynamic middleware */
     dynamicMiddlewares(after)
   ])
@@ -893,7 +885,7 @@ function analytics(config = {}) {
   
   const initialState = {
     context: initialConfig,
-    user: initialUser,
+    user: visitorInfo,
     plugins: intialPluginState,
     // Todo allow for more userland defined initial state?
   }
@@ -911,6 +903,19 @@ function analytics(config = {}) {
       )
     )
   )
+  function enhanceDispatch(fn) {
+    return function (event, resolver, callbacks) {
+      // console.log('original event', event)
+      const meta = enrichMeta(event.meta, resolver, ensureArray(callbacks))
+      // if (resolver) console.log('dispatch resolver', resolver)
+      // if (callbacks) console.log('dispatch callbacks', callbacks)
+      const newEvent = { ...event, ...{ meta: meta } }
+      // console.log('newEvent', newEvent)
+      return fn.apply(null, [ newEvent ])
+    }
+  }
+  // Automatically apply meta to dispatch calls
+  store.dispatch = enhanceDispatch(store.dispatch)
 
   /* Synchronously call bootstrap & register Plugin methods */
   const pluginKeys = Object.keys(customPlugins)
@@ -921,7 +926,8 @@ function analytics(config = {}) {
     plugins: pluginKeys,
     config: initialConfig,
     params: params,
-    user: initialUser
+    user: visitorInfo,
+    persistedUser
   })
 
   const enabledPlugins = pluginKeys.filter((name) => parsedOptions.pluginEnabled[name])
@@ -994,7 +1000,6 @@ function analytics(config = {}) {
 // Duplicated strings
 const before = 'before'
 const after = 'after'
-// const uId = 'userId'
 
 export default analytics
 

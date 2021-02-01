@@ -8,14 +8,12 @@ test.beforeEach((t) => {
   t.context.sandbox = sinon.createSandbox()
 })
 
-test('Track throws on malformed event', t => {
+test('Track throws on malformed event', async (t) => {
   const analytics = Analytics({
     app: 'appname',
     version: 100
   })
-  const error = t.throws(() => {
-    analytics.track()
-  })
+  const error = await t.throwsAsync(analytics.track())
   t.is(error.message, 'EventMissing')
 })
 

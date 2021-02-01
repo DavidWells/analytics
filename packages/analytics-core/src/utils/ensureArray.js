@@ -1,6 +1,7 @@
-import { isString } from 'analytics-utils'
+import { isArray } from 'analytics-utils'
 
-export default function ensureArray(strOrArr) {
-  if (!strOrArr) return []
-  return (isString(strOrArr)) ? [strOrArr] : strOrArr
+export default function ensureArray(singleOrArray) {
+  if (!singleOrArray) return []
+  if (isArray(singleOrArray)) return singleOrArray
+  return [singleOrArray] 
 }

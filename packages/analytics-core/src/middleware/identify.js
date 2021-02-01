@@ -1,4 +1,4 @@
-import { globalContext, uuid, isFunction } from 'analytics-utils'
+import { globalContext, uuid } from 'analytics-utils'
 import { tempKey } from '../modules/user'
 import { USER_ID, USER_TRAITS, ANON_ID } from '../constants'
 import { ID, ANONID } from '../utils/internalConstants'
@@ -7,18 +7,19 @@ import EVENTS from '../events'
 export default function identifyMiddleware(instance) {
   const { setItem, removeItem, getItem } = instance.storage
   return store => next => action => {
-    const { userId, traits, options, callback } = action
+    const { userId, traits, options } = action
     /* Reset user id and traits */
     if (action.type === EVENTS.reset) {
       // Remove stored data
-      [ USER_ID, USER_TRAITS, ANON_ID ].forEach((key) => removeItem(key));
+      [ USER_ID, USER_TRAITS, ANON_ID ].forEach((key) => {
+        // Fires async removeItem dispatch
+        removeItem(key)
+      });
       [ ID, ANONID, 'traits' ].forEach((key) => {
         globalContext[tempKey(key)] = undefined
       })
-      if (isFunction(callback)) {
-        callback()
-      }
     }
+
     if (action.type === EVENTS.identify) {
       /* If no anon id. Set it! */
       if (!getItem(ANON_ID)) {

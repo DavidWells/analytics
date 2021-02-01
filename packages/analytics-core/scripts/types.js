@@ -70,7 +70,9 @@ ${typeExtensions}
   export const Analytics: typeof analytics;
 
   export default analytics;
-}`// .replace(/;;/g, ';')
+}`
+
+//.replace(/  };/g, '  }')
 
 mkdirp(path.dirname(OUTPUT_PATH), function (err) {
   if (err) console.error(err)

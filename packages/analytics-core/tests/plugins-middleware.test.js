@@ -48,6 +48,9 @@ test('Plugin with [x]Start should enrich [x]Start payloads', async (t) => {
 
   await delay(100)
 
+  t.truthy(secondPayload.meta)
+
+  delete secondPayload.meta 
   t.deepEqual(secondPayload, {
     type: 'initializeStart',
     plugins: [ 'plugin-one', 'plugin-two', 'plugin-three' ],
@@ -55,6 +58,9 @@ test('Plugin with [x]Start should enrich [x]Start payloads', async (t) => {
     foo: 'baz'
   })
 
+  t.truthy(finalPayload.meta)
+
+  delete finalPayload.meta 
   t.deepEqual(finalPayload, {
     type: 'initializeStart',
     plugins: [ 'plugin-one', 'plugin-two', 'plugin-three' ],
