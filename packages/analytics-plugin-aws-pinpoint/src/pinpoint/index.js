@@ -58,7 +58,7 @@ export function initialize(config = {}) {
 	*/
 
 	// Run initialize endpoint merge
-	mergeEndpointData({}, configuration.getContext())
+	mergeEndpointData({}, configuration.getContext(), config.getUserId)
 
 	// Flush remaining events on page close
 	const detachWindowUnloadListener = onWindowUnload(recordEvent)
@@ -143,7 +143,7 @@ function makeRecordFunction(config = {}) {
 		const { pageSession, subSessionId, subSessionStart, elapsed } = contextInfo
     // Merge endpoint data.
     if (Object.entries(endpoint).length || type === EVENTS.PAGE_VIEW) {
-      endpoint = await mergeEndpointData(endpoint, contextInfo)
+      endpoint = await mergeEndpointData(endpoint, contextInfo, config.getUserId)
     }
 		
 		const time = new Date()
@@ -295,7 +295,7 @@ function createSendEvents(config = {}) {
 		// Update endpoint data if provided.
 		if (Object.entries(endpoint).length) {
 			const contextInfo = config.getContext()
-			endpointData = await mergeEndpointData(endpoint, contextInfo)
+			endpointData = await mergeEndpointData(endpoint, contextInfo, config.getUserId)
 		} else {
 			endpointData = getEndpoint() || {}
 		}
@@ -508,7 +508,7 @@ function sendBeaconRequest() {
 }
 */
 
-async function mergeEndpointData(endpoint = {}, context = {}) {
+async function mergeEndpointData(endpoint = {}, context = {}, getUserId) {
 	const persistedEndpoint = getEndpoint()
 	const { pageSession } = context
   const defaultEndpointConfig = {};
@@ -573,6 +573,23 @@ async function mergeEndpointData(endpoint = {}, context = {}) {
 		// TODO maybe change array merge
 		arrayMerge: overwriteMerge,
 	})
+
+	// Sync user ID if it's changed
+	if (endpoint.User && endpoint.User.UserId) {
+		const foundId = await getUserId()
+		if (endpoint.User.UserId !== foundId) {
+			endpoint.User.UserId = foundId
+		}
+	}
+	
+	// If no ID and we have one, lets set it
+	if (!endpoint.User || !endpoint.User.UserId) {
+		const foundId = await getUserId()
+		if (foundId) {
+			if (!endpoint.User) endpoint.User = {}
+			endpoint.User.UserId = foundId
+		}
+	}
 
 	/* Format attributes and metrics. */
 	if (endpoint.User && endpoint.User.UserAttributes) {

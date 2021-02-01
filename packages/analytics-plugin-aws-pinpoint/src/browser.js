@@ -88,6 +88,9 @@ function awsPinpointPlugin(pluginConfig = {}) {
         getEndpointId: () => {
           return instance.user('anonymousId')
         },
+        getUserId: () => {
+          return instance.user('userId')
+        },
         getContext: () => {
           return {
             elapsed: elapsedSessionTime,
