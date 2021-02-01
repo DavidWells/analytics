@@ -109,6 +109,8 @@ const analytics = Analytics({
 | `containerId` <br/>**required** - string| The Container ID uniquely identifies the GTM Container. |
 | `dataLayerName` <br/>_optional_ - string| The optional name for dataLayer-object. Defaults to dataLayer. |
 | `customScriptSrc` <br/>_optional_ - string| Load Google Tag Manager script from a custom source |
+| `preview` <br/>_optional_ - string| The preview-mode environment |
+| `auth` <br/>_optional_ - string| The preview-mode authentication credentials |
 
 
 ## Additional examples
