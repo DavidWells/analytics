@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/DavidWells/analytics/compare/@analytics/google-tag-manager@0.4.0...@analytics/google-tag-manager@0.5.0) (2021-02-01)
+
+
+### Features
+
+* **gtm:** support preview mode ([b644a2d](https://github.com/DavidWells/analytics/commit/b644a2d))
+
+
+
+
+
 # [0.4.0](https://github.com/DavidWells/analytics/compare/@analytics/google-tag-manager@0.3.1...@analytics/google-tag-manager@0.4.0) (2020-12-13)
 
 
