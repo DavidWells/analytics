@@ -7,6 +7,22 @@ import Log from '../../components/Log'
 import './Home.css'
 
 let hasCleared = false
+
+function sortByTimeStamp(a, b) {
+  if (!a.meta || !b.meta) {
+    return 0
+  }
+  // console.log('a.meta.ts', a.meta)
+  // console.log('b.meta.ts', b.meta)
+  if (a.meta.ts < b.meta.ts) {
+    return -1
+  }
+  if (a.meta.ts > b.meta.ts) {
+    return 1
+  }
+  return 0
+}
+
 export default class App extends Component {
   constructor (props, context) {
     super(props, context)
@@ -16,13 +32,14 @@ export default class App extends Component {
   }
   componentDidMount() {
     this.listener = analytics.on('*', ({ payload }) => {
+      console.log('payload', payload)
       this.setState({
-        history: window.__analytics__.concat(payload)
+        history: window.__analytics__.concat(payload) // .sort(sortByTimeStamp)
       })
     })
     setInterval(() => {
       this.setState({
-        history: window.__analytics__
+        history: window.__analytics__ // .sort(sortByTimeStamp)
       })
     }, 1000);
 
