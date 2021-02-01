@@ -3,6 +3,8 @@ export const config = {
   containerId: null,
   dataLayerName: 'dataLayer',
   dataLayer: undefined,
+  preview: undefined,
+  auth: undefined,
   // assumesPageview: true,
 }
 
@@ -16,6 +18,8 @@ let initializedDataLayerName;
  * @param {string} pluginConfig.containerId - The Container ID uniquely identifies the GTM Container.
  * @param {string} [pluginConfig.dataLayerName=dataLayer] - The optional name for dataLayer-object. Defaults to dataLayer.
  * @param {string} [pluginConfig.customScriptSrc] - Load Google Tag Manager script from a custom source
+ * @param {string} [pluginConfig.preview] - The preview-mode environment
+ * @param {string} [pluginConfig.auth] - The preview-mode authentication credentials
  * @return {object} Analytics plugin
  * @example
  *
@@ -32,9 +36,12 @@ function googleTagManager(pluginConfig = {}) {
       ...pluginConfig
     },
     initialize: ({ config }) => {
-      const { containerId, dataLayerName, customScriptSrc } = config
+      const { containerId, dataLayerName, customScriptSrc, preview, auth } = config
       if (!containerId) {
         throw new Error('No google tag manager containerId defined')
+      }
+      if (preview && !auth) {
+        throw new Error('When enabling preview mode, both preview and auth parameters must be defined');
       }
 
       const scriptSrc = customScriptSrc || 'https://www.googletagmanager.com/gtm.js';
@@ -44,9 +51,12 @@ function googleTagManager(pluginConfig = {}) {
         (function(w, d, s, l, i) {
           w[l] = w[l] || [];
           w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-          var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+          var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s),
+            dl = l != 'dataLayer' ? '&l=' + l : '',
+            p = preview ? '&gtm_preview=' + preview + '&gtm_auth=' + auth + '&gtm_cookies_win=x' : '';
           j.async = true;
-          j.src = `${scriptSrc}?id=` + i + dl;
+          j.src = `${scriptSrc}?id=` + i + dl + p;
           f.parentNode.insertBefore(j, f);
         })(window, document, 'script', dataLayerName, containerId);
         /* eslint-enable */
