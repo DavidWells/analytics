@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.1](https://github.com/DavidWells/analytics/compare/@analytics/aws-pinpoint@0.4.0...@analytics/aws-pinpoint@0.4.1) (2021-02-02)
+
+
+### Bug Fixes
+
+* import events ([2df50b8](https://github.com/DavidWells/analytics/commit/2df50b8))
+
+
+
+
+
 # [0.4.0](https://github.com/DavidWells/analytics/compare/@analytics/aws-pinpoint@0.3.0...@analytics/aws-pinpoint@0.4.0) (2021-02-02)
 
 
