@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/DavidWells/analytics/compare/@analytics/remote-storage-utils@0.2.1...@analytics/remote-storage-utils@0.3.0) (2021-02-02)
+
+
+### Features
+
+* support options in remote storage ([22d8713](https://github.com/DavidWells/analytics/commit/22d8713))
+
+
+
+
+
 ## [0.2.1](https://github.com/DavidWells/analytics/compare/@analytics/remote-storage-utils@0.2.0...@analytics/remote-storage-utils@0.2.1) (2021-01-05)
 
 
