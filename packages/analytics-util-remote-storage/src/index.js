@@ -1,9 +1,23 @@
 import { inBrowser } from 'analytics-utils'
 import { CrossStorageClient, CrossStorageHub } from 'cross-storage'
 
+/**
+ * Constructs a new cross storage client
+ * @param {string} url    The url to a cross storage hub
+ * @param {object} [opts] An optional object containing additional options
+ * @param {object} [opts.timeout] timeout
+ * @param {object} [opts.frameId] frameId
+ * @example
+ * const storage = new RemoteStorage('https://example.com/storage.html')
+ * @example
+ * const storage = new RemoteStorage('https://example.com/storage.html', {
+ *   timeout: 5000,
+ *   frameId: 'storageFrame'
+ * })
+ **/
 class RemoteStorage {
-  constructor(url) {
-    if (inBrowser) this.storage = new CrossStorageClient(url)
+  constructor(url, opts) {
+    if (inBrowser) this.storage = new CrossStorageClient(url, opts)
   }
   getItem(keys) {
     return getRemoteItem(keys, this.storage)
