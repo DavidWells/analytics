@@ -1,7 +1,6 @@
 import { initialize, ENDPOINT_KEY } from './pinpoint'
 import { CHANNEL_TYPES } from './pinpoint/constants'
 import * as PINPOINT_EVENTS from './pinpoint/events'
-import getEventName from './pinpoint/get-event-name'
 import { onTabChange } from 'analytics-plugin-tab-events'
 // import { onScrollChange } from '@analytics/scroll-utils'
 import { uuid } from 'analytics-utils'

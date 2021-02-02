@@ -4,7 +4,7 @@ import { AwsClient } from 'aws4fetch'
 import getClientInfo from './client-info'
 import getEventName from './get-event-name'
 import { CHANNEL_TYPES } from './constants'
-import * as PINPOINT_EVENTS from './constants'
+import * as PINPOINT_EVENTS from './events'
 
 // TODO use beacon
 // import 'navigator.sendbeacon'
@@ -145,8 +145,7 @@ function makeRecordFunction(config = {}) {
 		// console.log('contextInfo', contextInfo)
 		const { pageSession, subSessionId, subSessionStart, elapsed } = contextInfo
     // Merge endpoint data.
-		const pageViewEvent = getEventName(PINPOINT_EVENTS.PAGE_VIEW, config.eventMapping)
-    if (Object.entries(endpoint).length || type === pageViewEvent) {
+    if (Object.entries(endpoint).length || _type === PINPOINT_EVENTS.PAGE_VIEW) {
       endpoint = await mergeEndpointData(endpoint, contextInfo, config.getUserId)
     }
 		
@@ -241,8 +240,7 @@ function makeRecordFunction(config = {}) {
     }
 
     // Add session stop parameters.
-		const sessionStopEvent = getEventName(PINPOINT_EVENTS.SESSION_STOP, config.eventMapping)
-    if (type === sessionStopEvent) {
+    if (_type === PINPOINT_EVENTS.SESSION_STOP) {
       Event[eventId].Session.Duration = Date.now() - subSessionStart
       Event[eventId].Session.StopTimestamp = timeStamp
     }
