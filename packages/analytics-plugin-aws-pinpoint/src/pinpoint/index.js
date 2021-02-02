@@ -420,10 +420,23 @@ async function callAWS(eventsRequest, config) {
 	const LAMBDA_FN = `https://lambda.${lambda_region}.amazonaws.com/2015-03-31/functions/${lambdaArn}/invocations`
 	const PINPOINT_URL = `https://pinpoint.${pinpoint_region}.amazonaws.com/v1/apps/${pinpointAppId}/events`
 	const endpointUrl = (lambdaArn) ? LAMBDA_FN : PINPOINT_URL
+	
 	const data = await aws.fetch(endpointUrl, {
 		body: JSON.stringify(eventsRequest),
 	}).then((d) => d.json())
 	// console.log('pinpoint response', data)
+
+	/* swallow errors? probably bad idea
+	let data = {}
+	try {
+		data = await aws.fetch(endpointUrl, {
+			body: JSON.stringify(eventsRequest),
+		}).then((d) => d.json())
+	} catch (err) {
+		if (debug) {
+			console.log('Pinpoint error', err)
+		}
+	}*/
 
 	if (data && data.Results) {
 		// Process api responses
