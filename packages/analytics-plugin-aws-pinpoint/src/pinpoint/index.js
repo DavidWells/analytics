@@ -1,8 +1,10 @@
 import deepmerge from 'deepmerge'
 import { uuid } from 'analytics-utils'
 import { AwsClient } from 'aws4fetch'
-import { CHANNEL_TYPES, EVENTS } from './constants'
 import getClientInfo from './client-info'
+import getEventName from './get-event-name'
+import { CHANNEL_TYPES } from './constants'
+import * as PINPOINT_EVENTS from './constants'
 
 // TODO use beacon
 // import 'navigator.sendbeacon'
@@ -127,8 +129,9 @@ function makeRecordFunction(config = {}) {
 	let timer
 	const { sentDataToPinpoint, appPackageName, appTitle, appVersionCode, debug } = config
 
-  return async function recordEvent(type, data = {}, endpoint = {}, queue = true) {
-
+  return async function recordEvent(_type, data = {}, endpoint = {}, queue = true) {
+		// Event name mapping
+		const type = getEventName(_type, config.eventMapping)
     if (typeof data === 'boolean') {
       queue = data
       data = {}
@@ -142,7 +145,8 @@ function makeRecordFunction(config = {}) {
 		// console.log('contextInfo', contextInfo)
 		const { pageSession, subSessionId, subSessionStart, elapsed } = contextInfo
     // Merge endpoint data.
-    if (Object.entries(endpoint).length || type === EVENTS.PAGE_VIEW) {
+		const pageViewEvent = getEventName(PINPOINT_EVENTS.PAGE_VIEW, config.eventMapping)
+    if (Object.entries(endpoint).length || type === pageViewEvent) {
       endpoint = await mergeEndpointData(endpoint, contextInfo, config.getUserId)
     }
 		
@@ -237,7 +241,8 @@ function makeRecordFunction(config = {}) {
     }
 
     // Add session stop parameters.
-    if (type === EVENTS.SESSION_STOP) {
+		const sessionStopEvent = getEventName(PINPOINT_EVENTS.SESSION_STOP, config.eventMapping)
+    if (type === sessionStopEvent) {
       Event[eventId].Session.Duration = Date.now() - subSessionStart
       Event[eventId].Session.StopTimestamp = timeStamp
     }
@@ -409,6 +414,7 @@ async function callAWS(eventsRequest, config) {
 		accessKeyId: creds.accessKeyId || creds.AccessKeyId,
 		secretAccessKey: creds.secretAccessKey || creds.SecretKey,
 		sessionToken: creds.sessionToken || creds.SessionToken,
+		retries: 5
 	})
 	
 	const lambda_region = lambdaRegion || pinpointRegion

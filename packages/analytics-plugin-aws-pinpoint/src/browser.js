@@ -1,5 +1,7 @@
 import { initialize, ENDPOINT_KEY } from './pinpoint'
-import { EVENTS, CHANNEL_TYPES } from './pinpoint/constants'
+import { CHANNEL_TYPES } from './pinpoint/constants'
+import * as PINPOINT_EVENTS from './pinpoint/events'
+import getEventName from './pinpoint/get-event-name'
 import { onTabChange } from 'analytics-plugin-tab-events'
 // import { onScrollChange } from '@analytics/scroll-utils'
 import { uuid } from 'analytics-utils'
@@ -9,6 +11,8 @@ const config = {
   disableAnonymousTraffic: false,
   // Pinpoint service region
   pinpointRegion: 'us-east-1',
+  // Custom event mapping
+  eventMapping: {}
 }
 
 /**
@@ -31,7 +35,7 @@ const config = {
  * })
  */
 function awsPinpointPlugin(pluginConfig = {}) {
-
+  const eventMap = pluginConfig.eventMapping || {}
   let recordEvent 
   let updateEndpoint
   let tabListener
@@ -115,14 +119,16 @@ function awsPinpointPlugin(pluginConfig = {}) {
             // scrollDepthMax
           }
           */
-        }
+        },
+        // Custom event mapping
+        eventMapping: eventMap
       })
 
       recordEvent = pinpointClient.recordEvent
       updateEndpoint = pinpointClient.updateEndpoint
 
       /* Start session */
-      recordEvent('_session.start')
+      recordEvent(PINPOINT_EVENTS.SESSION_START)
       
       /* Scroll tracking
       function pageScrolled(data) {
@@ -148,13 +154,13 @@ function awsPinpointPlugin(pluginConfig = {}) {
           // On hide increment elapsed time.
           elapsedSessionTime += Date.now() - subSessionStart
           // Fire session stop event.
-          recordEvent(EVENTS.SESSION_STOP, false)
+          recordEvent(PINPOINT_EVENTS.SESSION_STOP, false)
         } else {
           // Reset subSessions.
           subSessionId = uuid()
           subSessionStart = Date.now()
           // Fire session start event.
-          recordEvent(EVENTS.SESSION_START)
+          recordEvent(PINPOINT_EVENTS.SESSION_START)
         }
       })
     },
@@ -164,7 +170,7 @@ function awsPinpointPlugin(pluginConfig = {}) {
         return 
       }
       // Fire page view and update pageSession Id
-      recordEvent(EVENTS.PAGE_VIEW, false).then(() =>{
+      recordEvent(PINPOINT_EVENTS.PAGE_VIEW, false).then(() =>{
         pageSession = uuid()
       })
     },
@@ -275,7 +281,6 @@ function formatEventData(obj) {
   }
 }
 */
+export { PINPOINT_EVENTS }
 
 export default awsPinpointPlugin
-
-export { EVENTS }
