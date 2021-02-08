@@ -169,7 +169,8 @@ function awsPinpointPlugin(pluginConfig = {}) {
         return 
       }
       // Fire page view and update pageSession Id
-      recordEvent(PINPOINT_EVENTS.PAGE_VIEW, false).then(() =>{
+      const queuePageView = true
+      recordEvent(PINPOINT_EVENTS.PAGE_VIEW, queuePageView).then(() =>{
         pageSession = uuid()
       })
     },
@@ -257,7 +258,7 @@ function formatEventData(obj) {
   // Custom pinpoint endpoint
   pinpointEndpoint: config.pinpointEndpoint,
   // Pinpoint App ID
-  pinpointAppId: config.pinpointAppId || '938bebb1ae954e0394bcbe060f2b3be4',
+  pinpointAppId: config.pinpointAppId
   // Cognito 
   getCredentials: config.getCredentials,
   // Get pinpoint endpoint ID

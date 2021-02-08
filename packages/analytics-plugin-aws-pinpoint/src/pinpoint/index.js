@@ -266,8 +266,8 @@ function makeRecordFunction(config = {}) {
       clearTimeout(timer)
     }
 
-    // Flush new events after 5 seconds.
-    timer = setTimeout(sentDataToPinpoint, 5000)
+    // Flush new events after 3 seconds.
+    timer = setTimeout(sentDataToPinpoint, 3000)
   }
 }
 
@@ -729,7 +729,6 @@ export async function prepareMetrics(metrics) {
 	}
 	return sanitized
 }
-
 
 /* usage
 updateEndpoint({
