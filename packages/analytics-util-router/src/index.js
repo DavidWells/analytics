@@ -1,8 +1,7 @@
-import { inBrowser } from 'analytics-utils'
 
 /* Listener for pushstate route changes */
 export default function routeChange(callback) {
-  if (!inBrowser) return
+  if (typeof document === 'undefined') return
   const { addEventListener, history, location } = window
   // Set initial pathname
   let previousPath = location.pathname

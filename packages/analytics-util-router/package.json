@@ -43,8 +43,5 @@
   "devDependencies": {
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5"
-  },
-  "dependencies": {
-    "analytics-utils": "^0.4.2"
   }
 }
