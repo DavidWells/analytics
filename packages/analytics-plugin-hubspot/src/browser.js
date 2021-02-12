@@ -63,15 +63,16 @@ function hubSpotPlugin(pluginConfig = {}) {
      */
     identify: ({ payload, config }) => {
       const { userId, traits } = payload
-      if (typeof _hsq === 'undefined') return false
-      if (!traits.email) return false
+      if (typeof _hsq === 'undefined' || !traits.email) {
+        return
+      }
       /* send hubspot identify call */
       const properties = formatTraits(traits, userId, defaultFormatter)
       _hsq.push(['identify', properties])
     },
     /* https://developers.hubspot.com/docs/methods/tracking_code_api/track_page_view */
     page: ({ payload, options, instance }) => {
-      if (typeof _hsq === 'undefined') return false
+      if (typeof _hsq === 'undefined') return
       /* ignore the first .page() call b/c hubspot tracking script already fired it */
       if (!initialPageViewFired) {
         initialPageViewFired = true
@@ -83,11 +84,15 @@ function hubSpotPlugin(pluginConfig = {}) {
     },
     /* https://developers.hubspot.com/docs/methods/tracking_code_api/javascript_events_api */
     track: ({ payload, options, config }) => {
-      if (typeof _hsq === 'undefined') return false
+      if (typeof _hsq === 'undefined') return
       const formattedProperties = Object.assign({}, payload.properties, {
         id: payload.event
       })
       _hsq.push(['trackEvent', formattedProperties])
+    },
+    reset: () => {
+      if (typeof _hsq === 'undefined') return
+      _hsp.push(['revokeCookieConsent'])
     },
     loaded: () => {
       return !!(window._hsq && window._hsq.push !== Array.prototype.push)
@@ -143,7 +148,8 @@ function snakeCase(str) {
 function scriptAlreadyLoaded() {
   const scripts = document.getElementsByTagName('script')
   return !!Object.keys(scripts).filter((key) => {
-    const { src } = scripts[key]
+    const scriptInfo = scripts[key] || {}
+    const src = scriptInfo.src || ''
     return src.match(/js\.hs-scripts\.com/)
   }).length
 }
