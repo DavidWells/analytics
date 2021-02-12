@@ -68,7 +68,13 @@ function hubSpotPlugin(pluginConfig = {}) {
       }
       /* send hubspot identify call */
       const properties = formatTraits(traits, userId, defaultFormatter)
+      // Identify will send with next event or page view.
       _hsq.push(['identify', properties])
+      // Fire without a hard reload or SPA routing
+      if (config.flushOnIdentify) {
+        // Hack to flush identify call immediately.
+        _hsq.push(['trackPageView'])
+      }
     },
     /* https://developers.hubspot.com/docs/methods/tracking_code_api/track_page_view */
     page: ({ payload, options, instance }) => {
