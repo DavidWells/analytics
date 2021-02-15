@@ -72,9 +72,10 @@ ${typeExtensions}
   export default analytics;
 }`
 
-//.replace(/  };/g, '  }')
+// Fix interface semi colons (╯°□°)╯︵ ┻━┻
+const finalContent = newContent.replace(/interface (\w+)(\s+){([?\w\s\d:;()\[\]=>\.]*)};/gm, 'interface $1$2{$3}')
 
 mkdirp(path.dirname(OUTPUT_PATH), function (err) {
   if (err) console.error(err)
-  fs.writeFileSync(OUTPUT_PATH, newContent)
+  fs.writeFileSync(OUTPUT_PATH, finalContent)
 })
