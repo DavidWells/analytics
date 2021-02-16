@@ -142,7 +142,7 @@ Below are additional implementation examples.
         var Analytics = _analytics.init({
           app: 'my-app-name',
           plugins: [
-            analyticsAWSPinpoint({
+            analyticsAWSPinpoint.default({
               pinpointAppId: '938bebb1ae954e123133213160f2b3be4',
               getCredentials: () => Auth.currentCredentials()
             })

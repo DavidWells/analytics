@@ -38,6 +38,7 @@ A lightweight analytics abstraction library for tracking page views, custom even
   * [analytics.plugins.disable](#analyticspluginsdisable)
 - [Events](#events)
 - [Analytic plugins](#analytic-plugins)
+- [Community Plugins](#community-plugins)
 - [Creating analytics plugins](#creating-analytics-plugins)
   * [React to any event](#react-to-any-event)
   * [Custom methods](#custom-methods)
@@ -698,6 +699,7 @@ The `analytics` has a robust plugin system. Here is a list of currently availabl
 - [@analytics/ownstats](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-ownstats) Ownstats integration for 'analytics' module for browser & node [npm link](https://www.npmjs.com/package/@analytics/ownstats).
 - [@analytics/perfumejs](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-perfumejs) Send browser performance metrics to third-party analytics providers [npm link](https://www.npmjs.com/package/@analytics/perfumejs).
 - [@analytics/remote-storage-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-remote-storage) Storage utilities for cross domain localStorage access, with permissions [npm link](https://www.npmjs.com/package/@analytics/remote-storage-utils).
+- [@analytics/router-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-router) Route change utilities for single page apps [npm link](https://www.npmjs.com/package/@analytics/router-utils).
 - [@analytics/scroll-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-scroll) Scroll utility library to fire events on scroll [npm link](https://www.npmjs.com/package/@analytics/scroll-utils).
 - [@analytics/segment](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-segment) Segment integration for 'analytics' module for browser & node [npm link](https://www.npmjs.com/package/@analytics/segment).
 - [@analytics/simple-analytics](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-simple-analytics) Simple analytics plugin for 'analytics' module for browser [npm link](https://www.npmjs.com/package/@analytics/simple-analytics).
@@ -714,6 +716,17 @@ The `analytics` has a robust plugin system. Here is a list of currently availabl
 - [gatsby-plugin-analytics](https://github.com/DavidWells/analytics/tree/master/packages/gatsby-plugin-analytics) Easily add analytics to your Gatsby site [npm link](https://www.npmjs.com/package/gatsby-plugin-analytics).
 - [use-analytics](https://github.com/DavidWells/analytics/tree/master/packages/use-analytics) Analytics hooks for React [npm link](https://www.npmjs.com/package/use-analytics).
 - Add yours! 👇
+<!-- AUTO-GENERATED-CONTENT:END -->
+
+## Community Plugins
+
+Below are plugins created outside of this repo:
+
+<!-- AUTO-GENERATED-CONTENT:START (EXTERNAL_PLUGINS) -->
+- [analytics-fetch](https://www.npmjs.com/package/@standardorg/analytics-fetch) Integration with the browser's fetch API for analytics
+- [Facebook tracking pixel](https://github.com/DavidWells/analytics/issues/54#issuecomment-735413632) Send data to Facebook Tracking pixel
+- [Yandex](https://github.com/pechischev/analytics-yandex-metric-plugin) Send data to Yandex metrica
+- [Add a plugin link](https://github.com/DavidWells/analytics/blob/master/external-plugins.json)
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 ## Creating analytics plugins

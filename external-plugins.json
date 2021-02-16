@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Facebook tracking pixel",
+    "url": "https://github.com/DavidWells/analytics/issues/54#issuecomment-735413632",
+    "description": "Send data to Facebook Tracking pixel"
+  },
+  {
+    "name": "Yandex",
+    "url": "https://github.com/pechischev/analytics-yandex-metric-plugin",
+    "description": "Send data to Yandex metrica"
+  },
+  {
+    "name": "analytics-fetch",
+    "url": "https://www.npmjs.com/package/@standardorg/analytics-fetch",
+    "description": "Integration with the browser's fetch API for analytics"
+  }
+]

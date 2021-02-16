@@ -68,6 +68,23 @@ const config = {
         .join('\n')
       return packages
     },
+    EXTERNAL_PLUGINS(content, options) {
+      const externalPackages = require('../external-plugins.json')
+
+      const sorted = externalPackages
+        // alphabetize list
+        .sort((a, b) => {
+          var textA = a.name.toLowerCase()
+          var textB = b.name.toLowerCase()
+          return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
+        })
+        .map(({ name, url, description }) => {
+          return `- [${name}](${url}) ${description}`
+        })
+        .concat('- [Add a plugin link](https://github.com/DavidWells/analytics/blob/master/external-plugins.json)')
+        .join('\n')
+      return sorted
+    },
     EVENT_DOCS(content, options) {
       const fileContents = fs.readFileSync(path.join(__dirname, '..', 'packages/analytics-core/src/events.js'), 'utf-8')
       const docBlocs = dox.parseComments(fileContents, { raw: true, skipSingleStar: true })
