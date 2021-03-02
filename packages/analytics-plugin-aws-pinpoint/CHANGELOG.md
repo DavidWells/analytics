@@ -1,5 +1,9 @@
 # Change Log
 
+## Unreleased
+### Added
+* Add a `fips` config option so that requests use the AWS FIPS endpoint
+
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 

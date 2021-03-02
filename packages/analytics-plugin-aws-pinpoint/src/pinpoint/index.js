@@ -417,8 +417,9 @@ async function callAWS(eventsRequest, config) {
 	
 	const lambda_region = lambdaRegion || pinpointRegion
 	const pinpoint_region = pinpointRegion || lambdaRegion
+	const fips = config.fips === true ? '-fips' : ''
 	const LAMBDA_FN = `https://lambda.${lambda_region}.amazonaws.com/2015-03-31/functions/${lambdaArn}/invocations`
-	const PINPOINT_URL = `https://pinpoint.${pinpoint_region}.amazonaws.com/v1/apps/${pinpointAppId}/events`
+	const PINPOINT_URL = `https://pinpoint${fips}.${pinpoint_region}.amazonaws.com/v1/apps/${pinpointAppId}/events`
 	const endpointUrl = (lambdaArn) ? LAMBDA_FN : PINPOINT_URL
 	
 	const data = await aws.fetch(endpointUrl, {
