@@ -119,6 +119,7 @@ const analytics = Analytics({
 | `appPackageName` <br/>_optional_ - string| The name of the app package, such as com.example.my_app. |
 | `appVersionCode` <br/>_optional_ - string| The version number of the app, such as 3.2.0 |
 | `disableAnonymousTraffic` <br/>_optional_ - boolean| Disable anonymous events from firing |
+| `fips` <br />_optional_ - boolean| Use the AWS FIPS service endpoint for Pinpoint |
 
 
 ## Additional examples
