@@ -210,6 +210,8 @@ Below are additional implementation examples.
 
 Make sure you have your google tags manager setup to fire on Page views.
 
+Please see this example on wiring up ["virtual page views" in google tag manager](https://www.bounteous.com/insights/2018/03/30/single-page-applications-google-analytics/).
+
 If you are using a SPA you want to listen to history changes as well.
 
 ![image](https://user-images.githubusercontent.com/532272/52185417-538fe500-27d4-11e9-9500-abf702e5d802.png)

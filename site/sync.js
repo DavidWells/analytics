@@ -3,7 +3,9 @@ const fs = require('fs-extra')
 const globby = require('markdown-magic').globby
 
 const PACKAGE_PATH = path.join(__dirname, '../packages')
-const PLUGIN_DOC_PATH = path.join(__dirname, 'main/source/plugins')
+const DOC_PATH = path.join(__dirname, 'main/source')
+const PLUGIN_DOC_PATH = path.join(DOC_PATH, 'plugins')
+const UTILS_DOC_PATH = path.join(DOC_PATH, 'utils')
 
 function resolve(name) {
   return path.join(PLUGIN_DOC_PATH, name)
@@ -11,6 +13,9 @@ function resolve(name) {
 
 const CUSTOM_MAPPING = {
   '@analytics/crazy-egg': resolve('crazyegg.md'),
+  '@analytics/scroll-utils': path.resolve(UTILS_DOC_PATH, 'scroll.md'),
+  '@analytics/remote-storage-utils': path.resolve(UTILS_DOC_PATH, 'remote-storage.md'),
+  '@analytics/router-utils': path.resolve(UTILS_DOC_PATH, 'router.md'),
 }
 
 async function getFiles() {

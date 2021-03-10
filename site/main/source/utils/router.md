@@ -1,10 +1,8 @@
-<!--
+---
 title: SPA Router Utilities
 pageTitle: Router Utils
 description: Utility library for single page app routing
--->
-
-# SPA router utils
+---
 
 Utilities for listening to route changes in SPA.
 

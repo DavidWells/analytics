@@ -1,9 +1,8 @@
-<!--
+---
 title: Scroll Utils
 pageTitle: Scroll Utils
 description: Utility library for dealing with scroll events
--->
-# Scroll Utilities
+---
 
 [Tiny](https://bundlephobia.com/result?p=@analytics/scroll-utils) utility library for dealing with scroll events.
 

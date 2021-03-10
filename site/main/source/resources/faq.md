@@ -79,7 +79,7 @@ Some Examples:
 - Reacting to more events
 - etc.
 
-This [`analytics`](https://getanalytics.io/) was built to account for a **wide** variety of use cases making nearly everything customizable via it's [middleware design](https://getanalytics.io/lifecycle/).
+This [`analytics`](https://getanalytics.io/) library was built to account for a **wide** variety of use cases making nearly everything customizable via it's [middleware design](https://getanalytics.io/lifecycle/).
 
 Event's can be hooked into, payloads can be altered, called can be cancelled if certain criteria isn't met, and even other plugins can be hooked into.
 
@@ -93,4 +93,4 @@ Yes, analytics was designed to work in browsers AND server-side for JavaScript r
 
 ## Other questions
 
-Tweet Questions [@DavidWells](https://twitter.com/davidwells) or leave them on [spectrum chat](https://spectrum.chat/analytics)
+Tweet Questions [@DavidWells](https://twitter.com/davidwells) or leave them in an [issue](https://github.com/DavidWells/analytics/issues)
