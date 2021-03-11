@@ -515,7 +515,7 @@ function track(name, event, properties) {
         break;
       case 'removefromcart':
         snowplow(
-          `trackRemoveToCart:${name}`,
+          `trackRemoveFromCart:${name}`,
           properties.sku,
           properties.name,
           properties.category,
