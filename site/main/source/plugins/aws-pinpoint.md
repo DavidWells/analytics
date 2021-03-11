@@ -1,14 +1,11 @@
-<!--
+---
 title: AWS Pinpoint
 description: Using the AWS Pinpoint plugin
--->
-# AWS Pinpoint Plugin for `analytics`
+---
 
 Integration with [AWS Pinpoint](https://aws.amazon.com/pinpoint/) for [analytics](https://www.npmjs.com/package/analytics)
 
 Amazon Pinpoint is a flexible and scalable outbound and inbound marketing communications service. You can connect with customers over channels like email, SMS, push, or voice.
-
-[View the docs](https://getanalytics.io/plugins/aws-pinpoint/).
 
 <!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
 <details>
@@ -121,7 +118,6 @@ const analytics = Analytics({
 | `fips` <br/>_optional_ - string| Use the AWS FIPS service endpoint for Pinpoint |
 | `disableAnonymousTraffic` <br/>_optional_ - boolean| Disable anonymous events from firing |
 
-
 ## Additional examples
 
 Below are additional implementation examples.
@@ -230,6 +226,5 @@ Below are additional implementation examples.
   ```
 
 </details>
-
 
 <!-- AUTO-GENERATED-CONTENT:END (PLUGIN_DOCS) -->

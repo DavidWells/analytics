@@ -32,6 +32,7 @@ module.exports = {
             'plugins/snowplow',
             'plugins/hubspot',
             'plugins/mixpanel',
+            'plugins/aws-pinpoint',
             'plugins/fullstory',
             'plugins/crazyegg',
             'plugins/gosquared',

@@ -24,6 +24,7 @@ const config = {
  * @param {string} [pluginConfig.appTitle] - The title of the app that's recording the event.
  * @param {string} [pluginConfig.appPackageName] - The name of the app package, such as com.example.my_app.
  * @param {string} [pluginConfig.appVersionCode] - The version number of the app, such as 3.2.0
+ * @param {string} [pluginConfig.fips] - Use the AWS FIPS service endpoint for Pinpoint
  * @param {boolean} [pluginConfig.disableAnonymousTraffic] -  Disable anonymous events from firing
  * @return {object} Analytics plugin
  * @example

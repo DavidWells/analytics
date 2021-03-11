@@ -112,7 +112,8 @@ const analytics = Analytics({
 | Option | description |
 |:---------------------------|:-----------|
 | `portalId` <br/>**required** - string| The HubSpot Portal (or Hub) Id of your HubSpot account |
-| `customScriptSrc` <br/>**required** - string| Load hubspot script from custom source |
+| `customScriptSrc` <br/>_optional_ - string| Load hubspot script from custom source |
+| `flushOnIdentify` <br/>_optional_ - boolean| Fire immediate page view to send identify information |
 
 
 ## Additional examples
