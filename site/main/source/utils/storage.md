@@ -27,24 +27,21 @@ import { setItem } from '@analytics/storage-utils'
 
 /* Save value to `localStorage` or `cookies` or `global` */
 setItem('key', 'value')
-// returns { value: "value", oldValue: "old", location: "localStorage" }
+// { value: "value", oldValue: "old", location: "localStorage" }
 
 /** Setting values to specific location */
 
 /* Set value to specifically localStorage */
-setItem('key', 'otherValue', 'localStorage')
-// setItem('key', 'otherValue', { storage: 'localStorage' })
-// returns { value: "otherValue", oldValue: "value", location: "localStorage" }
+setItem('key', 'otherValue', { storage: 'localStorage' })
+// { value: "otherValue", oldValue: "value", location: "localStorage" }
 
 /* Set value to specifically cookie */
-setItem('keyTwo', 'cookieVal', 'cookie')
-// setItem('keyTwo', 'cookieVal', { storage: 'cookie' })
-// returns { value: "cookieVal", oldValue: "null", location: "cookie" }
+setItem('keyTwo', 'cookieVal',  { storage: 'cookie' })
+// { value: "cookieVal", oldValue: "null", location: "cookie" }
 
 /* Set value from specifically the global window (or global this in node.js) */
-setItem('keyThree', 'xyz', 'global')
-// setItem('keyThree', 'xyz', { storage: 'global' })
-// returns { value: "cookieVal", oldValue: "null", location: "cookie" }
+setItem('keyThree', 'xyz', { storage: 'global' })
+// { value: "cookieVal", oldValue: "null", location: "cookie" }
 ```
 
 ## `getItem`
@@ -60,23 +57,21 @@ import { getItem } from '@analytics/storage-utils'
 const value = getItem('key')
 
 /** 
- * Getting values to specific location 
+ * Getting values to specific locations
  */
 
 // Get value to specifically localStorage
-const getLSValue = getItem('key', 'localStorage')
+const getLocalStorageValue = getItem('key', { storage: 'localStorage' })
 
 /* Get value to specifically cookie */
-const getLSValue = getItem('key', 'cookie')
-// getItem('key', { storage: 'cookie' })
+const getCookieValue = getItem('key', { storage: 'cookie' })
 
 /* Get value from specifically the global window (or global this in node.js) */
-const getLSValue = getItem('key', 'global')
-// getItem('key', { storage: 'global' })
+const getGlobalValue = getItem('key', { storage: 'global' })
 
 /* Get value from all locations */
-const valueObj = getItem('otherKey', '*')
-// returns { cookie: undefined, localStorage: "hahaha", global: null }
+const valueObj = getItem('otherKey', { storage: '*' })
+// { cookie: undefined, localStorage: "hahaha", global: null }
 ```
 
 ## `removeItem`
@@ -91,17 +86,17 @@ import { removeItem } from '@analytics/storage-utils'
 // Will try remove value from `localStorage` -> `cookies` -> `global`
 removeItem('key')
 
-/** Removing values to specific location */
+/** Removing values to specific locations */
 
 /* Remove value to specifically localStorage */
-removeItem('key', 'localStorage')
-// removeItem('key', { storage: 'localStorage' })
+removeItem('key', { storage: 'localStorage' })
 
 /* Remove value to specifically cookie */
-removeItem('keyTwo', 'cookie')
-// removeItem('keyTwo', { storage: 'cookie' })
+removeItem('keyTwo', { storage: 'cookie' })
 
 /* Remove value to specifically global */
-removeItem('keyThree', 'global')
-// removeItem('keyThree', { storage: 'global' })
+removeItem('keyThree', { storage: 'global' })
+
+/* Remove value from all locations */
+removeItem('otherKey', { storage: '*' })
 ```
