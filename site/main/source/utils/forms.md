@@ -72,7 +72,6 @@ const cleanUpFunction = onSubmit('form[id=three]', (event, data) => {
 })
 cleanUpFunction() // <-- call function to clean up listener
 
-
 // Listen to all forms on page
 onSubmit('all', (event, data, meta) => {
   console.log('form', event.target)

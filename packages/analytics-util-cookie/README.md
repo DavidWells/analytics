@@ -1,3 +1,9 @@
+<!--
+title: Javascript Cookie Utilities
+pageTitle: Cookie Utils
+description: Utility library for managing HTML cookies
+-->
+
 # Cookie Utilities
 
 [Tiny](https://bundlephobia.com/result?p=@analytics/cookie-utils) cookie utilities library for [analytics](https://npmjs.com/package/analytics) & whatever else 🌈

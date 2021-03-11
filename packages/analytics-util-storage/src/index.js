@@ -9,9 +9,10 @@ import parse from './utils/parse'
 import globalContext from './utils/globalContext'
 
 // Constants
-const LOCAL_STORAGE = 'localStorage'
-const COOKIE = 'cookie'
-const GLOBAL = 'global'
+export const ALL = '*'
+export const LOCAL_STORAGE = 'localStorage'
+export const COOKIE = 'cookie'
+export const GLOBAL = 'global'
 
 // Verify support
 const hasStorage = hasLocalStorageSupport()
@@ -28,7 +29,7 @@ export function getItem(key, options = {}) {
   if (!key) return null
   const storageType = getStorageType(options)
   // Get value from all locations
-  if (storageType === 'all') return getAll(key)
+  if (storageType === ALL) return getAll(key)
   /* 1. Try localStorage */
   if (useLocal(storageType)) {
     const value = localStorage.getItem(key)
@@ -60,27 +61,57 @@ function getAll(key) {
  * @returns {object} returns old value, new values, & location of storage
  */
 export function setItem(key, value, options = {}) {
-  if (!key || !value) return false
+  if (!key || typeof value === 'undefined') {
+    return
+  }
+  const data = {}
   const storageType = getStorageType(options)
   const saveValue = JSON.stringify(value)
+  const setAll = storageType === ALL
+
   /* 1. Try localStorage */
   if (useLocal(storageType)) {
     // console.log('SET as localstorage', saveValue)
-    const oldValue = parse(localStorage.getItem(key))
+    const values = {
+      current: value, 
+      previous: parse(localStorage.getItem(key)) 
+    }
+    // Set LocalStorage item
     localStorage.setItem(key, saveValue)
-    return { value, oldValue, location: LOCAL_STORAGE }
+    if (!setAll) {
+      return { location: LOCAL_STORAGE, ...values }
+    }
+    // Set object
+    data[LOCAL_STORAGE] = values
   }
   /* 2. Fallback to cookie */
   if (useCookie(storageType)) {
     // console.log('SET as cookie', saveValue)
-    const oldValue = parse(getCookie(key))
+    const cookieValues = {
+      current: value,
+      previous: parse(getCookie(key))
+    }
+    // Set Cookie
     setCookie(key, saveValue)
-    return { value, oldValue, location: COOKIE }
+    if (!setAll) {
+      return { location: COOKIE, ...cookieValues }
+    }
+    // Set object
+    data[COOKIE] = cookieValues
   }
   /* 3. Fallback to window/global */
-  const oldValue = globalContext[key]
+  const globalValues = {
+    current: value,
+    previous: globalContext[key]
+  }
+  // Set global value
   globalContext[key] = value
-  return { value, oldValue, location: GLOBAL }
+  if (!setAll) {
+    return { location: GLOBAL, ...globalValues }
+  }
+  // Set object
+  data[GLOBAL] = globalValues
+  return data
 }
 
 /**
@@ -92,30 +123,42 @@ export function setItem(key, value, options = {}) {
 export function removeItem(key, options = {}) {
   if (!key) return false
   const storageType = getStorageType(options)
-  if (useLocal(storageType)) {
+  const removeAll = storageType === ALL
+  const locations = []
+  if (removeAll || useLocal(storageType)) {
     /* 1. Try localStorage */
     localStorage.removeItem(key)
-    return LOCAL_STORAGE
-  } else if (useCookie(storageType)) {
+    locations.push(LOCAL_STORAGE)
+  }
+  if (removeAll || useCookie(storageType)) {
     /* 2. Fallback to cookie */
     removeCookie(key)
-    return COOKIE
+    locations.push(COOKIE)
   }
   /* 3. Fallback to window/global */
-  globalContext[key] = undefined
-  return GLOBAL
+  if (removeAll || useGlobal(storageType)) {
+    globalContext[key] = undefined
+    locations.push(GLOBAL)
+  }
+  return locations
 }
 
 function getStorageType(options) {
   return (typeof options === 'string') ? options : options.storage
 }
 
+function useGlobal(storage) {
+  return (!storage || storage === GLOBAL)
+}
+
 function useLocal(storage) {
-  return hasStorage && (!storage || storage === LOCAL_STORAGE)
+  // If has localStorage and storage option not defined, or is set to 'localStorage' or '*'
+  return hasStorage && (!storage || storage === LOCAL_STORAGE || storage === ALL)
 }
 
 function useCookie(storage) {
-  return hasCookies && (!storage || storage === COOKIE)
+  // If has cookies and storage option not defined, or is set to 'cookies' or '*'
+  return hasCookies && (!storage || storage === COOKIE || storage === ALL)
 }
 
 export {

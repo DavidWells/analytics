@@ -7,12 +7,28 @@ React hooks for [analytics](https://www.npmjs.com/package/analytics). This libra
 
 Note: When using `analytics` with React, this library, `use-analytics`, hooks library is **not** required. See details below for [using analytics with react without hooks.](https://getanalytics.io/utils/react-hooks/#without-hooks)
 
+<!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
+<details>
+<summary>Click to expand</summary>
+
+- [Installation](#installation)
+- [How to use](#how-to-use)
+- [Demo video](#demo-video)
+- [`useAnalytics` hook](#useanalytics-hook)
+- [`AnalyticsConsumer`](#analyticsconsumer)
+- [`withAnalytics`](#withanalytics)
+- [`AnalyticsContext`](#analyticscontext)
+- [Analytics without hooks](#analytics-without-hooks)
+
+</details>
+<!-- AUTO-GENERATED-CONTENT:END -->
+
 ## Installation
 
 Install `analytics`, `use-analytics` from [npm](https://www.npmjs.com/package/use-analytics).
 
 ```
-npm install use-analytics analytics
+npm install analytics use-analytics
 ```
 
 ## How to use
@@ -179,7 +195,6 @@ class App extends Component {
 export default withAnalytics(App)
 ```
 
-
 ## `AnalyticsContext`
 
 If you are using React class components, you can leverage the [static contextType](https://reactjs.org/docs/context.html#classcontexttype) field and set the `AnalyticsContext`.
@@ -229,7 +244,6 @@ ReactDOM.render((
   </AnalyticsProvider>
 ), document.getElementById('root'))
 ```
-
 
 ## Analytics without hooks
 

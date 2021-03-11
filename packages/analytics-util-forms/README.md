@@ -1,3 +1,9 @@
+<!--
+title: Javascript form utilities library with onSubmit & onChange helpers
+pageTitle: Form Utils
+description: Utility library for managing HTML form values
+-->
+
 # Form Utilities
 
 [Tiny](https://bundlephobia.com/result?p=@analytics/form-utils) form utilities library for dealing with HTML form data.
@@ -62,11 +68,11 @@ onSubmit('form[id=two]', {
 })
 
 // Remove onSubmit listener
-const cleanUpFuntion = onSubmit('form[id=three]', (event, data) => {
+const cleanUpFunction = onSubmit('form[id=three]', (event, data) => {
   console.log('form', event.target)
   console.log('form data', JSON.stringify(data, null, 2))
 })
-cleanUpFuntion() // <-- call function to clean up listener
+cleanUpFunction() // <-- call function to clean up listener
 
 
 // Listen to all forms on page
@@ -118,11 +124,11 @@ onChange('form[id=two]', {
 })
 
 // Remove onChange listener
-const cleanUpFuntion = onChange('form[id=three]', (event, data) => {
+const cleanUpFunction = onChange('form[id=three]', (event, data) => {
   console.log('form', event.target)
   console.log('change data', JSON.stringify(data, null, 2))
 })
-cleanUpFuntion() // <-- call function to clean up listener
+cleanUpFunction() // <-- call function to clean up listener
 
 // Listen to all forms on page
 onChange('all', (event, data) => {

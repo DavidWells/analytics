@@ -48,6 +48,10 @@ module.exports = {
           Utilities: [
             'utils/cookies',
             'utils/forms',
+            'utils/router',
+            'utils/storage',
+            'utils/remote-storage',
+            'utils/scroll',
             'utils/react-hooks',
           ],
           Tutorials: [

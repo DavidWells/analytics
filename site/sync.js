@@ -13,9 +13,13 @@ function resolve(name) {
 
 const CUSTOM_MAPPING = {
   '@analytics/crazy-egg': resolve('crazyegg.md'),
+  'use-analytics': path.resolve(UTILS_DOC_PATH, 'react-hooks.md'),
   '@analytics/scroll-utils': path.resolve(UTILS_DOC_PATH, 'scroll.md'),
-  '@analytics/remote-storage-utils': path.resolve(UTILS_DOC_PATH, 'remote-storage.md'),
+  '@analytics/form-utils': path.resolve(UTILS_DOC_PATH, 'forms.md'),
+  '@analytics/cookie-utils': path.resolve(UTILS_DOC_PATH, 'cookies.md'),
   '@analytics/router-utils': path.resolve(UTILS_DOC_PATH, 'router.md'),
+  '@analytics/storage-utils': path.resolve(UTILS_DOC_PATH, 'storage.md'),
+  '@analytics/remote-storage-utils': path.resolve(UTILS_DOC_PATH, 'remote-storage.md'),
 }
 
 async function getFiles() {
