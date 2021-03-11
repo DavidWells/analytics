@@ -6,7 +6,8 @@
  * @link https://developers.hubspot.com/docs/methods/tracking_code_api/tracking_code_overview
  * @param {object} pluginConfig - Plugin settings
  * @param {string} pluginConfig.portalId - The HubSpot Portal (or Hub) Id of your HubSpot account
- * @param {string} pluginConfig.customScriptSrc - Load hubspot script from custom source
+ * @param {string} [pluginConfig.customScriptSrc] - Load hubspot script from custom source
+ * @param {boolean} [pluginConfig.flushOnIdentify] - Fire immediate page view to send identify information
  * @return {object} Analytics plugin
  * @example
  *
@@ -99,6 +100,8 @@ function hubSpotPlugin(pluginConfig = {}) {
     reset: () => {
       if (typeof _hsq === 'undefined') return
       _hsp.push(['revokeCookieConsent'])
+      const cookiesToRemove = ['__hstc', '__hstc', '__hssc', 'hubspotutk']
+      // @TODO loop and remove cookies
     },
     loaded: () => {
       return !!(window._hsq && window._hsq.push !== Array.prototype.push)
