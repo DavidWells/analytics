@@ -1,6 +1,6 @@
 {
   "name": "analytics-utils",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Analytics utility functions used by 'analytics' module",
   "author": "David Wells <hello@davidwells.io>",
   "license": "MIT",
@@ -57,7 +57,7 @@
     "uglify-js": "^3.4.9"
   },
   "dependencies": {
-    "@analytics/storage-utils": "^0.2.4",
+    "@analytics/storage-utils": "^0.2.5",
     "dlv": "^1.1.3"
   }
 }
