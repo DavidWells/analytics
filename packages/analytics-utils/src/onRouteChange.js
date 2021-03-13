@@ -1,6 +1,16 @@
 import inBrowser from './inBrowser'
 import noOp from './noOp'
 
+/**
+ * @callback RouteChangeHandler
+ * @param {string} pathName
+ * @returns {void}
+ */
+
+/**
+ * @param {RouteChangeHandler} callback
+ * @returns {void}
+ */
 export default function onRouteChange(callback = noOp) {
   if (!inBrowser) return
   const { addEventListener, history, location } = window

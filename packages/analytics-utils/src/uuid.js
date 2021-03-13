@@ -1,4 +1,7 @@
 /* ref: http://bit.ly/2daP79j */
+/**
+ * @return {string}
+ */
 export default function uuid() {
   var u = '',
   m = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx',

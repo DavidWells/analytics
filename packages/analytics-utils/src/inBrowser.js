@@ -1,5 +1,5 @@
 /**
  * In browser context
- * @return {Boolean} true if in browser
+ * @type boolean true if in browser
  */
 export default typeof document !== 'undefined'

@@ -4,8 +4,8 @@ import paramsClean from './paramsClean'
 /**
  * Removes params from url in browser
  * @param  {string}   param       - param key to remove from current URL
- * @param  {function} [callback]  - callback function to run. Only runs in browser
- * @return {promise}
+ * @param  {() => void} [callback]  - callback function to run. Only runs in browser
+ * @return {PromiseLike<void>}
  */
 export default function paramsRemove(param, callback) {
   if (!inBrowser) return Promise.resolve()

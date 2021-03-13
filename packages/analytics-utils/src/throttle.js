@@ -1,3 +1,9 @@
+/**
+ * @template {Function} F;
+ * @param {F} func;
+ * @param {number} wait;
+ * @return {F};
+ */
 export default function throttle(func, wait) {
   var context, args, result
   var timeout = null
