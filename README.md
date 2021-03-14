@@ -1,5 +1,5 @@
 <a href="https://getanalytics.io">
-  <img src="https://user-images.githubusercontent.com/532272/61419845-ab1e9a80-a8b4-11e9-8fd1-18b9e743bb6f.png" width="450" />
+  <img src="https://user-images.githubusercontent.com/532272/110860586-cc927e00-8271-11eb-95c7-44bdda78ab2a.png" width="450" />
 </a>
 
 ![npm](https://img.shields.io/npm/dw/analytics?style=flat-square) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/analytics?style=flat-square) ![GitHub](https://img.shields.io/github/license/davidwells/analytics?style=flat-square)
