@@ -479,13 +479,13 @@ function track(name, event, properties) {
         snowplow(
           `trackAdConversion:${name}`,
           properties.conversionId,
+          properties.costModel,
           properties.cost,
           properties.category,
           properties.action,
           properties.property,
           properties.initialValue, // how much the conversion is initially worth
           properties.advertiserId,
-          properties.costModel,
           properties.campaignId,
           properties.contexts
         );
@@ -515,7 +515,7 @@ function track(name, event, properties) {
         break;
       case 'removefromcart':
         snowplow(
-          `trackRemoveToCart:${name}`,
+          `trackRemoveFromCart:${name}`,
           properties.sku,
           properties.name,
           properties.category,
