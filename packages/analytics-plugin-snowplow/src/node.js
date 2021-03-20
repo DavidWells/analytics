@@ -1,9 +1,12 @@
 /* import serverside SDK */
-let snowplow, gotEmitter, tracker;
+let http, https, snowplow, gotEmitter, tracker;
+
 if (!process.browser) {
-  snowplow = require('snowplow-tracker');
-  gotEmitter = snowplow.gotEmitter;
-  tracker = snowplow.tracker;
+  http = require('http')
+  https = require('https')
+  snowplow = require('snowplow-tracker')
+  gotEmitter = snowplow.gotEmitter
+  tracker = snowplow.tracker
 }
 
 /**
@@ -45,11 +48,13 @@ function snowplowPlugin(pluginConfig = {}) {
     throw new Error('snowplow collector url missing');
   }
   const name = pluginConfig.name || 'snowplow';
+  const protocol = (pluginConfig.protocol) ? pluginConfig.protocol.toLowerCase() : 'https'
+  const method = (pluginConfig.method) ?  pluginConfig.method.toLowerCase() : 'post'
   const e = gotEmitter(
     pluginConfig.collectorUrl,
-    pluginConfig.protocol.toLowerCase() || 'https',
+    protocol,
     pluginConfig.port,
-    pluginConfig.method.toLowerCase() || 'post',
+    method,
     pluginConfig.bufferSize,
     pluginConfig.retries || 5,
     null,
