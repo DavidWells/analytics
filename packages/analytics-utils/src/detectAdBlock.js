@@ -1,5 +1,10 @@
 import inBrowser from './inBrowser'
 
+/** 
+ * Determine if Adblock is installed
+ *
+ * @returns boolean
+ */
 export default function hasAdblock() {
   if (!inBrowser) return false
   // Create fake ad

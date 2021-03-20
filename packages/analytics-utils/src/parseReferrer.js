@@ -4,11 +4,19 @@ import isExternalReferrer from './isExternalReferrer'
 import { trimTld, getDomainBase } from './url'
 
 const googleKey = 'google'
+
+/**
+ * @typedef {{
+ *  campaign: string,
+ *  referrer?: string,
+ * } & DomainObject & Object.<string, any>} ReferrerObject
+ */
+
 /**
  * Checks a given url and parses referrer data
  * @param  {String} [referrer] - (optional) referring URL
  * @param  {String} [currentUrl] - (optional) the current url
- * @return {Object}     [description]
+ * @return {ReferrerObject}     [description]
  */
 export default function parseReferrer(referrer, currentUrl) {
   if (!inBrowser) return false
@@ -57,9 +65,17 @@ export default function parseReferrer(referrer, currentUrl) {
 }
 
 /**
+ * @typedef {{
+ *  source: string,
+ *  medium: string,
+ *  term?: string
+ * }} DomainObject
+ */
+
+/**
  * Client side domain parser for determining marketing data.
  * @param  {String} referrer - ref url
- * @return {Object}
+ * @return {DomainObject | boolean}
  */
 function parseDomain(referrer) {
   if (!referrer || !inBrowser) return false

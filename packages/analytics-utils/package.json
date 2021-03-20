@@ -13,17 +13,18 @@
   },
   "scripts": {
     "watch": "rollup -w -c scripts/rollup.config.browser.es.js",
-    "clean": "rimraf lib dist && mkdirp lib dist",
+    "clean": "rimraf lib dist types && mkdirp lib dist types",
     "rollup-cjs": "rollup -c scripts/rollup.config.cjs.js && rollup -c scripts/rollup.config.browser.cjs.js",
     "rollup-es": "rollup -c scripts/rollup.config.es.js && rollup -c scripts/rollup.config.browser.es.js",
     "rollup-iife": "rollup -c scripts/rollup.config.iife.js",
     "rollup": "npm-run-all --parallel rollup-cjs rollup-es rollup-iife",
     "minify-dist": "uglifyjs -mc < dist/analytics-utils.js > dist/analytics-utils.min.js",
-    "build": "npm-run-all clean rollup minify-dist",
+    "build": "npm-run-all clean rollup types minify-dist",
     "publish": "git push origin && git push origin --tags",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
-    "release:major": "npm version major && npm publish"
+    "release:major": "npm version major && npm publish",
+    "types": "tsc"
   },
   "keywords": [
     "analytics",
@@ -35,6 +36,7 @@
     "lib",
     "README.md"
   ],
+  "types": "./types/index.d.ts",
   "devDependencies": {
     "@ampproject/rollup-plugin-closure-compiler": "^0.8.5",
     "@babel/core": "^7.2.2",
@@ -54,10 +56,14 @@
     "rollup-plugin-strip-banner": "^0.2.0",
     "rollup-plugin-terser": "^4.0.3",
     "rollup-plugin-uglify": "^6.0.2",
+    "typescript": "^4.2.3",
     "uglify-js": "^3.4.9"
   },
   "dependencies": {
     "@analytics/storage-utils": "^0.2.5",
     "dlv": "^1.1.3"
+  },
+  "peerDependencies": {
+    "@types/dlv": "^1.0.0"
   }
 }

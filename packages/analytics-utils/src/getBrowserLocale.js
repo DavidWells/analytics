@@ -1,5 +1,8 @@
 import inBrowser from './inBrowser'
 
+/**
+ * @returns {string | undefined}
+ */
 export default function getBrowserLocale() {
   if (!inBrowser) return
   const { language, languages, userLanguage } = navigator
