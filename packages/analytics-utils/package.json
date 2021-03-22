@@ -26,6 +26,10 @@
     "release:major": "npm version major && npm publish",
     "types": "tsc"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DavidWells/analytics"
+  },
   "keywords": [
     "analytics",
     "analytics-project",
