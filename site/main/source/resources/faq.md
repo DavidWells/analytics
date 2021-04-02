@@ -19,7 +19,7 @@ You can attach your own data collection method via an inline plugin
     fetch(customAnalyticsEndpoint, {
       method: 'POST',
       body: JSON.stringify({
-        date: meta.timestamp
+        date: meta.ts
         title: properties.title
         anonymousId: anonymousId,
         userId: userId,
