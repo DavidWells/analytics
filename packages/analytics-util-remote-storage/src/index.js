@@ -104,7 +104,7 @@ async function setRemoteItem(storageKey, storageValue, opts = {}, instance) {
   const localParsed = safeParse(value)
 
   const newValue = await resolve({
-    key: storageKey,
+    key: key,
     local: localParsed,
     localRaw: value,
     remote: remoteParsed,
