@@ -1,6 +1,6 @@
 {
   "name": "@analytics/remote-storage-utils",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Storage utilities for cross domain localStorage access, with permissions",
   "author": "David Wells",
   "license": "MIT",
