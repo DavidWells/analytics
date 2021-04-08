@@ -25,11 +25,6 @@ export default function amplitudeBrowserPlugin (pluginConfig = {}) {
   // Flag is set to true after amplitude client instance is initialized.
   let amplitudeInitCompleted = false;
 
-  const scriptLoaded = (scriptSrc) => {
-    const scripts = document.querySelectorAll('script[src]')
-    return !!Object.keys(scripts).filter((key) => (scripts[key].src || '') === scriptSrc).length
-  }
-
   const initComplete = (d) => {
     client = d;
     amplitudeInitCompleted = true;
@@ -95,7 +90,6 @@ export default function amplitudeBrowserPlugin (pluginConfig = {}) {
     },
 
     identify: ({ payload: { userId, traits }, instance }) => {
-      client.setDeviceId(instance.user("anonymousId"))
       client.setUserId(userId)
       client.setUserProperties(traits)
     },
