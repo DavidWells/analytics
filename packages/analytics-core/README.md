@@ -59,7 +59,7 @@ A lightweight analytics abstraction library for tracking page views, custom even
 - [x] Queues events to send when analytic libraries are loaded
 - [x] Conditionally load third party scripts
 - [x] Works offline
-- [x] TypeScript support
+- [x] [TypeScript support](https://getanalytics.io/tutorials/typesafe-analytics/)
 
 ##  Why
 
