@@ -1,0 +1,13 @@
+dist
+node_modules
+lib
+temp-types
+*.log
+yarn.lock
+
+# IDE stuff
+**/.idea
+
+# OS stuff
+.DS_Store
+.tmp
