@@ -1,7 +1,7 @@
 ---
 title: 'Enrich tracking data sent to a specific analytics provider'
 description: Customize payloads by a specific analytics tool using the analytics lifecycle & namespaced plugin methods
-pageTitle: Enriching data for specific tools
+pageTitle: Enrich data for specific tools
 subTitle: Customizing tracking payloads with namespaced plugin methods
 ---
 

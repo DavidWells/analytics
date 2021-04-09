@@ -58,6 +58,7 @@ module.exports = {
           ],
           Tutorials: [
             'tutorials/getting-started',
+            'tutorials/typesafe-analytics',
             'tutorials/handling-campaign-url-parameters',
             'tutorials/sending-provider-specific-events',
             'tutorials/enriching-data',
