@@ -38,18 +38,18 @@ npm install @analytics/amplitude
 
 ## How to use
 
-The `@analytics/amplitude-browser` package works in [the browser](#browser-usage). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
+The `@analytics/amplitude` package works in [the browser](#browser-usage). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
 
 Below is an example of how to use the browser plugin.
 
 ```js
 import Analytics from 'analytics'
-import exports from '@analytics/amplitude-browser'
+import amplitudePlugin from '@analytics/amplitude'
 
 const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
-    amplitude({
+    amplitudePlugin({
       apiKey: 'token',
       options: {
         trackingOptions: {
@@ -77,13 +77,13 @@ analytics.identify('user-id-xyz', {
 
 ```
 
-After initializing `analytics` with the `exports` plugin, data will be sent into Amplitude whenever [analytics.page](https://getanalytics.io/api/#analyticspage), [analytics.track](https://getanalytics.io/api/#analyticstrack), or [analytics.identify](https://getanalytics.io/api/#analyticsidentify) are called.
+After initializing `analytics` with the `amplitudePlugin` plugin, data will be sent into Amplitude whenever [analytics.page](https://getanalytics.io/api/#analyticspage), [analytics.track](https://getanalytics.io/api/#analyticstrack), or [analytics.identify](https://getanalytics.io/api/#analyticsidentify) are called.
 
 See [additional implementation examples](#additional-examples) for more details on using in your project.
 
 ## Platforms Supported
 
-The `@analytics/amplitude-browser` package works in [the browser](#browser-usage)
+The `@analytics/amplitude` package works in [the browser](#browser-usage)
 
 ## Browser usage
 
@@ -97,12 +97,12 @@ The Amplitude client side browser plugin works with these analytic api methods:
 
 ```js
 import Analytics from 'analytics'
-import exports from '@analytics/amplitude-browser'
+import amplitudePlugin from '@analytics/amplitude'
 
 const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
-    amplitude({
+    amplitudePlugin({
       apiKey: 'token',
       options: {
         trackingOptions: {
@@ -137,15 +137,15 @@ Below are additional implementation examples.
   <!DOCTYPE html>
   <html>
     <head>
-      <title>Using @analytics/amplitude-browser in HTML</title>
+      <title>Using @analytics/amplitude in HTML</title>
       <script src="https://unpkg.com/analytics/dist/analytics.min.js"></script>
-      <script src="https://unpkg.com/@analytics/amplitude-browser/dist/@analytics/amplitude-browser.min.js"></script>
+      <script src="https://unpkg.com/@analytics/amplitude/dist/@analytics/amplitude.min.js"></script>
       <script type="text/javascript">
         /* Initialize analytics */
         var Analytics = _analytics.init({
           app: 'my-app-name',
           plugins: [
-            amplitude({
+            undefined({
               apiKey: 'token',
               options: {
                 trackingOptions: {
@@ -184,13 +184,13 @@ Below are additional implementation examples.
 <details>
   <summary>Using in HTML via ES Modules</summary>
 
-  Using `@analytics/amplitude-browser` in ESM modules.
+  Using `@analytics/amplitude` in ESM modules.
 
   ```html
   <!DOCTYPE html>
   <html>
     <head>
-      <title>Using @analytics/amplitude-browser in HTML via ESModules</title>
+      <title>Using @analytics/amplitude in HTML via ESModules</title>
       <script>
         // Polyfill process.
         // **Note**: Because `import`s are hoisted, we need a separate, prior <script> block.
@@ -198,13 +198,13 @@ Below are additional implementation examples.
       </script>
       <script type="module">
         import analytics from 'https://unpkg.com/analytics/lib/analytics.browser.es.js?module'
-        import undefined from 'https://unpkg.com/@analytics/amplitude-browser/lib/analytics-plugin-amplitude-browser.browser.es.js?module'
+        import undefined from 'https://unpkg.com/@analytics/amplitude/lib/analytics-plugin-amplitude.browser.es.js?module'
         /* Initialize analytics */
         const Analytics = analytics({
           app: 'analytics-html-demo',
           debug: true,
           plugins: [
-            amplitude({
+            undefined({
               apiKey: 'token',
               options: {
                 trackingOptions: {

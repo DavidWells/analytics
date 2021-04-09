@@ -1,7 +1,7 @@
 {
-  "name": "@analytics/amplitude-browser",
+  "name": "@analytics/amplitude",
   "version": "0.1.0",
-  "description": "Amplitude browser plugin for 'analytics' module",
+  "description": "Amplitude integration for 'analytics' module",
   "projectMeta": {
     "provider": {
       "name": "Amplitude",
@@ -9,7 +9,7 @@
     },
     "windowGlobal": "analyticsAmplitude",
     "platforms": {
-      "browser": "./src/index.js"
+      "browser": "./src/browser.js"
     }
   },
   "keywords": [
@@ -30,12 +30,12 @@
     "release:major": "npm version major && npm publish",
     "es": "../../node_modules/.bin/babel-node ./testBabel.js"
   },
-  "main": "lib/analytics-plugin-amplitude-browser.cjs.js",
-  "jsnext:main": "lib/analytics-plugin-amplitude-browser.es.js",
-  "module": "lib/analytics-plugin-amplitude-browser.es.js",
+  "main": "lib/analytics-plugin-amplitude.cjs.js",
+  "jsnext:main": "lib/analytics-plugin-amplitude.es.js",
+  "module": "lib/analytics-plugin-amplitude.es.js",
   "browser": {
-    "./lib/analytics-plugin-amplitude-browser.cjs.js": "./lib/analytics-plugin-amplitude-browser.browser.cjs.js",
-    "./lib/analytics-plugin-amplitude-browser.es.js": "./lib/analytics-plugin-amplitude-browser.browser.es.js"
+    "./lib/analytics-plugin-amplitude.cjs.js": "./lib/analytics-plugin-amplitude.browser.cjs.js",
+    "./lib/analytics-plugin-amplitude.es.js": "./lib/analytics-plugin-amplitude.browser.es.js"
   },
   "files": [
     "dist",

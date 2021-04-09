@@ -683,7 +683,7 @@ Below is a list of the current available events
 The `analytics` has a robust plugin system. Here is a list of currently available plugins:
 
 <!-- AUTO-GENERATED-CONTENT:START (PLUGINS) -->
-- [@analytics/amplitude-browser](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-amplitude-browser) Amplitude browser plugin for 'analytics' module [npm link](https://www.npmjs.com/package/@analytics/amplitude-browser).
+- [@analytics/amplitude](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-amplitude) Amplitude integration for 'analytics' module [npm link](https://www.npmjs.com/package/@analytics/amplitude).
 - [@analytics/aws-pinpoint](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-aws-pinpoint) AWS Pinpoint integration for 'analytics' module [npm link](https://www.npmjs.com/package/@analytics/aws-pinpoint).
 - [@analytics/cookie-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-cookie) Cookie helper functions [npm link](https://www.npmjs.com/package/@analytics/cookie-utils).
 - [@analytics/core](https://github.com/DavidWells/analytics/tree/master/packages/analytics-core) Lightweight analytics library for tracking events, page views, & identifying users. Works with any third party analytics provider via an extendable plugin system. [npm link](https://www.npmjs.com/package/@analytics/core).
