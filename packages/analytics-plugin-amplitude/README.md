@@ -51,6 +51,7 @@ const analytics = Analytics({
   plugins: [
     amplitudePlugin({
       apiKey: 'token',
+      // See options at https://bit.ly/3dRdZnE
       options: {
         trackingOptions: {
           ip_address: false
@@ -104,6 +105,7 @@ const analytics = Analytics({
   plugins: [
     amplitudePlugin({
       apiKey: 'token',
+      // See options at https://bit.ly/3dRdZnE
       options: {
         trackingOptions: {
           ip_address: false
@@ -147,6 +149,7 @@ Below are additional implementation examples.
           plugins: [
             undefined({
               apiKey: 'token',
+              // See options at https://bit.ly/3dRdZnE
               options: {
                 trackingOptions: {
                   ip_address: false
@@ -206,6 +209,7 @@ Below are additional implementation examples.
           plugins: [
             undefined({
               apiKey: 'token',
+              // See options at https://bit.ly/3dRdZnE
               options: {
                 trackingOptions: {
                   ip_address: false

@@ -12,6 +12,7 @@
  *
  * amplitudePlugin({
  *   apiKey: 'token',
+ *   // See options at https://bit.ly/3dRdZnE
  *   options: { 
  *     trackingOptions: {
  *       ip_address: false 
@@ -35,20 +36,20 @@ function amplitudePlugin(pluginConfig = {}) {
     config: pluginConfig,
     // For Amplitude options, see https://amplitude.github.io/Amplitude-JavaScript/Options
     initialize: ({ config }) => {
-      const { apiKey, projectName, customScriptSrc, options = {} } = config;
+      const { apiKey, projectName, customScriptSrc, options = {} } = config
       if (!apiKey) {
-        throw new Error("Amplitude project API key is not defined");
+        throw new Error("Amplitude project API key is not defined")
       }
       if (options && typeof options !== "object") {
-        throw new Error("Amplitude SDK options must be an object");
+        throw new Error("Amplitude SDK options must be an object")
       }
 
       // Already loaded
       if (typeof window.amplitude !== 'undefined') {
-        return;
+        return
       }
       
-      const scriptSrc = customScriptSrc ? customScriptSrc : 'https://cdn.amplitude.com/libs/amplitude-8.1.0-min.gz.js';
+      const scriptSrc = customScriptSrc ? customScriptSrc : 'https://cdn.amplitude.com/libs/amplitude-8.1.0-min.gz.js'
 
       // Initialize amplitude js
       (function(e, t) {
@@ -91,7 +92,9 @@ function amplitudePlugin(pluginConfig = {}) {
           s(u, l[p])
         }
         n.Revenue = u;
-        var d = ["init", "logEvent", "logRevenue", "setUserId", "setUserProperties", "setOptOut", "setVersionName", "setDomain", "setDeviceId", "enableTracking", "setGlobalUserProperties", "identify", "clearUserProperties", "setGroup", "logRevenueV2", "regenerateDeviceId", "groupIdentify", "onInit", "logEventWithTimestamp", "logEventWithGroups", "setSessionId", "resetSessionId"];
+        var d = [
+          "init", "logEvent", "logRevenue", "setUserId", "setUserProperties", "setOptOut", "setVersionName", "setDomain", "setDeviceId", "enableTracking", "setGlobalUserProperties", "identify", "clearUserProperties", "setGroup", "logRevenueV2", "regenerateDeviceId", "groupIdentify", "onInit", "logEventWithTimestamp", "logEventWithGroups", "setSessionId", "resetSessionId"
+        ];
 
         function v(e) {
           function t(t) {
@@ -105,16 +108,14 @@ function amplitudePlugin(pluginConfig = {}) {
         n.getInstance = function(e) {
           e = (!e || e.length === 0 ? "$default_instance" : e).toLowerCase();
           if (!Object.prototype.hasOwnProperty.call(n._iq, e)) {
-            n._iq[e] = {
-              _q: []
-            };
+            n._iq[e] = { _q: [] };
             v(n._iq[e])
           }
           return n._iq[e]
         };
         e.amplitude = n
       })(window, document);
-    
+      // See options at https://amplitude.github.io/Amplitude-JavaScript/Options/
       window.amplitude.init(config.apiKey, null, options, initComplete)
     },
 
