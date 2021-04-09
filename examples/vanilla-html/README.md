@@ -17,7 +17,7 @@
     debug: true,
     version: 100,
     plugins: [
-      analyticsGA({
+      analyticsGa({
         trackingId: 'UA-126647663-3'
       })
       // ... add other plugins

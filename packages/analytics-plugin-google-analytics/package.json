@@ -33,7 +33,7 @@
     "es": "../../node_modules/.bin/babel-node ./testBabel.js"
   },
   "main": "lib/analytics-plugin-ga.cjs.js",
-  "globalName": "analyticsGA",
+  "globalName": "analyticsGa",
   "jsnext:main": "lib/analytics-plugin-ga.es.js",
   "module": "lib/analytics-plugin-ga.es.js",
   "browser": {

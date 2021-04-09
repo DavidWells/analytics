@@ -4,7 +4,7 @@
     <title>Using Analytics in HTML</title>
     <!-- Include `analytics` from CDN -->
     <script src="https://unpkg.com/analytics/dist/analytics.min.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/@analytics/google-analytics/dist/analytics-plugin-ga.js" charset="utf-8"></script>
+    <script src="https://unpkg.com/@analytics/google-analytics/dist/@analytics/google-analytics.min.js"></script>
     <script type="text/javascript">
       /* Initialize analytics */
       var Analytics = _analytics.init({
@@ -12,7 +12,7 @@
         debug: true,
         plugins: [
           // attach google analytics plugin
-          analyticsGA.default({
+          analyticsGa.default({
             trackingId: 'UA-126647663-3'
           })
           // ... add any other third party analytics plugins

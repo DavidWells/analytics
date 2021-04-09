@@ -259,7 +259,7 @@ Below are additional implementation examples.
         var Analytics = _analytics.init({
           app: 'my-app-name',
           plugins: [
-            analyticsGA.init({
+            analyticsGa.init({
               trackingId: 'UA-1234567'
             })
           ]
@@ -308,13 +308,13 @@ Below are additional implementation examples.
       </script>
       <script type="module">
         import analytics from 'https://unpkg.com/analytics/lib/analytics.browser.es.js?module'
-        import analyticsGA from 'https://unpkg.com/@analytics/google-analytics/lib/analytics-plugin-ga.browser.es.js?module'
+        import analyticsGa from 'https://unpkg.com/@analytics/google-analytics/lib/analytics-plugin-ga.browser.es.js?module'
         /* Initialize analytics */
         const Analytics = analytics({
           app: 'analytics-html-demo',
           debug: true,
           plugins: [
-            analyticsGA({
+            analyticsGa({
               trackingId: 'UA-1234567'
             })
             // ... add any other third party analytics plugins
