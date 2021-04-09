@@ -8,7 +8,7 @@
 <!-- Include from CDN -->
 <script src="https://unpkg.com/analytics/dist/analytics.min.js"></script>
 <!-- Include plugins -->
-<script src="https://unpkg.com/analytics-plugin-ga/dist/analytics-plugin-ga.min.js"></script>
+<script src="https://unpkg.com/@analytics/google-analytics/dist/@analytics/google-analytics.min.js"></script>
 
 <script type="text/javascript">
   /* Initialize analytics */
