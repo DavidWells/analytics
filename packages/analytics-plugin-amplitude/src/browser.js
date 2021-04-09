@@ -5,7 +5,6 @@
  * @link https://developers.amplitude.com
  * @param {object} pluginConfig - Plugin settings
  * @param {string} pluginConfig.apiKey - Amplitude project API key
- * @param {string} pluginConfig.projectName - project name (if it's necessary to report to multiple projects)
  * @param {object} pluginConfig.options - Amplitude SDK options
  * @return {*}
  * @example
@@ -36,7 +35,7 @@ function amplitudePlugin(pluginConfig = {}) {
     config: pluginConfig,
     // For Amplitude options, see https://amplitude.github.io/Amplitude-JavaScript/Options
     initialize: ({ config }) => {
-      const { apiKey, projectName, customScriptSrc, options = {} } = config
+      const { apiKey, customScriptSrc, options = {} } = config
       if (!apiKey) {
         throw new Error("Amplitude project API key is not defined")
       }
