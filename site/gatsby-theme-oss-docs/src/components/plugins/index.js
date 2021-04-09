@@ -68,6 +68,16 @@ var tools = [
     image: 'fullstory.svg',
     url: 'https://getanalytics.io/plugins/fullstory/'
   },
+  // {
+  //   name: 'aws-pinpoint',
+  //   image: 'aws-pinpoint.svg',
+  //   url: 'https://getanalytics.io/plugins/aws-pinpoint/'
+  // },
+  {
+    name: 'amplitude',
+    image: 'amplitude.svg',
+    url: 'https://getanalytics.io/plugins/amplitude/'
+  },
   {
     name: 'segment',
     image: 'segment.svg',

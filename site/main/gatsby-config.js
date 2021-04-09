@@ -33,6 +33,7 @@ module.exports = {
             'plugins/hubspot',
             'plugins/mixpanel',
             'plugins/aws-pinpoint',
+            'plugins/amplitude',
             'plugins/fullstory',
             'plugins/crazyegg',
             'plugins/gosquared',
