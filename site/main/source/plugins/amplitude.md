@@ -1,16 +1,12 @@
-<!--
+---
 title: Adding Amplitude to your app using open source analytics
 description: Connect Amplitude to the analytics library
 pageTitle: Amplitude
--->
-
-# Amplitude
+---
 
 This library exports the `amplitude` plugin for the [`analytics`](https://www.npmjs.com/package/analytics) package.
 
 This analytics plugin will load Amplitude integration into your application.
-
-For more information [see the docs](https://getanalytics.io/plugins/amplitude/).
 
 <!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
 <details>
@@ -123,7 +119,6 @@ const analytics = Analytics({
 |:---------------------------|:-----------|
 | `apiKey` <br/>**required** - string| Amplitude project API key |
 | `options` <br/>**required** - object| Amplitude SDK options |
-
 
 ## Additional examples
 
@@ -243,6 +238,5 @@ Below are additional implementation examples.
   ```
 
 </details>
-
 
 <!-- AUTO-GENERATED-CONTENT:END (PLUGIN_DOCS) -->
