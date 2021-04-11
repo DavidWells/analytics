@@ -1,0 +1,44 @@
+{
+  "name": "@analytics/listener-utils",
+  "version": "0.0.1",
+  "description": "Backward compatible event listener library for attaching & detaching event handlers",
+  "author": "David Wells",
+  "license": "MIT",
+  "homepage": "https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-listener#readme",
+  "repository": "https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-listener",
+  "keywords": [
+    "analytics",
+    "analytics-project",
+    "analytics-util",
+    "events",
+    "listeners"
+  ],
+  "source": "src/index.js",
+  "main": "dist/analytics-util-listener.js",
+  "exports": "./dist/analytics-util-listener.modern.js",
+  "module": "dist/analytics-util-listener.module.js",
+  "unpkg": "dist/analytics-util-listener.umd.js",
+  "scripts": {
+    "example": "cp examples/index.html dist && serve ./dist -l 5000",
+    "open": "open-cli http://localhost:5000",
+    "serve": "concurrently \"npm:example\" \"npm:open\"",
+    "build": "microbundle --name analyticsUtilListener",
+    "dev": "microbundle watch",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish"
+  },
+  "files": [
+    "lib",
+    "dist",
+    "package.json",
+    "package-lock.json",
+    "README.md"
+  ],
+  "devDependencies": {
+    "concurrently": "^6.0.1",
+    "microbundle": "^0.13.0",
+    "open-cli": "^6.0.1",
+    "serve": "^11.3.2"
+  }
+}
