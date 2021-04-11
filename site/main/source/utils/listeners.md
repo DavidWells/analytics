@@ -1,12 +1,10 @@
-<!--
+---
 title: Javascript event listener util
 pageTitle: Event Listener Utils
 description: Utility library for adding backwards compatible event listeners
--->
+---
 
-# Listener Utilities
-
-A [tiny](https://bundlephobia.com/result?p=@analytics/listener-utils) utilities library for dealing with event listeners.
+A [tiny](https://bundlephobia.com/result?p=@analytics/listener-utils) utilities library for dealing with event listeners
 
 Exposes `addListener`, `removeListener` functions.
 

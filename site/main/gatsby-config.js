@@ -48,6 +48,7 @@ module.exports = {
             'plugins/request',
           ],
           Utilities: [
+            'utils/listeners',
             'utils/cookies',
             'utils/forms',
             'utils/router',
