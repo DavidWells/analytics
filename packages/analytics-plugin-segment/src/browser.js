@@ -120,8 +120,10 @@ function segmentPlugin(pluginConfig = {}) {
     /* Trigger Segment page view http://bit.ly/2LSPFr1 */
     page: ({ payload, config }) => {
       if (typeof analytics === 'undefined') return
-
-      analytics.page(payload.properties, {
+      const properties = payload.properties || {}
+      const name = properties.name || properties.title
+      
+      analytics.page(name, properties, {
         integrations: config.integrations,
         ...payload.options,
       })
