@@ -335,6 +335,20 @@ Below are additional implementation examples.
 
 <!-- AUTO-GENERATED-CONTENT:END -->
 
+## Customing the page name field
+
+By default the page name is the `document.title` value. 
+
+To have shorter names call page like so:
+
+```js
+analytics.page({
+  name: 'HomePage'
+})
+```
+
+This can quickly become tricky to manage and we'd advise against this approach.
+
 ## Loading script from custom proxy
 
 In specific scenarios, you might want to load your own version of segment's analytics from a different URL.
