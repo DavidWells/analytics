@@ -19,14 +19,16 @@
   "module": "dist/analytics-util-listener.module.js",
   "unpkg": "dist/analytics-util-listener.umd.js",
   "scripts": {
-    "example": "cp examples/index.html dist && serve ./dist -l 5000",
+    "sync": "cp examples/index.html dist",
+    "example": "npm run sync && serve ./dist -l 5000",
     "open": "open-cli http://localhost:5000",
     "serve": "concurrently \"npm:example\" \"npm:open\"",
     "build": "microbundle --name analyticsUtilListener",
     "dev": "microbundle watch",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
-    "release:major": "npm version major && npm publish"
+    "release:major": "npm version major && npm publish",
+    "deploy": "npm run sync && netlify deploy --prod --dir dist --site 804da5e7-8aa8-4da8-a983-8593754cacb9"
   },
   "files": [
     "lib",

@@ -12,6 +12,8 @@ Exposes `addListener`, `removeListener` functions.
 
 This library will work with [analytics](https://getanalytics.io) or as a standalone package.
 
+[See live demo](https://event-listener-util.netlify.app/).
+
 ### Why this package?
 
 This package makes it a little easy to work with `addEventListener` & `removeEventListener` by returning a clean up function for both. This makes it easy to re-attach a listener or disable a listener with it's return function.
