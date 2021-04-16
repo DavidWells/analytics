@@ -13,5 +13,20 @@
     "name": "analytics-fetch",
     "url": "https://www.npmjs.com/package/@standardorg/analytics-fetch",
     "description": "Integration with the browser's fetch API for analytics"
+  },
+  {
+    "name": "Logrocket",
+    "url": "https://www.npmjs.com/package/analytics-plugin-logrocket",
+    "description": "Adds Analytics support for LogRocket"
+  },
+  {
+    "name": "Indicative",
+    "url": "https://www.npmjs.com/package/analytics-plugin-indicative",
+    "description": "Adds Analytics support for Indicative"
+  },
+  {
+    "name": "Plausible",
+    "url": "https://www.npmjs.com/package/analytics-plugin-plausible",
+    "description": "Adds Analytics support for Plausible"
   }
 ]
