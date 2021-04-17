@@ -693,6 +693,7 @@ The `analytics` has a robust plugin system. Here is a list of currently availabl
 - [@analytics/google-tag-manager](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-google-tag-manager) Google tag manager plugin for 'analytics' module [npm link](https://www.npmjs.com/package/@analytics/google-tag-manager).
 - [@analytics/gosquared](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-gosquared) GoSquared integration for 'analytics' module [npm link](https://www.npmjs.com/package/@analytics/gosquared).
 - [@analytics/hubspot](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-hubspot) HubSpot plugin for 'analytics' module [npm link](https://www.npmjs.com/package/@analytics/hubspot).
+- [@analytics/listener-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-listener) Backward compatible event listener library for attaching & detaching event handlers [npm link](https://www.npmjs.com/package/@analytics/listener-utils).
 - [@analytics/mixpanel](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-mixpanel) Mixpanel plugin for 'analytics' module [npm link](https://www.npmjs.com/package/@analytics/mixpanel).
 - [@analytics/original-source-plugin](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-original-source) Save original referral source of visitor plugin for 'analytics' pkg [npm link](https://www.npmjs.com/package/@analytics/original-source-plugin).
 - [@analytics/ownstats](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-ownstats) Ownstats integration for 'analytics' module for browser & node [npm link](https://www.npmjs.com/package/@analytics/ownstats).
@@ -724,6 +725,9 @@ Below are plugins created outside of this repo:
 <!-- AUTO-GENERATED-CONTENT:START (EXTERNAL_PLUGINS) -->
 - [analytics-fetch](https://www.npmjs.com/package/@standardorg/analytics-fetch) Integration with the browser's fetch API for analytics
 - [Facebook tracking pixel](https://github.com/DavidWells/analytics/issues/54#issuecomment-735413632) Send data to Facebook Tracking pixel
+- [Indicative](https://www.npmjs.com/package/analytics-plugin-indicative) Adds Analytics support for Indicative
+- [Logrocket](https://www.npmjs.com/package/analytics-plugin-logrocket) Adds Analytics support for LogRocket
+- [Plausible](https://www.npmjs.com/package/analytics-plugin-plausible) Adds Analytics support for Plausible
 - [Yandex](https://github.com/pechischev/analytics-yandex-metric-plugin) Send data to Yandex metrica
 - [Add a plugin link](https://github.com/DavidWells/analytics/blob/master/external-plugins.json)
 <!-- AUTO-GENERATED-CONTENT:END -->
