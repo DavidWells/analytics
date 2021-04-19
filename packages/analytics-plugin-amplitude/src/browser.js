@@ -48,7 +48,7 @@ function amplitudePlugin(pluginConfig = {}) {
         return
       }
       
-      const scriptSrc = customScriptSrc ? customScriptSrc : 'https://cdn.amplitude.com/libs/amplitude-8.1.0-min.gz.js'
+      const scriptSrc = customScriptSrc ? customScriptSrc : 'https://cdn.amplitude.com/libs/amplitude-8.1.0-min.gz.js';
 
       // Initialize amplitude js
       (function(e, t) {
