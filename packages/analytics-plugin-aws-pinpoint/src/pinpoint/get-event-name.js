@@ -1,4 +1,4 @@
 
-export default function getEventName(key, eventMap) {
+export default function getEventName(key, eventMap = {}) {
   return eventMap[key] || key
 }
