@@ -1,4 +1,4 @@
-import { initialize, ENDPOINT_KEY } from './pinpoint'
+import { initialize, getStorageKey } from './pinpoint'
 import { CHANNEL_TYPES } from './pinpoint/constants'
 import * as PINPOINT_EVENTS from './pinpoint/events'
 import { onTabChange } from 'analytics-plugin-tab-events'
@@ -176,7 +176,9 @@ function awsPinpointPlugin(pluginConfig = {}) {
       })
     },
     reset: ({ instance }) => {
-      storage.removeItem(ENDPOINT_KEY)
+      const id = instance.user('anonymousId')
+      const key = getStorageKey(id)
+      storage.removeItem(key)
     },
     track: ({ payload, config, instance }) => {
       if (!recordEvent) {

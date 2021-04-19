@@ -22,6 +22,7 @@ For more information [see the docs](https://getanalytics.io/plugins/segment/).
   * [Server-side API](#server-side-api)
   * [Configuration options for server-side](#configuration-options-for-server-side)
 - [Additional examples](#additional-examples)
+- [Customing the page name field](#customing-the-page-name-field)
 - [Loading script from custom proxy](#loading-script-from-custom-proxy)
 - [Making group calls](#making-group-calls)
   * [Browser Example](#browser-example)

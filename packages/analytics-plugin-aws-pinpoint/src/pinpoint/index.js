@@ -17,6 +17,8 @@ const RETRYABLE_CODES = [429, 500]
 const ACCEPTED_CODES = [202]
 const FORBIDDEN_CODE = 403
 const BAD_REQUEST_CODE = 400
+const inBrowser = typeof window !== 'undefined'
+const isSessionStorageActive = isSessionStorageSupported()
 
 const clientInfo = getClientInfo()
 
@@ -60,7 +62,7 @@ export function initialize(config = {}) {
 	*/
 
 	// Run initialize endpoint merge
-	mergeEndpointData({}, configuration.getContext(), config.getUserId)
+	mergeEndpointData({}, configuration.getContext(), config.getUserId, config.getEndpointId)
 
 	// Flush remaining events on page close
 	const detachWindowUnloadListener = onWindowUnload(recordEvent)
@@ -76,13 +78,10 @@ export function initialize(config = {}) {
 }
 
 function onWindowUnload(recordFunc) {
-	if (typeof window === 'undefined') {
+	if (!inBrowser) {
 		return noOp
 	}
-
 	const stopSessionHandler = stopSessionFactory(recordFunc)
-	
-	// Attach listener
 	window.addEventListener('beforeunload', stopSessionHandler)
 	return () => window.removeEventListener('beforeunload', stopSessionHandler)
 }
@@ -91,12 +90,24 @@ function stopSessionFactory(recordFunc) {
 	// Flush remaining events
 	return () => {
 		console.log('Fire stop session')
-		recordFunc('_session.stop', false)
+		recordFunc(PINPOINT_EVENTS.SESSION_STOP, false)
+	}
+}
+
+function isSessionStorageSupported() {
+	if (!inBrowser) return false
+	const sessionStorage = window.sessionStorage;
+	try {
+		sessionStorage.setItem(ENDPOINT_KEY, 'x')
+		sessionStorage.removeItem(ENDPOINT_KEY)
+		return true
+	} catch (e) {
+		return false
 	}
 }
 
 function getSessionID() {
-	if (typeof window.sessionStorage === 'undefined') {
+	if (!isSessionStorageActive) {
 		return null
 	}
 
@@ -113,16 +124,23 @@ function getSessionID() {
 	return newSessionID
 }
 
-function getEndpoint() {
-  try {
-    return JSON.parse(localStorage.getItem(ENDPOINT_KEY)) || {}
-  } catch (error) {
-    return {}
-  }
+export function getStorageKey(id) {
+	return `${ENDPOINT_KEY}.${id}`
 }
 
-function setEndpoint(endpoint) {
-  localStorage.setItem(ENDPOINT_KEY, JSON.stringify(endpoint))
+function getEndpoint(id) {
+	let endpointInfo = {}
+  try {
+    endpointInfo = JSON.parse(localStorage.getItem(getStorageKey(id))) || {}
+  } catch (error) {
+  }
+	return endpointInfo
+}
+
+function setEndpoint(id, endpointData) {
+	const endpointKey = getStorageKey(id)
+	const data = (typeof endpointData === 'string') ? endpointData : JSON.stringify(endpointData)
+	localStorage.setItem(endpointKey, data)
 }
 
 function makeRecordFunction(config = {}) {
@@ -146,7 +164,7 @@ function makeRecordFunction(config = {}) {
 		const { pageSession, subSessionId, subSessionStart, elapsed } = contextInfo
     // Merge endpoint data.
     if (Object.entries(endpoint).length || _type === PINPOINT_EVENTS.PAGE_VIEW) {
-      endpoint = await mergeEndpointData(endpoint, contextInfo, config.getUserId)
+      endpoint = await mergeEndpointData(endpoint, contextInfo, config.getUserId, config.getEndpointId)
     }
 		
 		const time = new Date()
@@ -298,9 +316,9 @@ function createSendEvents(config = {}) {
 		// Update endpoint data if provided.
 		if (Object.entries(endpoint).length) {
 			const contextInfo = config.getContext()
-			endpointData = await mergeEndpointData(endpoint, contextInfo, config.getUserId)
+			endpointData = await mergeEndpointData(endpoint, contextInfo, config.getUserId, config.getEndpointId)
 		} else {
-			endpointData = getEndpoint() || {}
+			endpointData = getEndpoint(endpointId) || {}
 		}
 		
 		if (debug) {
@@ -427,18 +445,6 @@ async function callAWS(eventsRequest, config) {
 	}).then((d) => d.json())
 	// console.log('pinpoint response', data)
 
-	/* swallow errors? probably bad idea
-	let data = {}
-	try {
-		data = await aws.fetch(endpointUrl, {
-			body: JSON.stringify(eventsRequest),
-		}).then((d) => d.json())
-	} catch (err) {
-		if (debug) {
-			console.log('Pinpoint error', err)
-		}
-	}*/
-
 	if (data && data.Results) {
 		// Process api responses
 		const responses = Object.keys(data.Results).map((eventId) => data.Results[eventId])
@@ -526,8 +532,23 @@ function sendBeaconRequest() {
 }
 */
 
-async function mergeEndpointData(endpoint = {}, context = {}, getUserId) {
-	const persistedEndpoint = getEndpoint()
+let migrationRan = false
+async function mergeEndpointData(endpoint = {}, context = {}, getUserId, getEndpointId) {
+	const id = await getEndpointId()
+	// @TODO remove in next version
+	if (!migrationRan) {
+		migrationRan = true
+		// Backwards compatible endpoint info
+		const deprecatedData = localStorage.getItem(ENDPOINT_KEY)
+		// clear out old key value
+		if (deprecatedData) {
+			setEndpoint(id, deprecatedData)
+			// remove old key
+			localStorage.removeItem(ENDPOINT_KEY)
+		}
+	}
+
+	const persistedEndpoint = getEndpoint(id)
 	const { pageSession } = context
   const defaultEndpointConfig = {};
 
@@ -651,7 +672,7 @@ async function mergeEndpointData(endpoint = {}, context = {}, getUserId) {
 	}
 
 	// Store the endpoint data.
-	setEndpoint(endpoint)
+	setEndpoint(id, endpoint)
 
 	return endpoint
 }
