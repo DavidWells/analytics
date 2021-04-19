@@ -1,5 +1,7 @@
+import inBrowser from './in-browser'
 
 function isSessionStorageSupported() {
+  if (!inBrowser) return false
 	const sessionStorage = window.sessionStorage;
 	try {
 		sessionStorage.setItem('__test', 'x')

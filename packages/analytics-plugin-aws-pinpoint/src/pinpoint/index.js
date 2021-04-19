@@ -5,6 +5,7 @@ import getClientInfo from './client-info'
 import getEventName from './get-event-name'
 import { CHANNEL_TYPES } from './constants'
 import * as PINPOINT_EVENTS from './events'
+import inBrowser from '../utils/in-browser'
 
 // TODO use beacon
 // import 'navigator.sendbeacon'
@@ -16,7 +17,6 @@ const RETRYABLE_CODES = [429, 500]
 const ACCEPTED_CODES = [202]
 const FORBIDDEN_CODE = 403
 const BAD_REQUEST_CODE = 400
-const inBrowser = typeof window !== 'undefined'
 
 const clientInfo = getClientInfo()
 
