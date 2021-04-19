@@ -12,7 +12,7 @@ export default function browserClientInfo() {
 
 	return {
 		platform,
-		make: product || vendor,
+		make: vendor || product,
 		model: type.type,
 		version: type.version,
 		appVersion: [type.type, type.version].join('/'),
