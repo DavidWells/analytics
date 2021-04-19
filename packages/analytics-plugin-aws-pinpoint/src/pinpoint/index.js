@@ -11,14 +11,12 @@ import * as PINPOINT_EVENTS from './events'
 const BEACON_SUPPORTED = typeof navigator !== 'undefined' && navigator && typeof navigator.sendBeacon === 'function'
 
 const ENABLE_QUEUE = true
-const SESSION_KEY = '__session_id'
 const ENDPOINT_KEY = '__endpoint'
 const RETRYABLE_CODES = [429, 500]
 const ACCEPTED_CODES = [202]
 const FORBIDDEN_CODE = 403
 const BAD_REQUEST_CODE = 400
 const inBrowser = typeof window !== 'undefined'
-const isSessionStorageActive = isSessionStorageSupported()
 
 const clientInfo = getClientInfo()
 
@@ -37,6 +35,7 @@ function isEmail(string) {
 export { ENDPOINT_KEY }
 
 export function initialize(config = {}) {
+	// @TODO clean up 
 	const configuration = {
 		getContext: config.getContext || noOp,
 		enrichEventAttributes: config.enrichEventAttributes || noOp,
@@ -55,14 +54,8 @@ export function initialize(config = {}) {
 		...configuration
 	})
 
-	/*
-	const updateEndpoint = async function (endpoint = {}) {
-		return sentDataToPinpoint(endpoint)
-	}
-	*/
-
 	// Run initialize endpoint merge
-	mergeEndpointData({}, configuration.getContext(), config.getUserId, config.getEndpointId)
+	mergeEndpointData({}, config)
 
 	// Flush remaining events on page close
 	const detachWindowUnloadListener = onWindowUnload(recordEvent)
@@ -94,36 +87,6 @@ function stopSessionFactory(recordFunc) {
 	}
 }
 
-function isSessionStorageSupported() {
-	if (!inBrowser) return false
-	const sessionStorage = window.sessionStorage;
-	try {
-		sessionStorage.setItem(ENDPOINT_KEY, 'x')
-		sessionStorage.removeItem(ENDPOINT_KEY)
-		return true
-	} catch (e) {
-		return false
-	}
-}
-
-function getSessionID() {
-	if (!isSessionStorageActive) {
-		return null
-	}
-
-	// Get stored session.
-	const sessionID = window.sessionStorage.getItem(SESSION_KEY)
-
-	if (sessionID) {
-		return sessionID
-	}
-
-	// Create and set a UUID.
-	const newSessionID = uuid()
-	window.sessionStorage.setItem(SESSION_KEY, newSessionID)
-	return newSessionID
-}
-
 export function getStorageKey(id) {
 	return `${ENDPOINT_KEY}.${id}`
 }
@@ -145,11 +108,9 @@ function setEndpoint(id, endpointData) {
 
 function makeRecordFunction(config = {}) {
 	let timer
-	const { sentDataToPinpoint, appPackageName, appTitle, appVersionCode, debug } = config
+	const { sentDataToPinpoint } = config
 
-  return async function recordEvent(_type, data = {}, endpoint = {}, queue = true) {
-		// Event name mapping
-		const type = getEventName(_type, config.eventMapping)
+  return async function recordEvent(eventName, data = {}, endpoint = {}, queue = true) {
     if (typeof data === 'boolean') {
       queue = data
       data = {}
@@ -159,112 +120,15 @@ function makeRecordFunction(config = {}) {
       endpoint = {}
     }
 
-		const contextInfo = config.getContext()
-		// console.log('contextInfo', contextInfo)
-		const { pageSession, subSessionId, subSessionStart, elapsed } = contextInfo
-    // Merge endpoint data.
-    if (Object.entries(endpoint).length || _type === PINPOINT_EVENTS.PAGE_VIEW) {
-      endpoint = await mergeEndpointData(endpoint, contextInfo, config.getUserId, config.getEndpointId)
-    }
-		
-		const time = new Date()
-		const userDefinedAttributes = data.attributes || {}
-		
-		const defaultEventAttributes = {
-			date: time.toISOString(),
-			session: getSessionID(),
-			pageSession: pageSession,
-			hash: window.location.hash,
-			path: window.location.pathname,
-			referrer: document.referrer,
-			search: window.location.search,
-			title: document.title,
-			host: window.location.hostname,
-			url: window.location.origin + window.location.pathname
-		}
+		const eventPayload = await formatEvent(eventName, data, config)
 
-		const extraAttributes = await config.enrichEventAttributes()
-
-		/* Format attributes */
-    const eventAttributes = {
-			...defaultEventAttributes,
-			...extraAttributes,
-			/* Query params */
-			// TODO add ...queryParams,
-			...userDefinedAttributes,
-		}
-
-		/* Format metrics */
-
-		const elapsedSessionTime = elapsed + (time.getTime() - subSessionStart)
-		const userDefinedMetrics = data.metrics || {}
-
-		const defaultMetrics = {
-			/* Time of session */
-			sessionTime: elapsedSessionTime,
-			/* Date metrics */
-			hour: time.getHours(),
-			day: time.getDay() + 1,
-			month: time.getMonth() + 1,
-			year: time.getFullYear(),
-		}
-
-		const extraMetrics = await config.enrichEventMetrics()
-
-		const eventMetrics = {
-			...defaultMetrics,
-			...extraMetrics,
-			...userDefinedMetrics,
-		}
-	
-    const preparedData = {
-      attributes: await prepareAttributes(eventAttributes),
-      metrics: await prepareMetrics(eventMetrics),
-    }
-
-		const eventId = uuid()
-    const timeStamp = new Date().toISOString()
-
-		if (debug) {
-			console.log(`${eventId}:${type}`)
-			console.log('eventAttributes', preparedData.attributes)
-			console.log('eventMetrics', preparedData.metrics)
-		}
-
-    // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Pinpoint.html#putEvents-property
-    const Event = {
-      [eventId]: {
-        EventType: type,
-        Timestamp: timeStamp,
-        AppPackageName: appPackageName,
-        AppTitle: appTitle,
-        AppVersionCode: appVersionCode,
-				/* Event attributes */
-        Attributes: preparedData.attributes,
-				/* Event metrics */
-        Metrics: preparedData.metrics,
-        Session: {
-					/* SessionId is required */
-          Id: subSessionId,
-					/* StartTimestamp is required */
-          StartTimestamp: new Date(subSessionStart).toISOString(),
-        },
-      },
-			/*"client_context": {
-				"custom": {
-					"tester": "{\"he\":\"there\"}"
-				}
-			}*/
-    }
-
-    // Add session stop parameters.
-    if (_type === PINPOINT_EVENTS.SESSION_STOP) {
-      Event[eventId].Session.Duration = Date.now() - subSessionStart
-      Event[eventId].Session.StopTimestamp = timeStamp
+    // IF endpoint exists, & event is page view, update user attributes
+    if (Object.entries(endpoint).length || eventName === PINPOINT_EVENTS.PAGE_VIEW) {
+      endpoint = await mergeEndpointData(endpoint, config)
     }
 
     // Store sent events to queue
-    EVENTS_QUEUE.push(Event)
+    EVENTS_QUEUE.push(eventPayload)
 
     // If config setting to send every event as it happens
     if (!ENABLE_QUEUE) {
@@ -315,8 +179,7 @@ function createSendEvents(config = {}) {
 
 		// Update endpoint data if provided.
 		if (Object.entries(endpoint).length) {
-			const contextInfo = config.getContext()
-			endpointData = await mergeEndpointData(endpoint, contextInfo, config.getUserId, config.getEndpointId)
+			endpointData = await mergeEndpointData(endpoint, config)
 		} else {
 			endpointData = getEndpoint(endpointId) || {}
 		}
@@ -371,14 +234,7 @@ function createSendEvents(config = {}) {
 		
 		// const endpointId = endpointId.replace(`${COGNITO_REGION}:`, '' )
 		// Build events request object.
-		const eventsRequest = {
-			BatchItem: {
-				[endpointId]: {
-					Endpoint: Endpoint,
-					Events: Events,
-				},
-			},
-		}
+		const eventsRequest = formatPinpointBody(endpointId, Endpoint, Events)
 
 		try {
 			/*
@@ -400,6 +256,124 @@ function createSendEvents(config = {}) {
 		// console.log('After', EVENTS_QUEUE)
 		return endpointData
 	}
+}
+
+function formatPinpointBody(endpointId, endpoint, events) {
+	return {
+		BatchItem: {
+			[endpointId]: {
+				Endpoint: endpoint,
+				Events: events,
+			},
+		},
+	}
+}
+
+export async function formatEvent(eventName, data = {}, config = {}) {
+	const { 
+		appTitle,
+		appPackageName,
+		appVersionCode,
+		eventMapping,
+		getSessionID,
+		enrichEventAttributes, 
+		enrichEventMetrics,
+		debug
+	} = config
+	const type = getEventName(eventName, eventMapping)
+	const contextInfo = grabContext(config)
+	// console.log('contextInfo', contextInfo)
+	const { pageSession, subSessionId, subSessionStart, elapsed } = contextInfo
+	
+	const userDefinedAttributes = data.attributes || {}
+	const eventId = data.eventId || uuid()
+	const time = (data.time) ? new Date(data.time) : new Date()
+	const timeStamp = time.toISOString()
+	const sessionId = data.sessionId || getSessionID()
+
+	const defaultEventAttributes = {
+		date: timeStamp,
+		session: sessionId,
+		pageSession: pageSession,
+	}
+
+	const extraAttributes = await enrichEventAttributes()
+
+	/* Format attributes */
+	const eventAttributes = {
+		...defaultEventAttributes,
+		...extraAttributes,
+		/* Query params */
+		// TODO add ...queryParams,
+		...userDefinedAttributes,
+	}
+
+	/* Format metrics */
+	const elapsedSessionTime = elapsed + (time.getTime() - subSessionStart)
+	const userDefinedMetrics = data.metrics || {}
+
+	const defaultMetrics = {
+		/* Time of session */
+		sessionTime: elapsedSessionTime,
+		/* Date metrics */
+		hour: time.getHours(),
+		day: time.getDay() + 1,
+		month: time.getMonth() + 1,
+		year: time.getFullYear(),
+	}
+
+	const extraMetrics = await enrichEventMetrics()
+
+	const eventMetrics = {
+		...defaultMetrics,
+		...extraMetrics,
+		...userDefinedMetrics,
+	}
+
+	const preparedData = {
+		attributes: await prepareAttributes(eventAttributes),
+		metrics: await prepareMetrics(eventMetrics),
+	}
+
+	if (debug) {
+		console.log(`${eventId}:${type}`)
+		console.log('eventAttributes', preparedData.attributes)
+		console.log('eventMetrics', preparedData.metrics)
+	}
+
+	// https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Pinpoint.html#putEvents-property
+	const eventPayload = {
+		[eventId]: {
+			EventType: type,
+			Timestamp: timeStamp,
+			AppPackageName: appPackageName,
+			AppTitle: appTitle,
+			AppVersionCode: appVersionCode,
+			/* Event attributes */
+			Attributes: preparedData.attributes,
+			/* Event metrics */
+			Metrics: preparedData.metrics,
+			Session: {
+				/* SessionId is required */
+				Id: subSessionId,
+				/* StartTimestamp is required */
+				StartTimestamp: new Date(subSessionStart).toISOString(),
+			},
+		},
+		/*"client_context": {
+			"custom": {
+				"tester": "{\"he\":\"there\"}"
+			}
+		}*/
+	}
+
+	// Add session stop parameters.
+	if (eventName === PINPOINT_EVENTS.SESSION_STOP) {
+		eventPayload[eventId].Session.Duration = Date.now() - subSessionStart
+		eventPayload[eventId].Session.StopTimestamp = timeStamp
+	}
+
+	return eventPayload
 }
 
 async function callAWS(eventsRequest, config) {
@@ -491,49 +465,10 @@ function handleEndpointUpdateBadRequest(error, endpoint) {
   }
 }
 
-/* TODO wire up beacon
-function sendBeaconRequest() {
-	const eventParams = this._generateBatchItemContext(params);
-
-	const { region } = this._config;
-	const { ApplicationId, EventsRequest } = eventParams;
-
-	const accessInfo = {
-		secret_key: this._config.credentials.secretAccessKey,
-		access_key: this._config.credentials.accessKeyId,
-		session_token: this._config.credentials.sessionToken,
-	};
-
-	const url = `https://pinpoint.${region}.amazonaws.com/v1/apps/${ApplicationId}/events/legacy`;
-	const body = JSON.stringify(EventsRequest);
-	const method = 'POST';
-
-	const request = {
-		url,
-		body,
-		method,
-	};
-
-	const serviceInfo = { region, service: MOBILE_SERVICE_NAME };
-
-	const requestUrl = Signer.signUrl(
-		request,
-		accessInfo,
-		serviceInfo,
-		null
-	);
-
-	const success = navigator.sendBeacon(requestUrl, body);
-
-	if (success) {
-		return console.log('sendBeacon success');
-	}
-	return console.log('sendBeacon failure');
-}
-*/
-
 let migrationRan = false
-async function mergeEndpointData(endpoint = {}, context = {}, getUserId, getEndpointId) {
+async function mergeEndpointData(endpoint = {}, config = {}) {
+	const { getUserId, getEndpointId, getSessionID } = config
+	const context = grabContext(config)
 	const id = await getEndpointId()
 	// @TODO remove in next version
 	if (!migrationRan) {
@@ -688,6 +623,13 @@ function overwriteMerge(_destinationArray, sourceArray) {
   return sourceArray
 }
 
+function grabContext(config) {
+	if (typeof config.getContext === 'function') {
+		return config.getContext()
+	}
+	return config.getContext
+}
+
 /**
  * Resolves an attribute or metric value and sanitize it.
  *
@@ -711,15 +653,6 @@ function sanitizeAttribute(value) {
 }
 
 /**
- * Ensure value is a single float.
- *
- * @param {mixed} value
- */
-function sanitizeMetric(value) {
-  return parseFloat(Number(Array.isArray(value) ? value[0] : value))
-}
-
-/**
  * Prepares an object for inclusion in endpoint data or event data.
  *
  * @param {Object} attributes
@@ -740,6 +673,15 @@ export async function prepareAttributes(attributes, asArray = false) {
 }
 
 /**
+ * Ensure value is a single float.
+ *
+ * @param {mixed} value
+ */
+function sanitizeMetric(value) {
+  return parseFloat(Number(Array.isArray(value) ? value[0] : value))
+}
+
+/**
  * Prepares an object for inclusion in endpoint data or event data.
  *
  * @param {Object} metrics
@@ -751,6 +693,47 @@ export async function prepareMetrics(metrics) {
 	}
 	return sanitized
 }
+
+/* TODO wire up beacon
+function sendBeaconRequest() {
+	const eventParams = this._generateBatchItemContext(params);
+
+	const { region } = this._config;
+	const { ApplicationId, EventsRequest } = eventParams;
+
+	const accessInfo = {
+		secret_key: this._config.credentials.secretAccessKey,
+		access_key: this._config.credentials.accessKeyId,
+		session_token: this._config.credentials.sessionToken,
+	};
+
+	const url = `https://pinpoint.${region}.amazonaws.com/v1/apps/${ApplicationId}/events/legacy`;
+	const body = JSON.stringify(EventsRequest);
+	const method = 'POST';
+
+	const request = {
+		url,
+		body,
+		method,
+	};
+
+	const serviceInfo = { region, service: MOBILE_SERVICE_NAME };
+
+	const requestUrl = Signer.signUrl(
+		request,
+		accessInfo,
+		serviceInfo,
+		null
+	);
+
+	const success = navigator.sendBeacon(requestUrl, body);
+
+	if (success) {
+		return console.log('sendBeacon success');
+	}
+	return console.log('sendBeacon failure');
+}
+*/
 
 /* usage
 updateEndpoint({
