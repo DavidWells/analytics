@@ -1,5 +1,6 @@
 import { initialize, getStorageKey } from './pinpoint'
 import { CHANNEL_TYPES } from './pinpoint/constants'
+import hasSessionStorage from './utils/session-storage'
 import * as PINPOINT_EVENTS from './pinpoint/events'
 import { onTabChange } from 'analytics-plugin-tab-events'
 // import { onScrollChange } from '@analytics/scroll-utils'
@@ -35,7 +36,6 @@ const config = {
  * })
  */
 function awsPinpointPlugin(pluginConfig = {}) {
-  const eventMap = pluginConfig.eventMapping || {}
   let recordEvent 
   let updateEndpoint
   let tabListener
@@ -95,6 +95,7 @@ function awsPinpointPlugin(pluginConfig = {}) {
         getUserId: () => {
           return instance.user('userId')
         },
+        getSessionID: getSessionID,
         getContext: () => {
           return {
             elapsed: elapsedSessionTime,
@@ -108,7 +109,15 @@ function awsPinpointPlugin(pluginConfig = {}) {
           }
         },
         enrichEventAttributes: () => {
-          return {}
+          return {
+            hash: window.location.hash,
+            path: window.location.pathname,
+            referrer: document.referrer,
+            search: window.location.search,
+            title: document.title,
+            host: window.location.hostname,
+            url: window.location.origin + window.location.pathname
+          }
         },
         // Pass scroll into with all events
         enrichEventMetrics: () => {
@@ -121,7 +130,7 @@ function awsPinpointPlugin(pluginConfig = {}) {
           */
         },
         // Custom event mapping
-        eventMapping: eventMap
+        eventMapping: config.eventMapping
       })
 
       recordEvent = pinpointClient.recordEvent
@@ -239,7 +248,7 @@ function formatEventData(obj) {
     if (typeof value === 'number') {
       acc.metrics[key] = value
     }
-    if (typeof value === 'string') {
+    if (typeof value === 'string' || typeof value === 'boolean') {
       acc.attributes[key] = value
     }
     return acc
@@ -247,6 +256,26 @@ function formatEventData(obj) {
     attributes: {},
     metrics: {}
   })
+}
+
+const SESSION_KEY = '__session_id'
+function getSessionID() {
+	if (!hasSessionStorage) {
+    const windowSession = window[SESSION_KEY]
+    if (windowSession) return windowSession
+    const sessionID = uuid()
+    window[SESSION_KEY] = sessionID
+		return sessionID
+	}
+	// Get stored session.
+	const sessionID = window.sessionStorage.getItem(SESSION_KEY)
+	if (sessionID) {
+		return sessionID
+	}
+	// Create and set a UUID.
+	const newSessionID = uuid()
+	window.sessionStorage.setItem(SESSION_KEY, newSessionID)
+	return newSessionID
 }
 
 /*
