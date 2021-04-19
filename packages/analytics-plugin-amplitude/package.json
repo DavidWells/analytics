@@ -1,6 +1,6 @@
 {
   "name": "@analytics/amplitude",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Amplitude integration for 'analytics' module",
   "projectMeta": {
     "provider": {
@@ -50,6 +50,5 @@
   "devDependencies": {
     "@babel/core": "7.5.5",
     "@babel/preset-env": "7.5.5"
-  },
-  "dependencies": {}
+  }
 }

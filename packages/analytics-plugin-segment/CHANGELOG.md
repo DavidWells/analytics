@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/DavidWells/analytics/compare/@analytics/segment@0.6.1...@analytics/segment@1.1.0) (2021-04-19)
+
+
+### Bug Fixes
+
+* set name on page call with title by default or props.name ([69da370](https://github.com/DavidWells/analytics/commit/69da370))
+
+
+### Features
+
+* add support for multiple users using same client to pinpoint ([a6e6fba](https://github.com/DavidWells/analytics/commit/a6e6fba))
+
+
+
+
+
 ## [0.6.1](https://github.com/DavidWells/analytics/compare/@analytics/segment@0.6.0...@analytics/segment@0.6.1) (2021-01-29)
 
 **Note:** Version bump only for package @analytics/segment

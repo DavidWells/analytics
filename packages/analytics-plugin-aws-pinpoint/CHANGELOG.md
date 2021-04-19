@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/DavidWells/analytics/compare/@analytics/aws-pinpoint@0.4.4...@analytics/aws-pinpoint@0.5.0) (2021-04-19)
+
+
+### Features
+
+* add support for multiple users using same client to pinpoint ([a6e6fba](https://github.com/DavidWells/analytics/commit/a6e6fba))
+
+
+
+
+
 ## [0.4.4](https://github.com/DavidWells/analytics/compare/@analytics/aws-pinpoint@0.4.3...@analytics/aws-pinpoint@0.4.4) (2021-03-20)
 
 **Note:** Version bump only for package @analytics/aws-pinpoint
