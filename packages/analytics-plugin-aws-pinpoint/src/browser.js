@@ -259,12 +259,13 @@ function formatEventData(obj) {
 }
 
 const SESSION_KEY = '__session_id'
+let tempStorageFallback = {}
 function getSessionID() {
 	if (!hasSessionStorage) {
-    const windowSession = window[SESSION_KEY]
+    const windowSession = tempStorageFallback[SESSION_KEY]
     if (windowSession) return windowSession
     const sessionID = uuid()
-    window[SESSION_KEY] = sessionID
+    tempStorageFallback[SESSION_KEY] = sessionID
 		return sessionID
 	}
 	// Get stored session.
