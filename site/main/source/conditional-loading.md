@@ -132,3 +132,66 @@ analytics.plugins.enable(['google-analytics', 'hubspot']).then(() => {
 ```
 
 [Ref issue](https://github.com/DavidWells/analytics/issues/128)
+
+## By environment
+
+By using conditional spreads in the `plugins` option you can load plugins based on the type of environment you are running in.
+
+Here is an example of running different plugins in `development` and `production` environments.
+
+```js
+import Analytics from 'analytics'
+import googleAnalyticsPlugin from '@analytics/google-analytics'
+import originalSrcPlugin from 'analytics-plugin-original-source'
+
+// What type of env are we in?
+const IS_DEV_ENV = process.env.NODE_ENV === 'development'
+const IS_PROD_ENV = process.env.NODE_ENV === 'production'
+
+// dev only plugins
+const devOnlyPlugins = [
+  {
+    name: 'logger',
+    page: ({ payload }) => {
+      console.log('page', payload)
+    },
+    track: ({ payload }) => {
+      console.log('track', payload)
+    },
+    identify: ({ payload }) => {
+      console.log('identify', payload)
+    }
+  },
+]
+
+// prod only plugins
+const prodOnlyPlugins = [
+  googleAnalyticsPlugin({
+    trackingId: GOOGLE_ANALYTICS
+  }),
+]
+
+// both prod & dev plugins
+const loadInAllEnvPlugins = [
+  originalSrcPlugin(),
+]
+
+const plugins = [
+  ...loadInAllEnvPlugins,
+  ...(IS_DEV_ENV) ? devOnlyPlugins : [],
+  ...(IS_PROD_ENV) ? prodOnlyPlugins : [],
+]
+
+if (IS_DEV_ENV) {
+  console.log('Analytics plugins', plugins)
+}
+
+// Initialize analytics
+const analytics = Analytics({
+  app: 'my-app-name',
+  plugins: plugins
+})
+
+// Use it 
+analytics.page()
+```

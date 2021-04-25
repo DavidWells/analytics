@@ -19,6 +19,7 @@ Integration with [segment](https://segment.com/) for [analytics](https://www.npm
   * [Server-side API](#server-side-api)
   * [Configuration options for server-side](#configuration-options-for-server-side)
 - [Additional examples](#additional-examples)
+- [Customing the page name field](#customing-the-page-name-field)
 - [Loading script from custom proxy](#loading-script-from-custom-proxy)
 - [Making group calls](#making-group-calls)
   * [Browser Example](#browser-example)
@@ -329,6 +330,20 @@ Below are additional implementation examples.
 </details>
 
 <!-- AUTO-GENERATED-CONTENT:END -->
+
+## Customing the page name field
+
+By default the page name is the `document.title` value. 
+
+To have shorter names call page like so:
+
+```js
+analytics.page({
+  name: 'HomePage'
+})
+```
+
+This can quickly become tricky to manage and we'd advise against this approach.
 
 ## Loading script from custom proxy
 
