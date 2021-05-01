@@ -28,5 +28,15 @@
     "name": "Plausible",
     "url": "https://www.npmjs.com/package/analytics-plugin-plausible",
     "description": "Adds Analytics support for Plausible"
+  },
+  {
+    "name": "Reddit Pixel",
+    "url": "https://www.npmjs.com/package/analytics-plugin-reddit-pixel",
+    "description": "Adds Analytics support for Reddit Pixel"
+  },
+  {
+    "name": "Splitbee",
+    "url": "https://www.npmjs.com/package/analytics-plugin-splitbee",
+    "description": "Adds Analytics support for Splitbee"
   }
 ]
