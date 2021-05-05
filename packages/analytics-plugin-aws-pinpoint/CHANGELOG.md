@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.6](https://github.com/DavidWells/analytics/compare/@analytics/aws-pinpoint@0.5.5...@analytics/aws-pinpoint@0.5.6) (2021-05-05)
+
+**Note:** Version bump only for package @analytics/aws-pinpoint
+
+
+
+
+
 ## [0.5.5](https://github.com/DavidWells/analytics/compare/@analytics/aws-pinpoint@0.5.4...@analytics/aws-pinpoint@0.5.5) (2021-05-05)
 
 **Note:** Version bump only for package @analytics/aws-pinpoint
