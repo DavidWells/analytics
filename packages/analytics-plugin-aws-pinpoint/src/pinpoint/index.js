@@ -311,7 +311,7 @@ export async function formatEvent(eventName, data = {}, config = {}) {
   const defaultEventAttributes = {
     date: timeStamp,
     session: sessionId,
-    pageSession: pageSession,
+    ...(pageSession) ? { pageSession: pageSession } : {}
   }
 
   const extraAttributes = await enrichEventAttributes()
