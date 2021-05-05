@@ -5,5 +5,14 @@
       "modules": false
       }
     ]
+  ],
+  "plugins": [
+    ["@babel/plugin-transform-runtime",
+      {
+        "helpers": true,
+        "regenerator": true,
+        "version": "7.5.5"
+      }
+    ]
   ]
 }

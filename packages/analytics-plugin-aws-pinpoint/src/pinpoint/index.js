@@ -292,6 +292,7 @@ export async function formatEvent(eventName, data = {}, config = {}) {
   } = config
   const type = getEventName(eventName, eventMapping)
   const contextInfo = grabContext(config)
+	
   // console.log('contextInfo', contextInfo)
   const { pageSession, subSessionId, subSessionStart, elapsed } = contextInfo
 
