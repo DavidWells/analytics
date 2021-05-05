@@ -292,7 +292,7 @@ export async function formatEvent(eventName, data = {}, config = {}) {
   } = config
   const type = getEventName(eventName, eventMapping)
   const contextInfo = grabContext(config)
-	
+
   // console.log('contextInfo', contextInfo)
   const { pageSession, subSessionId, subSessionStart, elapsed } = contextInfo
 
@@ -300,18 +300,16 @@ export async function formatEvent(eventName, data = {}, config = {}) {
   const eventId = data.eventId || uuid()
   const time = (data.time) ? new Date(data.time) : new Date()
   const timeStamp = time.toISOString()
-	let sessionId
+	let sessionId = subSessionId || uuid()
 	if (data.sessionId) {
 		sessionId = data.sessionId
 	} else if (typeof getSessionID === 'function') {
 		sessionId = getSessionID()
-	} else {
-		sessionId = uuid()
 	}
 
   const defaultEventAttributes = {
     date: timeStamp,
-    session: sessionId,
+    sessionId: sessionId,
     ...(pageSession) ? { pageSession: pageSession } : {}
   }
 
@@ -373,7 +371,7 @@ export async function formatEvent(eventName, data = {}, config = {}) {
       Metrics: preparedData.metrics,
       Session: {
         /* SessionId is required */
-        Id: subSessionId,
+        Id: subSessionId || sessionId,
         /* StartTimestamp is required */
         StartTimestamp: new Date(subSessionStart).toISOString(),
       },
