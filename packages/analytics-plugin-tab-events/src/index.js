@@ -1,3 +1,6 @@
+const isServer = typeof window === 'undefined'
+const HIDDEN = 'hidden'
+
 /**
  * Expose Tab visbility events to analtyics
  * Trigger analytics actions when tab is hidden or visible
@@ -36,29 +39,31 @@ export default function tabEventsPlugin(pluginConfig = {}) {
  * @return {function} detach onTabChange listener
  */
 export function onTabChange(callback) {
-  if (typeof window === 'undefined') return false
+  if (isServer) return false
   const prop = getHiddenProp()
-  if (!prop) return false
   const event = `${prop.replace(/[H|h]idden/, '')}visibilitychange`
-  const handler = () => {
-    /* eslint-disable standard/no-callback-literal */
-    if (document[prop]) return callback(true)
-    return callback(false)
-    /* eslint-enable */
-  }
+  const handler = () => callback(Boolean(document[prop]))
   document.addEventListener(event, handler)
   return () => document.removeEventListener(event, handler)
+}
+
+/**
+ * Check if tab is hidden
+ * @return {boolean} true if tab hidden
+ */
+export function isTabHidden() {
+  if (isServer) return false
+  return Boolean(document[getHiddenProp()])
 }
 
 function getHiddenProp() {
   const prefixes = ['webkit', 'moz', 'ms', 'o']
   // if 'hidden' is natively supported just return it
-  if ('hidden' in document) return 'hidden'
+  if (isServer || HIDDEN in document) return HIDDEN
   // otherwise loop over all the known prefixes until we find one
   return prefixes.reduce((acc, curr) => {
-    if (!acc && `${curr}Hidden` in document) {
-      return `${curr}Hidden`
-    }
+    const prop = curr + 'Hidden'
+    if (!acc && prop in document) return prop
     return acc
   }, null)
 }
