@@ -12,7 +12,8 @@ export const ALLOWED_CHANNELS = [
 	'VOICE',
 	'EMAIL',
 	'BAIDU',
-	'CUSTOM'
+	'CUSTOM',
+	// 'IN_APP' what is this?
 ]
 
 export const CHANNEL_TYPES = ALLOWED_CHANNELS.reduce((acc, curr) => {
