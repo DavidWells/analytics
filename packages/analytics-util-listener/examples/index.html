@@ -72,10 +72,13 @@
       <br />
       <br />
       <button id="api">
-        Smart Fetch data from api. Disables self while request in flight
+        Smart Fetch 'API button'. Disables self while request in flight
       </button>
       <button id="api-disable">
-        Disable "Fetch data from api" button 
+        Disable "API button" button 
+      </button>
+      <button id="api-enable">
+        Enable "API button" button 
       </button>
       <br />
       <br />
@@ -85,11 +88,58 @@
       <button id="remove-normal">
         Disable "Simple console log button" button 
       </button>
+      <button id="add-normal">
+        Enable "Simple console log button" button 
+      </button>
+      <br />
+      <br />
+      <div>
+        <button id="disable-list">
+          Disable List handlers
+        </button>
+        <button id="enable-list">
+          Enable List handlers
+        </button>
+        <ul id='list'>
+          <li>One</li>
+          <li>Two</li>
+          <li>Three</li>
+        </ul>
+        <br />
+        <ul id='list-two'>
+          <li>x</li>
+          <li>y</li>
+          <li>z</li>
+        </ul>
+      </div>
     </div>
+  
     <script type="text/javascript">
+      function delay(ms) {
+        return new Promise(res => setTimeout(res, ms))
+      }
       console.log('Exposed methods', analyticsUtilListener)
       const addListener = analyticsUtilListener.addListener
       const removeListener = analyticsUtilListener.removeListener
+
+      const removeAllLi = addListener('#list li', 'click mouseover', () => {
+        console.log('This will only run once')
+      }, { once: true, onceEver: true })
+
+      addListener('#list-two li', ['click', 'mouseover'], (e) => {
+        console.log('coool', e.target)
+      }, { once: true })
+
+      var addBack
+      addListener('#disable-list', 'click', () => {
+        console.log('diable list')
+        addBack = removeAllLi()
+      })
+      
+      addListener('#enable-list', 'click', () => {
+        console.log('enable list')
+        addBack()
+      })
 
       // Run once via once options
       const onceButton = document.querySelector('#once')
@@ -116,11 +166,15 @@
         }, 2000);
       });
 
+      /* Detach self example */
       const apiButton = document.querySelector('#api')
-      const disableFetchListener = addListener(apiButton, 'click', () => {
+      const disableFetchListener = addListener(apiButton, 'click', async () => {
         // Fetch in progress disable click handler to avoid duplicate calls
         const renableAPIClickHandler = disableFetchListener()
-
+        console.log('1.5 sec delay...')
+        console.log('API button wont call api again until the request has finished')
+        await delay(1500)
+        // Make API call
         fetch(`https://swapi.dev/api/people/?search=l`)
           .then((response) => {
             return response.json()
@@ -128,14 +182,30 @@
           .then((json) => {
             console.log("data", json.results)
             // Success! Reattach event handler
+            console.log('re-enable API calls')
             renableAPIClickHandler()
           })
           .catch((err) => {
             console.log('API error', err)
-             // Error! Reattach event handler
+            // Error! Reattach event handler
+            console.log('re-enable API calls')
             renableAPIClickHandler()
           })
-      });
+      })
+
+      const apiDisableButton = document.querySelector('#api-disable')
+      let reEnableApiListner
+      addListener(apiDisableButton, 'click', () => {
+        console.log('Disable API button')
+        reEnableApiListner = disableFetchListener()
+      })
+
+      const apiEnableButton = document.querySelector('#api-enable')
+      let reEnableApiButton
+      addListener(apiEnableButton, 'click', () => {
+        console.log('Re-enable API button')
+        reEnableApiListner()
+      })
 
       const simpleButton = document.querySelector('#normal')
       const simpleFunction = () => {
@@ -144,11 +214,19 @@
       addListener(simpleButton, 'click', simpleFunction);
 
       const removeSimple = document.querySelector('#remove-normal')
+      let reAttach
       addListener(removeSimple, 'click', () => {
         console.log('Remove logger function from other button')
-        const reAttach = removeListener(simpleButton, 'click', simpleFunction);
+        reAttach = removeListener(simpleButton, 'click', simpleFunction);
+        console.log('reAttach', reAttach)
         // optional reattach function
       });
+
+      addListener('#add-normal', 'click', () => {
+        console.log('Enable logger')
+        reAttach()
+        console.log('done')
+      })
   
     </script>
   </body>

@@ -24,7 +24,7 @@
     "open": "open-cli http://localhost:5000",
     "serve": "concurrently \"npm:example\" \"npm:open\"",
     "build": "microbundle --name analyticsUtilListener",
-    "dev": "microbundle watch",
+    "dev": "microbundle watch --name analyticsUtilListener",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
