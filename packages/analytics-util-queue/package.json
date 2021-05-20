@@ -1,0 +1,52 @@
+{
+  "name": "@analytics/queue-utils",
+  "version": "0.0.1",
+  "description": "Dependency free queu processor",
+  "author": "David Wells",
+  "license": "MIT",
+  "homepage": "https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-queue#readme",
+  "repository": "https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-queue",
+  "source": "src/index.js",
+  "main": "dist/analytics-util-queue.js",
+  "exports": "./dist/analytics-util-queue.modern.js",
+  "module": "dist/analytics-util-queue.module.js",
+  "unpkg": "dist/analytics-util-queue.umd.js",
+  "scripts": {
+    "test": "uvu -r esm tests",
+    "test:unit": "npm run test",
+    "watch": "concurrently 'npm:watch-*'",
+    "watch-src": "microbundle watch --name analyticsUtilQueue",
+    "watch-test": "watchlist src tests -- yarn test",
+    "build": "microbundle --name analyticsUtilQueue",
+    "buildpkg": "npm run build",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish",
+    "chore:check-deps": "npx depcheck || true",
+    "chore:check-updates": "npm-check-updates",
+    "chore:license-check": "license-checker --production --failOn 'GPL;GPL-2.0' > licenses.txt",
+    "chore:audit": "npm audit",
+    "chore": "run-p chore:*"
+  },
+  "files": [
+    "lib",
+    "dist",
+    "package.json",
+    "package-lock.json",
+    "README.md"
+  ],
+  "devDependencies": {
+    "concurrently": "^6.0.2",
+    "esm": "^3.2.25",
+    "license-checker": "^25.0.1",
+    "microbundle": "^0.13.0",
+    "npm-check-updates": "^11.5.1",
+    "npm-run-all": "^4.1.5",
+    "uvu": "^0.5.1",
+    "watchlist": "^0.2.3"
+  },
+  "dependencies": {
+    "@vendia/aws-signed-fetch": "^0.0.2",
+    "isomorphic-unfetch": "^3.1.0"
+  }
+}
