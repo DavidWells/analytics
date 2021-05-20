@@ -23,7 +23,7 @@
       /* Attaching a listener */
       Analytics.on('*', ({ payload }) => {
         console.log(`Event ${payload.type}`, payload)
-      })
+      });
     </script>
   </head>
   <body>
@@ -45,19 +45,20 @@
       Identify visitor
     </button>
 
-    <br/>
-    <p><a href="https://getanalytics.io/">View the docs</a></p>
-
+    <p>
+      <br />
+      <a href="https://getanalytics.io/">View the docs</a>
+    </p>
 
     <script type="text/javascript">
       function trackEvent() {
-      	Analytics.track('buttonClicked')
+        Analytics.track('buttonClicked')
       }
       function pageView() {
-      	Analytics.page()
+        Analytics.page()
       }
       function identifyVisitor() {
-      	Analytics.identify('user-123', {
+        Analytics.identify('user-123', {
           pro: true,
         })
       }
