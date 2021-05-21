@@ -1,6 +1,6 @@
 {
   "name": "analytics-plugin-tab-events",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Expose tab visibility events plugin for 'analytics' module",
   "author": "David Wells",
   "license": "MIT",
