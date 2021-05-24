@@ -43,8 +43,12 @@ export function onTabChange(callback) {
   const prop = getHiddenProp()
   const event = `${prop.replace(/[H|h]idden/, '')}visibilitychange`
   const handler = () => callback(Boolean(document[prop]))
-  document.addEventListener(event, handler)
-  return () => document.removeEventListener(event, handler)
+  const attachFunc = () => document.addEventListener(event, handler)
+  attachFunc()
+  return () => {
+    document.removeEventListener(event, handler)
+    return attachFunc
+  }
 }
 
 /**
