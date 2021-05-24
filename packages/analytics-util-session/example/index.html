@@ -66,6 +66,7 @@
         <h3>Persisted session</h3>
         <button id="get-persisted">Get Persisted Session</button>
         <button id="set-persisted">Update Persisted Session</button>
+        <button id="remove-persisted">Clear Persisted Session</button>
         <pre id="data-persisted"></pre>
         <hr/>
         <h3>Tab session</h3>
@@ -84,6 +85,7 @@
       const {
         getSession,
         setSession,
+        removeSession,
         getTabSession,
         setTabSession, 
         getPageSession, 
@@ -93,6 +95,7 @@
         /* Page */
       const getButtonPersisted = document.querySelector('#get-persisted')
       const updateButtonPersisted = document.querySelector('#set-persisted')
+      const removeButtonPersisted = document.querySelector('#remove-persisted')
       const dataNodePersisted = document.querySelector('#data-persisted')
       const initialPersistedData = getSession()
       setPersistedData(initialPersistedData)
@@ -110,6 +113,10 @@
         const newData = setSession()
         console.log(newData)
         setPersistedData(newData)
+      })
+      removeButtonPersisted.addEventListener('click', () => {
+        removeSession()
+        setPersistedData('Session removed')
       })
 
       const getButton = document.querySelector('#get')

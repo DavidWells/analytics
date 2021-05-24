@@ -1,6 +1,6 @@
 // Session Utilities
 import { uuid, globalContext, inBrowser } from 'analytics-utils'
-import { setCookie, getCookie } from '@analytics/cookie-utils'
+import { setCookie, getCookie, removeCookie } from '@analytics/cookie-utils'
 
 const PREFIX = '__'
 const SESSION = 'session'
@@ -62,32 +62,41 @@ export function sessionDetails() {
 function logic(kind, isSetter) {
   const data = sessionDetails()
   const [ get, set ] = storageMechanism[kind]
+  let isNew = false
   const info = Object.fromEntries(KEYS.map((key) => {
     const k = PREFIX + kind + key
     const currentVal = get(k)
+    isNew = isSetter || !!!currentVal
     const value = (currentVal && !isSetter) ? currentVal : set(k, data[key])
     const finValue = (key !== 'epoch') ? value : Number(value)
     return [ key, finValue ]
   }))
-  return addElasped(info)
+  return addContext(info, isNew)
 }
 
-function addElasped(obj) {
+function addContext(obj, isNew) {
   obj.elapsed = Date.now() - obj.epoch
+  obj.isNew = isNew
   return obj
 }
 
-export function getSession()  {
-  const cookieData = getCookie(PREFIX + SESSION)
-  const data = (cookieData) ? JSON.parse(cookieData) : setSession()
-  return addElasped(data)
+function getName() {
+  return PREFIX + SESSION
 }
 
-export function setSession()  {
-  const data = sessionDetails()
-  setCookie(PREFIX + SESSION, JSON.stringify(data), 60*30)
-  return data
+export function getSession()  {
+  const cookieData = getCookie(getName())
+  const data = (cookieData) ? JSON.parse(cookieData) : setSession()
+  return addContext(data, !!!cookieData)
 }
+
+export function setSession(minutes = 30)  {
+  const data = sessionDetails()
+  setCookie(getName(), JSON.stringify(data), 60 * minutes)
+  return addContext(data, true)
+}
+
+export const removeSession = () => removeCookie(getName())
 
 export const getTabSession = logic.bind(null, SESSION)
 export const setTabSession = logic.bind(null, SESSION, true)
