@@ -1,0 +1,55 @@
+{
+  "name": "@analytics/activity-utils",
+  "version": "0.0.1",
+  "description": "User activity listener utilities",
+  "author": "David Wells",
+  "license": "MIT",
+  "homepage": "https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-activity#readme",
+  "repository": "https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-activity",
+  "keywords": [
+    "analytics",
+    "analytics-project",
+    "analytics-util",
+    "events",
+    "listeners",
+    "idle"
+  ],
+  "netlifySiteId": "xyz",
+  "amdName": "analyticsUtilActivity",
+  "source": "src/index.js",
+  "main": "dist/analytics-util-activity.js",
+  "exports": "./dist/analytics-util-activity.modern.js",
+  "module": "dist/analytics-util-activity.module.js",
+  "unpkg": "dist/analytics-util-activity.umd.js",
+  "scripts": {
+    "start": "npm run sync && concurrently 'npm:watch:dev' 'npm:copy' 'npm:serve'",
+    "serve": "servor dist index.html 8080 --reload --browse",
+    "copy": "watchlist example -- npm run sync",
+    "sync": "cp example/index.html dist",
+    "watch": "microbundle watch",
+    "watch:dev": "microbundle watch --external none --no-compress",
+    "build": "microbundle",
+    "build:dev": "microbundle build --external none",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish",
+    "deploy": "npm run sync && netlify deploy --prod --dir dist --site $npm_config_netlifySiteId"
+  },
+  "files": [
+    "lib",
+    "dist",
+    "package.json",
+    "package-lock.json",
+    "README.md"
+  ],
+  "devDependencies": {
+    "concurrently": "^6.1.0",
+    "microbundle": "^0.13.0",
+    "servor": "^4.0.2",
+    "watchlist": "^0.2.3"
+  },
+  "dependencies": {
+    "@analytics/listener-utils": "^0.1.0",
+    "analytics-plugin-tab-events": "^0.1.2"
+  }
+}
