@@ -79,7 +79,7 @@ function addElasped(obj) {
 
 export function getSession()  {
   const cookieData = getCookie(PREFIX + SESSION)
-  const data = (cookieData) ? JSON.parse(cookieData) : setPersistedSession()
+  const data = (cookieData) ? JSON.parse(cookieData) : setSession()
   return addElasped(data)
 }
 
