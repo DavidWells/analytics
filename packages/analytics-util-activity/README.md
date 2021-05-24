@@ -1,7 +1,27 @@
 <!--
-title: Javascript idle util
-pageTitle: idle util
-description: Utility library for firing events on user idle
+title: User activity util
+pageTitle: User activity listeners
+description: Utility library for firing events on user idle & wakeup
 -->
 
-# Idle Utilities
+# Activity Utilities
+
+User activity listener utilities
+
+```js
+import { onIdle, onWakeup } from '@analytics/activity-utils'
+
+const FIVE_MINUTES = 300e3
+
+const opts = {
+  timeout: FIVE_MINUTES,
+}
+
+onIdle((activeTime) => {
+  console.log('Ive been idle for 5 minutes', activeTime)
+}, opts)
+
+onWakeup(() => {
+  console.log('Yay wake up, user is back')
+}, opts)
+```
