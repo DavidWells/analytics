@@ -681,6 +681,7 @@ Below is a list of the current available events
 The `analytics` has a robust plugin system. Here is a list of currently available plugins:
 
 <!-- AUTO-GENERATED-CONTENT:START (PLUGINS) -->
+- [@analytics/activity-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-activity) User activity listener utilities [npm link](https://www.npmjs.com/package/@analytics/activity-utils).
 - [@analytics/amplitude](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-amplitude) Amplitude integration for 'analytics' module [npm link](https://www.npmjs.com/package/@analytics/amplitude).
 - [@analytics/aws-pinpoint](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-aws-pinpoint) AWS Pinpoint integration for 'analytics' module [npm link](https://www.npmjs.com/package/@analytics/aws-pinpoint).
 - [@analytics/cookie-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-cookie) Cookie helper functions [npm link](https://www.npmjs.com/package/@analytics/cookie-utils).
@@ -698,10 +699,12 @@ The `analytics` has a robust plugin system. Here is a list of currently availabl
 - [@analytics/original-source-plugin](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-original-source) Save original referral source of visitor plugin for 'analytics' pkg [npm link](https://www.npmjs.com/package/@analytics/original-source-plugin).
 - [@analytics/ownstats](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-ownstats) Ownstats integration for 'analytics' module for browser & node [npm link](https://www.npmjs.com/package/@analytics/ownstats).
 - [@analytics/perfumejs](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-perfumejs) Send browser performance metrics to third-party analytics providers [npm link](https://www.npmjs.com/package/@analytics/perfumejs).
+- [@analytics/queue-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-queue) Dependency free queu processor [npm link](https://www.npmjs.com/package/@analytics/queue-utils).
 - [@analytics/remote-storage-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-remote-storage) Storage utilities for cross domain localStorage access, with permissions [npm link](https://www.npmjs.com/package/@analytics/remote-storage-utils).
 - [@analytics/router-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-router) Route change utilities for single page apps [npm link](https://www.npmjs.com/package/@analytics/router-utils).
 - [@analytics/scroll-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-scroll) Scroll utility library to fire events on scroll [npm link](https://www.npmjs.com/package/@analytics/scroll-utils).
 - [@analytics/segment](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-segment) Segment integration for 'analytics' module for browser & node [npm link](https://www.npmjs.com/package/@analytics/segment).
+- [@analytics/session-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-session) Tiny session utility library [npm link](https://www.npmjs.com/package/@analytics/session-utils).
 - [@analytics/simple-analytics](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-simple-analytics) Simple analytics plugin for 'analytics' module for browser [npm link](https://www.npmjs.com/package/@analytics/simple-analytics).
 - [@analytics/snowplow](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-snowplow) Snowplow integration for 'analytics' module for browser & node [npm link](https://www.npmjs.com/package/@analytics/snowplow).
 - [@analytics/storage-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-storage) Storage utilities for saving values in browser [npm link](https://www.npmjs.com/package/@analytics/storage-utils).
