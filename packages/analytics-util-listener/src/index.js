@@ -78,7 +78,10 @@ function isString(x) {
 }
 
 function oncify(handler, opts) {
-  return opts && opts.once ? once(handler) : handler
+  if (opts && opts.once) {
+    return once(handler)
+  }
+  return handler
 }
 
 function once(fn, context) {
@@ -94,7 +97,11 @@ function once(fn, context) {
 
 function fireAndReturn(fn) {
   const listeners = fn() // attach listener
-  return { fn: once(fn), listeners }
+  return { 
+    // fn: once(fn), this causes reattach problems
+    fn: fn, 
+    listeners 
+  }
 }
 
 const addListener = createListener(true)
