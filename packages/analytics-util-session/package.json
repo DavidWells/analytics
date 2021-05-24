@@ -13,7 +13,7 @@
     "events",
     "sessions"
   ],
-  "netlifySiteId": "xyz123",
+  "netlifySiteId": "e16215ec-59e9-4687-b300-121ed73a6b20",
   "amdName": "analyticsUtilSession",
   "source": "src/index.js",
   "main": "dist/analytics-util-session.js",
@@ -32,7 +32,8 @@
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
-    "deploy": "npm run sync && netlify deploy --prod --dir dist --site $npm_config_netlifySiteId"
+    "deploy": "npm run build:dev && npm run sync && netlify deploy --prod --dir dist --site $npm_package_netlifySiteId",
+    "postdeploy": "npm run build"
   },
   "files": [
     "lib",
