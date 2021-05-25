@@ -66,6 +66,7 @@
         <h3>Persisted session</h3>
         <button id="get-persisted">Get Persisted Session</button>
         <button id="set-persisted">Update Persisted Session</button>
+        <button id="extend-persisted">Extend Persisted Session</button>
         <button id="remove-persisted">Clear Persisted Session</button>
         <pre id="data-persisted"></pre>
         <hr/>
@@ -86,6 +87,7 @@
         getSession,
         setSession,
         removeSession,
+        extendSession,
         getTabSession,
         setTabSession, 
         getPageSession, 
@@ -96,8 +98,10 @@
       const getButtonPersisted = document.querySelector('#get-persisted')
       const updateButtonPersisted = document.querySelector('#set-persisted')
       const removeButtonPersisted = document.querySelector('#remove-persisted')
+      const extendButtonPersisted = document.querySelector('#extend-persisted')
       const dataNodePersisted = document.querySelector('#data-persisted')
-      const initialPersistedData = getSession()
+      const SESSION_LENGTH_IN_MINUTES = 1
+      const initialPersistedData = getSession(SESSION_LENGTH_IN_MINUTES)
       setPersistedData(initialPersistedData)
 
       function setPersistedData(d) {
@@ -105,18 +109,22 @@
       }
 
       getButtonPersisted.addEventListener('click', () => {
-        const data = getSession()
+        const data = getSession(SESSION_LENGTH_IN_MINUTES)
         console.log(data)
         setPersistedData(data)
       })
       updateButtonPersisted.addEventListener('click', () => {
-        const newData = setSession()
+        const newData = setSession(SESSION_LENGTH_IN_MINUTES)
         console.log(newData)
         setPersistedData(newData)
       })
       removeButtonPersisted.addEventListener('click', () => {
         removeSession()
         setPersistedData('Session removed')
+      })
+      extendButtonPersisted.addEventListener('click', () => {
+        const d = extendSession(SESSION_LENGTH_IN_MINUTES)
+        setPersistedData(d)
       })
 
       const getButton = document.querySelector('#get')

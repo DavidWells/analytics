@@ -5,7 +5,8 @@ import { setCookie, getCookie, removeCookie } from '@analytics/cookie-utils'
 const PREFIX = '__'
 const SESSION = 'session'
 const PAGE = 'page'
-const KEYS = ['id', 'date', 'epoch']
+const KEYS = ['id', 'createdAt', 'created']
+const TIMEOUT = 30
 
 function isSessionSupported() {
   if (inBrowser) {
@@ -50,32 +51,42 @@ const storageMechanism = {
   page: [ getGlobal, setGlobal ]
 }
 
-export function sessionDetails() {
-  const d = new Date()
+function getDate(x) {
+  console.log('x', x)
+  const d = (x) ? new Date(x) : new Date()
+  const xx = [ d.toISOString(), d.getTime() ]
+  console.log('xx', xx)
+  return xx
+}
+
+export function sessionData() {
+  const [ iso, unix ] = getDate()
   return {
     id: uuid(),
-    date: d.toISOString(),
-    epoch: d.getTime(),
+    created: unix,
+    createdAt: iso,
   }
 }
 
 function logic(kind, isSetter) {
-  const data = sessionDetails()
+  const data = sessionData()
   const [ get, set ] = storageMechanism[kind]
   let isNew = false
   const info = Object.fromEntries(KEYS.map((key) => {
-    const k = PREFIX + kind + key
+    const k = PREFIX + kind + PREFIX + SESSION + PREFIX + key
     const currentVal = get(k)
     isNew = isSetter || !!!currentVal
     const value = (currentVal && !isSetter) ? currentVal : set(k, data[key])
-    const finValue = (key !== 'epoch') ? value : Number(value)
+    const finValue = (key !== 'created') ? value : Number(value)
     return [ key, finValue ]
   }))
   return addContext(info, isNew)
 }
 
 function addContext(obj, isNew) {
-  obj.elapsed = Date.now() - obj.epoch
+  const now = Date.now()
+  obj.elapsed = now - obj.created
+  if (obj.expires) obj.remaining = Math.abs(obj.expires - now)
   obj.isNew = isNew
   return obj
 }
@@ -84,17 +95,30 @@ function getName() {
   return PREFIX + SESSION
 }
 
-export function getSession()  {
+export function getSession(minutes = TIMEOUT)  {
   const cookieData = getCookie(getName())
-  const data = (cookieData) ? JSON.parse(cookieData) : setSession()
+  const data = (cookieData) ? JSON.parse(cookieData) : setSession(minutes)
   return addContext(data, !!!cookieData)
 }
 
-export function setSession(minutes = 30)  {
-  const data = sessionDetails()
-  setCookie(getName(), JSON.stringify(data), 60 * minutes)
-  return addContext(data, true)
+export function setSession(minutes = TIMEOUT, extend)  {
+  const data = extend ? getSession(minutes) : sessionData()
+  const exp = 60 * minutes
+  let timeExpire = data.created
+  if (extend) {
+    const [ iso, unix ] = getDate()
+    data.modified = unix
+    data.modifiedAt = iso
+    timeExpire = unix
+  }
+  const [ expiresIso, expiresUnix ] = getDate(timeExpire + (exp * 1e3))
+  data.expires = expiresUnix
+  data.expiresAt = expiresIso
+  setCookie(getName(), JSON.stringify(data), exp)
+  return addContext(data, !extend)
 }
+
+export const extendSession = (minutes = TIMEOUT) => setSession(minutes, true)
 
 export const removeSession = () => removeCookie(getName())
 
