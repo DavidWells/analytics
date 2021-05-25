@@ -52,11 +52,8 @@ const storageMechanism = {
 }
 
 function getDate(x) {
-  console.log('x', x)
   const d = (x) ? new Date(x) : new Date()
-  const xx = [ d.toISOString(), d.getTime() ]
-  console.log('xx', xx)
-  return xx
+  return [ d.toISOString(), d.getTime() ]
 }
 
 export function sessionData() {
