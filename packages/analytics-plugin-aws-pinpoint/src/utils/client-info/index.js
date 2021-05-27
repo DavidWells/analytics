@@ -1,3 +1,7 @@
+import getOs from './get-os'
+
+const BRAVE = 'Brave'
+
 export default function browserClientInfo() {
   if (typeof window === 'undefined') {
     return {}
@@ -6,16 +10,16 @@ export default function browserClientInfo() {
   if (!window.navigator) {
     return {}
   }
-
   const { platform, product, vendor, userAgent } = window.navigator
-  const type = browserType(userAgent)
-
+  const { type, version } = browserType(window.navigator)
+  const vender = (type === BRAVE) ? type : (vendor || '').split(' ')[0]
   return {
     platform,
-    make: vendor || product,
-    model: type.type,
-    version: type.version,
-    appVersion: [type.type, type.version].join('/'),
+    os: getOs(),
+    make: vender || product, // product always gecko
+    model: type,
+    version: version,
+    name: [type, version].join('/'),
     language: getLanguage(),
     timezone: browserTimezone(),
   }
@@ -45,7 +49,8 @@ function browserTimezone() {
   return tzMatch ? tzMatch[1] || '' : ''
 }
 
-function browserType(userAgent) {
+function browserType(navigator) {
+  const { userAgent } = navigator
   const operaMatch = /.+(Opera[\s[A-Z]*|OPR[\sA-Z]*)\/([0-9\.]+).*/i.exec(userAgent)
   if (operaMatch) {
     return {
@@ -62,40 +67,44 @@ function browserType(userAgent) {
     }
   }
 
-  const cfMatch = /.+(Chrome|Firefox|FxiOS)\/([0-9\.]+).*/i.exec(userAgent)
-  if (cfMatch) {
+  // headless chrome
+  const headless = /(headlesschrome)(?:\/([\w\.]+)| )/i.exec(userAgent)
+  if (headless) {
     return {
-      type: cfMatch[1],
-      version: cfMatch[2]
+      type: headless[1],
+      version: headless[2]
     }
   }
 
-  const sMatch = /.+(Safari)\/([0-9\.]+).*/i.exec(userAgent)
-  if (sMatch) {
+  const chromeMatch = /.+(Chrome|Firefox|FxiOS)\/([0-9\.]+).*/i.exec(userAgent)
+  if (chromeMatch) {
+    const isBrave = (navigator.brave && navigator.brave.isBrave || false)
     return {
-      type: sMatch[1],
-      version: sMatch[2]
+      type: (isBrave) ? BRAVE : chromeMatch[1],
+      version: chromeMatch[2]
     }
   }
 
-  const awkMatch = /.+(AppleWebKit)\/([0-9\.]+).*/i.exec(userAgent)
-  if (awkMatch) {
+  const safariMatch = /.+(Safari)\/([0-9\.]+).*/i.exec(userAgent)
+  if (safariMatch) {
     return {
-      type: awkMatch[1],
-      version: awkMatch[2]
+      type: safariMatch[1],
+      version: safariMatch[2]
+    }
+  }
+
+  const webkitMatch = /.+(AppleWebKit)\/([0-9\.]+).*/i.exec(userAgent)
+  if (webkitMatch) {
+    return {
+      type: webkitMatch[1],
+      version: webkitMatch[2]
     }
   }
 
   const anyMatch = /.*([A-Z]+)\/([0-9\.]+).*/i.exec(userAgent)
-  if (anyMatch) {
-    return {
-      type: anyMatch[1],
-      version: anyMatch[2]
-    }
-  }
-
+  const fallback = anyMatch || ['', 'NA', '0.0.0']
   return {
-    type: '',
-    version: ''
+    type: fallback[1],
+    version: fallback[2]
   }
 }

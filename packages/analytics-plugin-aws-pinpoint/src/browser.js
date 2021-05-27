@@ -1,10 +1,21 @@
 import { initialize, getStorageKey } from './pinpoint'
 import { CHANNEL_TYPES } from './pinpoint/constants'
-import hasSessionStorage from './utils/session-storage'
 import * as PINPOINT_EVENTS from './pinpoint/events'
-import { onTabChange } from 'analytics-plugin-tab-events'
+import { onTabChange, isTabHidden } from 'analytics-plugin-tab-events'
+import { onUserActivity } from '@analytics/activity-utils'
+import {
+  getSession,
+  setSession,
+  extendSession,
+  getTabSession,
+  setTabSession,
+  getPageSession, 
+  setPageSession,
+} from '@analytics/session-utils'
 // import { onScrollChange } from '@analytics/scroll-utils'
-import { uuid } from 'analytics-utils'
+
+// let hasAnonConsent = document.cookie.match(`__anon-consent=true`)
+// let hasFullConsent = document.cookie.match(`__full-consent=true`)
 
 const config = {
   /* Disable anonymous MTU */
@@ -39,14 +50,42 @@ function awsPinpointPlugin(pluginConfig = {}) {
   let recordEvent 
   let updateEndpoint
   let tabListener
-  let elapsedSessionTime = 0
 
   /* Page-session (on route changes) */
-  let pageSession = uuid()
+  let hasPageFiredOnce = false
+  
+  /* Sub-session (on tab visibility changes) */
+  // REMOVED let subSessionId = initSessionData.id
+  // REMOVED let subSessionStart = initSessionData.created
+  
+  function stopSession() {
+    console.log('STOP SESSION')
+    const currentSessionData = getSession()
+    console.log('STOP SESSION:', currentSessionData)
+    // Fire session stop event.
+    recordEvent(PINPOINT_EVENTS.SESSION_STOP, false)
+  }
 
-  /* Sub-session (visibility changes) */
-  let subSessionId = uuid()
-  let subSessionStart = Date.now()
+  window.stopSession = stopSession
+
+  function startNewSession() {
+    console.log('START SESSION')
+    // Set new sessions.
+    const newSession = setSession(30, null, {
+      lol: 'hi'
+    })
+    console.log('START SESSION: newSession', newSession)
+    
+    // @TODO do we want this here?....
+    // GONEpageSession = generatePageSession()
+
+    /* Fire session start event. */
+    recordEvent(PINPOINT_EVENTS.SESSION_START)
+    console.log('Fire start event?')
+  }
+
+  window.startNewSession = startNewSession
+
 
   // let scrollDepthMax = 0
   // let scrollDepthNow = 0
@@ -69,15 +108,50 @@ function awsPinpointPlugin(pluginConfig = {}) {
       }
     },
     initialize: ({ config, instance }) => {
-      const { disableAnonymousTraffic } = config
+      const { disableAnonymousTraffic, debug } = config
+      const logger = (debug) ? console.log : () => {}
       /* Disable pinpoint if user is not yet identified. */
       const state = instance.getState()
-      const userID = (state.user || {}).userId
+      const userDetails = state.user || {}
+      const { userId, anonymousId } = userDetails
       const context = state.context || {}
-      const { app, version } = context
-      if (!userID && disableAnonymousTraffic) {
+      const { app, version, campaign } = context
+
+      /* Initialize session info */
+      const initPageSession = getPageSession()
+      const initTabSession = getTabSession()
+      const initSessionData = getSession()
+      logger('initPageSession', initPageSession)
+      logger('initTabSession', initTabSession)
+      logger('initSessionData', initSessionData)
+  
+      /* If anonId has changed, refresh session details */
+      if (initSessionData && initSessionData.anonId && initSessionData.anonId !== anonymousId) {
+        logger('anonId different refresh session details')
+        // console.log('anonId', anonymousId)
+        // console.log('initSessionData.anonId', initSessionData.anonId)
+        /* Set new page session values */
+        setPageSession()
+        /* Set new tab session values */
+        setTabSession()
+        /* Set new session for new user */
+        const newSessionForNewUser = setSession(30, null, {
+          anonId: anonymousId,
+          userId: userId,
+        })
+        logger('newSessionForNewUser', newSessionForNewUser)
+      }
+
+      /* Disable for anonymous users */
+      if (!userId && disableAnonymousTraffic) {
         return false
       }
+
+      // construct utm params
+      const utmParams = Object.keys(campaign).reduce((acc, key) => {
+        acc[`utm_${key}`] = campaign[key]
+        return acc
+      }, {})
 
       /* Initialize pinpoint client */
       const pinpointClient = initialize({
@@ -88,6 +162,8 @@ function awsPinpointPlugin(pluginConfig = {}) {
         appPackageName: config.appPackageName || app,
         // The version number of the app that's recording the event.
         appVersionCode: config.appVersionCode || version,
+        // Custom event mapping
+        eventMapping: config.eventMapping,
         // Get pinpoint endpoint ID
         getEndpointId: () => {
           return instance.user('anonymousId')
@@ -95,42 +171,42 @@ function awsPinpointPlugin(pluginConfig = {}) {
         getUserId: () => {
           return instance.user('userId')
         },
-        getSessionID: getSessionID,
         getContext: () => {
           return {
-            elapsed: elapsedSessionTime,
-            pageSession,
-            subSessionId,
-            subSessionStart,
+            // Gone elapsed,
+            // GONE subSessionId,
+            // Gone subSessionStart,
             sessionKey: config.sessionKey,
             pageViewKey: config.pageViewKey,
+            initialSession: initSessionData,
             // scrollDepth: scrollDepthNow,
             // scrollDepthMax
           }
         },
         enrichEventAttributes: () => {
           return {
+            anonId: instance.user('anonymousId'),
+            userId: instance.user('userId'),
             hash: window.location.hash,
             path: window.location.pathname,
             referrer: document.referrer,
             search: window.location.search,
             title: document.title,
             host: window.location.hostname,
-            url: window.location.origin + window.location.pathname
+            url: window.location.origin + window.location.pathname,
+            ...utmParams
           }
         },
+        // Custom event mapping
+        enrichUserAttributes: config.enrichUserAttributes,
         // Pass scroll into with all events
         enrichEventMetrics: () => {
           return {}
-          /*
-          return {
-            // scrollDepth: scrollDepthNow,
-            // scrollDepthMax
-          }
-          */
+          /* {
+            scrollDepth: scrollDepthNow,
+            scrollDepthMax
+          }*/
         },
-        // Custom event mapping
-        eventMapping: config.eventMapping
       })
 
       recordEvent = pinpointClient.recordEvent
@@ -139,6 +215,47 @@ function awsPinpointPlugin(pluginConfig = {}) {
       /* Start session */
       recordEvent(PINPOINT_EVENTS.SESSION_START)
       
+
+      const FIVE_MINUTES = 300e3
+      const THIRTY_MINUTES = 180e4 // 1800000ms
+      let SESSION_LENGTH = THIRTY_MINUTES
+      // SESSION_LENGTH = 20000
+      const removeActivityListener = onUserActivity({
+        timeout: SESSION_LENGTH,
+        throttle: 20000,
+        onIdle: (activeTime, event) => {
+          logger(`Session idle. Active ${activeTime} seconds`)
+          // Stop session
+          stopSession()
+        },
+        onWakeUp: (idleTime, event) => {
+          logger(`Session wakeup. Idle ${idleTime} seconds`)
+          // Reset session info
+          startNewSession()
+        },
+        onHeartbeat: (timeActive, event) => {
+          logger('ping session', new Date())
+          logger('total active time', timeActive)
+          /* Extend current session by 30 minutes */
+          const user = instance.user()
+          extendSession(30, {
+            anonId: user.anonymousId,
+            userId: user.userId,
+          })
+        },
+      })
+
+      /* Old session handler
+      tabListener = onTabChange((isHidden) => {
+        console.log('isHidden', isHidden)
+        if (isHidden) {
+          stopSession()
+        } else {
+          console.log('Reset session!')
+          startNewSession()
+        }
+      })*/
+
       /* Scroll tracking
       function pageScrolled(data) {
         const { trigger, direction, scrollMax, scrollMin, range } = data
@@ -148,51 +265,35 @@ function awsPinpointPlugin(pluginConfig = {}) {
         // Record page scroll event 
         recordEvent('pageScrolled')
       }
-
       const detachScrollListener = onScrollChange({
         // 25: pageScrolled,
         50: pageScrolled,
         75: pageScrolled,
         90: pageScrolled
-      })
-      */
-
-      tabListener = onTabChange((isHidden) => {
-        // console.log('isHidden', isHidden)
-        if (isHidden) {
-          // On hide increment elapsed time.
-          elapsedSessionTime += Date.now() - subSessionStart
-          // Fire session stop event.
-          recordEvent(PINPOINT_EVENTS.SESSION_STOP, false)
-        } else {
-          // Reset subSessions.
-          subSessionId = uuid()
-          subSessionStart = Date.now()
-          // Fire session start event.
-          recordEvent(PINPOINT_EVENTS.SESSION_START)
-        }
-      })
+      })*/
     },
     page: ({ payload, config }) => {
       if (!recordEvent) {
-        console.log('Pinpoint not loaded')
-        return 
+        return loadError()
       }
-      // Fire page view and update pageSession Id
+      // Fire page view and update pageSessionInfo Id
+      if (hasPageFiredOnce) {
+        // Set new page session values
+        setPageSession()
+      }
       const queuePageView = true
-      recordEvent(PINPOINT_EVENTS.PAGE_VIEW, queuePageView).then(() =>{
-        pageSession = uuid()
-      })
+      recordEvent(PINPOINT_EVENTS.PAGE_VIEW, queuePageView)
+      hasPageFiredOnce = true
     },
     reset: ({ instance }) => {
       const id = instance.user('anonymousId')
       const key = getStorageKey(id)
       storage.removeItem(key)
     },
+    /* Track event & update endpoint details */
     track: ({ payload, config, instance }) => {
       if (!recordEvent) {
-        console.log('Pinpoint not loaded')
-        return 
+        return loadError()
       }
       if (config.disableAnonymousTraffic && !payload.userId) {
         return
@@ -200,11 +301,11 @@ function awsPinpointPlugin(pluginConfig = {}) {
       const data = formatEventData(payload.properties)
       recordEvent(payload.event, data)
     },
+    /* Update endpoint details */
     identify: ({ payload }) => {
       const { userId, traits } = payload
       if (!updateEndpoint) {
-        console.log('Pinpoint not loaded')
-        return 
+        return loadError()
       }
  
       const userInfo = {}
@@ -214,7 +315,6 @@ function awsPinpointPlugin(pluginConfig = {}) {
       if (traits && Object.keys(traits).length) {
         userInfo.UserAttributes = traits
       }
-
       // Update endpoint in AWS pinpoint
       updateEndpoint({
         ...(traits.email) ? { 
@@ -225,21 +325,13 @@ function awsPinpointPlugin(pluginConfig = {}) {
           User: userInfo
         },
       })
-      /* example
-      updateEndpoint({
-        "Address": 'jimbo@gmail.com',
-        "Attributes": { "lol": ['thing'], baz: 'bar' },
-        "Metrics": { "key": 1 },
-        "OptOut": 'NONE',
-        "User": {
-          "UserAttributes": { "key": 'baz', 'waht': ['chill'] },
-          "UserId": 'user-xyz'
-        }
-      })
-      */
     },
     loaded: () => !!recordEvent,
   }
+}
+
+function loadError() {
+  throw new Error('Pinpoint not loaded')
 }
 
 function formatEventData(obj) {
@@ -258,28 +350,20 @@ function formatEventData(obj) {
   })
 }
 
-const SESSION_KEY = '__session_id'
-let tempStorageFallback = {}
-function getSessionID() {
-	if (!hasSessionStorage) {
-    const windowSession = tempStorageFallback[SESSION_KEY]
-    if (windowSession) return windowSession
-    const sessionID = uuid()
-    tempStorageFallback[SESSION_KEY] = sessionID
-		return sessionID
-	}
-	// Get stored session.
-	const sessionID = window.sessionStorage.getItem(SESSION_KEY)
-	if (sessionID) {
-		return sessionID
-	}
-	// Create and set a UUID.
-	const newSessionID = uuid()
-	window.sessionStorage.setItem(SESSION_KEY, newSessionID)
-	return newSessionID
-}
-
 /*
+// updateEndpoint example
+updateEndpoint({
+  "Address": 'jimbo@gmail.com',
+  "Attributes": { "lol": ['thing'], baz: 'bar' },
+  "Metrics": { "key": 1 },
+  "OptOut": 'NONE',
+  "User": {
+    "UserAttributes": { "key": 'baz', 'waht': ['chill'] },
+    "UserId": 'user-xyz'
+  }
+})
+
+Config example
 {
   appPackageName: config.appPackageName || 'site',
   // The title of the app that's recording the event.
@@ -300,7 +384,7 @@ function getSessionID() {
   },
   getContext: () => {
     return {
-      elapsed: elapsedSessionTime,
+      elapsed: elapsed,
       pageSession,
       subSessionId,
       subSessionStart,
@@ -314,6 +398,7 @@ function getSessionID() {
   }
 }
 */
+
 export { PINPOINT_EVENTS }
 
 export default awsPinpointPlugin
