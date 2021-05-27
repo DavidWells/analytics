@@ -92,14 +92,14 @@ function getName() {
   return PREFIX + SESSION
 }
 
-export function getSession(minutes = TIMEOUT)  {
+export function getSession(minutes = TIMEOUT, persistedOnly)  {
   const cookieData = getCookie(getName())
   const data = (cookieData) ? JSON.parse(cookieData) : setSession(minutes)
-  return addContext(data, !!!cookieData)
+  return persistedOnly ? data : addContext(data, !!!cookieData)
 }
 
-export function setSession(minutes = TIMEOUT, extend)  {
-  const data = extend ? getSession(minutes) : sessionData()
+export function setSession(minutes = TIMEOUT, extend, extra)  {
+  let data = extend ? getSession(minutes, true) : sessionData()
   const exp = 60 * minutes
   let timeExpire = data.created
   if (extend) {
@@ -111,11 +111,14 @@ export function setSession(minutes = TIMEOUT, extend)  {
   const [ expiresIso, expiresUnix ] = getDate(timeExpire + (exp * 1e3))
   data.expires = expiresUnix
   data.expiresAt = expiresIso
+  if (extra) {
+    data = Object.assign(data, extra)
+  }
   setCookie(getName(), JSON.stringify(data), exp)
   return addContext(data, !extend)
 }
 
-export const extendSession = (minutes = TIMEOUT) => setSession(minutes, true)
+export const extendSession = (minutes = TIMEOUT, extra) => setSession(minutes, true, extra)
 
 export const removeSession = () => removeCookie(getName())
 

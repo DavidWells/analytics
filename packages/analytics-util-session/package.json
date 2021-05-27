@@ -1,6 +1,6 @@
 {
   "name": "@analytics/session-utils",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "Tiny session utility library",
   "author": "David Wells",
   "license": "MIT",
