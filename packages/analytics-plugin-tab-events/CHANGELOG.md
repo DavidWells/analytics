@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/DavidWells/analytics/compare/analytics-plugin-tab-events@0.1.1...analytics-plugin-tab-events@0.2.0) (2021-05-27)
+
+
+### Features
+
+* add isTabHidden is tab events plugin ([f4b61d4](https://github.com/DavidWells/analytics/commit/f4b61d4))
+
+
+
+
+
 ## [0.1.1](https://github.com/DavidWells/analytics/compare/analytics-plugin-tab-events@0.1.0...analytics-plugin-tab-events@0.1.1) (2020-12-23)
 
 **Note:** Version bump only for package analytics-plugin-tab-events

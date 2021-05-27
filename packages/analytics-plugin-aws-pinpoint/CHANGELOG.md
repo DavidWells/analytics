@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/DavidWells/analytics/compare/@analytics/aws-pinpoint@0.5.6...@analytics/aws-pinpoint@0.6.0) (2021-05-27)
+
+
+### Features
+
+* refactor session timeout to 30min of inactivity ([503e06a](https://github.com/DavidWells/analytics/commit/503e06a))
+
+
+
+
+
 ## [0.5.6](https://github.com/DavidWells/analytics/compare/@analytics/aws-pinpoint@0.5.5...@analytics/aws-pinpoint@0.5.6) (2021-05-05)
 
 **Note:** Version bump only for package @analytics/aws-pinpoint
