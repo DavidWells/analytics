@@ -58,8 +58,9 @@ function googleAnalytics(pluginConfig = {}) {
     initialize: (pluginApi) => {
       const { config, instance } = pluginApi
       if (!config.trackingId) throw new Error('No GA trackingId defined')
+      const { customDimensions, customScriptSrc } = config
       // var to hoist
-      const scriptSrc = config.customScriptSrc || 'https://www.google-analytics.com/analytics.js'
+      const scriptSrc = customScriptSrc || 'https://www.google-analytics.com/analytics.js'
       // Load google analytics script to page
       if (gaNotLoaded(scriptSrc)) {
         /* eslint-disable */
@@ -126,9 +127,9 @@ function googleAnalytics(pluginConfig = {}) {
         /* set custom dimensions from user traits */
         const user = instance.user() || {}
         const traits = user.traits || {}
-        if (Object.keys(traits).length) {
-          const customDimensions = formatObjectIntoDimensions(traits, config)
-          ga(`${instancePrefix}set`, customDimensions)
+        if (Object.keys(traits).length && customDimensions && Object.keys(customDimensions).length) {
+          const dimensions = formatObjectIntoDimensions(traits, config)
+          ga(`${instancePrefix}set`, dimensions)
         }
         loadedInstances[instanceName] = true
       }
