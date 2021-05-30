@@ -199,12 +199,7 @@ function createSendEvents(config = {}) {
       endpointData = getEndpoint(endpointId) || {}
     }
 
-    if (debug) {
-      console.log('endpointData', endpointData)
-    }
-
     let channelType = endpointData.ChannelType
-
     // If email is set, set email channel
     if (endpointData.Address && isEmail(endpointData.Address)) {
       channelType = CHANNEL_TYPES.EMAIL
@@ -219,9 +214,10 @@ function createSendEvents(config = {}) {
     }
 
     if (debug) {
-      console.log('CHANNEL_TYPE', channelType)
+      console.log('endpointData', endpointData)
+      if (channelType) console.log('CHANNEL_TYPE', channelType)
     }
-
+    
     // Reduce events to an object keyed by event ID.
     const Events = EVENTS_QUEUE.sort((a, b) => {
       const eventA = a.EventType
