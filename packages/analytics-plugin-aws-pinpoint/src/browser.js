@@ -324,7 +324,7 @@ function awsPinpointPlugin(pluginConfig = {}) {
         ...(!Object.keys(userInfo).length) ? {} : {
           User: userInfo
         },
-      })
+      }, false)
     },
     loaded: () => !!recordEvent,
   }

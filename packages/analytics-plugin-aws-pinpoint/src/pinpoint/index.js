@@ -173,7 +173,7 @@ function makeRecordFunction(config = {}) {
 function createSendEvents(config = {}) {
   const { getEndpointId, debug } = config
 
-  return async function sentDataToPinpoint(endpoint = {}) {
+  return async function sentDataToPinpoint(endpoint = {}, clearQueue = true) {
     // console.log(`flushEvents called ${counter++} EVENTS_QUEUE.length ${EVENTS_QUEUE.length}`)
     if (!EVENTS_QUEUE.length && !Object.keys(endpoint).length) {
       if (debug) console.log('No events, return early')
@@ -273,7 +273,15 @@ function createSendEvents(config = {}) {
       console.log('Error calling AWS', err)
     }
     /* Purge queue */
-    EVENTS_QUEUE = []
+    // Temp fix for race condition of identify & track removing unprocessed events
+    // @TODO use proper queue semantics
+    if (clearQueue) {
+      EVENTS_QUEUE = []
+    } else {
+      if (debug) {
+        console.log('Skip queue clear')
+      }
+    }
     return endpointData
   }
 }
