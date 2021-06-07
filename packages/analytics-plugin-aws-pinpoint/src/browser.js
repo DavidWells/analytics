@@ -1,7 +1,6 @@
 import { initialize, getStorageKey } from './pinpoint'
 import { CHANNEL_TYPES } from './pinpoint/constants'
 import * as PINPOINT_EVENTS from './pinpoint/events'
-import { onTabChange, isTabHidden } from 'analytics-plugin-tab-events'
 import { onUserActivity } from '@analytics/activity-utils'
 import {
   getSession,
@@ -12,8 +11,10 @@ import {
   getPageSession, 
   setPageSession,
 } from '@analytics/session-utils'
+// import { onTabChange, isTabHidden } from 'analytics-plugin-tab-events'
 // import { onScrollChange } from '@analytics/scroll-utils'
 
+// @TODO turn on consent
 // let hasAnonConsent = document.cookie.match(`__anon-consent=true`)
 // let hasFullConsent = document.cookie.match(`__full-consent=true`)
 
@@ -50,45 +51,41 @@ function awsPinpointPlugin(pluginConfig = {}) {
   let recordEvent 
   let updateEndpoint
   let tabListener
+  // let scrollDepthMax = 0
+  // let scrollDepthNow = 0
 
   /* Page-session (on route changes) */
   let hasPageFiredOnce = false
   
-  /* Sub-session (on tab visibility changes) */
-  // REMOVED let subSessionId = initSessionData.id
-  // REMOVED let subSessionStart = initSessionData.created
-  
   function stopSession() {
-    console.log('STOP SESSION')
     const currentSessionData = getSession()
-    console.log('STOP SESSION:', currentSessionData)
+    if (pluginConfig.debug) {
+      console.log('Stop session', currentSessionData)
+    }
     // Fire session stop event.
-    recordEvent(PINPOINT_EVENTS.SESSION_STOP, false)
+    recordEvent(PINPOINT_EVENTS.SESSION_STOP, true)
   }
 
   window.stopSession = stopSession
 
   function startNewSession() {
-    console.log('START SESSION')
     // Set new sessions.
     const newSession = setSession(30, null, {
       lol: 'hi'
     })
-    console.log('START SESSION: newSession', newSession)
-    
+    if (pluginConfig.debug) {
+      console.log('START SESSION', newSession)
+    }
     // @TODO do we want this here?....
-    // GONEpageSession = generatePageSession()
+    // const pageSession = generatePageSession()
 
     /* Fire session start event. */
     recordEvent(PINPOINT_EVENTS.SESSION_START)
-    console.log('Fire start event?')
   }
 
-  window.startNewSession = startNewSession
+  window.startSession = startNewSession
 
-
-  // let scrollDepthMax = 0
-  // let scrollDepthNow = 0
+  /* return plugin */
   return {
     name: 'aws-pinpoint',
     config: {
@@ -173,9 +170,6 @@ function awsPinpointPlugin(pluginConfig = {}) {
         },
         getContext: () => {
           return {
-            // Gone elapsed,
-            // GONE subSessionId,
-            // Gone subSessionStart,
             sessionKey: config.sessionKey,
             pageViewKey: config.pageViewKey,
             initialSession: initSessionData,
@@ -214,7 +208,6 @@ function awsPinpointPlugin(pluginConfig = {}) {
 
       /* Start session */
       recordEvent(PINPOINT_EVENTS.SESSION_START)
-      
 
       const FIVE_MINUTES = 300e3
       const THIRTY_MINUTES = 180e4 // 1800000ms
@@ -281,14 +274,8 @@ function awsPinpointPlugin(pluginConfig = {}) {
         // Set new page session values
         setPageSession()
       }
-      const queuePageView = true
-      recordEvent(PINPOINT_EVENTS.PAGE_VIEW, queuePageView)
+      recordEvent(PINPOINT_EVENTS.PAGE_VIEW)
       hasPageFiredOnce = true
-    },
-    reset: ({ instance }) => {
-      const id = instance.user('anonymousId')
-      const key = getStorageKey(id)
-      storage.removeItem(key)
     },
     /* Track event & update endpoint details */
     track: ({ payload, config, instance }) => {
@@ -307,24 +294,30 @@ function awsPinpointPlugin(pluginConfig = {}) {
       if (!updateEndpoint) {
         return loadError()
       }
- 
+      const endpoint = {}
       const userInfo = {}
+  
       if (userId) {
         userInfo.UserId = userId
       }
       if (traits && Object.keys(traits).length) {
         userInfo.UserAttributes = traits
       }
+      if (traits.email) {
+        endpoint.Address = traits.email,
+        endpoint.ChannelType = CHANNEL_TYPES.EMAIL
+      }
+      if (Object.keys(userInfo).length) {
+        endpoint.User = userInfo
+      }
       // Update endpoint in AWS pinpoint
-      updateEndpoint({
-        ...(traits.email) ? { 
-          Address: traits.email,
-          ChannelType: CHANNEL_TYPES.EMAIL,
-        } : {},
-        ...(!Object.keys(userInfo).length) ? {} : {
-          User: userInfo
-        },
-      }, false)
+      updateEndpoint(endpoint, true)
+    },
+    /* Reset user details */
+    reset: ({ instance }) => {
+      const id = instance.user('anonymousId')
+      const key = getStorageKey(id)
+      storage.removeItem(key)
     },
     loaded: () => !!recordEvent,
   }
@@ -348,6 +341,29 @@ function formatEventData(obj) {
     attributes: {},
     metrics: {}
   })
+}
+
+function getTabs() {
+  return JSON.parse(localStorage.getItem('TabsOpen') || '{}')
+}
+function setTabs(tabs) {
+  localStorage.setItem('TabsOpen', JSON.stringify(tabs))
+}
+function getTabsCount() {
+  return Object.keys(getTabs()).length
+}
+function tabLoadEventHandler() {
+  const hash = 'tab_' + +new Date()
+  sessionStorage.setItem('TabHash', hash)
+  let tabs = getTabs()
+  tabs[hash] = true
+  setTabs(tabs)
+}
+function tabUnloadEventHandler() {
+  let hash= sessionStorage.getItem('TabHash')
+  let tabs = getTabs()
+  delete tabs[hash];
+  setTabs(tabs)
 }
 
 /*
@@ -384,10 +400,6 @@ Config example
   },
   getContext: () => {
     return {
-      elapsed: elapsed,
-      pageSession,
-      subSessionId,
-      subSessionStart,
       scrollDepth: scrollDepthNow,
       scrollDepthMax
     }
