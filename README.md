@@ -739,6 +739,10 @@ Below are plugins created outside of this repo:
 - [Add a plugin link](https://github.com/DavidWells/analytics/blob/master/external-plugins.json)
 <!-- AUTO-GENERATED-CONTENT:END -->
 
+Additional examples
+
+- [Using AWS Lambda, API Gateway & analytics](https://blog.mikecoughlin.com/own-your-event-tracking/)
+
 ## Creating analytics plugins
 
 The library is designed to work with any third-party analytics tool.
