@@ -276,7 +276,11 @@ export async function formatEvent(eventName, data = {}, config = {}) {
   const type = getEventName(eventName, eventMapping)
   const pageSessionInfo = getPageSession()
   const tabSessionData = getTabSession()
-  const sessionData = getSession()
+  const sessionData = (inBrowser) ? getSession() : {}
+  // @TODO refactor session grabber
+  const sessionId = data.sessionId || sessionData.id
+  const sessionStart = data.sessionStart || sessionData.createdAt
+  const sessionStartUnix = (data.sessionStart) ? new Date(data.sessionStart).getTime() : sessionData.created
   logger('event pageSessionInfo', JSON.stringify(pageSessionInfo))
   logger('event tabSessionData ', JSON.stringify(tabSessionData))
   logger('event sessionData    ', JSON.stringify(sessionData))
@@ -285,11 +289,12 @@ export async function formatEvent(eventName, data = {}, config = {}) {
   const eventId = data.eventId || uuid()
   const time = (data.time) ? new Date(data.time) : new Date()
   const timeStamp = time.toISOString()
+  const sessionDuration = time.getTime() - sessionStartUnix
 
   const defaultEventAttributes = {
     date: timeStamp,
-    sessionId: sessionData.id, // Event[id].Session.Id 
-    pageSession: pageSessionInfo.id
+    sessionId, // Event[id].Session.Id 
+    ...(!inBrowser) ? {} : { pageSession: pageSessionInfo.id }
   }
 
   const extraAttributes = await enrichEventAttributes()
@@ -309,7 +314,7 @@ export async function formatEvent(eventName, data = {}, config = {}) {
 
   const defaultMetrics = {
     /* Time of session */
-    sessionTime: sessionData.elapsed,
+    sessionTime: sessionData.elapsed || sessionDuration,
     /* Date metrics */
     hour: time.getHours(),
     day: time.getDay() + 1,
@@ -359,9 +364,9 @@ export async function formatEvent(eventName, data = {}, config = {}) {
       Metrics: preparedData.metrics,
       Session: {
         /* SessionId is required */
-        Id: sessionData.id,
+        Id: sessionId,
         /* StartTimestamp is required */
-        StartTimestamp: sessionData.createdAt, // old  new Date(subSessionStart).toISOString()
+        StartTimestamp: sessionStart, // ISOString
       },
     },
   }
@@ -370,7 +375,7 @@ export async function formatEvent(eventName, data = {}, config = {}) {
   if (eventName === PINPOINT_EVENTS.SESSION_STOP) {
     // eventPayload[eventId].Session.Duration = Date.now() - subSessionStart
     // console.log('Old DURATION', Date.now() - subSessionStart)
-    eventPayload[eventId].Session.Duration = time.getTime() - sessionData.created
+    eventPayload[eventId].Session.Duration = sessionDuration
     // sessionData.elapsed was slightly off
     eventPayload[eventId].Session.StopTimestamp = timeStamp
   }
