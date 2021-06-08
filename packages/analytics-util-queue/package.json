@@ -8,7 +8,6 @@
   "repository": "https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-queue",
   "source": "src/index.js",
   "main": "dist/analytics-util-queue.js",
-  "exports": "./dist/analytics-util-queue.modern.js",
   "module": "dist/analytics-util-queue.module.js",
   "unpkg": "dist/analytics-util-queue.umd.js",
   "scripts": {

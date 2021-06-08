@@ -2,7 +2,6 @@ const noOp = () => {}
 
 export default function smartQueue(handler, opts) {
   opts = opts || {}
-
   var timer, tmp, running
   var queue = opts.initial || []
   var max = opts.max || Infinity
