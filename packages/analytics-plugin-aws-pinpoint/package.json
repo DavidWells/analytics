@@ -1,6 +1,6 @@
 {
   "name": "@analytics/aws-pinpoint",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "description": "AWS Pinpoint integration for 'analytics' module",
   "projectMeta": {
     "provider": {
@@ -47,9 +47,9 @@
     "url": "git+https://github.com/DavidWells/analytics.git"
   },
   "dependencies": {
-    "@analytics/activity-utils": "^0.1.0",
-    "@analytics/queue-utils": "^0.1.0",
-    "@analytics/session-utils": "^0.1.0",
+    "@analytics/activity-utils": "^0.1.1",
+    "@analytics/queue-utils": "^0.1.1",
+    "@analytics/session-utils": "^0.1.1",
     "analytics-plugin-tab-events": "^0.2.0",
     "analytics-utils": "^0.4.4",
     "aws4fetch": "^1.0.13",

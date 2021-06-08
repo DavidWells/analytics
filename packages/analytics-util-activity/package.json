@@ -1,6 +1,6 @@
 {
   "name": "@analytics/activity-utils",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "User activity listener utilities",
   "author": "David Wells",
   "license": "MIT",
@@ -49,7 +49,7 @@
     "watchlist": "^0.2.3"
   },
   "dependencies": {
-    "@analytics/listener-utils": "^0.1.2",
+    "@analytics/listener-utils": "^0.1.3",
     "analytics-plugin-tab-events": "^0.2.0"
   }
 }

@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.3](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-listener/compare/@analytics/listener-utils@0.1.2...@analytics/listener-utils@0.1.3) (2021-06-08)
+
+**Note:** Version bump only for package @analytics/listener-utils
+
+
+
+
+
 ## [0.1.2](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-listener/compare/@analytics/listener-utils@0.1.0...@analytics/listener-utils@0.1.2) (2021-05-27)
 
 **Note:** Version bump only for package @analytics/listener-utils
