@@ -96,7 +96,7 @@ function once(fn, context) {
 }
 
 function fireAndReturn(fn) {
-  const listeners = fn() // attach listener
+  const listeners = fn() // attach
   return { 
     // fn: once(fn), this causes reattach problems
     fn: fn, 

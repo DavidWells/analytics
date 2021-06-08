@@ -17,7 +17,6 @@
   "amdName": "analyticsUtilListener",
   "source": "src/index.js",
   "main": "dist/analytics-util-listener.js",
-  "exports": "./dist/analytics-util-listener.modern.js",
   "module": "dist/analytics-util-listener.module.js",
   "unpkg": "dist/analytics-util-listener.umd.js",
   "scripts": {
