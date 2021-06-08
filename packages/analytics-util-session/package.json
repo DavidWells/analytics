@@ -17,7 +17,6 @@
   "amdName": "analyticsUtilSession",
   "source": "src/index.js",
   "main": "dist/analytics-util-session.js",
-  "exports": "./dist/analytics-util-session.modern.js",
   "module": "dist/analytics-util-session.module.js",
   "unpkg": "dist/analytics-util-session.umd.js",
   "scripts": {

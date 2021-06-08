@@ -1,7 +1,6 @@
 import { addListener } from '@analytics/listener-utils'
 import { onTabChange } from 'analytics-plugin-tab-events'
 
-
 const DOCUMENT_EVENTS = [
   'mousemove', 'mousedown',
   'touchmove', 'touchstart',

@@ -18,7 +18,6 @@
   "amdName": "analyticsUtilActivity",
   "source": "src/index.js",
   "main": "dist/analytics-util-activity.js",
-  "exports": "./dist/analytics-util-activity.modern.js",
   "module": "dist/analytics-util-activity.module.js",
   "unpkg": "dist/analytics-util-activity.umd.js",
   "scripts": {

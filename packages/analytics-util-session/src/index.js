@@ -118,6 +118,7 @@ export function setSession(minutes = TIMEOUT, extend, extra)  {
   return addContext(data, !extend)
 }
 
+
 export const extendSession = (minutes = TIMEOUT, extra) => setSession(minutes, true, extra)
 
 export const removeSession = () => removeCookie(getName())
