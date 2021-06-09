@@ -65,14 +65,11 @@ function awsPinpointPlugin(pluginConfig = {}) {
     // Fire session stop event.
     recordEvent(PINPOINT_EVENTS.SESSION_STOP, true)
   }
-
-  window.stopSession = stopSession
+  // window.stopSession = stopSession
 
   function startNewSession() {
     // Set new sessions.
-    const newSession = setSession(30, null, {
-      lol: 'hi'
-    })
+    const newSession = setSession(30)
     if (pluginConfig.debug) {
       console.log('START SESSION', newSession)
     }
@@ -82,8 +79,7 @@ function awsPinpointPlugin(pluginConfig = {}) {
     /* Fire session start event. */
     recordEvent(PINPOINT_EVENTS.SESSION_START)
   }
-
-  window.startSession = startNewSession
+  // window.startSession = startNewSession
 
   /* return plugin */
   return {
@@ -132,7 +128,7 @@ function awsPinpointPlugin(pluginConfig = {}) {
         /* Set new tab session values */
         setTabSession()
         /* Set new session for new user */
-        const newSessionForNewUser = setSession(30, null, {
+        const newSessionForNewUser = setSession(30, {
           anonId: anonymousId,
           userId: userId,
         })
@@ -206,8 +202,11 @@ function awsPinpointPlugin(pluginConfig = {}) {
       recordEvent = pinpointClient.recordEvent
       updateEndpoint = pinpointClient.updateEndpoint
 
-      /* Start session */
-      recordEvent(PINPOINT_EVENTS.SESSION_START)
+      if (initSessionData && initSessionData.isNew) {
+        logger(`Start brand new session because cookie not found`)
+        /* Start new session if its new */
+        recordEvent(PINPOINT_EVENTS.SESSION_START)
+      }
 
       const FIVE_MINUTES = 300e3
       const THIRTY_MINUTES = 180e4 // 1800000ms
