@@ -98,7 +98,8 @@ export function getSession(minutes = TIMEOUT, persistedOnly)  {
   return persistedOnly ? data : addContext(data, !!!cookieData)
 }
 
-export function setSession(minutes = TIMEOUT, extend, extra)  {
+export function setSession(minutes = TIMEOUT, extra, extend) {
+  // const { extend, minutes } = opts
   let data = extend ? getSession(minutes, true) : sessionData()
   const exp = 60 * minutes
   let timeExpire = data.created
@@ -118,8 +119,7 @@ export function setSession(minutes = TIMEOUT, extend, extra)  {
   return addContext(data, !extend)
 }
 
-
-export const extendSession = (minutes = TIMEOUT, extra) => setSession(minutes, true, extra)
+export const extendSession = (minutes = TIMEOUT, extra) => setSession((minutes || 1), extra, true)
 
 export const removeSession = () => removeCookie(getName())
 

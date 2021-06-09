@@ -102,6 +102,7 @@
       const dataNodePersisted = document.querySelector('#data-persisted')
       const SESSION_LENGTH_IN_MINUTES = 1
       const initialPersistedData = getSession(SESSION_LENGTH_IN_MINUTES)
+      console.log('initialPersistedData', initialPersistedData)
       setPersistedData(initialPersistedData)
 
       function setPersistedData(d) {
@@ -123,7 +124,7 @@
         setPersistedData('Session removed')
       })
       extendButtonPersisted.addEventListener('click', () => {
-        const d = extendSession(SESSION_LENGTH_IN_MINUTES)
+        const d = extendSession(5, { zoo: 'bar' })
         setPersistedData(d)
       })
 
