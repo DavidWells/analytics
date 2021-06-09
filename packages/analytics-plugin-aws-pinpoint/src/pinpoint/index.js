@@ -45,8 +45,6 @@ export function initialize(config = {}) {
   // @TODO clean up
   const configuration = {
     getContext: config.getContext || noOp,
-    enrichEventAttributes: config.enrichEventAttributes || noOp,
-    enrichEventMetrics: config.enrichEventMetrics || noOp,
     credentials: config.credentials || {},
     getEndpointId: config.getEndpointId,
     ...config,
@@ -297,7 +295,7 @@ export async function formatEvent(eventName, data = {}, config = {}) {
     ...(!inBrowser) ? {} : { pageSession: pageSessionInfo.id }
   }
 
-  const extraAttributes = await enrichEventAttributes()
+  const extraAttributes = (enrichEventAttributes) ? await enrichEventAttributes() : {}
 
   /* Format attributes */
   const eventAttributes = {
@@ -322,7 +320,7 @@ export async function formatEvent(eventName, data = {}, config = {}) {
     year: time.getFullYear(),
   }
 
-  const extraMetrics = await enrichEventMetrics()
+  const extraMetrics = (enrichEventMetrics) ? await enrichEventMetrics() : {}
 
   const eventMetrics = {
     ...defaultMetrics,
