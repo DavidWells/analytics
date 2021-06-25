@@ -3,6 +3,7 @@
  * @link https://getanalytics.io/plugins/mixpanel/
  * @param {object} pluginConfig - Plugin settings
  * @param {string} pluginConfig.token - The mixpanel token associated to a mixpanel project
+ * @param {string} [pluginConfig.pageEvent] - Event name to use for page() events (default to page path)
  * @param {string} [pluginConfig.customScriptSrc] - Load mixpanel script from custom source
  * @return {object} Analytics plugin
  * @example
@@ -141,7 +142,7 @@ function mixpanelPlugin(pluginConfig = {}) {
      * the path as tracked event and search parameters as properties
      */
     page: ({ payload }) => {
-      mixpanel.track(payload.properties.path, payload.properties);
+      mixpanel.track(pluginConfig.pageEvent || payload.properties.path, payload.properties);
     },
     /* https://developer.mixpanel.com/docs/javascript-full-api-reference#mixpaneltrack */
     track: ({ payload }) => {
