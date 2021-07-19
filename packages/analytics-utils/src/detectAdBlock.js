@@ -5,7 +5,7 @@ import inBrowser from './inBrowser'
  *
  * @returns boolean
  */
-export default function hasAdblock() {
+export function hasAdblock() {
   if (!inBrowser) return false
   // Create fake ad
   const fakeAd = document.createElement('div')

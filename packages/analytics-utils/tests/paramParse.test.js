@@ -1,5 +1,5 @@
 import test from 'ava'
-import parseParam from '../dist/paramsParse'
+import {parseParam} from '../dist/paramsParse'
 
 test('test simple params', t => {
   const url = 'http://localhost:3000/?hi=there&wow=lol'

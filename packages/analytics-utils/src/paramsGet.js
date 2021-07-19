@@ -1,4 +1,4 @@
-import decodeUri from './decodeUri'
+import {decodeUri} from './decodeUri'
 
 /**
  * Get a given query parameter value
@@ -6,6 +6,6 @@ import decodeUri from './decodeUri'
  * @param  {string} url - url to search
  * @return {string} match
  */
-export default function getValueParamValue(param, url) {
+export function paramsGet(param, url) {
   return decodeUri((RegExp(`${param}=(.+?)(&|$)`).exec(url) || [, ''])[1])
 }

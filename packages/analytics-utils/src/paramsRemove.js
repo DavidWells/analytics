@@ -1,5 +1,5 @@
-import inBrowser from './inBrowser'
-import paramsClean from './paramsClean'
+import { inBrowser } from './inBrowser'
+import { paramsClean } from './paramsClean'
 
 /**
  * Removes params from url in browser
@@ -7,7 +7,7 @@ import paramsClean from './paramsClean'
  * @param  {() => void} [callback]  - callback function to run. Only runs in browser
  * @return {PromiseLike<void>}
  */
-export default function paramsRemove(param, callback) {
+export function paramsRemove(param, callback) {
   if (!inBrowser) return Promise.resolve()
 
   return new Promise((resolve, reject) => {

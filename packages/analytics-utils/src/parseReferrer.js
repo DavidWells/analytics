@@ -1,6 +1,6 @@
-import inBrowser from './inBrowser'
-import parseParams from './paramsParse'
-import isExternalReferrer from './isExternalReferrer'
+import { inBrowser } from './inBrowser'
+import { paramsParse } from './paramsParse'
+import { isExternalReferrer } from './isExternalReferrer'
 import { trimTld, getDomainBase } from './url'
 
 const googleKey = 'google'
@@ -18,7 +18,7 @@ const googleKey = 'google'
  * @param  {String} [currentUrl] - (optional) the current url
  * @return {ReferrerObject}     [description]
  */
-export default function parseReferrer(referrer, currentUrl) {
+export function parseReferrer(referrer, currentUrl) {
   if (!inBrowser) return false
   // default referral data
   let refData = {
@@ -38,7 +38,7 @@ export default function parseReferrer(referrer, currentUrl) {
   }
 
   // Read URI params and use set utm params
-  const params = parseParams(currentUrl)
+  const params = paramsParse(currentUrl)
   const paramKeys = Object.keys(params)
   if (!paramKeys.length) {
     return refData

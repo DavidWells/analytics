@@ -1,5 +1,5 @@
-import inBrowser from './inBrowser'
-import noOp from './noOp'
+import {inBrowser} from './inBrowser'
+import {noOp} from './noOp'
 
 /**
  * @callback RouteChangeHandler
@@ -11,7 +11,7 @@ import noOp from './noOp'
  * @param {RouteChangeHandler} callback
  * @returns {void}
  */
-export default function onRouteChange(callback = noOp) {
+export function onRouteChange(callback = noOp) {
   if (!inBrowser) return
   const { addEventListener, history, location } = window
   // Observe native navigation

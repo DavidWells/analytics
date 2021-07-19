@@ -2,7 +2,7 @@
 /**
  * @return {string}
  */
-export default function uuid() {
+export function uuid() {
   var u = '',
   m = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx',
   i = 0,

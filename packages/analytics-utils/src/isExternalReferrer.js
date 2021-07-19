@@ -1,10 +1,10 @@
-import inBrowser from './inBrowser'
+import { inBrowser } from './inBrowser'
 
 /**
  * @param {string | null | undefined} ref
  * @returns {boolean | undefined}
  */
-export default function isExternalReferrer(ref) {
+export function isExternalReferrer(ref) {
   if (!inBrowser) return false
   const referrer = ref || document.referrer
   if (referrer) {

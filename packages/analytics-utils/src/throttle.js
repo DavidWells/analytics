@@ -4,7 +4,7 @@
  * @param {number} wait;
  * @return {F};
  */
-export default function throttle(func, wait) {
+export function throttle(func, wait) {
   var context, args, result
   var timeout = null
   var previous = 0

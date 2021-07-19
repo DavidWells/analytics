@@ -1,9 +1,9 @@
-import inBrowser from './inBrowser'
+import { inBrowser } from './inBrowser'
 
 /**
  * @returns {string | undefined}
  */
-export default function getBrowserLocale() {
+export function getBrowserLocale() {
   if (!inBrowser) return
   const { language, languages, userLanguage } = navigator
   if (userLanguage) return userLanguage // IE only

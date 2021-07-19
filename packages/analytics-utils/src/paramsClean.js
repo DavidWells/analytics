@@ -5,7 +5,7 @@
  * @param  {string} param - parameter to strip
  * @return {string} cleaned url
  */
-export default function paramsClean(url, param) {
+export function paramsClean(url, param) {
   const search = (url.split('?') || [ , ])[1] // eslint-disable-line
   if (!search || search.indexOf(param) === -1) {
     return url

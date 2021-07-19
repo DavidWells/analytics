@@ -7,7 +7,7 @@
  * decode("Bought%20keyword)
  * => "Bought keyword"
  */
-export default function decode(s) {
+export function decodeUri(s) {
   try {
     return decodeURIComponent(s.replace(/\+/g, ' '))
   } catch (e) {

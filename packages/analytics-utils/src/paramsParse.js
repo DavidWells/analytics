@@ -1,5 +1,5 @@
-import inBrowser from './inBrowser'
-import decode from './decodeUri'
+import { inBrowser } from './inBrowser'
+import { decodeUri } from './decodeUri'
 
 /**
  * Get search string from given url
@@ -19,7 +19,7 @@ function getSearchString(url) {
  * @param  {string} [url] - URI to parse. If no url supplied window.location will be used
  * @return {object} parsed url parameters
  */
-export default function paramsParse(url) {
+export function paramsParse(url) {
   return getParamsAsObject(getSearchString(url))
 }
 
@@ -34,8 +34,8 @@ function getParamsAsObject(query) {
   const re = /([^&=]+)=?([^&]*)/g
 
   while (temp = re.exec(query)) {
-    var k = decode(temp[1])
-    var v = decode(temp[2])
+    var k = decodeUri(temp[1])
+    var v = decodeUri(temp[2])
     if (k.substring(k.length - 2) === '[]') {
       k = k.substring(0, k.length - 2);
       (params[k] || (params[k] = [])).push(v)

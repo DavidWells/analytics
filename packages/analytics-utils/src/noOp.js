@@ -1,1 +1,2 @@
-export default function noOp() {}
+
+export function noOp() {}
