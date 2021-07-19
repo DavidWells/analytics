@@ -25,3 +25,7 @@ onWakeup(() => {
   console.log('Yay wake up, user is back')
 }, opts)
 ```
+
+## Alternate libraries
+
+- [user-idle-tracker](https://github.com/willianjusten/user-idle-tracker)
