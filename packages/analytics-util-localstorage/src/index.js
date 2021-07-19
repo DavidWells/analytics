@@ -1,11 +1,15 @@
+import { get, set, remove } from '@analytics/global-storage-utils'
+
 const undef = 'undefined'
-let isSupported
+let isSupported = hasLocalStorage()
 /**
  * Check if browser has access to LocalStorage
  * @returns {Boolean}
  */
-export function hasLocalStorage() {
-  if (typeof isSupported !== undef) return isSupported
+function hasLocalStorage() {
+  if (typeof isSupported !== undef) {
+    return isSupported
+  }
   isSupported = true
   try {
     if (typeof localStorage === undef || typeof JSON === undef) {
@@ -18,4 +22,23 @@ export function hasLocalStorage() {
     isSupported = false
   }
   return isSupported
+}
+
+function getItem(key) {
+  return isSupported ? localStorage.getItem(key) : get(key)
+}
+
+function setItem(key, value) {
+  return isSupported ? localStorage.setItem(key, value) : set(key, value)
+}
+
+function removeItem(key) {
+  return isSupported ? localStorage.removeItem(key) : remove(key)
+}
+
+export {
+  hasLocalStorage,
+  getItem,
+  setItem,
+  removeItem
 }

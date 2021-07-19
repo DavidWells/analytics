@@ -8,9 +8,9 @@ description: Utility library for managing HTML LocalStorage
 
 [Tiny](https://bundlephobia.com/result?p=@analytics/localstorage-utils) LocalStorage utilities library for [analytics](https://npmjs.com/package/analytics) & whatever else 🌈
 
-Exposes `hasLocalStorage` function.
+Exposes `hasLocalStorage`, `getItem`, `setItem`, & `removeItem` functions.
 
-This will work with [analytics](https://getanalytics.io) or as a standalone import in your code.
+This modules will automatically fail back to global window storage if `localStorage` is not available in the browser.
 
 ## How to install
 
@@ -34,4 +34,34 @@ import { hasLocalStorage } from '@analytics/localstorage-utils'
 if (hasLocalStorage()) {
   // Use local storage 
 }
+```
+
+## `getItem`
+
+Get a localStorage value.
+
+```js
+import { getItem } from '@analytics/localstorage-utils'
+
+const value = getItem('cookie-key')
+```
+
+## `setItem`
+
+Set a localStorage value.
+
+```js
+import { setItem } from '@analytics/localstorage-utils'
+
+setItem('item-key', 'a')
+```
+
+## `removeItem`
+
+Delete a localStorage value.
+
+```js
+import { removeItem } from '@analytics/localstorage-utils'
+
+removeItem('key')
 ```
