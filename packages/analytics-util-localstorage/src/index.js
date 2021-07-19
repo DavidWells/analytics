@@ -1,19 +1,21 @@
+const undef = 'undefined'
+let isSupported
 /**
  * Check if browser has access to LocalStorage
- *
  * @returns {Boolean}
  */
-const u = 'undefined'
 export function hasLocalStorage() {
+  if (typeof isSupported !== undef) return isSupported
+  isSupported = true
   try {
-    if (typeof localStorage === u || typeof JSON === u) {
-      return false
+    if (typeof localStorage === undef || typeof JSON === undef) {
+      isSupported = false
     }
     // test for safari private
-    localStorage.setItem('_' + u, '1')
-    localStorage.removeItem('_' + u)
+    localStorage.setItem('_' + undef, '1')
+    localStorage.removeItem('_' + undef)
   } catch (err) {
-    return false
+    isSupported = false
   }
-  return true
+  return isSupported
 }
