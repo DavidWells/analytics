@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "@analytics/activity-utils": "^0.1.1",
+    "@analytics/localstorage-utils": "^0.1.1",
     "@analytics/queue-utils": "^0.1.1",
     "@analytics/session-utils": "^0.1.2",
     "analytics-plugin-tab-events": "^0.2.0",

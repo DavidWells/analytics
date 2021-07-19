@@ -10,6 +10,7 @@ import {
   setPageSession,
 } from '@analytics/session-utils'
 import smartQueue from '@analytics/queue-utils'
+import { setItem, getItem, removeItem } from '@analytics/localstorage-utils'
 
 import getClientInfo from '../utils/client-info'
 import getEventName from './get-event-name'
@@ -112,7 +113,7 @@ export function getStorageKey(id) {
 
 function getEndpoint(id) {
   try {
-    return JSON.parse(localStorage.getItem(getStorageKey(id))) || {}
+    return JSON.parse(getItem(getStorageKey(id))) || {}
   } catch (error) {}
   return {}
 }
@@ -120,7 +121,7 @@ function getEndpoint(id) {
 function persistEndpoint(id, endpointData) {
   const endpointKey = getStorageKey(id)
   const data = typeof endpointData === 'string' ? endpointData  : JSON.stringify(endpointData)
-  localStorage.setItem(endpointKey, data)
+  setItem(endpointKey, data)
   return endpointData
 }
 
@@ -522,12 +523,12 @@ async function mergeEndpointData(endpoint = {}, config = {}) {
   if (!migrationRan) {
     migrationRan = true
     // Backwards compatible endpoint info
-    const deprecatedData = localStorage.getItem(ENDPOINT_KEY)
+    const deprecatedData = getItem(ENDPOINT_KEY)
     // clear out old key value
     if (deprecatedData) {
       persistEndpoint(id, deprecatedData)
       // remove old key
-      localStorage.removeItem(ENDPOINT_KEY)
+      removeItem(ENDPOINT_KEY)
     }
   }
 

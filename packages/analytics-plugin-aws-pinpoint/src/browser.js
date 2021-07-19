@@ -2,6 +2,7 @@ import { initialize, getStorageKey } from './pinpoint'
 import { CHANNEL_TYPES } from './pinpoint/constants'
 import * as PINPOINT_EVENTS from './pinpoint/events'
 import { onUserActivity } from '@analytics/activity-utils'
+import { setItem, getItem, removeItem } from '@analytics/localstorage-utils'
 import {
   getSession,
   setSession,
@@ -343,10 +344,10 @@ function formatEventData(obj) {
 }
 
 function getTabs() {
-  return JSON.parse(localStorage.getItem('TabsOpen') || '{}')
+  return JSON.parse(getItem('TabsOpen') || '{}')
 }
 function setTabs(tabs) {
-  localStorage.setItem('TabsOpen', JSON.stringify(tabs))
+  setItem('TabsOpen', JSON.stringify(tabs))
 }
 function getTabsCount() {
   return Object.keys(getTabs()).length
