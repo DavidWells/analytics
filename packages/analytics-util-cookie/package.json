@@ -1,31 +1,37 @@
 {
   "name": "@analytics/cookie-utils",
   "version": "0.2.3",
-  "description": "Cookie helper functions",
+  "description": "Tiny cookie utility library",
   "author": "David Wells",
   "license": "MIT",
-  "homepage": "https://github.com/DavidWells/analytics#readme",
+  "homepage": "https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-cookie#readme",
+  "repository": "https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-cookie",
   "keywords": [
     "analytics",
     "analytics-project",
     "analytics-util",
     "cookies"
   ],
-  "main": "lib/analytics-util-cookie.cjs.js",
-  "globalName": "analyticsUtilCookie",
-  "jsnext:main": "lib/analytics-util-cookie.es.js",
-  "module": "lib/analytics-util-cookie.es.js",
-  "browser": {
-    "./lib/analytics-util-cookie.cjs.js": "./lib/analytics-util-cookie.browser.cjs.js",
-    "./lib/analytics-util-cookie.es.js": "./lib/analytics-util-cookie.browser.es.js"
-  },
+  "netlifySiteId": "8e3043e9-1557-4849-b4cc-ead830d41e01",
+  "amdName": "utilCookies",
+  "source": "src/index.js",
+  "main": "dist/analytics-util-cookie.js",
+  "module": "dist/analytics-util-cookie.module.js",
+  "unpkg": "dist/analytics-util-cookie.umd.js",
   "scripts": {
-    "build": "node ../../scripts/build/index.js",
-    "watch": "node ../../scripts/build/_watch.js",
+    "start": "npm run sync && concurrently 'npm:watch:dev' 'npm:copy' 'npm:serve'",
+    "serve": "servor dist index.html 8081 --reload --browse",
+    "copy": "watchlist example -- npm run sync",
+    "sync": "cp example/index.html dist",
+    "watch": "microbundle watch",
+    "watch:dev": "microbundle watch --external none --no-compress",
+    "build": "microbundle",
+    "build:dev": "microbundle build --external none",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
-    "es": "../../node_modules/.bin/babel-node ./testBabel.js"
+    "deploy": "npm run build:dev && npm run sync && netlify deploy --prod --dir dist --site $npm_package_netlifySiteId",
+    "postdeploy": "npm run build"
   },
   "files": [
     "lib",
@@ -34,12 +40,13 @@
     "package-lock.json",
     "README.md"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/DavidWells/analytics.git"
-  },
   "devDependencies": {
-    "@babel/core": "^7.4.5",
-    "@babel/preset-env": "^7.4.5"
+    "concurrently": "^6.1.0",
+    "microbundle": "^0.13.0",
+    "servor": "^4.0.2",
+    "watchlist": "^0.2.3"
+  },
+  "dependencies": {
+    "@analytics/global-storage-utils": "^0.1.0"
   }
 }
