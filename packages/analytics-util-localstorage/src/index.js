@@ -6,8 +6,8 @@ let isSupported = hasLocalStorage()
  * Check if browser has access to LocalStorage
  * @returns {Boolean}
  */
-function hasLocalStorage() {
-  if (typeof isSupported !== undef) {
+function hasLocalStorage(againCheck = false) {
+  if (typeof isSupported !== undef && !againCheck) {
     return isSupported
   }
   isSupported = true

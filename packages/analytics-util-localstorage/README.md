@@ -6,11 +6,11 @@ description: Utility library for managing HTML LocalStorage
 
 # LocalStorage Utilities
 
-[Tiny](https://bundlephobia.com/result?p=@analytics/localstorage-utils) LocalStorage utilities library for [analytics](https://npmjs.com/package/analytics) & whatever else 🌈
+[Tiny](https://bundlephobia.com/result?p=@analytics/localstorage-utils) localStorage utility library with fallbacks.
+
+This module will automatically fail back to global window storage if `localStorage` is not available.
 
 Exposes `hasLocalStorage`, `getItem`, `setItem`, & `removeItem` functions.
-
-This modules will automatically fail back to global window storage if `localStorage` is not available in the browser.
 
 ## How to install
 
