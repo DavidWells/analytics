@@ -46,6 +46,8 @@
     "@babel/preset-env": "^7.4.5"
   },
   "dependencies": {
-    "@analytics/cookie-utils": "^0.2.3"
+    "@analytics/cookie-utils": "^0.2.3",
+    "@analytics/global-storage-utils": "^0.1.0",
+    "@analytics/localstorage-utils": "^0.1.1"
   }
 }
