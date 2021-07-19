@@ -1,0 +1,49 @@
+{
+  "name": "@analytics/global-storage-utils",
+  "version": "0.0.1",
+  "description": "Tiny global storage utility library",
+  "author": "David Wells",
+  "license": "MIT",
+  "homepage": "https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-global-storage#readme",
+  "repository": "https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-global-storage",
+  "keywords": [
+    "analytics",
+    "analytics-project",
+    "analytics-util",
+    "global-storage"
+  ],
+  "netlifySiteId": "2401aec5-ceab-49bb-9343-f11108fdeef6",
+  "amdName": "utilGlobalStorage",
+  "source": "src/index.js",
+  "main": "dist/analytics-util-global-storage.js",
+  "module": "dist/analytics-util-global-storage.module.js",
+  "unpkg": "dist/analytics-util-global-storage.umd.js",
+  "scripts": {
+    "start": "npm run sync && concurrently 'npm:watch:dev' 'npm:copy' 'npm:serve'",
+    "serve": "servor dist index.html 8081 --reload --browse",
+    "copy": "watchlist example -- npm run sync",
+    "sync": "cp example/index.html dist",
+    "watch": "microbundle watch",
+    "watch:dev": "microbundle watch --external none --no-compress",
+    "build": "microbundle",
+    "build:dev": "microbundle build --external none",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish",
+    "deploy": "npm run build:dev && npm run sync && netlify deploy --prod --dir dist --site $npm_package_netlifySiteId",
+    "postdeploy": "npm run build"
+  },
+  "files": [
+    "lib",
+    "dist",
+    "package.json",
+    "package-lock.json",
+    "README.md"
+  ],
+  "devDependencies": {
+    "concurrently": "^6.1.0",
+    "microbundle": "^0.13.0",
+    "servor": "^4.0.2",
+    "watchlist": "^0.2.3"
+  }
+}
