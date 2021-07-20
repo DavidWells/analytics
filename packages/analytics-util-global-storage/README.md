@@ -1,6 +1,6 @@
 <!--
 title: Javascript Global Storage Utilities
-pageTitle: Global Storage Utils
+pageTitle: GlobalStorage Utils
 description: Utility library for managing global values
 -->
 

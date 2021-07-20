@@ -1,6 +1,6 @@
 ---
 title: Remote Storage Utils
-pageTitle: Remote Storage Utils
+pageTitle: RemoteStorage Utils
 description: Utility library for cross domain localStorage access.
 ---
 
