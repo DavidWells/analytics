@@ -1,6 +1,6 @@
 {
   "name": "@analytics/cookie-utils",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Tiny cookie utility library",
   "author": "David Wells",
   "license": "MIT",

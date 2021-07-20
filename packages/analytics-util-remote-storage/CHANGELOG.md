@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.4](https://github.com/DavidWells/analytics/compare/@analytics/remote-storage-utils@0.4.3...@analytics/remote-storage-utils@0.4.4) (2021-07-20)
+
+**Note:** Version bump only for package @analytics/remote-storage-utils
+
+
+
+
+
 ## [0.4.3](https://github.com/DavidWells/analytics/compare/@analytics/remote-storage-utils@0.4.2...@analytics/remote-storage-utils@0.4.3) (2021-04-06)
 
 
