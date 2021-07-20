@@ -752,6 +752,30 @@ function renderArg(tag) {
   return `- **${tag.name}** ${optionalText}${typesDescription} ${tag.description}`
 }
 
+
+function renderArgWithDoxxx(tag) {
+  const optionalText = (tag.name.match(/^\[/)) ? '(optional) ' : ''
+  if (tag.name === '[data]') {
+    // console.log('tag', tag)
+  }
+  let typesDescription = tag.types.join('|')
+  if (tag.types.includes('GENERIC')) {
+    console.log('tag', tag)
+    console.log(tag.typesDescription)
+  }
+  // Remove link from description
+  // if (tag.typesDescription.match((/<a href/))) {
+  //   // console.log('tag.typesDescription', tag.typesDescription)
+  //   // console.log('tag.types[0]', tag.types[0])
+  //   const realLink = SRC_LINKS[tag.types[0]]
+  //   // console.log('realLink', realLink)
+  //   if (realLink) {
+  //     typesDescription = tag.typesDescription.replace(/href="(.*?)"/, `href="${realLink}"`)
+  //   }
+  // }
+  return `- **${tag.name}** ${optionalText}${typesDescription} ${tag.description}`
+}
+
 function renderExample(example) {
   return `**Example**
 
@@ -765,8 +789,8 @@ const rootDir = path.join(__dirname, '..')
 const markdownFiles = [
   path.join(rootDir, 'README.md'),
   path.join(rootDir, 'packages/**/**.md'),
-  `!${path.join(rootDir, 'packages/**/node_modules/**/**.md')}`,
-  '!node_modules'
+  `!${path.join(rootDir, 'packages/**/node_modules/**/**')}`,
+  `!${path.join(rootDir, 'node_modules/**/**')}`,
 ]
 markdownMagic(markdownFiles, config, () => {
   console.log('docs done')

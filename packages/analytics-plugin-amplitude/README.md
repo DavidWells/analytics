@@ -20,8 +20,8 @@ For more information [see the docs](https://getanalytics.io/plugins/amplitude/).
 - [How to use](#how-to-use)
 - [Platforms Supported](#platforms-supported)
 - [Browser usage](#browser-usage)
-  * [Browser API](#browser-api)
-  * [Configuration options for browser](#configuration-options-for-browser)
+  - [Browser API](#browser-api)
+  - [Configuration options for browser](#configuration-options-for-browser)
 - [Additional examples](#additional-examples)
 
 </details>

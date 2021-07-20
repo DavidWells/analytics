@@ -21,29 +21,29 @@ Designed to work with any [third-party analytics tool](https://getanalytics.io/p
 - [Usage](#usage)
 - [Demo](#demo)
 - [API](#api)
-  * [Configuration](#configuration)
-  * [analytics.identify](#analyticsidentify)
-  * [analytics.track](#analyticstrack)
-  * [analytics.page](#analyticspage)
-  * [analytics.user](#analyticsuser)
-  * [analytics.reset](#analyticsreset)
-  * [analytics.ready](#analyticsready)
-  * [analytics.on](#analyticson)
-  * [analytics.once](#analyticsonce)
-  * [analytics.getState](#analyticsgetstate)
-  * [analytics.storage](#analyticsstorage)
-  * [analytics.storage.getItem](#analyticsstoragegetitem)
-  * [analytics.storage.setItem](#analyticsstoragesetitem)
-  * [analytics.storage.removeItem](#analyticsstorageremoveitem)
-  * [analytics.plugins](#analyticsplugins)
-  * [analytics.plugins.enable](#analyticspluginsenable)
-  * [analytics.plugins.disable](#analyticspluginsdisable)
+  - [Configuration](#configuration)
+  - [analytics.identify](#analyticsidentify)
+  - [analytics.track](#analyticstrack)
+  - [analytics.page](#analyticspage)
+  - [analytics.user](#analyticsuser)
+  - [analytics.reset](#analyticsreset)
+  - [analytics.ready](#analyticsready)
+  - [analytics.on](#analyticson)
+  - [analytics.once](#analyticsonce)
+  - [analytics.getState](#analyticsgetstate)
+  - [analytics.storage](#analyticsstorage)
+  - [analytics.storage.getItem](#analyticsstoragegetitem)
+  - [analytics.storage.setItem](#analyticsstoragesetitem)
+  - [analytics.storage.removeItem](#analyticsstorageremoveitem)
+  - [analytics.plugins](#analyticsplugins)
+  - [analytics.plugins.enable](#analyticspluginsenable)
+  - [analytics.plugins.disable](#analyticspluginsdisable)
 - [Events](#events)
 - [Analytic plugins](#analytic-plugins)
 - [Community Plugins](#community-plugins)
 - [Creating analytics plugins](#creating-analytics-plugins)
-  * [React to any event](#react-to-any-event)
-  * [Custom methods](#custom-methods)
+  - [React to any event](#react-to-any-event)
+  - [Custom methods](#custom-methods)
 - [Plugin Naming Conventions](#plugin-naming-conventions)
 - [Debugging analytics](#debugging-analytics)
 - [TypeScript support](#typescript-support)
@@ -688,17 +688,19 @@ The `analytics` has a robust plugin system. Here is a list of currently availabl
 - [@analytics/activity-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-activity) User activity listener utilities [npm link](https://www.npmjs.com/package/@analytics/activity-utils).
 - [@analytics/amplitude](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-amplitude) Amplitude integration for 'analytics' module [npm link](https://www.npmjs.com/package/@analytics/amplitude).
 - [@analytics/aws-pinpoint](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-aws-pinpoint) AWS Pinpoint integration for 'analytics' module [npm link](https://www.npmjs.com/package/@analytics/aws-pinpoint).
-- [@analytics/cookie-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-cookie) Cookie helper functions [npm link](https://www.npmjs.com/package/@analytics/cookie-utils).
+- [@analytics/cookie-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-cookie) Tiny cookie utility library [npm link](https://www.npmjs.com/package/@analytics/cookie-utils).
 - [@analytics/core](https://github.com/DavidWells/analytics/tree/master/packages/analytics-core) Lightweight analytics library for tracking events, page views, & identifying users. Works with any third party analytics provider via an extendable plugin system. [npm link](https://www.npmjs.com/package/@analytics/core).
 - [@analytics/crazy-egg](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-crazy-egg) Crazy Egg integration for 'analytics' module [npm link](https://www.npmjs.com/package/@analytics/crazy-egg).
 - [@analytics/customerio](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-customerio) Customer.io integration for 'analytics' module [npm link](https://www.npmjs.com/package/@analytics/customerio).
 - [@analytics/form-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-forms) Form utility library for managing HTML form submissions & values [npm link](https://www.npmjs.com/package/@analytics/form-utils).
 - [@analytics/fullstory](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-fullstory) FullStory plugin for 'analytics' module [npm link](https://www.npmjs.com/package/@analytics/fullstory).
+- [@analytics/global-storage-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-global-storage) Tiny global storage utility library [npm link](https://www.npmjs.com/package/@analytics/global-storage-utils).
 - [@analytics/google-analytics](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-google-analytics) Google analytics plugin for 'analytics' module [npm link](https://www.npmjs.com/package/@analytics/google-analytics).
 - [@analytics/google-tag-manager](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-google-tag-manager) Google tag manager plugin for 'analytics' module [npm link](https://www.npmjs.com/package/@analytics/google-tag-manager).
 - [@analytics/gosquared](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-gosquared) GoSquared integration for 'analytics' module [npm link](https://www.npmjs.com/package/@analytics/gosquared).
 - [@analytics/hubspot](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-hubspot) HubSpot plugin for 'analytics' module [npm link](https://www.npmjs.com/package/@analytics/hubspot).
 - [@analytics/listener-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-listener) Backward compatible event listener library for attaching & detaching event handlers [npm link](https://www.npmjs.com/package/@analytics/listener-utils).
+- [@analytics/localstorage-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-localstorage) Tiny LocalStorage utility library [npm link](https://www.npmjs.com/package/@analytics/localstorage-utils).
 - [@analytics/mixpanel](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-mixpanel) Mixpanel plugin for 'analytics' module [npm link](https://www.npmjs.com/package/@analytics/mixpanel).
 - [@analytics/original-source-plugin](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-original-source) Save original referral source of visitor plugin for 'analytics' pkg [npm link](https://www.npmjs.com/package/@analytics/original-source-plugin).
 - [@analytics/ownstats](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-ownstats) Ownstats integration for 'analytics' module for browser & node [npm link](https://www.npmjs.com/package/@analytics/ownstats).
