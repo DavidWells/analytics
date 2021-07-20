@@ -4,11 +4,11 @@ pageTitle: Cookie Utils
 description: Utility library for managing HTML cookies
 ---
 
-[Tiny](https://bundlephobia.com/result?p=@analytics/cookie-utils) cookie utilities library for [analytics](https://npmjs.com/package/analytics) & whatever else 🌈
+[Tiny](https://bundlephobia.com/result?p=@analytics/cookie-utils) cookie utility library with fallbacks.
 
-Exposes `getCookie`, `setCookie`, `removeCookie`, & `hasCookieSupport` functions.
+This module will automatically fail back to global window storage if `cookies` are not available.
 
-This will work with [analytics](https://getanalytics.io) or as a standalone import in your code.
+Exposes `hasCookies`, `getCookie`, `setCookie`, & `removeCookie` functions.
 
 ## How to install
 
@@ -21,6 +21,18 @@ npm install @analytics/cookie-utils
 ## API
 
 Below is the api for `@analytics/cookie-utils`. These utilities are tree-shakable.
+
+## `hasCookies`
+
+Check if cookies are supported. Will verify browser will accept cookies
+
+```js
+import { hasCookies } from '@analytics/cookie-utils'
+
+if (hasCookies()) {
+  // Use them 🍪
+}
+```
 
 ## `getCookie`
 
@@ -54,16 +66,4 @@ Delete a cookie.
 import { deleteCookie } from '@analytics/cookie-utils'
 
 deleteCookie('cookie-key')
-```
-
-## `hasCookieSupport`
-
-Check if cookies are supported. Will verify browser will accept cookies
-
-```js
-import { hasCookieSupport } from '@analytics/cookie-utils'
-
-if (hasCookieSupport()) {
-  // Use them 🍪
-}
 ```

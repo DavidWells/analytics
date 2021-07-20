@@ -13,17 +13,17 @@ Integration with [segment](https://segment.com/) for [analytics](https://www.npm
 - [How to use](#how-to-use)
 - [Platforms Supported](#platforms-supported)
 - [Browser usage](#browser-usage)
-  * [Browser API](#browser-api)
-  * [Configuration options for browser](#configuration-options-for-browser)
+  - [Browser API](#browser-api)
+  - [Configuration options for browser](#configuration-options-for-browser)
 - [Server-side usage](#server-side-usage)
-  * [Server-side API](#server-side-api)
-  * [Configuration options for server-side](#configuration-options-for-server-side)
+  - [Server-side API](#server-side-api)
+  - [Configuration options for server-side](#configuration-options-for-server-side)
 - [Additional examples](#additional-examples)
 - [Customing the page name field](#customing-the-page-name-field)
 - [Loading script from custom proxy](#loading-script-from-custom-proxy)
 - [Making group calls](#making-group-calls)
-  * [Browser Example](#browser-example)
-  * [Server side Example](#server-side-example)
+  - [Browser Example](#browser-example)
+  - [Server side Example](#server-side-example)
 
 </details>
 <!-- AUTO-GENERATED-CONTENT:END -->

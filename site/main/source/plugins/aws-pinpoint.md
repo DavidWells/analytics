@@ -15,8 +15,8 @@ Amazon Pinpoint is a flexible and scalable outbound and inbound marketing commun
 - [How to use](#how-to-use)
 - [Platforms Supported](#platforms-supported)
 - [Browser usage](#browser-usage)
-  * [Browser API](#browser-api)
-  * [Configuration options for browser](#configuration-options-for-browser)
+  - [Browser API](#browser-api)
+  - [Configuration options for browser](#configuration-options-for-browser)
 - [Additional examples](#additional-examples)
 
 </details>
@@ -83,9 +83,9 @@ The `@analytics/aws-pinpoint` package works in [the browser](#browser-usage)
 The AWSPinpoint client side browser plugin works with these analytic api methods:
 
 - **[analytics.page](https://getanalytics.io/api/#analyticspage)** - Sends page views into AWSPinpoint
-- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for AWSPinpoint values
 - **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to AWSPinpoint
 - **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to AWSPinpoint
+- **[analytics.reset](https://getanalytics.io/api/#analyticsreset)** - Reset browser storage cookies & localstorage for AWSPinpoint values
 
 ### Browser API
 

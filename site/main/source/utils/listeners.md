@@ -32,21 +32,36 @@ Below is the api for `@analytics/listener-utils`.
 
 ## `addListener`
 
-Add an event listener to an element.
+Add an event listener to an element. 
 
 ```js
 import { addListener } from '@analytics/listener-utils'
 
-const button = document.querySelector('#my-button')
-const options = {} // (optional) See opts at https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+addListener('#button', 'click', () => {
+  console.log('do stuff')
+})
+```
 
-// addListener returns a disable listener function
-const disableListener = addListener(button, 'click', () => {
+This method returns a cleanup function. When the cleanup function is called the event listener is removed.
+
+```js
+import { addListener } from '@analytics/listener-utils'
+
+const selectorOrNode = '#my-button'
+const event = 'click'
+const opts = {} // (optional) See opts at https://mzl.la/2QtNRHR
+const handler = () => {
   console.log('wow you clicked it!')
-}, options)
+}
+// addListener returns a disable listener function
+const disableListener = addListener(selectorOrNode, event, handler, opts)
 
 // Detach the listener
-disableListener()
+const reAttachListner = disableListener()
+
+// reAttach the listener
+const disableAgain = reAttachListner()
+// ...and so on
 ```
 
 Below is an example of automatically disabling a click handler while an api request is in flight
@@ -54,8 +69,7 @@ Below is an example of automatically disabling a click handler while an api requ
 ```js
 import { addListener } from '@analytics/listener-utils'
 
-const apiButton = document.querySelector('#api')
-const disableFetchListener = addListener(apiButton, 'click', () => {
+const disableFetchListener = addListener('#api', 'click', () => {
   // Fetch in progress disable click handler to avoid duplicate calls
   const renableAPIClickHandler = disableFetchListener()
 
@@ -73,12 +87,31 @@ const disableFetchListener = addListener(apiButton, 'click', () => {
         // Error! Reattach event handler
       renableAPIClickHandler()
     })
-});
-
+})
 // call disableFetchListener wherever you wish to disable this click handler
 ```
 
 See [addEventListener docs](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener) for options 
+
+Fire an event once
+
+```js
+import { addListener } from '@analytics/listener-utils'
+
+addListener('#my-button', 'click', () => {
+  console.log('will fire only once')
+}, { once: true })
+```
+
+Fire an event on multiple event types
+
+```js
+import { addListener } from '@analytics/listener-utils'
+
+addListener('#my-button', 'click mouseover', () => {
+  console.log('will fire on click & mouseover events')
+})
+```
 
 ## `removeListener`
 
@@ -87,14 +120,16 @@ Removes an event listener from an element.
 ```js
 import { addListener, removeListener } from '@analytics/listener-utils'
 
-const button = document.querySelector('#my-button')
+const buttonSelector = '#my-button'
 const simpleFunction = () => console.log('wow you clicked it!')
-addListener(button, 'click', simpleFunction)
+addListener(buttonSelector, 'click', simpleFunction)
 
-const options = {} // (optional) See opts at https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/removeEventListener
+const options = {} 
+// (optional) See opts at https://mzl.la/2QtNRHR
 
 // removeListener returns an enable listener function
-const reAttachListener = removeListener(button, 'click', simpleFunction, options)
+const altSeletor = document.querySelector('#my-button')
+const reAttachListener = removeListener(altSeletor, 'click', simpleFunction, options)
 
 // Reattach the listener
 reAttachListener()

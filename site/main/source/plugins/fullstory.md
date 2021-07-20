@@ -18,8 +18,8 @@ This analytics plugin will add the FullStory javascript library to your app & se
 - [How to use](#how-to-use)
 - [Platforms Supported](#platforms-supported)
 - [Browser usage](#browser-usage)
-  * [Browser API](#browser-api)
-  * [Configuration options for browser](#configuration-options-for-browser)
+  - [Browser API](#browser-api)
+  - [Configuration options for browser](#configuration-options-for-browser)
 - [Additional examples](#additional-examples)
 - [Formatting payloads](#formatting-payloads)
 

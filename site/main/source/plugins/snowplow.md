@@ -13,11 +13,11 @@ Integration with [Snowplow Analytics](https://www.snowplowanalytics.com/) for [a
 - [How to use](#how-to-use)
 - [Platforms Supported](#platforms-supported)
 - [Browser usage](#browser-usage)
-  * [Browser API](#browser-api)
-  * [Configuration options for browser](#configuration-options-for-browser)
+  - [Browser API](#browser-api)
+  - [Configuration options for browser](#configuration-options-for-browser)
 - [Server-side usage](#server-side-usage)
-  * [Server-side API](#server-side-api)
-  * [Configuration options for server-side](#configuration-options-for-server-side)
+  - [Server-side API](#server-side-api)
+  - [Configuration options for server-side](#configuration-options-for-server-side)
 - [Additional examples](#additional-examples)
 
 </details>
