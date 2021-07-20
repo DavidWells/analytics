@@ -6,7 +6,7 @@ description: Session library for user sessions
 
 # Session Utilities
 
-Tiny session utility library. [Demo](https://utils-sessions.netlify.app)
+Tiny session utility library.
 
 - Persisted Sessions - saved as cookie for 30min
   - `getSession`
@@ -17,6 +17,8 @@ Tiny session utility library. [Demo](https://utils-sessions.netlify.app)
 - Page Sessions - saved until page changes
   - `getPageSession`
   - `setPageSession`
+
+[See live demo](https://utils-sessions.netlify.app).
 
 ## Example
 

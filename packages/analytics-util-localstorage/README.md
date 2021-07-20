@@ -12,6 +12,8 @@ This module will automatically fail back to global window storage if `localStora
 
 Exposes `hasLocalStorage`, `getItem`, `setItem`, & `removeItem` functions.
 
+[See live demo](https://utils-localstorage.netlify.app/).
+
 ## How to install
 
 Install `@analytics/localstorage-utils` from [npm](https://www.npmjs.com/package/@analytics/localstorage-utils).

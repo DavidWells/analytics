@@ -10,6 +10,8 @@ This module will automatically fail back to global window storage if `cookies` a
 
 Exposes `hasCookies`, `getCookie`, `setCookie`, & `removeCookie` functions.
 
+[See live demo](https://utils-cookies.netlify.app/).
+
 ## How to install
 
 Install `@analytics/cookie-utils` from [npm](https://www.npmjs.com/package/@analytics/cookie-utils).

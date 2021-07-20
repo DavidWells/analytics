@@ -4,7 +4,9 @@ pageTitle: User Activity Utils
 description: Utility library for firing events on user idle & wakeup
 ---
 
-User activity listener utilities. [Demo](https://utils-activity-listener.netlify.app)
+User activity listener utilities.
+
+[See live demo](https://utils-activity-listener.netlify.app).
 
 ```js
 import { onIdle, onWakeup } from '@analytics/activity-utils'

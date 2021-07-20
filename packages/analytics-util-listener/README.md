@@ -12,7 +12,7 @@ Exposes `addListener`, `removeListener` functions.
 
 This library will work with [analytics](https://getanalytics.io) or as a standalone package.
 
-[See live demo](https://event-listener-util.netlify.app/).
+[See live demo](https://utils-event-listener.netlify.app/).
 
 ### Why this package?
 
