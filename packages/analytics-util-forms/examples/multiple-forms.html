@@ -1,8 +1,8 @@
 <!doctype html>
 <html>
   <head>
-    <title>Form utils</title>
-    <script type="text/javascript" src="../dist/analytics-util-forms.js" charset="utf-8"></script>
+    <title>Multiple Form Demo</title>
+    <script type="text/javascript" src="./browser/form-utils.js" charset="utf-8"></script>
     <style media="screen">
       html {
         padding: 20px;
@@ -15,6 +15,47 @@
       }
       label {
         display: block;
+      }
+      .hero {
+        margin-bottom: 24px;
+      }
+      .github-corner svg {
+        height: 80px;
+        width: 80px;
+        fill: #151513;
+        color: #fff;
+        position: absolute;
+        top: 0;
+        border: 0;
+        right: 0
+      }
+      .github-corner:hover .octo-arm {
+        animation: octocat-wave .56s ease-in-out
+      }
+      @keyframes octocat-wave {
+        0%,to { transform: rotate(0) }
+        20%,60% { transform: rotate(-25deg) }
+        40%,80% { transform: rotate(10deg) }
+      }
+      @media (max-width: 720px) {
+        .content, .content-left, iframe {
+          flex-direction: column;
+          max-width: 100%;
+          min-width: 100%;
+        }
+        
+        h1 { font-size: 24px; }
+        #protected, #large-div div {
+          font-size: 18px;
+        }
+        .github-corner svg {
+          height: 60px;
+          width: 60px;
+        }
+      }
+      @media (max-width: 500px) {
+        .github-corner:hover .octo-arm { animation:none }
+        .github-corner .octo-arm { animation: octocat-wave .56s ease-in-out }
       }
     </style>
   </head>
@@ -109,26 +150,26 @@
       <h2 class="form-title">Form 3</h2>
       <form id="content-form-three" name="three" action="/content-thank-you/" method="POST">
         <table cellpadding="0" cellspacing="2">
-      	<tr>
-      		<td><input type="checkbox" name="how_hear[]" id="how_hear1" value="Website"  /></td>
-      		<td style="padding-left:3px"><label for="how_hear1">Website</label></td>
-      	</tr>
-      	<tr>
-      		<td><input type="checkbox" name="how_hear[]" id="how_hear2" value="TV Commercial" /></td>
-      		<td style="padding-left:3px"><label for="how_hear2">TV Commercial</label></td>
-      	</tr>
-      	<tr>
-      		<td><input type="checkbox" name="how_hear[]" id="how_hear3" value="Magazine Ad" /></td>
-      		<td style="padding-left:3px"><label for="how_hear3">Magazine Ad</label></td>
-      	</tr>
-      	<tr>
-      		<td><input type="checkbox" name="how_hear[]" id="how_hear4" value="Billboard" /></td>
-      		<td style="padding-left:3px"><label for="how_hear4">Billboard</label></td>
-      	</tr>
-      	<tr>
-      		<td><input type="checkbox" name="how_hear[]" id="how_hear5" value="Other" /></td>
-      		<td style="padding-left:3px"><label for="how_hear5">Other</label></td>
-      	</tr>
+        <tr>
+          <td><input type="checkbox" name="how_hear[]" id="how_hear1" value="Website"  /></td>
+          <td style="padding-left:3px"><label for="how_hear1">Website</label></td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" name="how_hear[]" id="how_hear2" value="TV Commercial" /></td>
+          <td style="padding-left:3px"><label for="how_hear2">TV Commercial</label></td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" name="how_hear[]" id="how_hear3" value="Magazine Ad" /></td>
+          <td style="padding-left:3px"><label for="how_hear3">Magazine Ad</label></td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" name="how_hear[]" id="how_hear4" value="Billboard" /></td>
+          <td style="padding-left:3px"><label for="how_hear4">Billboard</label></td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" name="how_hear[]" id="how_hear5" value="Other" /></td>
+          <td style="padding-left:3px"><label for="how_hear5">Other</label></td>
+        </tr>
       </table>
         <label>
           <span class="label">Organization</span>
@@ -140,13 +181,13 @@
       </form>
     </div>
     <script type="text/javascript">
-    console.log('Exposed methods', analyticsUtilForms)
+    console.log('Exposed methods', utilForms)
 
     window.document.forms[0].addEventListener('submit', () => {
       // window.location.href = 'https://google.com'
     }, false)
 
-    analyticsUtilForms.listen('all', {
+    utilForms.listen('all', {
       /* Turn on debug to disable submissions and see values */
       debug: true,
       /* Turn off sensitive values filter */
@@ -159,9 +200,9 @@
       onChange: (event, data, meta) => {
         console.log('change form', event.target)
         console.log('change data', JSON.stringify(data, null, 2))
-        const allFormData = analyticsUtilForms.getFormData(meta.form)
+        const allFormData = utilForms.getFormData(meta.form)
         console.log('allFormData', JSON.stringify(allFormData, null, 2))
-        const filtered = analyticsUtilForms.filterData(allFormData)
+        const filtered = utilForms.filterData(allFormData)
         console.log('filtered data', JSON.stringify(filtered, null, 2))
       },
       /* // Include only specific forms. Omit for all

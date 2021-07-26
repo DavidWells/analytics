@@ -1,16 +1,18 @@
 <!--
-title: Javascript form utilities library with onSubmit & onChange helpers
+title: Javascript form utility library with onSubmit & onChange helpers
 pageTitle: Form Utils
 description: Utility library for managing HTML form values
 -->
 
 # Form Utilities
 
-[Tiny](https://bundlephobia.com/result?p=@analytics/form-utils) form utilities library for dealing with HTML form data.
+A tiny form utility library for dealing with HTML form data in <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`2.4kb`<!-- AUTO-GENERATED-CONTENT:END -->.
 
 Exposes `onSubmit`, `onChange`, `listen`, `submitForm`, `getFormData`, & `getInputData` functions.
 
 This library will work with [analytics](https://getanalytics.io) or as a standalone import in your code.
+
+[See live demo](https://utils-forms.netlify.app/).
 
 ## How to install
 

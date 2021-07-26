@@ -10,7 +10,7 @@ import submitHandler from './handler'
  * @return {function} detach onSubmit listener
  */
 export function onSubmit(formElement, options = {}, callback) {
-  if (!inBrowser) return false
+  if (!inBrowser) return
   const type = 'submit'
   const [settings, forms] = formatArgs(formElement, options, callback, type)
   // Attach Listeners

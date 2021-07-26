@@ -4,7 +4,7 @@ pageTitle: LocalStorage Utils
 description: Utility library for managing HTML LocalStorage
 ---
 
-[Tiny](https://bundlephobia.com/result?p=@analytics/localstorage-utils) localStorage utility library with fallbacks.
+A tiny <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`315 bytes`<!-- AUTO-GENERATED-CONTENT:END --> localStorage utility library with fallbacks.
 
 This module will automatically fail back to global window storage if `localStorage` is not available.
 

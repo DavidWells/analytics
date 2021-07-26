@@ -4,7 +4,7 @@ pageTitle: Storage Utils
 description: Utility library for persisting data
 ---
 
-Stand alone storage utilities used in [analytics](https://www.npmjs.com/package/analytics)
+Stand alone <!-- AUTO-GENERATED-CONTENT:START (pkgSize:src=./dist/@analytics/storage-utils.min.js) -->`1.41kb`<!-- AUTO-GENERATED-CONTENT:END --> storage utility library used in [analytics](https://www.npmjs.com/package/analytics).
 
 By default, `@analytics/storage-utils` will persist values in browser in this order:
 

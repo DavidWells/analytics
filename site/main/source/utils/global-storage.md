@@ -4,7 +4,7 @@ pageTitle: GlobalStorage Utils
 description: Utility library for managing global values
 ---
 
-[Tiny](https://bundlephobia.com/result?p=@analytics/global-storage-utils) Global Storage utilities library for [analytics](https://npmjs.com/package/analytics) & whatever else 🌈
+A tiny <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`214 bytes`<!-- AUTO-GENERATED-CONTENT:END --> window storage util library for [analytics](https://npmjs.com/package/analytics) & whatever else 🌈
 
 This will work with [analytics](https://getanalytics.io) or as a standalone import in your code.
 

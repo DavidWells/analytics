@@ -4,29 +4,34 @@
   "description": "Form utility library for managing HTML form submissions & values",
   "author": "David Wells",
   "license": "MIT",
-  "homepage": "https://github.com/DavidWells/analytics#readme",
+  "homepage": "https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-form#readme",
+  "repository": "https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-form",
   "keywords": [
     "analytics",
     "analytics-project",
     "analytics-util",
     "forms"
   ],
-  "main": "lib/analytics-util-forms.cjs.js",
-  "globalName": "analyticsUtilForms",
-  "jsnext:main": "lib/analytics-util-forms.es.js",
-  "module": "lib/analytics-util-forms.es.js",
-  "browser": {
-    "./lib/analytics-util-forms.cjs.js": "./lib/analytics-util-forms.browser.cjs.js",
-    "./lib/analytics-util-forms.es.js": "./lib/analytics-util-forms.browser.es.js"
-  },
+  "netlifySiteId": "1e354b6a-7748-4427-ac01-bba39285da10",
+  "amdName": "utilForms",
+  "source": "src/index.js",
+  "main": "dist/analytics-util-forms.js",
+  "module": "dist/analytics-util-forms.module.js",
+  "unpkg": "dist/analytics-util-forms.umd.js",
   "scripts": {
-    "serve": "cd dist examples && http-server",
-    "build": "node ../../scripts/build/index.js",
-    "watch": "node ../../scripts/build/_watch.js",
+    "start": "npm run sync && concurrently 'npm:watch:dev' 'npm:copy' 'npm:serve'",
+    "serve": "servor dist index.html 8081 --reload --browse",
+    "copy": "watchlist examples -- npm run sync",
+    "sync": "cp examples/index.html dist && cp examples/multiple-forms.html dist",
+    "watch": "microbundle watch",
+    "watch:dev": "microbundle build --external none -f iife,umd -o dist/browser --no-compress",
+    "build": "microbundle && npm run build:dev",
+    "build:dev": "microbundle build --external none -f iife,umd -o dist/browser",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
-    "es": "../../node_modules/.bin/babel-node ./testBabel.js"
+    "deploy": "npm run build:dev && npm run sync && netlify deploy --prod --dir dist --site $npm_package_netlifySiteId",
+    "postdeploy": "npm run build"
   },
   "files": [
     "lib",
@@ -35,12 +40,10 @@
     "package-lock.json",
     "README.md"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/DavidWells/analytics.git"
-  },
   "devDependencies": {
-    "@babel/core": "^7.4.5",
-    "@babel/preset-env": "^7.4.5"
+    "concurrently": "^6.1.0",
+    "microbundle": "^0.13.0",
+    "servor": "^4.0.2",
+    "watchlist": "^0.2.3"
   }
 }

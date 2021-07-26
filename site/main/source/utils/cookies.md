@@ -4,7 +4,7 @@ pageTitle: Cookie Utils
 description: Utility library for managing HTML cookies
 ---
 
-[Tiny](https://bundlephobia.com/result?p=@analytics/cookie-utils) cookie utility library with fallbacks.
+A tiny <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`474 bytes`<!-- AUTO-GENERATED-CONTENT:END --> cookie utility library with fallbacks.
 
 This module will automatically fail back to global window storage if `cookies` are not available.
 
