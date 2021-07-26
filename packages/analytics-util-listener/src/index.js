@@ -3,17 +3,19 @@ const ADD = ['add', 'attach']
 const REMOVE = ['remove', 'detach']
 const ACTIONS = [ ADD, REMOVE ]
 const EventListener = EVENT + 'Listener'
+const noOp = () => {}
 
 function createListener(add) {
   const [ action, inverse ] = (add) ? ACTIONS : ACTIONS.reverse()
   const method = action[0] + EventListener
-  return (elements, events, handler, opts) => {
+  return (elements, evts, callback, opts) => {
+    const handler = callback || noOp
     /* SSR support */
     if (typeof window === 'undefined') {
-      return () => {}
+      return handler
     }
     var options = opts || false
-    var events = (isString(events) ? events.split(' ') : events).map(e => e.trim())
+    var events = toArray(evts)
     var els = toArray(isString(elements) ? document.querySelectorAll(elements) : elements)
     var connectListener
     /* Throw if no element found */
@@ -74,6 +76,14 @@ function createListener(add) {
 }
 
 function toArray(obj) {
+  // Is array, return it
+  if (Object.prototype.toString.call(obj) === '[object Array]') {
+    return obj
+  }
+  // Split string
+  if (isString(obj)) {
+    return obj.split(' ').map(e => e.trim())
+  }
   // Convert NodeList to array
   if (NodeList.prototype.isPrototypeOf(obj)) {
     const array = []
@@ -83,14 +93,11 @@ function toArray(obj) {
     return array
   }
   // Convert single element to array
-  if (Object.prototype.toString.call(obj) !== '[object Array]') {
-    return [obj]
-  }
-  return obj
+  return [ obj ]
 }
 
-function isString(x) {
-  return typeof x === 'string'
+function isString(str) {
+  return typeof str === 'string'
 }
 
 function oncify(handler, opts) {
@@ -110,11 +117,10 @@ function once(fn, context) {
 }
 
 function fireAndReturn(fn) {
-  const listeners = fn() // attach
   return { 
-    // fn: once(fn), this causes reattach problems
     fn: fn, 
-    listeners 
+    // attach and return
+    listeners: fn()
   }
 }
 
@@ -122,6 +128,8 @@ const addListener = createListener(true)
 const removeListener = createListener()
 
 export {
+  /* Fire function only once */
+  once,
   /* Listen to onSubmit events on 1 or more elements */
   addListener,
   /* Listen to onChange events on 1 or more elements */

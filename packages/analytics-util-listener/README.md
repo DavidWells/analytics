@@ -139,3 +139,23 @@ reAttachListener()
 ```
 
 See [removeEventListener docs](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/removeEventListener) for options 
+
+
+## `once`
+
+Utility function to fire function exactly once.
+
+```js
+import { once } from '@analytics/listener-utils'
+
+function simpleFunction() {
+  console.log('Fired')
+}
+
+const onceOnlyFunc = once(simpleFunction)
+
+onceOnlyFunc()
+// Fired
+onceOnlyFunc()
+// nothing fired
+```

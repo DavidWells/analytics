@@ -126,15 +126,15 @@
         console.log('This will only run once')
       }, { once: true, onceEver: true })
 
-      // const listTwo = document.querySelectorAll('#list-two li')
+      const listTwo = document.querySelectorAll('#list-two li')
       // console.log('listTwo', listTwo)
-      addListener('#list-two li', ['click', 'mouseover'], (e) => {
-        console.log('coool', e.target)
+      addListener(listTwo, ['click', 'mouseover'], (e) => {
+        console.log('cool', e.target)
       }, { once: true })
 
       var addBack
       addListener('#disable-list', 'click', () => {
-        console.log('diable list')
+        console.log('disable list')
         addBack = removeAllLi()
       })
       
@@ -172,7 +172,7 @@
       const apiButton = document.querySelector('#api')
       const disableFetchListener = addListener(apiButton, 'click', async () => {
         // Fetch in progress disable click handler to avoid duplicate calls
-        const renableAPIClickHandler = disableFetchListener()
+        const reAddAPIClickHandler = disableFetchListener()
         console.log('1.5 sec delay...')
         console.log('API button wont call api again until the request has finished')
         await delay(1500)
@@ -185,28 +185,28 @@
             console.log("data", json.results)
             // Success! Reattach event handler
             console.log('re-enable API calls')
-            renableAPIClickHandler()
+            reAddAPIClickHandler()
           })
           .catch((err) => {
             console.log('API error', err)
             // Error! Reattach event handler
             console.log('re-enable API calls')
-            renableAPIClickHandler()
+            reAddAPIClickHandler()
           })
       })
 
       const apiDisableButton = document.querySelector('#api-disable')
-      let reEnableApiListner
+      let reEnableApiListener
       addListener(apiDisableButton, 'click', () => {
         console.log('Disable API button')
-        reEnableApiListner = disableFetchListener()
+        reEnableApiListener = disableFetchListener()
       })
 
       const apiEnableButton = document.querySelector('#api-enable')
       let reEnableApiButton
       addListener(apiEnableButton, 'click', () => {
         console.log('Re-enable API button')
-        reEnableApiListner()
+        reEnableApiListener()
       })
 
       const simpleButton = document.querySelector('#normal')
