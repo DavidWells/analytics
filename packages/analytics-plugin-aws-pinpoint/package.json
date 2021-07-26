@@ -36,6 +36,7 @@
     "./lib/analytics-plugin-aws-pinpoint.cjs.js": "./lib/analytics-plugin-aws-pinpoint.browser.cjs.js",
     "./lib/analytics-plugin-aws-pinpoint.es.js": "./lib/analytics-plugin-aws-pinpoint.browser.es.js"
   },
+  "sideEffects": false,
   "files": [
     "dist",
     "lib",

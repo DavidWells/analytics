@@ -27,6 +27,7 @@
     "./lib/analytics-plugin-event-validation.cjs.js": "./lib/analytics-plugin-event-validation.browser.cjs.js",
     "./lib/analytics-plugin-event-validation.es.js": "./lib/analytics-plugin-event-validation.browser.es.js"
   },
+  "sideEffects": false,
   "files": [
     "dist",
     "lib",

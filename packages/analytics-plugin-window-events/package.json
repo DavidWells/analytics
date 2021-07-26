@@ -20,6 +20,7 @@
     "./lib/analytics-plugin-window-events.cjs.js": "./lib/analytics-plugin-window-events.browser.cjs.js",
     "./lib/analytics-plugin-window-events.es.js": "./lib/analytics-plugin-window-events.browser.es.js"
   },
+  "sideEffects": false,
   "scripts": {
     "build": "node ../../scripts/build/index.js",
     "watch": "node ../../scripts/build/_watch.js",

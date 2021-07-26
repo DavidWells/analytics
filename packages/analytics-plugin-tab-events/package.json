@@ -20,6 +20,7 @@
     "./lib/analytics-plugin-tab-events.cjs.js": "./lib/analytics-plugin-tab-events.browser.cjs.js",
     "./lib/analytics-plugin-tab-events.es.js": "./lib/analytics-plugin-tab-events.browser.es.js"
   },
+  "sideEffects": false,
   "scripts": {
     "build": "node ../../scripts/build/index.js",
     "watch": "node ../../scripts/build/_watch.js",
