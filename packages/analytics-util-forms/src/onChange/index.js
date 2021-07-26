@@ -12,7 +12,7 @@ import args from '../utils/args'
  * @return {Function} unsubscribe listeners
  */
 export function onChange(formElement, options = {}, callback) {
-  if (!inBrowser) return false
+  if (!inBrowser) return
   const type = 'change'
   const [settings, forms] = args(formElement, options, callback, type)
   // Attach Listeners

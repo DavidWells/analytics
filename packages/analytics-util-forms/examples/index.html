@@ -228,7 +228,7 @@
     </div>
   </div>
     <script type="text/javascript">
-      console.log('Exposed methods', utilForms)
+      console.log('utilForms API', utilForms)
       var formThree = document.getElementById('content-form-three')
       const opts = {
         debug: true,
@@ -243,7 +243,7 @@
       ]
       /**/
 
-      //*
+      /*
       utilForms.onChange('all', {
         debug: true,
         // excludeForms: [
@@ -261,7 +261,7 @@
       })
       /**/
 
-      //*
+      /*
       utilForms.onSubmit('all', opts, (event, data) => {
         event.preventDefault()
         console.log('submit form', event.target)
@@ -278,10 +278,12 @@
 
       const formOne = document.querySelector("form[id=content-form-three]")
       const x = ['form[id=content-form-three]', 'input[id=xxx]']
-      utilForms.listen(formOne, {debug: true}, (event, data, type) => {
-        console.log('listen type', type)
+      utilForms.listen(formOne, { debug: true }, (event, data, meta) => {
+        console.log('listen type', meta.type)
         console.log('listen form', event.target)
-        console.log('listen form data', JSON.stringify(data, null, 2))
+        console.log(`${meta.type} data`, JSON.stringify(data, null, 2))
+        const allFormData = utilForms.getFormData(meta.form)
+        console.log(allFormData)
       })
     ;</script>
   </body>
