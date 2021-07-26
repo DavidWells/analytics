@@ -8,6 +8,10 @@ const prettier = require('prettier')
 const parseSourceCode = require('./docs/parse').sync
 const getPluginDetails = require('./docs/get-plugin-details')
 const indentString = require('indent-string')
+const { getSizeInfo } = require('./getSize')
+
+const fileExists = (s) => new Promise(r => fs.access(s, fs.F_OK, e => r(!e)))
+
 // Force sync processing until markdown-magic 2.0 is released
 
 function deepLog(data) {
@@ -43,6 +47,30 @@ const config = {
         })
         .join('\n')
       return packages
+    },
+    pkgSize: async (content, options, context) => {
+      const dir = path.dirname(context.originalPath)
+      let fileToCheck
+      if (options.src) {
+        fileToCheck = path.resolve(dir, options.src)
+      } else {
+        const pkg = JSON.parse(fs.readFileSync(path.resolve(dir, 'package.json')))
+        fileToCheck = path.resolve(dir, pkg.main) 
+      }
+      if (!fileToCheck) {
+        console.log(`Missing options.src ${options.src} or pkg.main in ${dir}`)
+        process.exit(1)
+      }
+      const exists = await fileExists(fileToCheck)
+      if (fileToCheck && !exists) {
+        console.log(`Missing options.src ${options.src} or pkg.main in ${dir}`)
+        process.exit(1)
+      }
+
+      const code = fs.readFileSync(path.resolve(dir, fileToCheck))
+      const sizeData = await getSizeInfo(code, fileToCheck)
+      // console.log(sizeData)
+      return `\`${sizeData.size}\``
     },
     PLUGINS(content, options) {
       const base = path.resolve('packages')

@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>LocalStorage utils</title>
-    <script type="text/javascript" src="./analytics-util-localstorage.umd.js" charset="utf-8"></script>
+    <script type="text/javascript" src="./browser/localstorage-utils.js" charset="utf-8"></script>
     <style media="screen">
       html {
         padding: 0 20px;
@@ -63,20 +63,47 @@
         <div id="supported-text">
 
         </div>
-        <p>Open console for more details</p>
+        <p>Sets values to localStorage or global window</p>
+        <div class='hero'>
+          <button id="get">Get "xyz" value</button>
+          <button id="set">Set "xyz"  value</button>
+          <button id="remove">Remove "xyz"  value</button>
+          <p>Open console & view page source for more details!</p>
+        </div>
       </div>
   
     <script type="text/javascript">
-      const { hasLocalStorage } = utilLocalStorage
+      const { hasLocalStorage, getItem, setItem, removeItem } = utilLocalStorage
       console.log('utilLocalStorage API', utilLocalStorage)
 
       /* Example usage */
       const isSupported = hasLocalStorage()
-      const getButtonPersisted = document.querySelector('#supported-text')
+      const isSupportedText = document.querySelector('#supported-text')
       console.log('LocalStorage is supported', isSupported)
-      if (getButtonPersisted) {
-        getButtonPersisted.innerText = (isSupported) ? 'LocalStorage is supported here' : 'LocalStorage is NOT supported here'
+      
+      if (isSupportedText) {
+        isSupportedText.innerText = (isSupported) ? 'LocalStorage is supported here' : 'LocalStorage is NOT supported here'
       }
+
+      const getButton = document.querySelector('#get')
+      const updateButton = document.querySelector('#set')
+      const removeButton = document.querySelector('#remove')
+
+      getButton.addEventListener('click', () => {
+        const data = getItem('xyz')
+        console.log('get "xyz" value', data)
+      })
+
+      updateButton.addEventListener('click', () => {
+        const time = new Date().getTime()
+        const data = setItem('xyz', time)
+        console.log('new "xyz" value', time)
+      })
+
+      removeButton.addEventListener('click', () => {
+        const data = removeItem('xyz')
+        console.log('value "xyz" cleared', data)
+      });
     </script>
   </body>
 </html>

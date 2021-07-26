@@ -6,7 +6,7 @@ description: Utility library for adding backwards compatible event listeners
 
 # Listener Utilities
 
-A [tiny](https://bundlephobia.com/result?p=@analytics/listener-utils) utilities library for dealing with event listeners.
+A tiny <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`549 bytes`<!-- AUTO-GENERATED-CONTENT:END --> utilities library for dealing with event listeners.
 
 Exposes `addListener`, `removeListener` functions.
 
