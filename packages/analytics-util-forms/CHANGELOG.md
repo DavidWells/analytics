@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.1](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-form/compare/@analytics/form-utils@0.3.0...@analytics/form-utils@0.3.1) (2021-07-26)
+
+**Note:** Version bump only for package @analytics/form-utils
+
+
+
+
+
 # 0.3.0 (2019-09-23)
 
 
