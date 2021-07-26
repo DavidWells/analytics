@@ -20,6 +20,7 @@
   "main": "dist/analytics-util-activity.js",
   "module": "dist/analytics-util-activity.module.js",
   "unpkg": "dist/analytics-util-activity.umd.js",
+  "sideEffects": false,
   "scripts": {
     "start": "npm run sync && concurrently 'npm:watch:dev' 'npm:copy' 'npm:serve'",
     "serve": "servor dist index.html 8080 --reload --browse",

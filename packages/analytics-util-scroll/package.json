@@ -19,6 +19,7 @@
     "./lib/analytics-util-scroll.cjs.js": "./lib/analytics-util-scroll.browser.cjs.js",
     "./lib/analytics-util-scroll.es.js": "./lib/analytics-util-scroll.browser.es.js"
   },
+  "sideEffects": false,
   "scripts": {
     "serve": "cd dist examples && http-server",
     "build": "node ../../scripts/build/index.js",

@@ -1,7 +1,7 @@
 {
   "name": "@analytics/queue-utils",
   "version": "0.1.1",
-  "description": "Dependency free queu processor",
+  "description": "Dependency free queue processor",
   "author": "David Wells",
   "license": "MIT",
   "homepage": "https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-queue#readme",
@@ -10,6 +10,7 @@
   "main": "dist/analytics-util-queue.js",
   "module": "dist/analytics-util-queue.module.js",
   "unpkg": "dist/analytics-util-queue.umd.js",
+  "sideEffects": false,
   "scripts": {
     "test": "uvu -r esm tests",
     "test:unit": "npm run test",

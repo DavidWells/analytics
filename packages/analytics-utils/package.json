@@ -11,6 +11,7 @@
     "./lib/analytics-utils.cjs.js": "./lib/analytics-utils.browser.cjs.js",
     "./lib/analytics-utils.es.js": "./lib/analytics-utils.browser.es.js"
   },
+  "sideEffects": false,
   "scripts": {
     "watch": "rollup -w -c scripts/rollup.config.browser.es.js",
     "clean": "rimraf lib dist types && mkdirp lib dist types",

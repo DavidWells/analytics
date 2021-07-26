@@ -19,6 +19,7 @@
   "main": "dist/analytics-util-session.js",
   "module": "dist/analytics-util-session.module.js",
   "unpkg": "dist/analytics-util-session.umd.js",
+  "sideEffects": false,
   "scripts": {
     "start": "npm run sync && concurrently 'npm:watch:dev' 'npm:copy' 'npm:serve'",
     "serve": "servor dist index.html 8081 --reload --browse",

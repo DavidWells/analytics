@@ -18,6 +18,7 @@
   "main": "dist/analytics-util-cookie.js",
   "module": "dist/analytics-util-cookie.module.js",
   "unpkg": "dist/analytics-util-cookie.umd.js",
+  "sideEffects": false,
   "scripts": {
     "start": "npm run sync && concurrently 'npm:watch:dev' 'npm:copy' 'npm:serve'",
     "serve": "servor dist index.html 8081 --reload --browse",
