@@ -60,6 +60,7 @@ module.exports = {
             'utils/cookies',
             'utils/localstorage',
             'utils/remote-storage',
+            'utils/types',
           ],
           Tutorials: [
             'tutorials/getting-started',

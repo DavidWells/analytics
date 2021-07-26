@@ -4,7 +4,7 @@ pageTitle: Event Listener Utils
 description: Utility library for adding backwards compatible event listeners
 ---
 
-A tiny utility library for working with event listeners in <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`549 bytes`<!-- AUTO-GENERATED-CONTENT:END -->.
+A tiny utility library for working with event listeners in <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`649 bytes`<!-- AUTO-GENERATED-CONTENT:END -->.
 
 Exposes `addListener`, `removeListener` functions.
 
@@ -136,3 +136,22 @@ reAttachListener()
 ```
 
 See [removeEventListener docs](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/removeEventListener) for options 
+
+## `once`
+
+Utility function to fire function exactly once.
+
+```js
+import { once } from '@analytics/listener-utils'
+
+function simpleFunction() {
+  console.log('Fired')
+}
+
+const onceOnlyFunc = once(simpleFunction)
+
+onceOnlyFunc()
+// Fired
+onceOnlyFunc()
+// nothing fired
+```
