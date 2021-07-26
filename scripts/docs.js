@@ -51,6 +51,8 @@ const config = {
     pkgSize: async (content, options, context) => {
       const dir = path.dirname(context.originalPath)
       let fileToCheck
+      const hasPlural = options.hasOwnProperty('plural') || options.plural === true
+
       if (options.src) {
         fileToCheck = path.resolve(dir, options.src)
       } else {
@@ -69,6 +71,7 @@ const config = {
 
       const code = fs.readFileSync(path.resolve(dir, fileToCheck))
       const sizeData = await getSizeInfo(code, fileToCheck)
+      
       // console.log(sizeData)
       return `\`${sizeData.size}\``
     },

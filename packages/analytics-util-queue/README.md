@@ -6,7 +6,7 @@ description: Utility library for queuing events
 
 # Queue Utility
 
-A simple tiny <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`352 bytes`<!-- AUTO-GENERATED-CONTENT:END --> queue library.
+A simple tiny queue library in <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`352 bytes`<!-- AUTO-GENERATED-CONTENT:END -->.
 
 ```js
 import smartQueue from '@analytics/queue-utils'

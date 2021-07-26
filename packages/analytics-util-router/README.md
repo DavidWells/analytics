@@ -4,11 +4,17 @@ pageTitle: Router Utils
 description: Utility library for single page app routing
 -->
 
-# SPA router utils
+# Single Page Router utils
 
-A tiny <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`584 bytes`<!-- AUTO-GENERATED-CONTENT:END --> routing utility for listening to route changes in single page applications.
+A tiny (<!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`584 bytes`<!-- AUTO-GENERATED-CONTENT:END -->) routing utility for listening to route changes in single page applications.
 
-## Basic Usage
+## Install
+
+```bash
+npm install @analytics/router-utils
+```
+
+## Usage
 
 ```js
 import onRouteChange from '@analytics/router-utils'
@@ -20,5 +26,3 @@ onRouteChange((newRoutePath) => {
   analytics.page()
 })
 ```
-
-See more utils on [getanalytics.io](https://getanalytics.io/)

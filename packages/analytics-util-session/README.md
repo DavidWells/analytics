@@ -6,7 +6,7 @@ description: Session library for user sessions
 
 # Session Utilities
 
-Tiny <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`865 bytes`<!-- AUTO-GENERATED-CONTENT:END --> session utility library.
+A tiny session utility library in <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`865 bytes`<!-- AUTO-GENERATED-CONTENT:END -->.
 
 - Persisted Sessions - saved as cookie for 30min
   - `getSession`

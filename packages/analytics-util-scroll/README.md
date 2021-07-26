@@ -5,7 +5,7 @@ description: Utility library for dealing with scroll events
 -->
 # Scroll Utilities
 
-[Tiny](https://bundlephobia.com/result?p=@analytics/scroll-utils) utility library for dealing with scroll events.
+A tiny utility library for dealing with scroll events in <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`2.11kb`<!-- AUTO-GENERATED-CONTENT:END -->.
 
 Exposes `onScrollChange` functions.
 
