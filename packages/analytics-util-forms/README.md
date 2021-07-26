@@ -6,7 +6,7 @@ description: Utility library for managing HTML form values
 
 # Form Utilities
 
-A tiny form utility library for dealing with HTML form data in <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`2.4kb`<!-- AUTO-GENERATED-CONTENT:END -->.
+A tiny form utility library for dealing with HTML form data in <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`2.39kb`<!-- AUTO-GENERATED-CONTENT:END -->.
 
 Exposes `onSubmit`, `onChange`, `listen`, `submitForm`, `getFormData`, & `getInputData` functions.
 
