@@ -8,6 +8,8 @@ export const UNDEFINED = 'undefined'
 export const BOOLEAN = 'boolean'
 export const OBJECT = 'object'
 
+export const isBrowser = typeof window !== UNDEFINED
+
 /** 
  * @param x
  * @return {x is Function}

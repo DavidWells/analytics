@@ -26,6 +26,18 @@ npm install @analytics/types-utils
 
 Below is the api for `@analytics/types-utils`.
 
+## `isBrowser`
+
+Check if currently in browser context
+
+```js
+import { isBrowser } from '@analytics/types-utils'
+
+if (isBrowser) {
+  console.log('do things in browser env')
+}
+```
+
 ## `isString`
 
 Check if value is `string`
