@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Listener utils</title>
-    <script type="text/javascript" src="./analytics-util-listener.umd.js" charset="utf-8"></script>
+    <script type="text/javascript" src="./browser/listener-utils.js" charset="utf-8"></script>
     <style media="screen">
       html {
         padding: 20px;
@@ -118,14 +118,16 @@
       function delay(ms) {
         return new Promise(res => setTimeout(res, ms))
       }
-      console.log('Exposed methods', analyticsUtilListener)
-      const addListener = analyticsUtilListener.addListener
-      const removeListener = analyticsUtilListener.removeListener
+      console.log('Exposed methods', utilListener)
+      const addListener = utilListener.addListener
+      const removeListener = utilListener.removeListener
 
       const removeAllLi = addListener('#list li', 'click mouseover', () => {
         console.log('This will only run once')
       }, { once: true, onceEver: true })
 
+      // const listTwo = document.querySelectorAll('#list-two li')
+      // console.log('listTwo', listTwo)
       addListener('#list-two li', ['click', 'mouseover'], (e) => {
         console.log('coool', e.target)
       }, { once: true })
@@ -220,7 +222,7 @@
         reAttach = removeListener(simpleButton, 'click', simpleFunction);
         console.log('reAttach', reAttach)
         // optional reattach function
-      });
+      })
 
       addListener('#add-normal', 'click', () => {
         console.log('Enable logger')
@@ -228,6 +230,6 @@
         console.log('done')
       })
   
-    </script>
+    ;</script>
   </body>
 </html>

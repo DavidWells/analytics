@@ -14,7 +14,7 @@ function createListener(add) {
     }
     var options = opts || false
     var events = (isString(events) ? events.split(' ') : events).map(e => e.trim())
-    var els = isString(elements) ? Array.from(document.querySelectorAll(elements)) : [elements]
+    var els = toArray(isString(elements) ? document.querySelectorAll(elements) : elements)
     var connectListener
     /* Throw if no element found */
     if (!els.length) throw new Error('noElements')
@@ -73,14 +73,28 @@ function createListener(add) {
   }
 }
 
+function toArray(obj) {
+  // Convert NodeList to array
+  if (NodeList.prototype.isPrototypeOf(obj)) {
+    const array = []
+    for (var i = obj.length >>> 0; i--;) { // iterate backwards ensuring that length is an UInt32
+      array[i] = obj[i]
+    }
+    return array
+  }
+  // Convert single element to array
+  if (Object.prototype.toString.call(obj) !== '[object Array]') {
+    return [obj]
+  }
+  return obj
+}
+
 function isString(x) {
   return typeof x === 'string'
 }
 
 function oncify(handler, opts) {
-  if (opts && opts.once) {
-    return once(handler)
-  }
+  if (opts && opts.once) return once(handler)
   return handler
 }
 
@@ -108,9 +122,9 @@ const addListener = createListener(true)
 const removeListener = createListener()
 
 export {
-  /* Listen to onSubmit events on 1 or more forms */
+  /* Listen to onSubmit events on 1 or more elements */
   addListener,
-  /* Listen to onChange events on 1 or more forms */
+  /* Listen to onChange events on 1 or more elements */
   removeListener,
 }
 

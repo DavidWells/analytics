@@ -14,7 +14,7 @@
     "listeners"
   ],
   "netlifySiteId": "804da5e7-8aa8-4da8-a983-8593754cacb9",
-  "amdName": "analyticsUtilListener",
+  "amdName": "utilListener",
   "source": "src/index.js",
   "main": "dist/analytics-util-listener.js",
   "module": "dist/analytics-util-listener.module.js",
@@ -25,13 +25,13 @@
     "copy": "watchlist examples -- npm run sync",
     "sync": "cp examples/index.html dist",
     "watch": "microbundle watch",
-    "watch:dev": "microbundle watch --external none --no-compress",
-    "build": "microbundle",
-    "build:dev": "microbundle build --external none",
+    "watch:dev": "microbundle watch --external none -f iife,umd -o dist/browser --no-compress",
+    "build": "microbundle && npm run build:dev",
+    "build:dev": "microbundle build --external none -f iife,umd -o dist/browser",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
-    "deploy": "npm run sync && netlify deploy --prod --dir dist --site $npm_config_netlifySiteId"
+    "deploy": "npm run build:dev && npm run sync && netlify deploy --prod --dir dist --site $npm_config_netlifySiteId"
   },
   "files": [
     "lib",
