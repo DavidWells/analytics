@@ -1,34 +1,26 @@
-import {
-  uuid,
-  paramsParse,
-  dotProp,
-  isFunction,
-  isObject,
-  isString,
-  inBrowser,
-  globalContext
-} from 'analytics-utils'
+import { uuid, paramsParse, dotProp } from 'analytics-utils'
+import { get, set, remove } from '@analytics/global-storage-utils'
+import { isBrowser, isFunction, isObject, isString } from '@analytics/type-utils'
 import { createStore, combineReducers, applyMiddleware, compose } from './vendor/redux'
+import * as CONSTANTS from './constants'
+import { ID, ANONID, ERROR_URL } from './utils/internalConstants'
+import EVENTS, { coreEvents, nonEvents, isReservedAction } from './events'
 // Middleware
 import * as middleware from './middleware'
 import DynamicMiddleware from './middleware/dynamic'
 // Modules
 import pluginsMiddleware from './modules/plugins'
-import context, { makeContext } from './modules/context'
-import page, { getPageData } from './modules/page'
 import track from './modules/track'
 import queue from './modules/queue'
+import page, { getPageData } from './modules/page'
+import context, { makeContext } from './modules/context'
 import user, { getUserPropFunc, tempKey, getPersistedUserData } from './modules/user'
-import * as CONSTANTS from './constants'
-import { ID, ANONID, ERROR_URL } from './utils/internalConstants'
-import EVENTS, { coreEvents, nonEvents, isReservedAction } from './events'
 // Utils
 import { watch } from './utils/handleNetworkEvents'
 import { Debug, composeWithDebug } from './utils/debug'
 import heartBeat from './utils/heartbeat'
 import ensureArray from './utils/ensureArray'
 import enrichMeta from './utils/enrichMeta'
-
 
 /**
  * Analytics library configuration
@@ -126,9 +118,9 @@ function analytics(config = {}) {
   
   /* Storage by default is set to global & is not persisted */
   const storage = (config.storage) ? config.storage : {
-    getItem: (key) => globalContext[key],
-    setItem: (key, value) => globalContext[key] = value,
-    removeItem: (key) => globalContext[key] = undefined
+    getItem: get,
+    setItem: set,
+    removeItem: remove
   }
 
   const getUserProp = getUserPropFunc(storage)
@@ -137,14 +129,13 @@ function analytics(config = {}) {
   let customPlugins = parsedOptions.plugins
 
   /* Grab all registered events from plugins loaded */
-  const pluginEvents = parsedOptions.events.filter((name) => {
+  const allPluginEvents = parsedOptions.events.filter((name) => {
     return !nonEvents.includes(name)
-  })
-  const uniqueEvents = new Set(pluginEvents.concat(coreEvents).filter((name) => {
+  }).sort()
+  const uniqueEvents = new Set(allPluginEvents.concat(coreEvents).filter((name) => {
     return !nonEvents.includes(name)
   }))
   const allSystemEvents = Array.from(uniqueEvents).sort()
-  const allPluginEvents = pluginEvents.sort()
 
   /* plugin methods(functions) must be kept out of state. thus they live here */
   const getPlugins = () => customPlugins
@@ -342,7 +333,7 @@ function analytics(config = {}) {
       const user = instance.user()
 
       /* sets temporary in memory id. Not to be relied on */
-      globalContext[tempKey(ID)] = id
+      set(tempKey(ID), id)
 
       const resolvedId = id || data.userId || getUserProp(ID, instance, data)
 
@@ -808,7 +799,7 @@ function analytics(config = {}) {
      */
     setAnonymousId: (anonymousId, options) => {
       /* sets temporary in memory id. Not to be relied on */
-      // globalContext[tempKey(ANONID)] = anonymousId
+      // set(tempKey(ANONID), anonymousId)
       instance.storage.setItem(CONSTANTS.ANON_ID, anonymousId, options)
     },
     /*
@@ -856,7 +847,7 @@ function analytics(config = {}) {
 
   let composeEnhancers = compose
   let composeWithGlobalDebug = compose
-  if (inBrowser && config.debug) {
+  if (isBrowser && config.debug) {
     const devTools = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
     if (devTools) {
       composeEnhancers = devTools({ trace: true, traceLimit: 25 })
@@ -977,19 +968,17 @@ function analytics(config = {}) {
 
   function appendArguments(fn) {
     return function () {
-      const originalArgs = Array.prototype.slice.call(arguments)
-      // Pass analytics instance as last arg for arrow functions
-      const argsToPass = Array.apply(null, Array(fn.length))
-        .map(() => {})
-        .map((x, i) => {
-          if (originalArgs[i] || originalArgs[i] === false || originalArgs[i] === null) {
-            return originalArgs[i]
-          }
-        })
-        // Add instance to args
-        .concat(instance)
+      /* Get original args */
+      const args = Array.prototype.slice.call(arguments)
+      /* Create clone of args */
+      let newArgs = new Array(fn.length)
+      for (let i = 0; i < args.length; i++) {
+        newArgs[i] = args[i]
+      }
+      /* Append new arg to end */
+      newArgs[newArgs.length] = instance
       // Set instance on extended methods
-      return fn.apply({ instance }, argsToPass)
+      return fn.apply({ instance }, newArgs)
     }
   }
 
