@@ -894,6 +894,8 @@ function analytics(config = {}) {
       )
     )
   )
+
+  /* Supe up dispatch with callback promise resolver. Happens in enrichMeta */
   function enhanceDispatch(fn) {
     return function (event, resolver, callbacks) {
       // console.log('original event', event)
@@ -905,6 +907,7 @@ function analytics(config = {}) {
       return fn.apply(null, [ newEvent ])
     }
   }
+
   // Automatically apply meta to dispatch calls
   store.dispatch = enhanceDispatch(store.dispatch)
 
