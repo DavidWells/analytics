@@ -1,8 +1,8 @@
-import { inBrowser } from 'analytics-utils'
+import { isBrowser } from '@analytics/type-utils'
 
 function listen(events, func, toAdd) {
-  if (!inBrowser) return false
-  let fn = window[(toAdd ? 'add' : 'remove') + 'EventListener']
+  if (!isBrowser) return
+  const fn = window[(toAdd ? 'add' : 'remove') + 'EventListener']
   events.split(' ').forEach(ev => {
     fn(ev, func)
   })
@@ -13,9 +13,9 @@ export function check() {
 }
 
 export function watch(cb) {
-  let fn = _ => check().then(cb)
-  let listener = listen.bind(null, 'online offline', fn)
+  const fn = _ => check().then(cb)
+  const listener = listen.bind(null, 'online offline', fn)
   listener(true)
-  // return unsubscribe
+  // return unsubscribe function
   return _ => listener(false)
 }

@@ -1,7 +1,7 @@
-import { inBrowser } from 'analytics-utils'
+import { isBrowser } from '@analytics/type-utils'
 
 export default function getBrowserOS() {
-  if (!inBrowser) return false
+  if (!isBrowser) return false
   const os = navigator.appVersion
   // ~os bitwise operator to check if in navigator
   if (~os.indexOf('Win')) return 'Windows'

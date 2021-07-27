@@ -1,5 +1,5 @@
 // Page View Reducer. Follows ducks pattern http://bit.ly/2DnERMc
-import { inBrowser } from 'analytics-utils'
+import { isBrowser } from '@analytics/type-utils'
 import serialize from '../utils/serialize'
 
 import EVENTS from '../events'
@@ -7,7 +7,7 @@ import EVENTS from '../events'
 const hashRegex = /#.*$/
 
 function canonicalUrl() {
-  if (!inBrowser) return
+  if (!isBrowser) return
   const tags = document.getElementsByTagName('link')
   for (var i = 0, tag; tag = tags[i]; i++) {
     if (tag.getAttribute('rel') === 'canonical') {
@@ -52,7 +52,7 @@ function currentUrl(search) {
  * @return {PageData} resolved page data
  */
 export const getPageData = (pageData = {}) => {
-  if (!inBrowser) return pageData
+  if (!isBrowser) return pageData
   const { title, referrer } = document
   const { location, innerWidth, innerHeight } = window
   const { hash, search } = location

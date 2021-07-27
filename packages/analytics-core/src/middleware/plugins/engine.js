@@ -1,6 +1,6 @@
 import EVENTS from '../../events'
 import fitlerDisabledPlugins from '../../utils/filterDisabled'
-import { isFunction, isObject, isString } from 'analytics-utils'
+import { isFunction, isObject, isString } from '@analytics/type-utils'
 import { runCallback } from '../../utils/callback-stack'
 
 const endsWithStartRegex = /Start$/

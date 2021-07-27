@@ -8,7 +8,7 @@ const traitRegex = /^an_trait_/
 
 // Middleware runs during EVENTS.initialize
 export default function initializeMiddleware(instance) {
-  const { setItem, getItem } = instance.storage
+  const { setItem } = instance.storage
   return store => next => action => {
     /* Handle bootstrap event */
     if (action.type === EVENTS.bootstrap) {

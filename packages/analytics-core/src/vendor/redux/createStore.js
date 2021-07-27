@@ -1,4 +1,4 @@
-import { isObject } from 'analytics-utils'
+import { isObject } from '@analytics/type-utils'
 import { FUNC, UNDEF, ACTION_INIT, REDUCER } from './utils/defs'
 
 // eslint-disable-next-line

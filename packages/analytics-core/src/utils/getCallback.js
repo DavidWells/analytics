@@ -1,12 +1,10 @@
-import { isFunction } from 'analytics-utils'
+import { isFunction, isArray } from '@analytics/type-utils'
 
 export default function getCallbackFromArgs(argArray) {
-  const processArray = argArray || Array.prototype.slice.call(arguments)
-  return processArray.reduce((acc, arg) => {
-    if (acc) return acc
-    if (isFunction(arg)) {
-      return arg
-    }
-    return acc
-  }, false)
+  let cb
+  const args = isArray(argArray) ? argArray : Array.prototype.slice.call(arguments)
+  for (let i = 0; i < args.length; i++) {
+    if (isFunction(args[i])) cb = args[i]; break;
+  }
+  return cb
 }

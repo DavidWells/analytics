@@ -1,5 +1,6 @@
 // Context Reducer.  Follows ducks pattern http://bit.ly/2DnERMc
-import { getBrowserLocale, getTimeZone, uuid, inBrowser } from 'analytics-utils'
+import { getBrowserLocale, getTimeZone, uuid } from 'analytics-utils'
+import { isBrowser } from '@analytics/type-utils'
 import EVENTS from '../events'
 import { LIBRARY_NAME } from '../utils/internalConstants'
 import getOSNameNode from '../utils/getOSName/node'
@@ -11,7 +12,7 @@ let locale
 let timeZone
 if (process.browser) {
   osName = getOSNameBrowser()
-  referrer = (inBrowser) ? document.referrer : null
+  referrer = (isBrowser) ? document.referrer : null
   locale = getBrowserLocale()
   timeZone = getTimeZone()
 } else {
@@ -25,11 +26,11 @@ const initialState = {
   app: null,
   version: null,
   debug: false,
-  offline: (inBrowser) ? !navigator.onLine : false, // use node network is-online
+  offline: (isBrowser) ? !navigator.onLine : false, // use node network is-online
   os: {
     name: osName,
   },
-  userAgent: (inBrowser) ? navigator.userAgent : 'node', // https://github.com/bestiejs/platform.js
+  userAgent: (isBrowser) ? navigator.userAgent : 'node', // https://github.com/bestiejs/platform.js
   library: {
     name: LIBRARY_NAME,
     // TODO fix version number. npm run publish:patch has wrong version

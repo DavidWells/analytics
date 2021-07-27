@@ -1,4 +1,4 @@
-import { isFunction } from 'analytics-utils'
+import { isFunction } from '@analytics/type-utils'
 import { ID, ANONID } from './internalConstants'
 
 export function processQueue(store, getPlugins, instance) {
@@ -62,7 +62,7 @@ export function processQueue(store, getPlugins, instance) {
 
       /* Removed processed actions */
       const reQueueActions = queue.actions.filter((value, index) => {
-        // !~ === return pipeline.processIndex.indexOf(index) === -1
+        // note !~ === return pipeline.processIndex.indexOf(index) === -1
         return !~pipeline.processIndex.indexOf(index)
       })
 
