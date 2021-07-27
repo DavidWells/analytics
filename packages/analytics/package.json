@@ -29,6 +29,7 @@
     "./lib/analytics.cjs.js": "./lib/analytics.browser.cjs.js",
     "./lib/analytics.es.js": "./lib/analytics.browser.es.js"
   },
+  "sideEffects": false,
   "scripts": {
     "test": "ava -v",
     "test:watch": "ava -v --watch",
