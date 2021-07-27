@@ -83,7 +83,7 @@ function togglePluginStatus(plugins, status, currentState) {
   return plugins.reduce((acc, pluginKey) => {
     acc[pluginKey] = {
       ...currentState[pluginKey],
-      ...{ 
+      ...{
         enabled: status 
       }
     }

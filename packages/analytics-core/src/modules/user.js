@@ -1,6 +1,7 @@
-import { uuid, isObject, globalContext } from 'analytics-utils'
+import { get } from '@analytics/global-storage-utils'
+import { isObject } from '@analytics/type-utils'
 import { ANON_ID, USER_ID, USER_TRAITS } from '../constants'
-import { ID, ANONID, PREFIX } from '../utils/internalConstants'
+import { PREFIX } from '../utils/internalConstants'
 import EVENTS from '../events'
 
 /* user reducer */
@@ -85,13 +86,6 @@ export function getUserPropFunc(storage) {
     }
 
     /* 4. Else, try to get in memory placeholder. TODO watch this for future issues */
-    if (globalContext[tempKey(key)]) {
-      /*
-      console.log(`from global ${key}`, globalContext[tempKey(key)])
-      /** */
-      return globalContext[tempKey(key)]
-    }
-    // return null instead of undefined for consistency
-    return null
+    return get(tempKey(key)) || null
   }
 }

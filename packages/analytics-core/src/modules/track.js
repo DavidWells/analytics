@@ -10,7 +10,7 @@ const initialState = {
 
 // track reducer
 export default function trackReducer(state = initialState, action) {
-  const { type, meta, options, event, properties } = action
+  const { type, event, properties, options, meta } = action
 
   switch (type) {
     case EVENTS.track:

@@ -1,4 +1,3 @@
-import { isFunction, isString } from 'analytics-utils'
 import EVENTS, { nonEvents } from '../../events'
 import { runCallback, stack } from '../../utils/callback-stack'
 import waitForReady from '../../utils/waitForReady'
@@ -50,7 +49,7 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
     }
     */
 
-    //*  || type.match(/^initializeAbort:/)
+    //  || type.match(/^initializeAbort:/)
     if (type === EVENTS.initializeEnd) {
       const allPlugins = getPlugins()
       const pluginsArray = Object.keys(allPlugins)

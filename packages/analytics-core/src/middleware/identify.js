@@ -1,4 +1,5 @@
-import { globalContext, uuid } from 'analytics-utils'
+import { uuid } from 'analytics-utils'
+import { remove } from '@analytics/global-storage-utils'
 import { tempKey } from '../modules/user'
 import { USER_ID, USER_TRAITS, ANON_ID } from '../constants'
 import { ID, ANONID } from '../utils/internalConstants'
@@ -16,7 +17,8 @@ export default function identifyMiddleware(instance) {
         removeItem(key)
       });
       [ ID, ANONID, 'traits' ].forEach((key) => {
-        globalContext[tempKey(key)] = undefined
+        // Remove from global context
+        remove(tempKey(key))
       })
     }
 

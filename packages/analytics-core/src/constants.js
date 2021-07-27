@@ -7,7 +7,6 @@
  */
 import { PREFIX } from './utils/internalConstants'
 
-
 /**
  * Anonymous visitor Id localstorage key
  * @typedef {String} ANON_ID

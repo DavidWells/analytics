@@ -1,13 +1,13 @@
-import { globalContext } from 'analytics-utils'
+import { set, globalContext } from '@analytics/global-storage-utils'
 import { compose } from '../vendor/redux'
 import { LIBRARY_NAME, PREFIX } from './internalConstants'
 
 export function Debug() {
-  const config = arguments[0] || {} // eslint-disable-line
   // initialize global history
   const globalVariable = PREFIX + LIBRARY_NAME + PREFIX
   // Global key is window.__analytics__
-  globalContext[globalVariable] = []
+  set(globalVariable, [])
+  // Return debugger
   return (createStore) => {
     return (reducer, preloadedState, enhancer) => {
       const store = createStore(reducer, preloadedState, enhancer)
