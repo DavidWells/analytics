@@ -27,10 +27,13 @@ Below is the api for `@analytics/global-storage-utils`. These utilities are tree
 ```js
 import { get, set, remove } from '@analytics/global-storage-utils'
 
+/* Set value */
 set('key', 'value')
 
+/* Get value */
 const val = get('key')
 console.log(val) // 'value'
 
+/* Remove value */
 remove('key')
 ```

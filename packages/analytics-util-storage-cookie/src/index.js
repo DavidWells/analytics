@@ -1,6 +1,5 @@
-import { get, set, remove } from '@analytics/global-storage-utils'
+import { get, set, remove, undef } from '@analytics/global-storage-utils'
 
-const undef = 'undefined'
 let isSupported = hasCookies()
 
 /**
@@ -28,20 +27,18 @@ function removeCookie(name) {
 
 /**
  * Check if browser has cookie support
- * @param {boolean} againCheck - verify cookies again
  * @returns {boolean}
  */
-function hasCookies(againCheck = false) {
-  if (typeof isSupported !== undef && !againCheck) {
+function hasCookies() {
+  if (typeof isSupported !== undef) {
     return isSupported
   }
   try {
-    const key = '_' + undef
     // Try to set cookie
-    cookie(key, '1')
-    isSupported = document.cookie.indexOf(key) !== -1
+    cookie(undef, '1')
+    isSupported = document.cookie.indexOf(undef) !== -1
     // Cleanup cookie
-    cookie(key, '', -1)
+    removeCookie(undef)
   } catch (e) {
     isSupported = false
   }

@@ -1,14 +1,17 @@
-const globalContext =
+export const globalContext =
   (typeof self === 'object' && self.self === self && self) ||
   (typeof global === 'object' && global.global === global && global) ||
   this
+
+
+export const undef = 'undefined'
 
 /**
  * Get value from global context
  * @param {string} key - Key of value to get
  * @returns {*} value
  */
-function get(key) {
+export function get(key) {
   return globalContext[key]
 }
 
@@ -18,7 +21,7 @@ function get(key) {
  * @param {*} value 
  * @returns value
  */
-function set(key, value) {
+export function set(key, value) {
   globalContext[key] = value
   return value
 }
@@ -27,13 +30,6 @@ function set(key, value) {
  * Remove value to global context
  * @param {string} key - Key of value to remove
  */
-function remove(key) {
-  set(key, undefined)
-}
-
-export {
-  get,
-  set,
-  remove,
-  globalContext,
+export function remove(key) {
+  set(key)
 }

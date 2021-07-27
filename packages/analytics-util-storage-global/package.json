@@ -20,19 +20,18 @@
   "unpkg": "dist/analytics-util-global-storage.umd.js",
   "sideEffects": false,
   "scripts": {
-    "start": "npm run sync && concurrently 'npm:watch:dev' 'npm:copy' 'npm:serve'",
+    "start": "npm run sync && concurrently 'npm:watch:standalone' 'npm:copy' 'npm:serve'",
     "serve": "servor dist index.html 8081 --reload --browse",
     "copy": "watchlist example -- npm run sync",
     "sync": "cp example/index.html dist",
     "watch": "microbundle watch",
-    "watch:dev": "microbundle watch --external none --no-compress",
-    "build": "microbundle",
-    "build:dev": "microbundle build --external none",
+    "watch:standalone": "microbundle watch --external none -f iife,umd -o dist/browser --no-compress",
+    "build": "microbundle && npm run build:standalone",
+    "build:standalone": "microbundle build --external none -f iife,umd -o dist/browser",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
-    "deploy": "npm run build:dev && npm run sync && netlify deploy --prod --dir dist --site $npm_package_netlifySiteId",
-    "postdeploy": "npm run build"
+    "deploy": "npm run build && npm run sync && netlify deploy --prod --dir dist --site $npm_package_netlifySiteId"
   },
   "files": [
     "lib",

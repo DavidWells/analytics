@@ -17,16 +17,16 @@ function pretty(size, raw) {
 }
 
 function formatBytes(bytes, decimals = 2) {
-    if (bytes === 0) return '0 Bytes';
+  if (bytes === 0) return '0 Bytes';
 
-    const k = 1024;
-    const dm = decimals < 0 ? 0 : decimals;
-    const sizes = ['bytes', 'kb', 'mb', 'gb', 'tb', 'pb'];
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ['bytes', 'kb', 'mb', 'gb', 'tb', 'pb'];
 
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    const type = sizes[i]
-    const space = type === 'bytes' ? ' ' : ''
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + space + type;
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  const type = sizes[i]
+  const space = type === 'bytes' ? ' ' : ''
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + space + type;
 }
 
 async function getSizeInfo(code, filename) {
