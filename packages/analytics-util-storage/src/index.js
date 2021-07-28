@@ -1,10 +1,12 @@
 import { set, get, remove, globalContext } from '@analytics/global-storage-utils'
-import { hasLocalStorage } from '@analytics/localstorage-utils'
 import { getCookie, setCookie, removeCookie, hasCookies } from '@analytics/cookie-utils'
+import { hasLocalStorage } from '@analytics/localstorage-utils'
+import { isUndefined } from '@analytics/type-utils'
 import parse from './utils/parse'
 
 // Constants
 export const ALL = '*'
+export const ANY = 'any'
 export const LOCAL_STORAGE = 'localStorage'
 export const COOKIE = 'cookie'
 export const GLOBAL = 'global'
@@ -20,30 +22,30 @@ const hasCookiesSupport = hasCookies()
  * @param  {string} [options.storage] - Define type of storage to pull from.
  * @return {Any}  the value of key
  */
-export function getItem(key, options = {}) {
+export function getItem(key, options) {
   if (!key) return
-  const storageType = getStorageType(options)
-  // Get value from all locations
-  if (storageType === ALL) return getAll(key)
-  /* 1. Try localStorage */
-  if (useLocal(storageType)) {
-    const value = localStorage.getItem(key)
-    if (value || storageType === LOCAL_STORAGE) return parse(value)
-  }
-  /* 2. Fallback to cookie */
-  if (useCookie(storageType)) {
-    const value = getCookie(key)
-    if (value || storageType === COOKIE) return parse(value)
-  }
-  /* 3. Fallback to window/global. */
-  return get(key)
-}
+  const type = getStorageType(options)
+  const getFirst = !useAll(type)
 
-function getAll(key) {
-  return {
-    cookie: parse(getCookie(key)),
-    localStorage: parse(localStorage.getItem(key)),
-    global: get(key)
+  /* 1. Try localStorage */
+  const localValue = useLocal(type) ? parse(localStorage.getItem(key)) : undefined
+  if (getFirst && !isUndefined(localValue)) {
+    return localValue
+  }
+
+  /* 2. Fallback to cookie */
+  const cookieVal = useCookie(type) ? parse(getCookie(key)) : undefined
+  if (getFirst && cookieVal) {
+    return cookieVal
+  }
+
+  /* 3. Fallback to window/global. */
+  const globalValue = get(key)
+
+  return getFirst ? globalValue : {
+    cookie: cookieVal,
+    localStorage: localValue,
+    global: globalValue
   }
 }
 
@@ -55,67 +57,53 @@ function getAll(key) {
  * @param {string} [options.storage] - Define type of storage to pull from.
  * @returns {object} returns old value, new values, & location of storage
  */
-export function setItem(key, value, options = {}) {
-  if (!key || typeof value === 'undefined') {
+export function setItem(key, value, options) {
+  if (!key || isUndefined(value)) {
     return
   }
   const data = {}
-  const storageType = getStorageType(options)
+  const type = getStorageType(options)
   const saveValue = JSON.stringify(value)
-  const setAll = storageType === ALL
+  const setFirst = !useAll(type)
 
   /* 1. Try localStorage */
-  if (useLocal(storageType)) {
+  if (useLocal(type)) {
     // console.log('SET as localstorage', saveValue)
-    const values = {
+    data[LOCAL_STORAGE] = {
+      location: LOCAL_STORAGE,
       current: value, 
-      previous: parse(localStorage.getItem(key)) 
+      previous: parse(localStorage.getItem(key))
     }
     // Set LocalStorage item
     localStorage.setItem(key, saveValue)
-    if (!setAll) {
-      return { 
-        location: LOCAL_STORAGE, 
-        ...values 
-      }
+    if (setFirst) {
+      return data[LOCAL_STORAGE]
     }
-    // Set object
-    data[LOCAL_STORAGE] = values
   }
   /* 2. Fallback to cookie */
-  if (useCookie(storageType)) {
+  if (useCookie(type)) {
     // console.log('SET as cookie', saveValue)
-    const cookieValues = {
+    data[COOKIE] = {
+      location: COOKIE,
       current: value,
       previous: parse(getCookie(key))
     }
     // Set Cookie
     setCookie(key, saveValue)
-    if (!setAll) {
-      return { 
-        location: COOKIE, 
-        ...cookieValues 
-      }
+    if (setFirst) {
+      return data[COOKIE]
     }
-    // Set object
-    data[COOKIE] = cookieValues
   }
   /* 3. Fallback to window/global */
-  const globalValues = {
+  data[GLOBAL] = {
+    location: GLOBAL, 
     current: value,
     previous: get(key)
   }
   // Set global value
   set(key, value)
-  if (!setAll) {
-    return { 
-      location: GLOBAL, 
-      ...globalValues 
-    }
-  }
-  // Set object
-  data[GLOBAL] = globalValues
-  return data
+  // Return set value(s)
+  return (setFirst) ? data[GLOBAL] : data
 }
 
 /**
@@ -124,31 +112,37 @@ export function setItem(key, value, options = {}) {
  * @param {object|string} [options] - storage options. If string location of where to get storage
  * @param {string} [options.storage] - Define type of storage to pull from.
  */
-export function removeItem(key, options = {}) {
+export function removeItem(key, options) {
   if (!key) return
-  const storageType = getStorageType(options)
-  const removeAll = storageType === ALL
-  const locations = []
-  if (removeAll || useLocal(storageType)) {
+  const type = getStorageType(options)
+
+  console.log('type', type)
+
+  const values = getItem(key, ALL)
+  console.log('values', values)
+  
+  const data = {}
+  if (values.localStorage !== null && useLocal(type)) {
     /* 1. Try localStorage */
     localStorage.removeItem(key)
-    locations.push(LOCAL_STORAGE)
+    data[LOCAL_STORAGE] = values.localStorage
   }
-  if (removeAll || useCookie(storageType)) {
+  if (values.cookie && useCookie(type)) {
     /* 2. Fallback to cookie */
     removeCookie(key)
-    locations.push(COOKIE)
+    data[LOCAL_STORAGE] = values.cookie
   }
   /* 3. Fallback to window/global */
-  if (removeAll || useGlobal(storageType)) {
+  if (!isUndefined(values.global) && useGlobal(type)) {
     remove(key)
-    locations.push(GLOBAL)
+    data[GLOBAL] = values.global
   }
-  return locations
+  return data
 }
 
-function getStorageType(options) {
-  return (typeof options === 'string') ? options : options.storage
+function getStorageType(opts) {
+  if (!opts) return ANY
+  return (typeof opts === 'string') ? opts : opts.storage
 }
 
 function useGlobal(storage) {
@@ -165,8 +159,12 @@ function useCookie(storage) {
   return hasCookiesSupport && useType(storage, COOKIE)
 }
 
+function useAll(storage) {
+  return storage === ALL || storage === 'all'
+}
+
 function useType(storage, type) {
-  return (!storage || storage === type || storage === ALL)
+  return (storage === ANY || storage === type || useAll(storage))
 }
 
 export {
@@ -179,7 +177,7 @@ export {
 }
 
 export default {
-  getItem,
   setItem,
+  getItem,
   removeItem
 }

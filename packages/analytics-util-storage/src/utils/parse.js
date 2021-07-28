@@ -1,26 +1,22 @@
+import { isObject } from '@analytics/type-utils'
 /**
  * Safe JSON parse
  * @param  {*} input - value to parse
  * @return {*} parsed input
  */
 export default function parse(input) {
-  let value
+  let value = input
   try {
     value = JSON.parse(input)
-    if (typeof value === 'undefined') {
-      value = input
-    }
-    if (value === 'true') {
-      value = true
-    }
-    if (value === 'false') {
-      value = false
-    }
-    if (parseFloat(value) === value && typeof value !== 'object') {
+    if (value === 'true') return true
+    if (value === 'false') return false
+    if (isObject(value)) return value
+    if (parseFloat(value) === value) {
       value = parseFloat(value)
     }
-  } catch (e) {
-    value = input
+  } catch (e) { }
+  if (value === null || value === "") {
+    return
   }
   return value
 }
