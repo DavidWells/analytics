@@ -1,10 +1,11 @@
 {
   "name": "@analytics/storage-utils",
   "version": "0.2.8",
-  "description": "Storage utilities for saving values in browser",
+  "description": "Storage utility with fallbacks",
   "author": "David Wells",
   "license": "MIT",
-  "homepage": "https://github.com/DavidWells/analytics#readme",
+  "homepage": "https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-storage#readme",
+  "repository": "https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-storage",
   "keywords": [
     "analytics",
     "analytics-project",
@@ -14,22 +15,30 @@
     "localStorage",
     "persistance"
   ],
-  "main": "lib/analytics-util-storage.cjs.js",
-  "globalName": "analyticsUtilStorage",
-  "jsnext:main": "lib/analytics-util-storage.es.js",
-  "module": "lib/analytics-util-storage.es.js",
-  "browser": {
-    "./lib/analytics-util-storage.cjs.js": "./lib/analytics-util-storage.browser.cjs.js",
-    "./lib/analytics-util-storage.es.js": "./lib/analytics-util-storage.browser.es.js"
-  },
+  "netlifySiteId": "8e3043e9-1557-4849-b4cc-ead830d41e01",
+  "amdName": "utilStorage",
+  "source": "src/index.js",
+  "main": "dist/analytics-util-storage.js",
+  "module": "dist/analytics-util-storage.module.js",
+  "unpkg": "dist/analytics-util-storage.umd.js",
   "sideEffects": false,
   "scripts": {
-    "build": "node ../../scripts/build/index.js",
-    "watch": "node ../../scripts/build/_watch.js",
+    "start": "npm run sync && concurrently 'npm:watch' 'npm:serve'",
+    "test": "uvu -r esm tests",
+    "serve": "servor dist index.html 8081 --reload --browse",
+    "watch:test": "watchlist src tests -- npm run test",
+    "watch:copy": "watchlist example -- npm run sync",
+    "watch:build": "npm run build:browser -- --watch --no-compress",
+    "sync": "cp example/index.html dist",
+    "watch": "concurrently 'npm:watch:*'",
+    "build": "concurrently 'npm:build:*' && npm run sync",
+    "build:package": "microbundle",
+    "build:browser": "microbundle build --external none -f iife,umd -o dist/browser",
+    "build:no-deps": "microbundle build -f iife,umd -o dist/browser-no-deps",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
-    "es": "../../node_modules/.bin/babel-node ./testBabel.js"
+    "deploy": "npm run build && netlify deploy --prod --dir dist --site $npm_package_netlifySiteId"
   },
   "files": [
     "lib",
@@ -38,17 +47,18 @@
     "package-lock.json",
     "README.md"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/DavidWells/analytics.git"
-  },
   "devDependencies": {
-    "@babel/core": "^7.4.5",
-    "@babel/preset-env": "^7.4.5"
+    "concurrently": "^6.1.0",
+    "esm": "^3.2.25",
+    "microbundle": "^0.13.0",
+    "servor": "^4.0.2",
+    "uvu": "^0.5.1",
+    "watchlist": "^0.2.3"
   },
   "dependencies": {
     "@analytics/cookie-utils": "^0.2.5",
     "@analytics/global-storage-utils": "^0.1.1",
-    "@analytics/localstorage-utils": "^0.1.4"
+    "@analytics/localstorage-utils": "^0.1.4",
+    "@analytics/type-utils": "^0.1.0"
   }
 }

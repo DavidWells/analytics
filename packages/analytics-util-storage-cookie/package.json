@@ -10,7 +10,8 @@
     "analytics",
     "analytics-project",
     "analytics-util",
-    "cookies"
+    "cookies",
+    "storage"
   ],
   "netlifySiteId": "8e3043e9-1557-4849-b4cc-ead830d41e01",
   "amdName": "utilCookies",
@@ -20,18 +21,19 @@
   "unpkg": "dist/analytics-util-cookie.umd.js",
   "sideEffects": false,
   "scripts": {
-    "start": "npm run sync && concurrently 'npm:watch:standalone' 'npm:copy' 'npm:serve'",
+    "start": "npm run sync && concurrently 'npm:watch' 'npm:copy' 'npm:serve'",
     "serve": "servor dist index.html 8081 --reload --browse",
     "copy": "watchlist example -- npm run sync",
     "sync": "cp example/index.html dist",
-    "watch": "microbundle watch",
-    "watch:standalone": "microbundle watch --external none -f iife,umd -o dist/browser --no-compress",
-    "build": "microbundle && npm run build:standalone",
-    "build:standalone": "microbundle build --external none -f iife,umd -o dist/browser",
+    "watch": "npm run build:browser -- --watch --no-compress",
+    "build": "concurrently 'npm:build:*' && npm run sync",
+    "build:package": "microbundle",
+    "build:browser": "microbundle build --external none -f iife,umd -o dist/browser",
+    "build:no-deps": "microbundle build -f iife,umd -o dist/browser-no-deps",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
-    "deploy": "npm run build && npm run sync && netlify deploy --prod --dir dist --site $npm_package_netlifySiteId"
+    "deploy": "npm run build && netlify deploy --prod --dir dist --site $npm_package_netlifySiteId"
   },
   "files": [
     "lib",
