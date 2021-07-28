@@ -25,7 +25,7 @@ function hasSessionStorage() {
  * @returns {*} value
  */
 function getSessionItem(key) {
-  return isSupported ? sessionStorage.getItem(key) : get(key)
+  return isSupported ? sessionStorage.getItem(key) || undefined : get(key)
 }
 
 /**

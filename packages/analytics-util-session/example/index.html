@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Session utils</title>
-    <script type="text/javascript" src="./analytics-util-session.umd.js" charset="utf-8"></script>
+    <script type="text/javascript" src="./browser/session-utils.js" charset="utf-8"></script>
     <style media="screen">
       html {
         padding: 0 20px;
@@ -61,7 +61,7 @@
       <h2>Session Demo</h2>
       <div class='hero'>
         <p id='info'>
-          Listener activitated. Idle time set at 10 seconds.<br/>After 10 seconds of no activity the `onIdle` handler will trigger.
+          Listener activated. Idle time set at 10 seconds.<br/>After 10 seconds of no activity the `onIdle` handler will trigger.
         </p>
         <h3>Persisted session</h3>
         <button id="get-persisted">Get Persisted Session</button>
@@ -82,7 +82,7 @@
       </div>
   
     <script type="text/javascript">
-      console.log('analyticsUtilSession', analyticsUtilSession)
+      console.log('utilSessions API', utilSessions)
       const {
         getSession,
         setSession,
@@ -92,7 +92,7 @@
         setTabSession, 
         getPageSession, 
         setPageSession 
-      } = analyticsUtilSession
+      } = utilSessions
       
         /* Page */
       const getButtonPersisted = document.querySelector('#get-persisted')

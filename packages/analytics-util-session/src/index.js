@@ -1,55 +1,14 @@
 // Session Utilities
-import { uuid, globalContext, inBrowser } from 'analytics-utils'
+import { uuid } from 'analytics-utils'
+import { getSessionItem, setSessionItem } from '@analytics/session-storage-utils'
 import { setCookie, getCookie, removeCookie } from '@analytics/cookie-utils'
+import { set, get } from '@analytics/global-storage-utils'
 
 const PREFIX = '__'
 const SESSION = 'session'
 const PAGE = 'page'
 const KEYS = ['id', 'createdAt', 'created']
 const TIMEOUT = 30
-
-function isSessionSupported() {
-  if (inBrowser) {
-    try {
-      sessionStorage.setItem(PREFIX, PREFIX)
-      sessionStorage.removeItem(PREFIX)
-      return true
-    } catch (e) {}
-  }
-  return false
-}
-
-const hasSessionStorage = isSessionSupported()
-
-function getSessionItem(key, defaultValue) {
-  let value = (hasSessionStorage) ? sessionStorage.getItem(key) : getGlobal(key)
-  if (value == null && defaultValue) {
-    value = setSessionItem(key, defaultValue)
-  }
-  return value
-}
-
-function setSessionItem(key, value) {
-	if (hasSessionStorage) {
-    sessionStorage.setItem(key, value)
-    return value
-	}
-  return setGlobal(key, value)
-}
-
-function setGlobal(key, val) {
-  globalContext[key] = val
-  return val
-}
-
-function getGlobal(key) {
-  return globalContext[key]
-}
-
-const storageMechanism = {
-  session: [ getSessionItem, setSessionItem ],
-  page: [ getGlobal, setGlobal ]
-}
 
 function getDate(x) {
   const d = (x) ? new Date(x) : new Date()
@@ -66,14 +25,18 @@ export function sessionData() {
 }
 
 function logic(kind, isSetter) {
+  const storageMechanism = {
+    session: [ getSessionItem, setSessionItem ],
+    page: [ get, set ]
+  }
+  const [ getter, setter ] = storageMechanism[kind]
   const data = sessionData()
-  const [ get, set ] = storageMechanism[kind]
   let isNew = false
   const info = Object.fromEntries(KEYS.map((key) => {
     const k = PREFIX + kind + PREFIX + SESSION + PREFIX + key
-    const currentVal = get(k)
+    const currentVal = getter(k)
     isNew = isSetter || !!!currentVal
-    const value = (currentVal && !isSetter) ? currentVal : set(k, data[key])
+    const value = (currentVal && !isSetter) ? currentVal : setter(k, data[key])
     const finValue = (key !== 'created') ? value : Number(value)
     return [ key, finValue ]
   }))
