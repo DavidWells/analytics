@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import EVENTS from '../events'
-import { ANON_ID, USER_ID } from '../constants'
+import { ANON_ID, USER_ID, USER_TRAITS } from '../constants'
 
 const utmRegex = /^utm_/
 const propRegex = /^an_prop_/
@@ -12,16 +12,30 @@ export default function initializeMiddleware(instance) {
   return store => next => action => {
     /* Handle bootstrap event */
     if (action.type === EVENTS.bootstrap) {
-      const { params, user, persistedUser } = action
+      const { params, user, persistedUser, initialUser } = action
+      const isKnownId = persistedUser.userId === user.userId
       /* 1. Set anonymous ID */
       if (persistedUser.anonymousId !== user.anonymousId) {
         setItem(ANON_ID, user.anonymousId)
       }
       /* 2. Set userId */
-      if (persistedUser.userId !== user.userId) {
+      if (!isKnownId) {
         setItem(USER_ID, user.userId)
       }
-      /* 3. Parse url params */
+      /* 3. Set traits if they are different */
+      if (initialUser.traits) {
+         setItem(USER_TRAITS, {
+          ...(isKnownId && persistedUser.traits) ? persistedUser.traits : {},
+          ...initialUser.traits
+        })
+        /* TODO multi user setup
+        setItem(`${USER_TRAITS}.${user.userId}`, {
+          ...(isKnownId) ? existingTraits : {},
+          ...initialUser.traits
+        })
+        */
+      }
+      /* 4. Parse url params */
       const paramsArray = Object.keys(action.params)
       if (paramsArray.length) {
         const { an_uid, an_event } = params

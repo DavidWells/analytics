@@ -28,7 +28,6 @@ export default function trackReducer(state = initialState, action) {
           history: state.history.concat(trackEvent)
         }
       }
-    // todo push events to history
     default:
       return state
   }

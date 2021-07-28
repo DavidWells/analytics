@@ -51,7 +51,7 @@ export function getPersistedUserData(storage) {
   return {
     userId: storage.getItem(USER_ID),
     anonymousId: storage.getItem(ANON_ID),
-    traits: storage.getItem(USER_TRAITS) || {}
+    traits: storage.getItem(USER_TRAITS)
   }
 }
 

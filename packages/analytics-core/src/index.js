@@ -165,7 +165,6 @@ function analytics(config = {}) {
   if (!visitorInfo.anonymousId) {
     visitorInfo.anonymousId = uuid()
   }
-  // TODO merge and set traits
 
   /**
    * Async Management methods for plugins. 
@@ -469,7 +468,7 @@ function analytics(config = {}) {
       }
       */
 
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         store.dispatch({
           type: EVENTS.pageStart,
           properties: getPageData(d),
@@ -518,7 +517,7 @@ function analytics(config = {}) {
      * analytics.reset()
      */
     reset: (callback) => {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         store.dispatch({
           type: EVENTS.resetStart
         }, resolve, callback)
@@ -921,6 +920,7 @@ function analytics(config = {}) {
     config: initialConfig,
     params: params,
     user: visitorInfo,
+    initialUser,
     persistedUser
   })
 
