@@ -1,6 +1,6 @@
 {
   "name": "@analytics/scroll-utils",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Scroll utility library to fire events on scroll",
   "author": "David Wells",
   "license": "MIT",
@@ -45,6 +45,6 @@
     "@babel/preset-env": "^7.4.5"
   },
   "dependencies": {
-    "analytics-utils": "^0.4.7"
+    "analytics-utils": "^0.4.8"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@analytics/storage-utils",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "Storage utility with fallbacks",
   "author": "David Wells",
   "license": "MIT",
@@ -56,9 +56,9 @@
     "watchlist": "^0.2.3"
   },
   "dependencies": {
-    "@analytics/cookie-utils": "^0.2.5",
-    "@analytics/global-storage-utils": "^0.1.1",
-    "@analytics/localstorage-utils": "^0.1.4",
+    "@analytics/cookie-utils": "^0.2.6",
+    "@analytics/global-storage-utils": "^0.1.2",
+    "@analytics/localstorage-utils": "^0.1.5",
     "@analytics/type-utils": "^0.1.0"
   }
 }
