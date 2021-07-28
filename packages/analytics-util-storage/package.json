@@ -15,7 +15,7 @@
     "localStorage",
     "persistance"
   ],
-  "netlifySiteId": "8e3043e9-1557-4849-b4cc-ead830d41e01",
+  "netlifySiteId": "961970d3-4d7b-4cc0-a54b-f304b73f0935",
   "amdName": "utilStorage",
   "source": "src/index.js",
   "main": "dist/analytics-util-storage.js",

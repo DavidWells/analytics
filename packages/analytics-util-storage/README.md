@@ -16,6 +16,8 @@ By default, `@analytics/storage-utils` will persist values in browser in this or
 
 If you want to specify which storage mechanism to use, use the `options` parameter.
 
+[See live demo](https://utils-storage.netlify.app).
+
 ## `setItem`
 
 Set a value.
