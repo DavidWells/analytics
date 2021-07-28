@@ -4,7 +4,7 @@ pageTitle: GlobalStorage Utils
 description: Utility library for managing global values
 ---
 
-A tiny window storage util library in <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`214 bytes`<!-- AUTO-GENERATED-CONTENT:END -->.
+A tiny window storage util library in <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`218 bytes`<!-- AUTO-GENERATED-CONTENT:END -->.
 
 This will work with [analytics](https://getanalytics.io) or as a standalone import in your code.
 
@@ -25,10 +25,13 @@ Below is the api for `@analytics/global-storage-utils`. These utilities are tree
 ```js
 import { get, set, remove } from '@analytics/global-storage-utils'
 
+/* Set value */
 set('key', 'value')
 
+/* Get value */
 const val = get('key')
 console.log(val) // 'value'
 
+/* Remove value */
 remove('key')
 ```

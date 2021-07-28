@@ -26,6 +26,7 @@ const CUSTOM_MAPPING = {
   '@analytics/global-storage-utils': path.resolve(UTILS_DOC_PATH, 'global-storage.md'),
   '@analytics/queue-utils': path.resolve(UTILS_DOC_PATH, 'queue.md'),
   '@analytics/type-utils': path.resolve(UTILS_DOC_PATH, 'types.md'),
+  '@analytics/session-storage-utils': path.resolve(UTILS_DOC_PATH, 'session-storage.md'),
 }
 
 async function getFiles() {
