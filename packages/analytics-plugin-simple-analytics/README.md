@@ -78,7 +78,7 @@ const analytics = Analytics({
 
 | Option | description |
 |:---------------------------|:-----------|
-| `customDomain` <br/>_optional_ - boolean| Custom domain for simple analytics script.  https://docs.simpleanalytics.com/script |
+| `customDomain` <br/>_optional_ - string| Custom domain for simple analytics script.  https://docs.simpleanalytics.com/script |
 
 
 ## Additional examples
