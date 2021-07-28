@@ -18,6 +18,7 @@ function hasSessionStorage() {
   return isSupported
 }
 
+
 /**
  * Get value from sessionStorage or fallback to global window
  * @param {string} key - Key of value to get

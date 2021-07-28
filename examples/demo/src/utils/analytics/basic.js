@@ -18,11 +18,11 @@ const analytics = Analytics({
     useParams: true,
   },
   initialUser: {
-    anonymousId: 'd62959d3-b50f-4041-8499-a943c9af25b3',
-    userId: '12828281811818',
+    // anonymousId: 'd62959d3-b50f-4041-8499-a943c9af25b3',
+    // userId: '12828281811818',
     traits: {
       blue: 'shirts'
-    }
+    },
   },
   resolvers: {
     getUserId: async () => {
@@ -52,7 +52,7 @@ const analytics = Analytics({
         await delay(1000)
         console.log('Bootstrap plugin x')
         // d62959d3-b50f-4041-8499-a943c9af25b3
-        instance.setAnonymousId('xxxxxxx-b50f-4041-8499-a943c9af25b3')
+        // instance.setAnonymousId('xxxxxxx-b50f-4041-8499-a943c9af25b3')
         // instance.setAnonymousId('1234567')
       },
       initialize: () => {
