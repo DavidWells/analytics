@@ -43,8 +43,8 @@ export function getItem(key, options) {
   const globalValue = get(key)
 
   return getFirst ? globalValue : {
-    cookie: cookieVal,
     localStorage: localValue,
+    cookie: cookieVal,
     global: globalValue
   }
 }
@@ -115,22 +115,18 @@ export function setItem(key, value, options) {
 export function removeItem(key, options) {
   if (!key) return
   const type = getStorageType(options)
-
-  console.log('type', type)
-
   const values = getItem(key, ALL)
-  console.log('values', values)
-  
+
   const data = {}
-  if (values.localStorage !== null && useLocal(type)) {
+  if (!isUndefined(values.localStorage) && useLocal(type)) {
     /* 1. Try localStorage */
     localStorage.removeItem(key)
     data[LOCAL_STORAGE] = values.localStorage
   }
-  if (values.cookie && useCookie(type)) {
+  if (!isUndefined(values.cookie) && useCookie(type)) {
     /* 2. Fallback to cookie */
     removeCookie(key)
-    data[LOCAL_STORAGE] = values.cookie
+    data[COOKIE] = values.cookie
   }
   /* 3. Fallback to window/global */
   if (!isUndefined(values.global) && useGlobal(type)) {
