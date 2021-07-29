@@ -233,3 +233,70 @@ Below are additional implementation examples.
 
 
 <!-- AUTO-GENERATED-CONTENT:END (PLUGIN_DOCS) -->
+
+## Authenticating 
+
+Pinpoint requires a valid identity to make calls to the service.
+
+To do this you will need to use the AWS SDK, [AWS Amplify](https://docs.amplify.aws/lib/auth/getting-started/q/platform/js), [tiny-cognito](https://www.npmjs.com/package/tiny-cognito) etc to vend AWS creds for that visitors to be allowed to call pinpoint
+
+The `getCredentials` must be provided and return an object that returns `accessKeyId`, `secretAccessKey`, `sessionToken` that have access to your AWS pinpoint instance.
+
+```js
+{
+  accessKeyId: 'xyz',
+  secretAccessKey: 'xyz',
+  sessionToken: 'xyz'
+}
+```
+
+Here is an example using `tiny-cognito`
+
+```js
+import Analytics from 'analytics'
+import cognitoAuth from 'tiny-cognito'
+import awsPinpointPlugin from '@analytics/aws-pinpoint'
+
+// Identity pool ID that allows for unauthenticated access. 
+const poolId = 'us-east-1:11111111-22222-222222-44444'
+const region = 'us-east-1'
+
+function getCredentials() {
+  return cognitoAuth({
+    COGNITO_REGION: region,
+    IDENTITY_POOL_ID: poolId
+  })
+}
+
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    awsPinpointPlugin({
+      pinpointAppId: '123456789',
+      getCredentials: getCredentials
+    })
+  ]
+})
+```
+
+Here is an example using `@aws-amplify/auth`
+
+```js
+import Analytics from 'analytics'
+import AmplifyAuth from '@aws-amplify/auth'
+import awsPinpointPlugin from '@analytics/aws-pinpoint'
+
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    awsPinpointPlugin({
+      pinpointAppId: '123456789',
+      // Get credentials from amplify
+      getCredentials: async () => {
+        const creds = await AmplifyAuth.currentCredentials()
+        return creds
+      },
+    })
+  ]
+})
+```
