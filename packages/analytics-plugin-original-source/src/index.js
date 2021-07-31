@@ -1,4 +1,6 @@
-import { inBrowser, parseReferrer, getCookie, storage } from 'analytics-utils'
+import { parseReferrer } from 'analytics-utils'
+import { getItem, setItem, LOCAL_STORAGE, COOKIE } from '@analytics/storage-utils'
+import { isBrowser } from '@analytics/type-utils'
 import { formatPipeString, parsePipeString } from './utils'
 
 const events = {
@@ -6,7 +8,7 @@ const events = {
 }
 
 const CONFIG = {
-  storage: 'localStorage',
+  storage: LOCAL_STORAGE,
   originalSourceKey: '__user_original_source',
   originalLandingPageKey: '__user_original_landing_page'
 }
@@ -46,14 +48,12 @@ export function getOriginalSource(opts = {}) {
   const config = Object.assign({}, CONFIG, opts)
   const { referrer, originalSourceKey } = config
   // 1. try first source browser storage
-  const originalSrc = storage.getItem(originalSourceKey, {
-    storage: config.storage
-  })
+  const originalSrc = getItem(originalSourceKey, config.storage)
   if (originalSrc) {
     return parsePipeString(originalSrc)
   }
   // 2. then try __utmz cookie
-  const utmzCookie = getCookie('__utmz')
+  const utmzCookie = getItem('__utmz', COOKIE)
   if (utmzCookie) {
     const parsedCookie = parsePipeString(utmzCookie)
     if (parsedCookie) {
@@ -62,16 +62,14 @@ export function getOriginalSource(opts = {}) {
     }
   }
   // 3. Then try referrer url and utm params
-  const ref = (inBrowser) ? (referrer || document.referrer) : ''
+  const ref = (isBrowser) ? (referrer || document.referrer) : ''
   const refData = parseReferrer(ref)
   setOriginalSource(refData, config)
   return refData
 }
 
 function setOriginalSource(data, config) {
-  storage.setItem(config.originalSourceKey, formatPipeString(data), {
-    storage: config.storage
-  })
+  setItem(config.originalSourceKey, formatPipeString(data), config.storage)
 }
 
 /**
@@ -86,11 +84,11 @@ export function getOriginalLandingPage(opts = {}) {
   const key = config.originalLandingPageKey
   const storageConfig = { storage: config.storage }
   // 1. try first source browser storage
-  const originalLandingPage = storage.getItem(key, storageConfig)
+  const originalLandingPage = getItem(key, storageConfig)
   if (originalLandingPage) {
     return originalLandingPage
   }
-  const url = (inBrowser) ? window.location.href : ''
-  storage.setItem(key, url, storageConfig)
+  const url = (isBrowser) ? window.location.href : ''
+  setItem(key, url, storageConfig)
   return url
 }

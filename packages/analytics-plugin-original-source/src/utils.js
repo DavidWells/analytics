@@ -1,4 +1,5 @@
 import { decodeUri } from 'analytics-utils'
+import { isObject } from '@analytics/type-utils'
 
 /**
  * Turn object into pipe separated values
@@ -12,9 +13,7 @@ import { decodeUri } from 'analytics-utils'
  *
  */
 export function formatPipeString(obj) {
-  if (!obj || typeof obj !== 'object') {
-    return null
-  }
+  if (!isObject(obj)) return
   return Object.keys(obj).reduce((acc, curr, i) => {
     return `${acc}${(i) ? '|' : ''}${curr}=${obj[curr]}`
   }, '')

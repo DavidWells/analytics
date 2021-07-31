@@ -11,21 +11,28 @@
   ],
   "author": "David Wells",
   "license": "MIT",
+  "amdName": "analyticsOriginalSource",
+  "source": "src/index.js",
+  "main": "dist/analytics-util-storage.js",
+  "module": "dist/analytics-util-storage.module.js",
+  "unpkg": "dist/analytics-util-storage.umd.js",
+  "sideEffects": false,
   "scripts": {
-    "build": "node ../../scripts/build/index.js",
-    "watch": "node ../../scripts/build/_watch.js",
+    "start": "npm run sync && concurrently 'npm:watch' 'npm:serve'",
+    "test": "uvu -r esm tests",
+    "serve": "servor dist index.html 8081 --reload --browse",
+    "watch:test": "watchlist src tests -- npm run test",
+    "watch:copy": "watchlist example -- npm run sync",
+    "watch:build": "npm run build:browser -- --watch --no-compress",
+    "sync": "cp example/index.html dist",
+    "watch": "concurrently 'npm:watch:*'",
+    "build": "concurrently 'npm:build:*'",
+    "build:package": "microbundle",
+    "build:browser": "microbundle build --external none -f iife,umd -o dist/browser",
+    "build:no-deps": "microbundle build -f iife,umd -o dist/browser-no-deps",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
-    "release:major": "npm version major && npm publish",
-    "es": "../../node_modules/.bin/babel-node ./testBabel.js"
-  },
-  "main": "lib/analytics-plugin-original-source.cjs.js",
-  "globalName": "analyticsOriginalSource",
-  "jsnext:main": "lib/analytics-plugin-original-source.es.js",
-  "module": "lib/analytics-plugin-original-source.es.js",
-  "browser": {
-    "./lib/analytics-plugin-original-source.cjs.js": "./lib/analytics-plugin-original-source.browser.cjs.js",
-    "./lib/analytics-plugin-original-source.es.js": "./lib/analytics-plugin-original-source.browser.es.js"
+    "release:major": "npm version major && npm publish"
   },
   "files": [
     "dist",
@@ -38,10 +45,15 @@
     "url": "git+https://github.com/DavidWells/analytics.git"
   },
   "dependencies": {
+    "@analytics/storage-utils": "^0.2.9",
+    "@analytics/type-utils": "^0.1.0",
     "analytics-utils": "^0.4.8"
   },
   "devDependencies": {
-    "@babel/core": "^7.2.2",
-    "@babel/preset-env": "^7.3.1"
+    "concurrently": "^6.1.0",
+    "esm": "^3.2.25",
+    "microbundle": "^0.13.0",
+    "servor": "^4.0.2",
+    "uvu": "^0.5.1"
   }
 }
