@@ -1,7 +1,7 @@
 import { set, get, remove, globalContext } from '@analytics/global-storage-utils'
 import { getCookie, setCookie, removeCookie, hasCookies } from '@analytics/cookie-utils'
 import { hasLocalStorage } from '@analytics/localstorage-utils'
-import { isUndefined } from '@analytics/type-utils'
+import { isUndefined, isString } from '@analytics/type-utils'
 import parse from './utils/parse'
 
 // Constants
@@ -138,7 +138,7 @@ export function removeItem(key, options) {
 
 function getStorageType(opts) {
   if (!opts) return ANY
-  return (typeof opts === 'string') ? opts : opts.storage
+  return isString(opts) ? opts : opts.storage
 }
 
 function useGlobal(storage) {
