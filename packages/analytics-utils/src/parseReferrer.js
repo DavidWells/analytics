@@ -1,4 +1,4 @@
-import { inBrowser } from './inBrowser'
+import { isBrowser } from '@analytics/type-utils'
 import { paramsParse } from './paramsParse'
 import { isExternalReferrer } from './isExternalReferrer'
 import { trimTld, getDomainBase } from './url'
@@ -19,7 +19,7 @@ const googleKey = 'google'
  * @return {ReferrerObject}     [description]
  */
 export function parseReferrer(referrer, currentUrl) {
-  if (!inBrowser) return false
+  if (!isBrowser) return false
   // default referral data
   let refData = {
     'source': '(direct)',
@@ -78,7 +78,7 @@ export function parseReferrer(referrer, currentUrl) {
  * @return {DomainObject | boolean}
  */
 function parseDomain(referrer) {
-  if (!referrer || !inBrowser) return false
+  if (!referrer || !isBrowser) return false
 
   let referringDomain = getDomainBase(referrer)
   const a = document.createElement('a')

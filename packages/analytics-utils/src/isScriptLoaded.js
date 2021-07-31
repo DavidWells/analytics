@@ -1,4 +1,4 @@
-import { inBrowser } from './inBrowser'
+import { isBrowser, isString, isRegex } from '@analytics/type-utils'
 
 /**
  * Check if a script is loaded
@@ -6,13 +6,13 @@ import { inBrowser } from './inBrowser'
  * @return {Boolean} is script loaded
  */
 export function isScriptLoaded(script) {
-  if (!inBrowser) return true
+  if (!isBrowser) return true
   const scripts = document.getElementsByTagName('script')
   return !!Object.keys(scripts).filter((key) => {
     const { src } = scripts[key]
-    if (typeof script === 'string') {
+    if (isString(script)) {
       return src.indexOf(script) !== -1
-    } else if (script instanceof RegExp) {
+    } else if (isRegex(script)) {
       return src.match(script)
     }
     return false

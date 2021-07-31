@@ -1,11 +1,11 @@
-import { inBrowser } from './inBrowser'
+import { isBrowser } from '@analytics/type-utils'
 
 /**
  * @param {string | null | undefined} ref
  * @returns {boolean | undefined}
  */
 export function isExternalReferrer(ref) {
-  if (!inBrowser) return false
+  if (!isBrowser) return false
   const referrer = ref || document.referrer
   if (referrer) {
     const port = window.document.location.port

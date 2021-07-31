@@ -1,4 +1,4 @@
-import { inBrowser } from './inBrowser'
+import { isBrowser } from '@analytics/type-utils'
 
 /**
  * Get host domain of url
@@ -10,7 +10,7 @@ import { inBrowser } from './inBrowser'
  *  > subdomain.my-site.com
  */
 export function getDomainHost(url) {
-  if (!inBrowser) return null
+  if (!isBrowser) return null
   const a = document.createElement('a')
   a.setAttribute('href', url)
   return a.hostname

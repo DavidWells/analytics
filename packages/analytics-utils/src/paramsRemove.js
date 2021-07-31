@@ -1,4 +1,4 @@
-import { inBrowser } from './inBrowser'
+import { isBrowser } from '@analytics/type-utils'
 import { paramsClean } from './paramsClean'
 
 /**
@@ -8,7 +8,7 @@ import { paramsClean } from './paramsClean'
  * @return {PromiseLike<void>}
  */
 export function paramsRemove(param, callback) {
-  if (!inBrowser) return Promise.resolve()
+  if (!isBrowser) return Promise.resolve()
 
   return new Promise((resolve, reject) => {
     if (window.history && window.history.replaceState) {

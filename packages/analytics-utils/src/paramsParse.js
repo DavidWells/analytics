@@ -1,4 +1,4 @@
-import { inBrowser } from './inBrowser'
+import { isBrowser } from '@analytics/type-utils'
 import { decodeUri } from './decodeUri'
 
 /**
@@ -11,7 +11,7 @@ function getSearchString(url) {
     const p = url.match(/\?(.*)/)
     return (p && p[1]) ? p[1].split('#')[0] : ''
   }
-  return inBrowser && window.location.search.substring(1)
+  return isBrowser && window.location.search.substring(1)
 }
 
 /**

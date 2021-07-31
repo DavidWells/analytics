@@ -1,4 +1,4 @@
-import inBrowser from './inBrowser'
+import { isBrowser } from '@analytics/type-utils'
 
 /** 
  * Determine if Adblock is installed
@@ -6,7 +6,7 @@ import inBrowser from './inBrowser'
  * @returns boolean
  */
 export function hasAdblock() {
-  if (!inBrowser) return false
+  if (!isBrowser) return false
   // Create fake ad
   const fakeAd = document.createElement('div')
   fakeAd.innerHTML = '&nbsp;'
