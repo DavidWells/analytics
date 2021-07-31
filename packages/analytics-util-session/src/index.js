@@ -32,14 +32,20 @@ function logic(kind, isSetter) {
   const [ getter, setter ] = storageMechanism[kind]
   const data = sessionData()
   let isNew = false
-  const info = Object.fromEntries(KEYS.map((key) => {
+  let info = {}
+
+  for (let i = 0; i < KEYS.length; i++) {
+    const key = KEYS[i]
+    // e.g. __page__session__createdAt
     const k = PREFIX + kind + PREFIX + SESSION + PREFIX + key
     const currentVal = getter(k)
+    // Triple ! sets !!!false | !!!null | !!!undefined to true
     isNew = isSetter || !!!currentVal
     const value = (currentVal && !isSetter) ? currentVal : setter(k, data[key])
     const finValue = (key !== 'created') ? value : Number(value)
-    return [ key, finValue ]
-  }))
+    info[key] = finValue
+  }
+
   return addContext(info, isNew)
 }
 
