@@ -1,3 +1,4 @@
+import { isElement } from '@analytics/type-utils'
 import toArray from './toArray'
 
 export function getForms(forms, opts) {
@@ -49,8 +50,4 @@ function getSelector(selector) {
     throw new Error('Selector must be string')
   }
   return toArray(document.querySelectorAll(selector))
-}
-
-export function isElement(element) {
-  return element instanceof Element || element instanceof HTMLDocument
 }

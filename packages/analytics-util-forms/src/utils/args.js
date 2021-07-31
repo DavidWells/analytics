@@ -1,6 +1,7 @@
+import { isElement } from '@analytics/type-utils'
 import toArray from './toArray'
 import isInsideForm from './isInsideForm'
-import { getForms, isElement } from './getForms'
+import { getForms } from './getForms'
 
 function isObj(el) {
   return !isElement(el) && typeof el === 'object'

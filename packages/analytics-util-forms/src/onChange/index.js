@@ -1,6 +1,5 @@
+import { isBrowser, isForm } from '@analytics/type-utils'
 import changeHandler from './handler'
-import isForm from '../utils/isForm'
-import inBrowser from '../utils/inBrowser'
 import toArray from '../utils/toArray'
 import args from '../utils/args'
 
@@ -12,7 +11,7 @@ import args from '../utils/args'
  * @return {Function} unsubscribe listeners
  */
 export function onChange(formElement, options = {}, callback) {
-  if (!inBrowser) return
+  if (!isBrowser) return
   const type = 'change'
   const [settings, forms] = args(formElement, options, callback, type)
   // Attach Listeners

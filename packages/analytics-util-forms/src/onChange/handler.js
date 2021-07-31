@@ -1,4 +1,4 @@
-import isForm from '../utils/isForm'
+import { isForm, isFunction } from '@analytics/type-utils'
 import filterValues from '../utils/filter'
 import { getFormData, getInputData, getValue } from '../utils/getFormValues'
 
@@ -13,7 +13,7 @@ export default function changeHandler(opts, element, type) {
     const value = grabVal(name, input, element)
     /* Filter sensitive values */
     const filtered = (disableFilter) ? value : filterValues(value, opts, type)
-    if (Object.keys(filtered).length && onChange && typeof onChange === 'function') {
+    if (Object.keys(filtered).length && onChange && isFunction(onChange)) {
       onChange(event, filtered, {
         type: type,
         form: element

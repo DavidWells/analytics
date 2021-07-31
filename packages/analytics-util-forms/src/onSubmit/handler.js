@@ -1,4 +1,4 @@
-import isForm from '../utils/isForm'
+import { isFunction, isForm } from '@analytics/type-utils'
 import submitForm from './submit'
 import filterValues from '../utils/filter'
 import { getFormData } from '../utils/getFormValues'
@@ -13,7 +13,7 @@ export default function interceptForm(opts = {}, element, type) {
     const rawValues = getFormData(form)
     /* Filter sensitive values */
     const values = (disableFilter) ? rawValues : filterValues(rawValues, opts, type)
-    if (onSubmit && typeof onSubmit === 'function') {
+    if (onSubmit && isFunction(onSubmit)) {
       onSubmit(event, values, {
         type: type,
         form: isForm(element) ? element : null
