@@ -7,6 +7,8 @@ Integration with [AWS Pinpoint](https://aws.amazon.com/pinpoint/) for [analytics
 
 Amazon Pinpoint is a flexible and scalable outbound and inbound marketing communications service. You can connect with customers over channels like email, SMS, push, or voice.
 
+This package weighs in at <!-- AUTO-GENERATED-CONTENT:START (pkgSize:src=./dist/@analytics/aws-pinpoint.min.js) -->`14.23kb`<!-- AUTO-GENERATED-CONTENT:END --> gzipped.
+
 <!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
 <details>
 <summary>Click to expand</summary>
@@ -18,6 +20,7 @@ Amazon Pinpoint is a flexible and scalable outbound and inbound marketing commun
   - [Browser API](#browser-api)
   - [Configuration options for browser](#configuration-options-for-browser)
 - [Additional examples](#additional-examples)
+- [Authenticating](#authenticating)
 
 </details>
 <!-- AUTO-GENERATED-CONTENT:END -->
