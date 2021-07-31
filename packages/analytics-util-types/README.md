@@ -6,7 +6,9 @@ description: Utility library for runtime type checking
 
 # Type Utilities
 
-A tiny tree shakable utility library for runtime type checking in <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`327 bytes`<!-- AUTO-GENERATED-CONTENT:END -->.
+A tiny tree shakable utility library for runtime type checking.
+
+The entire package weighs in at <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`528 bytes`<!-- AUTO-GENERATED-CONTENT:END -->.
 
 [See live demo](https://utils-types.netlify.app/).
 
@@ -95,5 +97,54 @@ import { isUndefined } from '@analytics/types-utils'
 
 let myval
 console.log(isUndefined(myval))
+// true
+```
+
+## `isNoOp`
+
+Check if value is a `noOp` function.
+
+```js
+import { isNoOp } from '@analytics/types-utils'
+
+function empty () { }
+console.log(isNoOp(isNoOp))
+// true
+```
+
+## `isElement`
+
+Check if value is a a DOM node.
+
+```js
+import { isElement } from '@analytics/types-utils'
+
+const formElement = document.querySelector('.my-form')
+console.log(isElement(formElement))
+// true
+```
+
+
+## `isNodeList`
+
+Check if value is a list of DOM nodes.
+
+```js
+import { isNodeList } from '@analytics/types-utils'
+
+const buttons = document.querySelectorAll('button')
+console.log(isNodeList(buttons))
+// true
+```
+
+## `isForm`
+
+Check if value is a `noOp` function.
+
+```js
+import { isForm } from '@analytics/types-utils'
+
+const formElement = document.querySelector('.my-form')
+console.log(isForm(formElement))
 // true
 ```
