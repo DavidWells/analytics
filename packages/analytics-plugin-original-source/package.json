@@ -1,6 +1,6 @@
 {
   "name": "@analytics/original-source-plugin",
-  "version": "0.3.8",
+  "version": "0.3.9",
   "description": "Save original referral source of visitor plugin for 'analytics' pkg",
   "keywords": [
     "analytics",
@@ -44,9 +44,9 @@
     "url": "git+https://github.com/DavidWells/analytics.git"
   },
   "dependencies": {
-    "@analytics/storage-utils": "^0.2.9",
-    "@analytics/type-utils": "^0.1.0",
-    "analytics-utils": "^0.4.8"
+    "@analytics/storage-utils": "^0.2.10",
+    "@analytics/type-utils": "^0.2.0",
+    "analytics-utils": "^1.0.0"
   },
   "devDependencies": {
     "concurrently": "^6.1.0",

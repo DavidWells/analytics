@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0](https://github.com/DavidWells/analytics/compare/analytics-utils@0.4.8...analytics-utils@1.0.0) (2021-07-31)
+
+
+### Code Refactoring
+
+* streamline analytics-utils ([641a917](https://github.com/DavidWells/analytics/commit/641a917))
+
+
+### BREAKING CHANGES
+
+* removes types, noOp, & storage
+
+Signed-off-by: David Wells <>
+
+
+
+
+
 ## [0.4.8](https://github.com/DavidWells/analytics/compare/analytics-utils@0.4.7...analytics-utils@0.4.8) (2021-07-28)
 
 **Note:** Version bump only for package analytics-utils

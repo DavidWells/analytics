@@ -1,6 +1,6 @@
 {
   "name": "@analytics/core",
-  "version": "0.10.10",
+  "version": "0.10.11",
   "description": "Lightweight analytics library for tracking events, page views, & identifying users. Works with any third party analytics provider via an extendable plugin system.",
   "keywords": [
     "analytics",
@@ -49,8 +49,8 @@
   "typings": "lib/types.d.ts",
   "dependencies": {
     "@analytics/global-storage-utils": "^0.1.2",
-    "@analytics/type-utils": "^0.1.0",
-    "analytics-utils": "^0.4.8"
+    "@analytics/type-utils": "^0.2.0",
+    "analytics-utils": "^1.0.0"
   },
   "ava": {
     "files": [

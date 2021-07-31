@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-types/compare/@analytics/type-utils@0.1.0...@analytics/type-utils@0.2.0) (2021-07-31)
+
+
+### Features
+
+* add isRegex util ([ce931b5](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-types/commit/ce931b5))
+
+
+
+
+
 # 0.1.0 (2021-07-26)
 
 
