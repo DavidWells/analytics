@@ -6,7 +6,7 @@ description: Utility library for adding backwards compatible event listeners
 
 # Listener Utilities
 
-A tiny utility library for working with event listeners in <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`649 bytes`<!-- AUTO-GENERATED-CONTENT:END -->.
+A tiny utility library for working with event listeners in <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`563 bytes`<!-- AUTO-GENERATED-CONTENT:END -->.
 
 Exposes `addListener`, `removeListener` functions.
 

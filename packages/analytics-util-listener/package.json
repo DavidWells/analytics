@@ -46,5 +46,8 @@
     "microbundle": "^0.13.0",
     "servor": "^4.0.2",
     "watchlist": "^0.2.3"
+  },
+  "dependencies": {
+    "@analytics/type-utils": "^0.1.0"
   }
 }
