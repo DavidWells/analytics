@@ -1,5 +1,5 @@
-import { inBrowser } from 'analytics-utils'
 import { CrossStorageClient, CrossStorageHub } from 'cross-storage'
+import { isBrowser, isUndefined, isObject } from '@analytics/type-utils'
 
 /**
  * Constructs a new cross storage client
@@ -17,7 +17,7 @@ import { CrossStorageClient, CrossStorageHub } from 'cross-storage'
  **/
 class RemoteStorage {
   constructor(url, opts) {
-    if (inBrowser) this.storage = new CrossStorageClient(url, opts)
+    if (isBrowser) this.storage = new CrossStorageClient(url, opts)
   }
   getItem(keys) {
     return getRemoteItem(keys, this.storage)
@@ -55,10 +55,10 @@ async function getRemoteItem(keys, instance) {
 function formatArgs(key, value, opts = {}, instance) {
   const storage = (opts._id) ? opts : instance
 
-  if (typeof key === 'object') {
+  if (isObject(key)) {
     return {
       ...key,
-      storage: (typeof value === 'object' && value._id) ? value : storage
+      storage: (isObject(value) && value._id) ? value : storage
     }
   }
 
@@ -121,7 +121,7 @@ async function setRemoteItem(storageKey, storageValue, opts = {}, instance) {
  * @return {Promise} - resolved value
  */
 function getRemoteItemRaw(key, instance) {
-  if (!inBrowser) return
+  if (!isBrowser) return
   return instance.onConnect().then(() => instance.get(key))
     // Swallow errors. @TODO make option
     .catch(e => {})
@@ -134,14 +134,14 @@ function getRemoteItemRaw(key, instance) {
  * @return {Promise}
  */
 async function setRemoteItemRaw(key, value, instance) {
-  if (typeof value === 'undefined' || !inBrowser) return
+  if (isUndefined(value) || !isBrowser) return
   return instance.onConnect().then(() => instance.set(key, value))
     // Swallow errors. @TODO make option
     .catch(e => {})
 }
 
 function safeParse(val) {
-  if (typeof val === 'undefined') return
+  if (isUndefined(val)) return
   try {
     return JSON.parse(val)
   } catch (e) {
