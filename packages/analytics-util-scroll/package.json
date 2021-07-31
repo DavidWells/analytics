@@ -4,30 +4,35 @@
   "description": "Scroll utility library to fire events on scroll",
   "author": "David Wells",
   "license": "MIT",
-  "homepage": "https://github.com/DavidWells/analytics#readme",
+  "homepage": "https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-scroll#readme",
+  "repository": "https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-scroll",
   "keywords": [
     "analytics",
     "analytics-project",
     "analytics-util",
-    "scroll"
+    "scroll",
+    "scroll-percentage"
   ],
-  "main": "lib/analytics-util-scroll.cjs.js",
-  "globalName": "analyticsUtilScroll",
-  "jsnext:main": "lib/analytics-util-scroll.es.js",
-  "module": "lib/analytics-util-scroll.es.js",
-  "browser": {
-    "./lib/analytics-util-scroll.cjs.js": "./lib/analytics-util-scroll.browser.cjs.js",
-    "./lib/analytics-util-scroll.es.js": "./lib/analytics-util-scroll.browser.es.js"
-  },
+  "netlifySiteId": "4b8c0490-8cb4-48fb-a125-14f33b31c310",
+  "amdName": "utilScroll",
+  "source": "src/index.js",
+  "main": "dist/analytics-util-scroll.js",
+  "module": "dist/analytics-util-scroll.module.js",
+  "unpkg": "dist/analytics-util-scroll.umd.js",
   "sideEffects": false,
   "scripts": {
-    "serve": "cd dist examples && http-server",
-    "build": "node ../../scripts/build/index.js",
-    "watch": "node ../../scripts/build/_watch.js",
+    "start": "npm run sync && concurrently 'npm:watch:dev' 'npm:copy' 'npm:serve'",
+    "serve": "servor dist index.html 8081 --reload --browse",
+    "copy": "watchlist examples -- npm run sync",
+    "sync": "cp examples/index.html dist",
+    "watch": "microbundle watch",
+    "watch:dev": "microbundle watch --external none -f iife,umd -o dist/browser --no-compress",
+    "build": "microbundle && npm run build:dev",
+    "build:dev": "microbundle build --external none -f iife,umd -o dist/browser",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
-    "es": "../../node_modules/.bin/babel-node ./testBabel.js"
+    "deploy": "npm run build:dev && npm run sync && netlify deploy --prod --dir dist --site $npm_package_netlifySiteId"
   },
   "files": [
     "lib",
@@ -36,15 +41,14 @@
     "package-lock.json",
     "README.md"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/DavidWells/analytics.git"
-  },
   "devDependencies": {
-    "@babel/core": "^7.4.5",
-    "@babel/preset-env": "^7.4.5"
+    "concurrently": "^6.1.0",
+    "microbundle": "^0.13.0",
+    "servor": "^4.0.2",
+    "watchlist": "^0.2.3"
   },
   "dependencies": {
+    "@analytics/type-utils": "^0.1.0",
     "analytics-utils": "^0.4.8"
   }
 }

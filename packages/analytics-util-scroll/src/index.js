@@ -1,6 +1,10 @@
-import { inBrowser, noOp, throttle } from 'analytics-utils'
+import { throttle } from 'analytics-utils'
+import { isBrowser, noOp } from '@analytics/type-utils'
 
-function log(...args) {
+const UP = 'up'
+const DOWN = 'down'
+
+function log(args) {
   // console.log(args)
 }
 
@@ -15,14 +19,14 @@ function calculateThresholds(docHeight, percentages) {
 }
 
 export function getScrollTop() {
-  if (!inBrowser) return 0
+  if (!isBrowser) return 0
   const body = document.body
   const html = document.documentElement
   return body.scrollTop || html.scrollTop
 }
 
 export function getWindowHeight() {
-  if (!inBrowser) return 0
+  if (!isBrowser) return 0
   return window.innerHeight || document.documentElement.clientHeight
 }
 
@@ -31,7 +35,7 @@ export function getScrollDistance() {
 }
 
 export function getDocHeight() {
-  if (!inBrowser) return 0
+  if (!isBrowser) return 0
   const body = document.body
   const html = document.documentElement
   return Math.max(
@@ -47,8 +51,8 @@ export function getScrollPercent(scrollDistance, docHeight) {
   return Math.round((scrollDistance / docHeight) * 100)
 }
 
-function onScrollChange(handlers = {}) {
-  if (!inBrowser) return noOp
+export function onScrollChange(handlers = {}) {
+  if (!isBrowser) return noOp
   const docHeightStart = getDocHeight()
   const scrollTopStart = getScrollTop()
   const scrollDistanceStart = getScrollDistance()
@@ -124,11 +128,11 @@ function onScrollChange(handlers = {}) {
     // log('scrollDistanceCurrent', scrollDistanceCurrent)
     const isInitial = previous === scrollDistanceCurrent
 
-    let direction = 'up'
+    let direction = UP
     if (isInitial) {
       direction = 'initial'
     } else if (previous <= scrollDistanceCurrent) {
-      direction = 'down'
+      direction = DOWN
     }
 
     // const direction = (previous >= scrollDistanceCurrent) ? 'down' : 'up'
@@ -136,7 +140,7 @@ function onScrollChange(handlers = {}) {
     let percentagesArray = percentages
     // if (!hasMoved) {
 
-    if (direction === 'up' || isInitial) {
+    if (direction === UP || isInitial) {
       thresholdsArray = thresholds.slice().reverse()
       percentagesArray = percentages.slice().reverse()
     }
@@ -152,7 +156,7 @@ function onScrollChange(handlers = {}) {
       }
 
       if (
-        direction === 'down'
+        direction === DOWN
         && !callbackCache.includes(percent)
         && scrollDistanceCurrent >= height
         && percent > scrollTopPercentStart
@@ -166,7 +170,7 @@ function onScrollChange(handlers = {}) {
       log('scrollBottomPercent', scrollBottomPercent)
       log('scrollTopPercentStart', scrollTopPercentStart)
       if (
-        direction === 'up'
+        direction === UP
         && !callbackCache.includes(percent)
         && scrollDistanceCurrent <= height
         && percent <= scrollBottomPercent
@@ -222,7 +226,7 @@ function onScrollChange(handlers = {}) {
     // Set previous scroll for direction
     previous = scrollDistanceCurrent
 
-    if (direction === 'down' && triggers.callbacks) {
+    if (direction === DOWN && triggers.callbacks) {
       triggers.callbacks.forEach((match) => {
         log('Call functions')
         if (typeof handlers[match] === 'function') {
@@ -261,6 +265,3 @@ function onScrollChange(handlers = {}) {
 export function getPercentages() {
   return [...Array(21)].map((v, i) => Number(((.05 * i) * 100).toFixed(2)))
 }
-
-export { onScrollChange }
-export default onScrollChange
