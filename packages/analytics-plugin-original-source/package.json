@@ -19,7 +19,6 @@
   "sideEffects": false,
   "scripts": {
     "start": "npm run sync && concurrently 'npm:watch' 'npm:serve'",
-    "test": "uvu -r esm tests",
     "serve": "servor dist index.html 8081 --reload --browse",
     "watch:test": "watchlist src tests -- npm run test",
     "watch:copy": "watchlist example -- npm run sync",
