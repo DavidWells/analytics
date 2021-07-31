@@ -68,6 +68,16 @@ export function isObject(obj) {
   return Object.getPrototypeOf(obj) === proto
 }
 
+
+/**
+ * Check if value is regexp
+ * @param {*} value - Value to check
+ * @return {boolean} 
+ */
+export function isRegex(value) {
+  return value instanceof RegExp
+}
+
 /** 
  * @param func - function to check if noOp
  * @return {Boolean} - is noOp

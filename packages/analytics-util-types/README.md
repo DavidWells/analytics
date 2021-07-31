@@ -100,6 +100,18 @@ console.log(isUndefined(myval))
 // true
 ```
 
+## `isRegex`
+
+Check if value is regular expression.
+
+```js
+import { isRegex } from '@analytics/types-utils'
+
+let myval = /pattern/gm
+console.log(isRegex(myval))
+// true
+```
+
 ## `isNoOp`
 
 Check if value is a `noOp` function.
