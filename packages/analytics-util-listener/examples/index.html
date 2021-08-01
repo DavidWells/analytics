@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
     <title>Listener utils</title>
@@ -10,19 +10,8 @@
       body {
         display: flex;
       }
-    
       label {
         display: block;
-      }
-      .github-corner svg {
-        height: 80px;
-        width: 80px;
-        fill: #151513;
-        color: #fff;
-        position: absolute;
-        top: 0;
-        border: 0;
-        right: 0
       }
       h2 {
         cursor: pointer;
@@ -34,6 +23,16 @@
       li:hover {
         background: #dbdbdb;
       }
+      .github-corner svg {
+        height: 80px;
+        width: 80px;
+        fill: #151513;
+        color: #fff;
+        position: absolute;
+        top: 0;
+        border: 0;
+        right: 0
+      }
       .github-corner:hover .octo-arm {
         animation: octocat-wave .56s ease-in-out
       }
@@ -43,16 +42,6 @@
         40%,80% { transform: rotate(10deg) }
       }
       @media (max-width: 720px) {
-        .content, .content-left, iframe {
-          flex-direction: column;
-          max-width: 100%;
-          min-width: 100%;
-        }
-        
-        h1 { font-size: 24px; }
-        #protected, #large-div div {
-          font-size: 18px;
-        }
         .github-corner svg {
           height: 60px;
           width: 60px;
@@ -148,7 +137,7 @@
         Span two
       </span>
       <br />
-      <br />
+      <br id='tester' />
       <span id='span-three'>
         Span three
       </span>
@@ -196,9 +185,11 @@
       }))
 
       // Run once via once options
+      window.onceCount = 0
       const onceButton = document.querySelector('#once')
       addListener(onceButton, 'click', () => {
         console.log('This will only run once')
+        window.onceCount = window.onceCount + 1
       }, { once: true })
       
       // Run three times via counter + cleanup function
@@ -217,8 +208,8 @@
         setTimeout(() => {
           const disableAgain = reAttachHandler()
           // It's possible to disable and re-enable listener whenever you wish
-        }, 2000);
-      });
+        }, 2000)
+      })
 
       /* Detach self example */
       const apiButton = document.querySelector('#api')

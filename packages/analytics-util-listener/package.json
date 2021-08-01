@@ -21,12 +21,13 @@
   "unpkg": "dist/analytics-util-listener.umd.js",
   "sideEffects": false,
   "scripts": {
-    "start": "npm run sync && concurrently 'npm:watch:dev' 'npm:copy' 'npm:serve'",
+    "test": "uvu tests -r esm -i setup",
+    "start": "npm run sync && concurrently 'npm:watch:*' 'npm:copy' 'npm:serve'",
     "serve": "servor dist index.html 8081 --reload --browse",
     "copy": "watchlist examples -- npm run sync",
     "sync": "cp examples/index.html dist",
-    "watch": "microbundle watch",
     "watch:dev": "microbundle watch --external none -f iife,umd -o dist/browser --no-compress",
+    "watch:test": "watchlist src tests examples -- npm t",
     "build": "microbundle && npm run build:dev",
     "build:dev": "microbundle build --external none -f iife,umd -o dist/browser",
     "release:patch": "npm version patch && npm publish",
@@ -43,8 +44,10 @@
   ],
   "devDependencies": {
     "concurrently": "^6.1.0",
+    "esm": "^3.2.25",
     "microbundle": "^0.13.0",
     "servor": "^4.0.2",
+    "uvu": "^0.5.1",
     "watchlist": "^0.2.3"
   },
   "dependencies": {
