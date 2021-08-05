@@ -46,7 +46,7 @@ export function onIdle(onIdle, opts = {}) {
   return onUserActivity({ onIdle, ...opts })
 }
 
-export function onWakeup(onWakeUp, opts = {}) {
+export function onWakeUp(onWakeUp, opts = {}) {
   return onUserActivity({ onWakeUp, ...opts })
 }
 

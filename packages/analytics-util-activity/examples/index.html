@@ -1,8 +1,8 @@
 <!doctype html>
 <html>
   <head>
-    <title>Idle utils</title>
-    <script type="text/javascript" src="./analytics-util-activity.umd.js" charset="utf-8"></script>
+    <title>User Activity utils</title>
+    <script type="text/javascript" src="./browser/activity-utils.js" charset="utf-8"></script>
     <style media="screen">
       html {
         padding: 20px;
@@ -75,7 +75,7 @@
       <h2>User Activity Demo</h2>
       <div class='hero'>
         <p id='info'>
-          Listener activitated. Idle time set at 10 seconds.<br/>After 10 seconds of no activity the `onIdle` handler will trigger.
+          Listener activated. Idle time set at 10 seconds.<br/>After 10 seconds of no activity the `onIdle` handler will trigger.
         </p>
         <button id="disable">Disable Listener</button>
         <button id="enable">Enable Listener</button>
@@ -105,8 +105,8 @@
     </div>
   
     <script type="text/javascript">
-      console.log('analyticsUtilActivity', analyticsUtilActivity)
-      const { onUserActivity, onIdle, onWakeup, onDomActivity } = analyticsUtilActivity
+      console.log('utilActivity API', utilActivity)
+      const { onUserActivity, onIdle, onWakeUp, onDomActivity } = utilActivity
       const idleStatusNode = document.querySelector('#idle')
       const activeStatusNode = document.querySelector('#active')
       const statusNode = document.querySelector('#status')
@@ -119,7 +119,7 @@
         console.log('Im idle', activeTime)
       })
 
-      onWakeup(() => {
+      onWakeUp(() => {
         console.log('yay wake up')
       })
 
