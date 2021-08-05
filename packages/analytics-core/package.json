@@ -50,7 +50,8 @@
   "dependencies": {
     "@analytics/global-storage-utils": "^0.1.2",
     "@analytics/type-utils": "^0.3.1",
-    "analytics-utils": "^1.0.2"
+    "analytics-utils": "^1.0.2",
+    "regenerator-runtime": "^0.13.9"
   },
   "ava": {
     "files": [
@@ -67,12 +68,12 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "7.5.5",
-    "@babel/plugin-proposal-class-properties": "7.5.5",
-    "@babel/plugin-transform-runtime": "7.5.5",
-    "@babel/preset-env": "7.5.5",
-    "@babel/register": "7.5.5",
-    "@babel/runtime": "7.5.5",
+    "@babel/core": "7.14.5",
+    "@babel/plugin-proposal-class-properties": "7.14.5",
+    "@babel/plugin-transform-runtime": "7.14.5",
+    "@babel/preset-env": "7.14.5",
+    "@babel/register": "7.14.5",
+    "@babel/runtime": "7.14.5",
     "ava": "^2.2.0",
     "mkdirp": "^0.5.1",
     "npm-run-all": "^4.1.5",

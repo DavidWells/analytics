@@ -55,15 +55,16 @@
     "url": "git+https://github.com/DavidWells/analytics.git"
   },
   "devDependencies": {
-    "@babel/core": "7.5.5",
-    "@babel/preset-env": "7.5.5",
-    "@babel/register": "^7.6.0",
-    "@babel/runtime": "7.5.5"
+    "@babel/core": "7.14.5",
+    "@babel/preset-env": "7.14.5",
+    "@babel/register": "^7.14.5",
+    "@babel/runtime": "7.14.5"
   },
   "dependencies": {
     "deepmerge": "^4.0.0",
     "qss": "^2.0.3",
     "query-string": "^6.8.3",
+    "regenerator-runtime": "^0.13.9",
     "search-params": "^2.1.3"
   }
 }

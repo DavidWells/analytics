@@ -25,13 +25,14 @@
   "dependencies": {
     "hoist-non-react-statics": "^3.3.2",
     "mini-create-react-context": "^0.4.1",
+    "regenerator-runtime": "^0.13.9",
     "tiny-invariant": "^1.1.0"
   },
   "peerDependencies": {
     "react": ">=15"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-decorators": "^7.8.3",
+    "@babel/plugin-proposal-decorators": "^7.14.5",
     "babel-eslint": "^10.0.3",
     "cross-env": "^7.0.2",
     "microbundle-crl": "^0.13.8",

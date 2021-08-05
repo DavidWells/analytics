@@ -53,6 +53,7 @@
     "@analytics/cookie-utils": "^0.2.6",
     "@analytics/global-storage-utils": "^0.1.2",
     "@analytics/session-storage-utils": "^0.0.2",
-    "analytics-utils": "^1.0.2"
+    "analytics-utils": "^1.0.2",
+    "regenerator-runtime": "^0.13.9"
   }
 }

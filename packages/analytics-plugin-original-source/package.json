@@ -46,7 +46,8 @@
   "dependencies": {
     "@analytics/storage-utils": "^0.2.12",
     "@analytics/type-utils": "^0.3.1",
-    "analytics-utils": "^1.0.2"
+    "analytics-utils": "^1.0.2",
+    "regenerator-runtime": "^0.13.9"
   },
   "devDependencies": {
     "concurrently": "^6.1.0",

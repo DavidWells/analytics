@@ -15,7 +15,8 @@
     "@oclif/plugin-help": "^2.1.2",
     "dox": "^0.9.0",
     "markdown-magic": "^0.1.25",
-    "prettier": "^1.17.1"
+    "prettier": "^1.17.1",
+    "regenerator-runtime": "^0.13.9"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1.17.0",
