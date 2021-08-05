@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.4](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-activity/compare/@analytics/activity-utils@0.1.3...@analytics/activity-utils@0.1.4) (2021-08-05)
+
+**Note:** Version bump only for package @analytics/activity-utils
+
+
+
+
+
 ## [0.1.3](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-activity/compare/@analytics/activity-utils@0.1.2...@analytics/activity-utils@0.1.3) (2021-07-31)
 
 **Note:** Version bump only for package @analytics/activity-utils
