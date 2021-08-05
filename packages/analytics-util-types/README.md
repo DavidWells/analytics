@@ -52,6 +52,18 @@ console.log(isString(xyz))
 // true
 ```
 
+## `isNumber`
+
+Check if value is `number`
+
+```js
+import { isNumber } from '@analytics/types-utils'
+
+const xyz = 123
+console.log(isNumber(xyz))
+// true
+```
+
 ## `isBoolean`
 
 Check if value is `boolean`

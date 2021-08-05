@@ -8,11 +8,13 @@ export const UNDEFINED = 'undefined'
 export const BOOLEAN = 'boolean'
 export const OBJECT = 'object'
 export const ARRAY = 'array'
+export const NUMBER = 'number'
 export const noOp = () => {}
 
 export const isBrowser = typeof window !== UNDEFINED
 
 /** 
+ * Check if value is function.
  * @param x
  * @return {x is Function}
  */
@@ -21,6 +23,7 @@ export function isFunction(x) {
 }
 
 /** 
+ * Check if value is string.
  * @param x
  * @return {x is string}
  */
@@ -29,6 +32,16 @@ export function isString(x) {
 }
 
 /** 
+ * Check if value is number.
+ * @param v
+ * @return {v is Object}
+ */
+export function isNumber(v) {
+  return typeof v === NUMBER && !isNaN(v)
+}
+
+/** 
+ * Check if value is undefined.
  * @param x
  * @return {x is undefined}
  */
@@ -104,6 +117,15 @@ export function isNodeList(obj) {
 }
 
 /**
+ * Check if input is DOM element
+ * @param {HTMLElement|*} element
+ * @return {boolean} 
+ */
+export function isElement(element) {
+  return element instanceof Element || element instanceof HTMLDocument
+}
+
+/**
  * Check if element is form element
  * @param {HTMLElement} element
  * @return {boolean} 
@@ -113,10 +135,19 @@ export function isForm(element) {
 }
 
 /**
- * Check if element is form element
- * @param {HTMLElement|*} element
+ * Check if DOM element is hidden
+ * @param {HTMLElement|null|undefined} element
+ * @param {HTMLElement|null|undefined} until 
  * @return {boolean} 
  */
-export function isElement(element) {
-  return element instanceof Element || element instanceof HTMLDocument
+export function isHidden(element, until) {
+  if (!element || getComputedStyle(element).visibility === "hidden") return true
+
+  while (element) {
+    if (until != null && element === until) return false
+    if (getComputedStyle(element).display === "none") return true
+    element = element.parentElement
+  }
+
+  return false
 }
