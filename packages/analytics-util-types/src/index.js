@@ -134,6 +134,7 @@ export function isForm(element) {
   return isElement(element) && element.nodeName === 'FORM'
 }
 
+
 /**
  * Check if DOM element is hidden
  * @param {HTMLElement|null|undefined} element
