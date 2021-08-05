@@ -37,6 +37,7 @@
     "indent-string": "^4.0.0",
     "jsdoc": "^3.6.3",
     "jsdoc-to-markdown": "^7.0.1",
+    "jsdom": "^16.6.0",
     "lerna": "^3.10.7",
     "markdown-magic": "^2.5.2",
     "mkdirp": "^0.5.1",

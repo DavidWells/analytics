@@ -748,6 +748,7 @@ Below are plugins created outside of this repo:
 Additional examples
 
 - [Using AWS Lambda, API Gateway & analytics](https://blog.mikecoughlin.com/own-your-event-tracking/)
+- [Using analytics to make amundsen.io pluggable](https://github.com/amundsen-io/amundsenfrontendlibrary/blob/e91c0ab9d8a39b302a71c535145a20e24326ee21/docs/application_config.md#analytics)
 
 ## Creating analytics plugins
 
