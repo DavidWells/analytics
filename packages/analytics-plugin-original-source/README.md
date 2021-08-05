@@ -22,7 +22,7 @@ npm install @analytics/original-source-plugin
 
 ```js
 import Analytics from 'analytics'
-import originalSourcePlugin from '@analytics/original-source-plugin'
+import { originalSourcePlugin } from '@analytics/original-source-plugin'
 
 const analytics = Analytics({
   app: 'my-app',

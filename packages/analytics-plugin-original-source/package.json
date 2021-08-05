@@ -1,6 +1,6 @@
 {
   "name": "@analytics/original-source-plugin",
-  "version": "0.3.9",
+  "version": "0.3.10",
   "description": "Save original referral source of visitor plugin for 'analytics' pkg",
   "keywords": [
     "analytics",
@@ -13,9 +13,9 @@
   "license": "MIT",
   "amdName": "analyticsOriginalSource",
   "source": "src/index.js",
-  "main": "dist/analytics-util-storage.js",
-  "module": "dist/analytics-util-storage.module.js",
-  "unpkg": "dist/analytics-util-storage.umd.js",
+  "main": "dist/analytics-original-source.js",
+  "module": "dist/analytics-original-source.module.js",
+  "unpkg": "dist/analytics-original-source.umd.js",
   "sideEffects": false,
   "scripts": {
     "start": "npm run sync && concurrently 'npm:watch' 'npm:serve'",

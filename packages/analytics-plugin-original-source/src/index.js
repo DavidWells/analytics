@@ -21,7 +21,7 @@ const CONFIG = {
  * @param  {String} [pluginConfig.originalLandingPageKey] - overide the storage key. Default '__user_original_landing_page'
  * @return {Object} - plugin for `analytics` package
  */
-export default function originalSourcePlugin(pluginConfig = {}) {
+export function originalSourcePlugin(pluginConfig = {}) {
   return {
     name: 'original-source',
     EVENTS: events,
