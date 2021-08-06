@@ -67,6 +67,13 @@ function oncify(handler, opts) {
   return (opts && opts.once) ? once(handler) : handler
 }
 
+
+/**
+ * Run function once
+ * @param {Function} fn - Function to run just once
+ * @param {*} [context] - Extend function context
+ * @returns 
+ */
 function once(fn, context) {
   var result
   return function() {
@@ -78,7 +85,54 @@ function once(fn, context) {
   }
 }
 
+/**
+ * Element selector
+ * @typedef {(string|Node|NodeList|EventTarget|null)} Selector
+ */
+
+/**
+ * Event to listen to 
+ * @typedef {(string|string[])} EventType
+ */
+
+/**
+ * Cleanup event listener
+ * @callback RemoveListener
+ * @returns {AttachListener}
+ */
+
+/**
+ * ReAttach event listener
+ * @callback AttachListener
+ * @returns {RemoveListener}
+ */
+
+/**
+ * Add an event listener
+ * @callback AddEventListener
+ * @param {Selector}  elements  - Element(s) to attach event(s) to.
+ * @param {EventType} eventType - Event(s) to listen to 
+ * @param {Function}  [handler] - Function to fire
+ * @param {Object}    [options] - Event listener options
+ * @param {Boolean}   [options.once] - Trigger handler just once
+ * @returns {RemoveListener}
+ */
+
+/** @type {AddEventListener} */
 const addListener = createListener(EVENT)
+
+/**
+ * Remove an event listener
+ * @callback RemoveEventListener
+ * @param {Selector}  elements  - Element(s) to remove event(s) from.
+ * @param {EventType} eventType - Event(s) to remove
+ * @param {Function}  [handler] - Function to remove
+ * @param {Object}    [options] - Event listener options
+ * @param {Boolean}   [options.once] - Trigger handler just once
+ * @returns {AttachListener}
+ */
+
+/** @type {RemoveEventListener} */
 const removeListener = createListener()
 
 export {
