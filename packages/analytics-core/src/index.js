@@ -408,7 +408,7 @@ function analytics(config = {}) {
         store.dispatch({
           type: EVENTS.trackStart,
           event: name,
-          properties: data,
+          properties: getPageData(data),
           options: opts,
           userId: getUserProp(ID, instance, payload),
           anonymousId: getUserProp(ANONID, instance, payload),
