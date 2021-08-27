@@ -5,7 +5,6 @@ export const config = {
   dataLayer: undefined,
   preview: undefined,
   auth: undefined,
-  customScriptSrc: 'https://www.googletagmanager.com/gtm.js',
   // assumesPageview: true,
 }
 
@@ -44,6 +43,7 @@ function googleTagManager(pluginConfig = {}) {
       if (preview && !auth) {
         throw new Error('When enabling preview mode, both preview and auth parameters must be defined');
       }
+      const scriptSrc = customScriptSrc || 'https://www.googletagmanager.com/gtm.js';
 
       if (!scriptLoaded(containerId)) {
         /* eslint-disable */
@@ -55,7 +55,7 @@ function googleTagManager(pluginConfig = {}) {
             dl = l != 'dataLayer' ? '&l=' + l : '',
             p = preview ? '&gtm_preview=' + preview + '&gtm_auth=' + auth + '&gtm_cookies_win=x' : '';
           j.async = true;
-          j.src = `${customScriptSrc}?id=` + i + dl + p;
+          j.src = `${scriptSrc}?id=` + i + dl + p;
           f.parentNode.insertBefore(j, f);
         })(window, document, 'script', dataLayerName, containerId);
         /* eslint-enable */

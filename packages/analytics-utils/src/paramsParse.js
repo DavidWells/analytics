@@ -28,8 +28,11 @@ export function paramsParse(url) {
 https://random.url.com?Target=Report&Method=getStats&fields%5B%5D=Offer.name&fields%5B%5D=Advertiser.company&fields%5B%5D=Stat.clicks&fields%5B%5D=Stat.conversions&fields%5B%5D=Stat.cpa&fields%5B%5D=Stat.payout&fields%5B%5D=Stat.date&fields%5B%5D=Stat.offer_id&fields%5B%5D=Affiliate.company&groups%5B%5D=Stat.offer_id&groups%5B%5D=Stat.date&filters%5BStat.affiliate_id%5D%5Bconditional%5D=EQUAL_TO&filters%5BStat.affiliate_id%5D%5Bvalues%5D=1831&limit=9999
 https://random.url.com?Target=Offer&Method=findAll&filters%5Bhas_goals_enabled%5D%5BTRUE%5D=1&filters%5Bstatus%5D=active&fields%5B%5D=id&fields%5B%5D=name&fields%5B%5D=default_goal_name
 http://localhost:3000/?Target=Offer&Method=findAll&filters[has_goals_enabled][TRUE]=1&filters[status]=active&filters[wow]arr[]=yaz&filters[wow]arr[]=naz&fields[]=id&fields[]=name&fields[]=default_goal_name */
+
+
+
 function getParamsAsObject(query) {
-  let params = {}
+  let params = Object.create(null)
   let temp
   const re = /([^&=]+)=?([^&]*)/g
 
@@ -58,6 +61,9 @@ function assign(obj, keyPath, value) {
   var lastKeyIndex = keyPath.length - 1
   for (var i = 0; i < lastKeyIndex; ++i) {
     var key = keyPath[i]
+    if (key === '__proto__' || key === 'constructor') {
+      break;
+    }
     if (!(key in obj)) { 
       obj[key] = {} 
     }
