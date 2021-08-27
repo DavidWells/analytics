@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.1](https://github.com/DavidWells/analytics/compare/@analytics/google-tag-manager@0.5.0...@analytics/google-tag-manager@0.5.1) (2021-08-27)
+
+
+### Bug Fixes
+
+* remove prototype issue ([5acaea4](https://github.com/DavidWells/analytics/commit/5acaea4))
+* **vulnerabilitie:** prototype chain contamination vulnerability ([540d76b](https://github.com/DavidWells/analytics/commit/540d76b))
+
+
+
+
+
 # [0.5.0](https://github.com/DavidWells/analytics/compare/@analytics/google-tag-manager@0.4.0...@analytics/google-tag-manager@0.5.0) (2021-02-01)
 
 
