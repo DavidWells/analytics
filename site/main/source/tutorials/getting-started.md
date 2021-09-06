@@ -86,7 +86,7 @@ Import the `analytics` instance created in the previous step and call a method:
 - `analytics.identify` to identify a website visitor
 
 ```js
-// Import analytics instance into your app and call it's methods
+// Import analytics instance into your app and call its methods
 import analytics from './analytics'
 
 /* Track page views */
@@ -133,7 +133,7 @@ Analytics works in vanilla HTML pages and can be [imported from a CDN](#cdn-brow
 
 Checkout the [using analytics with react demo](https://analytics-react-example.netlify.com/) & the [source code](https://github.com/DavidWells/analytics/tree/master/examples/react)
 
-For a larger example see the [kitchen sink example](https://analytics-demo.netlify.com) & it's [source code](https://github.com/DavidWells/analytics/tree/master/examples/demo).
+For a larger example see the [kitchen sink example](https://analytics-demo.netlify.com) & its [source code](https://github.com/DavidWells/analytics/tree/master/examples/demo).
 
 Also checkout the [`useAnalytics`](http://getanalytics.io/utils/react-hooks) react hooks.
 
