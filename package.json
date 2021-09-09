@@ -1,5 +1,5 @@
 {
-  "name": "root",
+  "name": "analytics",
   "private": true,
   "scripts": {
     "setup": "npm install && lerna bootstrap",
