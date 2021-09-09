@@ -1,25 +1,15 @@
-import { initialize } from './pinpoint'
-import * as PINPOINT_EVENTS from './pinpoint/helpers/events'
-import loadError from './utils/load-error'
-import formatEventData from './utils/format-event-data'
-import bootstrap from './utils/bootstrap'
-import { getSession, setSession } from '@analytics/session-utils'
-
-const config = {
-  /* Disable anonymous MTU */
-  disableAnonymousTraffic: false,
-  // Pinpoint service region
-  pinpointRegion: 'us-east-1',
-  // Custom event mapping
-  eventMapping: {},
+/* import aws SDK for server side */
+let awsPinpoint
+if (!process.browser) {
+  awsPinpoint = require('@aws-sdk/client-pinpoint')
 }
 
 /**
- * AWS Pinpoint analytics Node integration
+ * AWS Pinpoint analytics server side integration. Uses https://github.com/aws/aws-sdk-js module
  * @link https://docs.aws.amazon.com/pinpoint/latest/developerguide/
  * @param {object} pluginConfig - Plugin settings
  * @param {string} pluginConfig.pinpointAppId - AWS Pinpoint app Id for client side tracking
- * @param {function} pluginConfig.getCredentials - Async function to get AWS Cognito creds
+ * @param {function} pluginConfig.getCredentials - Async function to get AWS Cognito creds 
  * @param {string} [pluginConfig.pinpointRegion] - AWS Pinpoint region. Defaults to us-east-1
  * @param {string} [pluginConfig.appTitle] - The title of the app that's recording the event.
  * @param {string} [pluginConfig.appPackageName] - The name of the app package, such as com.example.my_app.
@@ -34,11 +24,11 @@ const config = {
  *   getCredentials: () => Auth.currentCredentials(),
  * })
  */
-function awsPinpointPlugin(pluginConfig = {}) {
-  let recordEvent
-  let updateEndpoint
+function awsPinpointNode(pluginConfig = {}) {
 
-  /* return plugin */
+}
+
+export default function awsPinpointNode(pluginConfig) {
   return {
     name: 'aws-pinpoint',
     config: {
