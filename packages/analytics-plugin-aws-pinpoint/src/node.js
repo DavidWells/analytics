@@ -1,9 +1,11 @@
-import { initialize } from './pinpoint'
+import { initialize, getStorageKey } from './pinpoint'
 import { CHANNEL_TYPES } from './pinpoint/constants'
 import * as PINPOINT_EVENTS from './pinpoint/events'
 import {
   getSession,
   setSession,
+  getPageSession, 
+  setPageSession,
 } from '@analytics/session-utils'
 
 const config = {
@@ -16,10 +18,10 @@ const config = {
 }
 
 /**
- * AWS Pinpoint analytics integration
+ * AWS Pinpoint analytics Node integration
  * @link https://docs.aws.amazon.com/pinpoint/latest/developerguide/
  * @param {object} pluginConfig - Plugin settings
- * @param {string} pluginConfig.pinpointAppId - AWS Pinpoint app Id for server side tracking
+ * @param {string} pluginConfig.pinpointAppId - AWS Pinpoint app Id for client side tracking
  * @param {function} pluginConfig.getCredentials - Async function to get AWS Cognito creds 
  * @param {string} [pluginConfig.pinpointRegion] - AWS Pinpoint region. Defaults to us-east-1
  * @param {string} [pluginConfig.appTitle] - The title of the app that's recording the event.
@@ -30,15 +32,17 @@ const config = {
  * @return {object} Analytics plugin
  * @example
  *
- * awsPinpointServer({
+ * awsPinpointNode({
  *   pinpointAppId: '938bebb1ae954e123133213160f2b3be4',
  *   getCredentials: () => Auth.currentCredentials(),
  * })
  */
-function awsPinpointServer(pluginConfig = {}) {
+function awsPinpointNode(pluginConfig = {}) {
   let recordEvent 
   let updateEndpoint
 
+  /* Page-session (on route changes) */
+  let hasPageFiredOnce = false
   
   function stopSession() {
     const currentSessionData = getSession()
@@ -48,6 +52,7 @@ function awsPinpointServer(pluginConfig = {}) {
     // Fire session stop event.
     recordEvent(PINPOINT_EVENTS.SESSION_STOP, true)
   }
+  // window.stopSession = stopSession
 
   function startNewSession() {
     // Set new sessions.
@@ -80,41 +85,69 @@ function awsPinpointServer(pluginConfig = {}) {
       }
     },
     initialize: ({ config, instance }) => {
-      console.log('changing 7 test logic into node')
+      console.log('3 - AWS Pinpoint Analytics Server Implementation')
       const { disableAnonymousTraffic, debug } = config
       const logger = (debug) ? console.log : () => {}
       /* Disable pinpoint if user is not yet identified. */
-      // const state = instance.getState()
-      // const userDetails = state.user || {}
-      // const { userId, anonymousId } = userDetails
-      // const context = state.context || {}
-      // const { app, version, campaign } = context
+      const state = instance.getState()
+      const userDetails = state.user || {}
+      const { userId, anonymousId } = userDetails
+      const context = state.context || {}
+      const { app, version, campaign } = context
 
       /* Initialize session info */
+      const initPageSession = getPageSession()
       const initSessionData = getSession()
+      logger('initPageSession', initPageSession)
       logger('initSessionData', initSessionData)
-  
+      
       /* If anonId has changed, refresh session details */
       if (initSessionData && initSessionData.anonId && initSessionData.anonId !== anonymousId) {
         logger('anonId different refresh session details')
+        /* Set new page session values */
+        setPageSession()
+        /* Set new session for new user */
+        const newSessionForNewUser = setSession(30, {
+          anonId: anonymousId,
+          userId: userId,
+        })
+        logger('newSessionForNewUser', newSessionForNewUser)
+      }
+
+      /* Disable for anonymous users */
+      if (!userId && disableAnonymousTraffic) {
+        return false
       }
 
       /* Initialize pinpoint client */
       const pinpointClient = initialize({
         ...config,
+        // The title of the app that's recording the event.
+        appTitle: config.appTitle || app,
+        // The package name of the app that's recording the event.
+        appPackageName: config.appPackageName || app,
+        // The version number of the app that's recording the event.
+        appVersionCode: config.appVersionCode || version,
+        // Custom event mapping
         eventMapping: config.eventMapping,
         // Get pinpoint endpoint ID
         getEndpointId: () => {
           return instance.user('anonymousId')
         },
+        getUserId: () => {
+          return instance.user('userId')
+        },
         getContext: () => {
           return {
             sessionKey: config.sessionKey,
+            // pageViewKey: config.pageViewKey,
             initialSession: initSessionData,
           }
         },
         enrichEventAttributes: () => {
           return {
+            anonId: instance.user('anonymousId'),
+            userId: instance.user('userId'),
           }
         },
         // Custom event mapping
@@ -133,6 +166,18 @@ function awsPinpointServer(pluginConfig = {}) {
         /* Start new session if its new */
         recordEvent(PINPOINT_EVENTS.SESSION_START)
       }
+    },
+    page: ({ payload, config }) => {
+      if (!recordEvent) {
+        return loadError()
+      }
+      // Fire page view and update pageSessionInfo Id
+      if (hasPageFiredOnce) {
+        // Set new page session values
+        setPageSession()
+      }
+      recordEvent(PINPOINT_EVENTS.PAGE_VIEW)
+      hasPageFiredOnce = true
     },
     /* Track event & update endpoint details */
     track: ({ payload, config, instance }) => {
@@ -170,6 +215,12 @@ function awsPinpointServer(pluginConfig = {}) {
       // Update endpoint in AWS pinpoint
       updateEndpoint(endpoint, true)
     },
+    /* Reset user details */
+    reset: ({ instance }) => {
+      const id = instance.user('anonymousId')
+      const key = getStorageKey(id)
+      storage.removeItem(key)
+    },
     loaded: () => !!recordEvent,
   }
 }
@@ -196,4 +247,4 @@ function formatEventData(obj) {
 
 export { PINPOINT_EVENTS }
 
-export default awsPinpointServer
+export default awsPinpointNode
