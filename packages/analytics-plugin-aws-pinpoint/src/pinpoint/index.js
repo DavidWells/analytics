@@ -29,7 +29,10 @@ const ACCEPTED_CODES = [202]
 const FORBIDDEN_CODE = 403
 const BAD_REQUEST_CODE = 400
 
-const clientInfo = getClientInfo()
+let clientInfo = {}
+if (process.browser) {
+  clientInfo = getClientInfo() 
+}
 
 function noOp() {
   return {}
@@ -337,7 +340,7 @@ export async function formatEvent(eventName, data = {}, config = {}) {
   logger(`${eventId}:${type}`)
   logger('eventAttributes', preparedData.attributes)
   logger('eventMetrics', preparedData.metrics)
-  logger('clientInfo', clientInfo)
+  // logger('clientInfo', clientInfo)
 
   const appVersionCodeString = getAppVersionCode(config)
   // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Pinpoint.html#putEvents-property
@@ -536,24 +539,27 @@ async function mergeEndpointData(endpoint = {}, config = {}) {
   // const browserVersion = [clientInfo.model, clientInfo.version].join('/')
   const appVersionString = getAppVersionCode(config)
   
-  const demographicInfo = {
-    // AppTitle/0.0.0. Maps to application.version_name in kinesis stream 
-    AppVersion: appVersionString,
-    /* The locale of the endpoint, in the following format: 
-       the ISO 639-1 alpha-2 code, followed by an underscore (_), 
-       followed by an ISO 3166-1 alpha-2 value. 
-    */
-    Locale: clientInfo.language,
-    // Maker - Google/Mozilla/Apple
-    Make: clientInfo.make,
-    // Model - Safari/Chrome/Brave/Opera
-    Model: clientInfo.model,
-    // ModelVersion - 91.0.0
-    ModelVersion: clientInfo.version,
-    // Platform - os name
-    Platform: clientInfo.os.name || clientInfo.platform,
-    // PlatformVersion: browserVersion,
-    // Timezone: 'STRING_VALUE'
+  let demographicInfo = {}
+  if (process.browser) {
+    demographicInfo = {
+      // AppTitle/0.0.0. Maps to application.version_name in kinesis stream 
+      AppVersion: appVersionString,
+      /* The locale of the endpoint, in the following format: 
+         the ISO 639-1 alpha-2 code, followed by an underscore (_), 
+         followed by an ISO 3166-1 alpha-2 value. 
+      */
+      Locale: clientInfo.language,
+      // Maker - Google/Mozilla/Apple
+      Make: clientInfo.make,
+      // Model - Safari/Chrome/Brave/Opera
+      Model: clientInfo.model,
+      // ModelVersion - 91.0.0
+      ModelVersion: clientInfo.version,
+      // Platform - os name
+      Platform: clientInfo.os.name || clientInfo.platform,
+      // PlatformVersion: browserVersion,
+      // Timezone: 'STRING_VALUE'
+    }
   }
 
   if (clientInfo.os && clientInfo.os.version) {
