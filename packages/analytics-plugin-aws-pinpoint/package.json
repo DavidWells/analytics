@@ -53,10 +53,11 @@
     "@analytics/localstorage-utils": "^0.1.5",
     "@analytics/queue-utils": "^0.1.1",
     "@analytics/session-utils": "^0.1.10",
-    "@aws-sdk/client-pinpoint": "^3.30.0",
+    "@aws-sdk/client-pinpoint": "^3.31.0",
     "analytics-plugin-tab-events": "^0.2.0",
     "analytics-utils": "^1.0.4",
     "aws4fetch": "^1.0.13",
+    "cross-fetch": "^3.1.4",
     "deepmerge": "^4.2.2"
   },
   "devDependencies": {

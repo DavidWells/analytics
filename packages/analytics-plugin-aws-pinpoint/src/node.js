@@ -1,4 +1,4 @@
-import { initialize, getStorageKey } from './pinpoint'
+import { initialize, getStorageKey } from './pinpoint/index-node'
 import { CHANNEL_TYPES } from './pinpoint/constants'
 import * as PINPOINT_EVENTS from './pinpoint/events'
 import {
@@ -9,8 +9,6 @@ import {
 } from '@analytics/session-utils'
 
 const config = {
-  /* Disable anonymous MTU */
-  disableAnonymousTraffic: false,
   // Pinpoint service region
   pinpointRegion: 'us-east-1',
   // Custom event mapping
@@ -28,7 +26,6 @@ const config = {
  * @param {string} [pluginConfig.appPackageName] - The name of the app package, such as com.example.my_app.
  * @param {string} [pluginConfig.appVersionCode] - The version number of the app, such as 3.2.0
  * @param {string} [pluginConfig.fips] - Use the AWS FIPS service endpoint for Pinpoint
- * @param {boolean} [pluginConfig.disableAnonymousTraffic] -  Disable anonymous events from firing
  * @return {object} Analytics plugin
  * @example
  *
@@ -52,7 +49,6 @@ function awsPinpointNode(pluginConfig = {}) {
     // Fire session stop event.
     recordEvent(PINPOINT_EVENTS.SESSION_STOP, true)
   }
-  // window.stopSession = stopSession
 
   function startNewSession() {
     // Set new sessions.
@@ -75,7 +71,7 @@ function awsPinpointNode(pluginConfig = {}) {
     bootstrap: (pluginApi) => {
       const { config, instance } = pluginApi
       /* Load aws-pinpoint script after userId exists */
-      if (config.disableAnonymousTraffic && !instance.user('userId')) {
+      if (!instance.user('userId')) {
         instance.once('identifyStart', ({ plugins }) => {
           const self = plugins['aws-pinpoint']
           if (!self.loaded()) {
@@ -85,22 +81,21 @@ function awsPinpointNode(pluginConfig = {}) {
       }
     },
     initialize: ({ config, instance }) => {
-      console.log('3 - AWS Pinpoint Analytics Server Implementation')
-      const { disableAnonymousTraffic, debug } = config
+      console.log('5 - AWS Pinpoint Analytics Server Implementation')
+      const { debug } = config
       const logger = (debug) ? console.log : () => {}
       /* Disable pinpoint if user is not yet identified. */
       const state = instance.getState()
       const userDetails = state.user || {}
       const { userId, anonymousId } = userDetails
       const context = state.context || {}
-      const { app, version, campaign } = context
+      const { app, version } = context
 
       /* Initialize session info */
       const initPageSession = getPageSession()
       const initSessionData = getSession()
       logger('initPageSession', initPageSession)
       logger('initSessionData', initSessionData)
-      
       /* If anonId has changed, refresh session details */
       if (initSessionData && initSessionData.anonId && initSessionData.anonId !== anonymousId) {
         logger('anonId different refresh session details')
@@ -112,11 +107,6 @@ function awsPinpointNode(pluginConfig = {}) {
           userId: userId,
         })
         logger('newSessionForNewUser', newSessionForNewUser)
-      }
-
-      /* Disable for anonymous users */
-      if (!userId && disableAnonymousTraffic) {
-        return false
       }
 
       /* Initialize pinpoint client */
@@ -157,7 +147,6 @@ function awsPinpointNode(pluginConfig = {}) {
           return {}
         },
       })
-
       recordEvent = pinpointClient.recordEvent
       updateEndpoint = pinpointClient.updateEndpoint
 
@@ -184,7 +173,7 @@ function awsPinpointNode(pluginConfig = {}) {
       if (!recordEvent) {
         return loadError()
       }
-      if (config.disableAnonymousTraffic && !payload.userId) {
+      if (!payload.userId) {
         return
       }
       const data = formatEventData(payload.properties)
