@@ -1,6 +1,6 @@
 {
   "name": "@analytics/segment",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Segment integration for 'analytics' module for browser & node",
   "projectMeta": {
     "provider": {
