@@ -130,7 +130,6 @@ function awsPinpointNode(pluginConfig = {}) {
         getContext: () => {
           return {
             sessionKey: config.sessionKey,
-            // pageViewKey: config.pageViewKey,
             initialSession: initSessionData,
           }
         },
@@ -169,16 +168,12 @@ function awsPinpointNode(pluginConfig = {}) {
       hasPageFiredOnce = true
     },
     /* Track event & update endpoint details */
-    track: ({ payload, config, instance }) => {
+    track: ({ payload, instance }) => {
       if (!recordEvent) {
         return loadError()
       }
-      // if (!payload.userId) {
-      //   return
-      // }
       const data = formatEventData(payload.properties)
       recordEvent(payload.event, data)
-      console.log('***** after track record event *****')
     },
     /* Update endpoint details */
     identify: ({ payload }) => {

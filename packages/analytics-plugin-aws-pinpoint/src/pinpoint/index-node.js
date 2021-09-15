@@ -7,16 +7,10 @@ import getEventName from './get-event-name'
 import { CHANNEL_TYPES } from './constants'
 import * as PINPOINT_EVENTS from './events'
 
-let AWS
-if (!process.browser) {
-  AWS = require('@aws-sdk/client-pinpoint')
-}
+// TODO: Using import causes build to fail
+const AWS = require('@aws-sdk/client-pinpoint')
 
 const { SESSION_START, SESSION_STOP } = PINPOINT_EVENTS
-const BEACON_SUPPORTED =
-  typeof navigator !== 'undefined' &&
-  navigator &&
-  typeof navigator.sendBeacon === 'function'
 
 const ENDPOINT_KEY = '__endpoint'
 const RETRYABLE_CODES = [429, 500]
@@ -127,10 +121,6 @@ function createEventQueue(queue, config = {}) {
       eventName === PINPOINT_EVENTS.PAGE_VIEW
     ) {
       endpoint = await mergeEndpointData(endpoint, config)
-    }
-
-    if (BEACON_SUPPORTED) {
-      // console.log('Beacon supported')
     }
 
     if (eventName === PINPOINT_EVENTS.SESSION_STOP) {
@@ -397,16 +387,11 @@ async function callAWS(eventsRequest, config) {
   const PINPOINT_URL = `https://pinpoint${fips}.${pinpoint_region}.amazonaws.com/v1/apps/${pinpointAppId}/events`
   const endpointUrl = lambdaArn ? LAMBDA_FN : PINPOINT_URL
 
-  const payload = {
-    body: JSON.stringify(eventsRequest),
-  }
-
   const command = new AWS.PutEventsCommand({
     ApplicationId: pinpointAppId,
     EventsRequest: eventsRequest
   })
   const data = await pinpointClient.send(command)
-  console.log(data, '******* response from client send *******')
   if (data && data.Results) {
     // Process api responses
     const responses = Object.keys(data.Results).map(
@@ -446,29 +431,6 @@ async function callAWS(eventsRequest, config) {
   return data
 }
 
-function formatPayload({ eventId, time, sessionId, sessionStart, properties, rest }) {
-  return {
-    eventId,
-    sessionId,
-    sessionStart,
-    time,
-    attributes: {
-      ...properties,
-      ...rest
-    }
-  }
-}
-
-function getPinpointConfig() {
-  return {
-    appTitle: 'clientName',
-    appPackageName: 'clientName',
-    appVersionCode: 'clientVersion',
-    getEndpointId: () => '816d9486-d26f-43b9-a1a2-51b0eac28e5b',
-    getUserId: () => 'userId',
-  }
-}
-
 function handleEndpointUpdateBadRequest(error, endpoint) {
   const { StatusCode, Message } = error
   // console.log('message', Message)
@@ -484,26 +446,6 @@ function handleEndpointUpdateBadRequest(error, endpoint) {
     // Handle forbidden
   }
 }
-
-function generateEndpointData(eventPayload, pinpointConfig) {
-  const { attributes } = eventPayload
-  const { userId, platform, os, platformVersion, nodeVersion } = attributes
-  const platformName = getPlatformNiceName(platform)  
-  const demographicInfo = {
-    AppVersion: '2.0.0',
-    Make: 'Javascript',
-    Model: 'NodeJS',
-    ModelVersion: 'nodeVersion',
-    Platform: 'platformName',
-  }
-
-  return {
-    Attributes: {},
-    Demographic: demographicInfo,
-    ...(!userId) ? {} : { User: { UserId: userId } }
-  }
-}
-
 
 function getAppVersionCode(config) {
   const appName = config.appTitle || config.appPackageName || ''
@@ -646,7 +588,6 @@ async function mergeEndpointData(endpoint = {}, config = {}) {
  * @param {Array} destinationArray
  * @param {Array} sourceArray
  */
-
 function overwriteMerge(_destinationArray, sourceArray) {
   return sourceArray
 }
@@ -700,7 +641,6 @@ function isNullOrUndef(value) {
  * @param {Object} attributes
  * @param {Boolean} asArray If true ensure an array of strings is returned for each property
  */
-
 export async function prepareAttributes(attributes, asArray = false) {
   const sanitized = {}
   for (const name in attributes) {
