@@ -4,8 +4,6 @@ import * as PINPOINT_EVENTS from './pinpoint/events'
 import {
   getSession,
   setSession,
-  getPageSession, 
-  setPageSession,
 } from '@analytics/session-utils'
 
 const config = {
@@ -38,28 +36,25 @@ function awsPinpointNode(pluginConfig = {}) {
   let recordEvent 
   let updateEndpoint
 
-  /* Page-session (on route changes) */
-  let hasPageFiredOnce = false
-  
-  function stopSession() {
-    const currentSessionData = getSession()
-    if (pluginConfig.debug) {
-      console.log('Stop session', currentSessionData)
-    }
-    // Fire session stop event.
-    recordEvent(PINPOINT_EVENTS.SESSION_STOP, true)
-  }
+  // function stopSession() {
+  //   const currentSessionData = getSession()
+  //   if (pluginConfig.debug) {
+  //     console.log('Stop session', currentSessionData)
+  //   }
+  //   // Fire session stop event.
+  //   recordEvent(PINPOINT_EVENTS.SESSION_STOP, true)
+  // }
 
-  function startNewSession() {
-    // Set new sessions.
-    const newSession = setSession(30)
-    if (pluginConfig.debug) {
-      console.log('START SESSION', newSession)
-    }
+  // function startNewSession() {
+  //   // Set new sessions.
+  //   const newSession = setSession(30)
+  //   if (pluginConfig.debug) {
+  //     console.log('START SESSION', newSession)
+  //   }
 
-    /* Fire session start event. */
-    recordEvent(PINPOINT_EVENTS.SESSION_START)
-  }
+  //   /* Fire session start event. */
+  //   recordEvent(PINPOINT_EVENTS.SESSION_START)
+  // }
 
   /* return plugin */
   return {
@@ -92,15 +87,11 @@ function awsPinpointNode(pluginConfig = {}) {
       const { app, version } = context
 
       /* Initialize session info */
-      const initPageSession = getPageSession()
       const initSessionData = getSession()
-      logger('initPageSession', initPageSession)
       logger('initSessionData', initSessionData)
       /* If anonId has changed, refresh session details */
       if (initSessionData && initSessionData.anonId && initSessionData.anonId !== anonymousId) {
         logger('anonId different refresh session details')
-        /* Set new page session values */
-        setPageSession()
         /* Set new session for new user */
         const newSessionForNewUser = setSession(30, {
           anonId: anonymousId,
@@ -155,26 +146,16 @@ function awsPinpointNode(pluginConfig = {}) {
         recordEvent(PINPOINT_EVENTS.SESSION_START)
       }
     },
-    page: ({ payload, config }) => {
-      if (!recordEvent) {
-        return loadError()
-      }
-      // Fire page view and update pageSessionInfo Id
-      if (hasPageFiredOnce) {
-        // Set new page session values
-        setPageSession()
-      }
-      recordEvent(PINPOINT_EVENTS.PAGE_VIEW)
-      hasPageFiredOnce = true
-    },
     /* Track event & update endpoint details */
     track: ({ payload, instance }) => {
       if (!recordEvent) {
         return loadError()
       }
+      console.log(instance.user('userId'), '******* user ID *****')
+      console.log(payload, '******* payload *****')
       const data = formatEventData(payload.properties)
       recordEvent(payload.event, data)
-    },
+   },
     /* Update endpoint details */
     identify: ({ payload }) => {
       const { userId, traits } = payload
@@ -199,12 +180,6 @@ function awsPinpointNode(pluginConfig = {}) {
       }
       // Update endpoint in AWS pinpoint
       updateEndpoint(endpoint, true)
-    },
-    /* Reset user details */
-    reset: ({ instance }) => {
-      const id = instance.user('anonymousId')
-      const key = getStorageKey(id)
-      storage.removeItem(key)
     },
     loaded: () => !!recordEvent,
   }
