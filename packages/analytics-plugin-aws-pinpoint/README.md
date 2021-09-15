@@ -41,7 +41,7 @@ npm install @analytics/aws-pinpoint
 
 ## How to use
 
-The `@analytics/aws-pinpoint` package works in [the browser](#browser-usage). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
+The `@analytics/aws-pinpoint` package works in [the browser](#browser-usage) and on [the server](#server-usage) in [Node.js](https://nodejs.org/en/). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
 
 Below is an example of how to use the browser plugin.
 
@@ -105,6 +105,31 @@ const analytics = Analytics({
     awsPinpointPlugin({
       pinpointAppId: '938bebb1ae954e123133213160f2b3be4',
       getCredentials: () => Auth.currentCredentials()
+    })
+  ]
+})
+
+```
+
+## Server usage
+
+The AWSPinpoint server side Node.js plugin works with these analytic api methods:
+
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to AWSPinpoint
+- **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to AWSPinpoint
+
+### Server API
+
+```js
+import Analytics from 'analytics'
+import awsPinpointPlugin from '@analytics/aws-pinpoint'
+
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    awsPinpointPlugin({
+      pinpoingAppId: '938bebb1ae954e123133213160f2b3be4',
+      getCredentials: () => Auth.currentCredentials() 
     })
   ]
 })
