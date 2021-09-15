@@ -52,7 +52,7 @@ export default async function mergeEndpointData(endpoint = {}, config = {}) {
   // const browserVersion = [clientInfo.model, clientInfo.version].join('/')
   const appVersionString = getAppVersionCode(config)
   
-  const demographicInfo = inBrowser ? getBrowserDemographicInfo(appVersionString) : getServerDemographicInfo()
+  const demographicInfo = inBrowser ? getBrowserDemographicInfo(appVersionString) : getServerDemographicInfo(appVersionString)
 
   // console.log('demographicInfo', demographicInfo)
 
