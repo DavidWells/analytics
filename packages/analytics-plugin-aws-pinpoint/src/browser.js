@@ -1,10 +1,6 @@
-import { initialize } from './pinpoint'
-import { getStorageKey } from './pinpoint/helpers/getStorageKey'
-import { CHANNEL_TYPES } from './pinpoint/helpers/constants'
-import * as PINPOINT_EVENTS from './pinpoint/helpers/events'
-import loadError from './utils/load-error'
-import formatEventData from './utils/format-event-data'
-import bootstrap from './utils/bootstrap'
+import { initialize, getStorageKey } from './pinpoint/browser'
+import { CHANNEL_TYPES } from './pinpoint/constants'
+import * as PINPOINT_EVENTS from './pinpoint/events'
 import { onUserActivity } from '@analytics/activity-utils'
 import { setItem, getItem, removeItem } from '@analytics/localstorage-utils'
 import {
