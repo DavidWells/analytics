@@ -1,10 +1,9 @@
 import deepmerge from 'deepmerge'
 import { uuid } from 'analytics-utils'
-import { getSession, getPageSession } from '@analytics/session-utils'
+import { getSession } from '@analytics/session-utils'
 import smartQueue from '@analytics/queue-utils'
 import { setItem, getItem, removeItem } from '@analytics/localstorage-utils'
 import getEventName from './get-event-name'
-import { CHANNEL_TYPES } from './constants'
 import * as PINPOINT_EVENTS from './events'
 
 // TODO: Using import causes build to fail
@@ -18,15 +17,8 @@ const ACCEPTED_CODES = [202]
 const FORBIDDEN_CODE = 403
 const BAD_REQUEST_CODE = 400
 
-let clientInfo = {}
-
 function noOp() {
   return {}
-}
-
-const EMAIL_REGEX = /.+\@.+\..+/
-function isEmail(string) {
-  return EMAIL_REGEX.test(string)
 }
 
 export { ENDPOINT_KEY }
@@ -115,14 +107,6 @@ function createEventQueue(queue, config = {}) {
     }
     const eventPayload = await formatEvent(eventName, eventData, config)
 
-    // IF endpoint exists, & event is PAGE_VIEW, update user attributes
-    if (
-      Object.entries(endpoint).length ||
-      eventName === PINPOINT_EVENTS.PAGE_VIEW
-    ) {
-      endpoint = await mergeEndpointData(endpoint, config)
-    }
-
     if (eventName === PINPOINT_EVENTS.SESSION_STOP) {
       // console.log('PINPOINT_EVENTS.SESSION_STOP fired')
       // TODO maybe skip queue and just sign requeest here
@@ -177,28 +161,8 @@ function createPinpointSender(config = {}) {
       ? getEndpoint(id)
       : await mergeEndpointData(endpointInfo, config)
 
-    let channelType = endpoint.ChannelType
-    // If email is set, set email channel
-    if (endpoint.Address && isEmail(endpoint.Address)) {
-      channelType = CHANNEL_TYPES.EMAIL
-    }
-
-    if (!channelType && endpoint.Address) {
-      if (clientInfo.platform === 'android') {
-        channelType = channelType || CHANNEL_TYPES.GCM
-      } else {
-        channelType = channelType || CHANNEL_TYPES.APNS
-      }
-    }
-
-    if (debug) {
-      console.log('Endpoint', endpoint)
-      if (channelType) console.log('CHANNEL_TYPE', channelType)
-    }
-
     // Build endpoint data.
     endpoint.RequestId = uuid()
-    endpoint.ChannelType = channelType
 
     if (endpoint.Address) {
       // https://amzn.to/3bYC5gp
@@ -213,6 +177,7 @@ function createPinpointSender(config = {}) {
     let error
     try {
       response = await callAWS(eventsRequest, config)
+      console.log(response, '****** RESPONSE ******')
     } catch (err) {
       console.log('Error calling AWS', err)
       error = err
@@ -249,7 +214,6 @@ export async function formatEvent(eventName, data = {}, config = {}) {
   } = config
   const logger = debug ? console.log : () => {}
   const type = getEventName(eventName, eventMapping)
-  const pageSessionInfo = getPageSession()
   const sessionData = getSession()
   // @TODO refactor session grabber
   const sessionId = sessionData.id
@@ -257,7 +221,6 @@ export async function formatEvent(eventName, data = {}, config = {}) {
   const sessionStartUnix = data.sessionStart
     ? new Date(data.sessionStart).getTime()
     : sessionData.created
-  logger('event pageSessionInfo', JSON.stringify(pageSessionInfo))
   logger('event sessionData    ', JSON.stringify(sessionData))
 
   const eventAttribs = data.attributes || {}
@@ -269,7 +232,6 @@ export async function formatEvent(eventName, data = {}, config = {}) {
   const defaultEventAttributes = {
     date: timeStamp,
     sessionId, // Event[id].Session.Id
-    pageSession: pageSessionInfo.id,
   }
 
   const extraAttributes = enrichEventAttributes
@@ -435,10 +397,6 @@ function handleEndpointUpdateBadRequest(error, endpoint) {
   const { StatusCode, Message } = error
   // console.log('message', Message)
   if (StatusCode === BAD_REQUEST_CODE) {
-    // 400
-    if (Message.startsWith('Missing ChannelType')) {
-      throw new Error('Missing ChannelType')
-    }
     if (Message.startsWith('Exceeded maximum endpoint per user count')) {
       throw new Error('Exceeded maximum endpoint per user count')
     }
@@ -463,10 +421,7 @@ async function mergeEndpointData(endpoint = {}, config = {}) {
   } = config
   const context = grabContext(config)
   const sessionKey = context.sessionKey ? context.sessionKey() : 'sessions'
-  const pageKey = context.pageViewKey ? context.pageViewKey() : 'pageViews'
 
-  const pageSessionInfo = getPageSession()
-  const pageSession = pageSessionInfo.id
   const sessionData = getSession()
 
   const id = await getEndpointId()
@@ -546,10 +501,6 @@ async function mergeEndpointData(endpoint = {}, config = {}) {
   if (!endpoint.Metrics[sessionKey]) {
     endpoint.Metrics[sessionKey] = 1.0
   }
-  /* Set initial page view count */
-  if (!endpoint.Metrics[pageKey]) {
-    endpoint.Metrics[pageKey] = 1.0
-  }
 
   /* Custom data migration function */
   if (endpointMigration) {
@@ -561,7 +512,6 @@ async function mergeEndpointData(endpoint = {}, config = {}) {
   if (!hasPreviousSession) {
     endpoint.Attributes.lastSessionDate = [sessionData.createdAt]
     endpoint.Attributes.lastSession = [sessionData.id]
-    endpoint.Attributes.lastPageSession = [pageSession]
     // Store the endpoint data.
     return persistEndpoint(id, endpoint)
   }
@@ -571,11 +521,6 @@ async function mergeEndpointData(endpoint = {}, config = {}) {
     endpoint.Attributes.lastSessionDate = [sessionData.createdAt]
     endpoint.Attributes.lastSession = [sessionData.id]
     endpoint.Metrics[sessionKey] += 1.0
-  }
-  // Increment pageViews.
-  if (endpoint.Attributes.lastPageSession[0] !== pageSession) {
-    endpoint.Attributes.lastPageSession = [pageSession]
-    endpoint.Metrics[pageKey] += 1.0
   }
 
   // Store the endpoint data.
