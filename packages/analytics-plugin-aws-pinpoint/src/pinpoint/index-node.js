@@ -3,12 +3,9 @@ import { uuid } from 'analytics-utils'
 import { getSession, getPageSession } from '@analytics/session-utils'
 import smartQueue from '@analytics/queue-utils'
 import { setItem, getItem, removeItem } from '@analytics/localstorage-utils'
-
-import getClientInfo from '../utils/client-info'
 import getEventName from './get-event-name'
 import { CHANNEL_TYPES } from './constants'
 import * as PINPOINT_EVENTS from './events'
-import inBrowser from '../utils/in-browser'
 
 let AWS
 if (!process.browser) {
@@ -16,8 +13,6 @@ if (!process.browser) {
 }
 
 const { SESSION_START, SESSION_STOP } = PINPOINT_EVENTS
-// TODO use beacon
-// import 'navigator.sendbeacon'
 const BEACON_SUPPORTED =
   typeof navigator !== 'undefined' &&
   navigator &&
@@ -43,19 +38,18 @@ function isEmail(string) {
 export { ENDPOINT_KEY }
 
 export function initialize(config = {}) {
-  // @TODO clean up
   const configuration = {
     getContext: config.getContext || noOp,
     credentials: config.credentials || {},
     getEndpointId: config.getEndpointId,
     ...config,
   }
+  
 
   const logger = configuration.debug ? console.log : () => {}
 
   // Create function that sends to pinpoint
   const pinpointPutEvent = createPinpointSender(configuration)
-
   const queue = smartQueue(
     async (events, rest) => {
       events.forEach((event) => logger('>>>>> PROCESS queue', event))
@@ -66,8 +60,6 @@ export function initialize(config = {}) {
       max: 10, // limit... event limit is 100 for pinpoint
       interval: 3000, // 3s
       throttle: true, // Ensure only max is processed at interval
-      // onPause: (queue) => {},
-      // onEmpty: () => {}
     }
   )
 
@@ -188,7 +180,7 @@ function createPinpointSender(config = {}) {
       console.error('No endpoint id. check getEndpointId()')
       return
     }
-
+    config.anonId = id
     const hasEndpoint =
       typeof endpointInfo === 'object' && Object.keys(endpointInfo).length
     const endpoint = !hasEndpoint
@@ -220,8 +212,6 @@ function createPinpointSender(config = {}) {
 
     if (endpoint.Address) {
       // https://amzn.to/3bYC5gp
-      // Default OptOut is ALL
-      // OptOut: 'NONE',
       endpoint.OptOut = endpoint.OptOut || 'NONE'
     }
 
@@ -233,7 +223,6 @@ function createPinpointSender(config = {}) {
     let error
     try {
       response = await callAWS(eventsRequest, config)
-      // console.log('awsResponse', response)
     } catch (err) {
       console.log('Error calling AWS', err)
       error = err
@@ -271,10 +260,10 @@ export async function formatEvent(eventName, data = {}, config = {}) {
   const logger = debug ? console.log : () => {}
   const type = getEventName(eventName, eventMapping)
   const pageSessionInfo = getPageSession()
-  const sessionData = inBrowser ? getSession() : {}
+  const sessionData = getSession()
   // @TODO refactor session grabber
-  const sessionId = data.sessionId || sessionData.id
-  const sessionStart = data.sessionStart || sessionData.createdAt
+  const sessionId = sessionData.id
+  const sessionStart = sessionData.createdAt
   const sessionStartUnix = data.sessionStart
     ? new Date(data.sessionStart).getTime()
     : sessionData.created
@@ -290,7 +279,7 @@ export async function formatEvent(eventName, data = {}, config = {}) {
   const defaultEventAttributes = {
     date: timeStamp,
     sessionId, // Event[id].Session.Id
-    ...(!inBrowser ? {} : { pageSession: pageSessionInfo.id }),
+    pageSession: pageSessionInfo.id,
   }
 
   const extraAttributes = enrichEventAttributes
@@ -334,8 +323,6 @@ export async function formatEvent(eventName, data = {}, config = {}) {
   logger('eventAttributes', preparedData.attributes)
   logger('eventMetrics', preparedData.metrics)
 
-  const appVersionCodeString = getAppVersionCode(config)
-  // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Pinpoint.html#putEvents-property
   const eventPayload = {
     [eventId]: {
       /* The name of the event */
@@ -400,7 +387,7 @@ async function callAWS(eventsRequest, config) {
   }
   const pinpointClient = new AWS.PinpointClient({
     credentials: auth,
-    region: 'us-east-1',
+    region: pinpointRegion,
   })
   const lambda_region = lambdaRegion || pinpointRegion
   const pinpoint_region = pinpointRegion || lambdaRegion
@@ -414,9 +401,11 @@ async function callAWS(eventsRequest, config) {
     body: JSON.stringify(eventsRequest),
   }
 
+  console.log(payload, '***** payload ******')
+
   const command = new AWS.PutEventsCommand({
-    ApplicationId: 'de54da32bb1f44e682ba1adcdc71762e',
-    EventsRequest: payload,
+    ApplicationId: pinpointAppId,
+    EventsRequest: eventsRequest
   })
   const data = await pinpointClient.send(command)
 
@@ -459,6 +448,29 @@ async function callAWS(eventsRequest, config) {
   return data
 }
 
+function formatPayload({ eventId, time, sessionId, sessionStart, properties, rest }) {
+  return {
+    eventId,
+    sessionId,
+    sessionStart,
+    time,
+    attributes: {
+      ...properties,
+      ...rest
+    }
+  }
+}
+
+function getPinpointConfig() {
+  return {
+    appTitle: 'clientName',
+    appPackageName: 'clientName',
+    appVersionCode: 'clientVersion',
+    getEndpointId: () => '816d9486-d26f-43b9-a1a2-51b0eac28e5b',
+    getUserId: () => 'userId',
+  }
+}
+
 function handleEndpointUpdateBadRequest(error, endpoint) {
   const { StatusCode, Message } = error
   // console.log('message', Message)
@@ -474,6 +486,26 @@ function handleEndpointUpdateBadRequest(error, endpoint) {
     // Handle forbidden
   }
 }
+
+function generateEndpointData(eventPayload, pinpointConfig) {
+  const { attributes } = eventPayload
+  const { userId, platform, os, platformVersion, nodeVersion } = attributes
+  const platformName = getPlatformNiceName(platform)  
+  const demographicInfo = {
+    AppVersion: '2.0.0',
+    Make: 'Javascript',
+    Model: 'NodeJS',
+    ModelVersion: 'nodeVersion',
+    Platform: 'platformName',
+  }
+
+  return {
+    Attributes: {},
+    Demographic: demographicInfo,
+    ...(!userId) ? {} : { User: { UserId: userId } }
+  }
+}
+
 
 function getAppVersionCode(config) {
   const appName = config.appTitle || config.appPackageName || ''
@@ -513,7 +545,6 @@ async function mergeEndpointData(endpoint = {}, config = {}) {
   }
 
   const persistedEndpoint = getEndpoint(id)
-  // const browserVersion = [clientInfo.model, clientInfo.version].join('/')
   const appVersionString = getAppVersionCode(config)
 
   let demographicInfo = {
@@ -537,11 +568,6 @@ async function mergeEndpointData(endpoint = {}, config = {}) {
     Metrics: {
       // [`${sessionKey}Unix`]: sessionData.Unix
     },
-    /** Indicates whether a user has opted out of receiving messages with one of the following values:
-     * ALL - User has opted out of all messages.
-     * NONE - Users has not opted out and receives all messages.
-     */
-    // OptOut: 'STRING_VALUE',
   }
 
   /* Merge new endpoint data with defaults. */
