@@ -173,11 +173,12 @@ function awsPinpointNode(pluginConfig = {}) {
       if (!recordEvent) {
         return loadError()
       }
-      if (!payload.userId) {
-        return
-      }
+      // if (!payload.userId) {
+      //   return
+      // }
       const data = formatEventData(payload.properties)
       recordEvent(payload.event, data)
+      console.log('***** after track record event *****')
     },
     /* Update endpoint details */
     identify: ({ payload }) => {
