@@ -1,4 +1,4 @@
-import { initialize } from './pinpoint/index-node'
+import { initialize } from './pinpoint/node'
 import * as PINPOINT_EVENTS from './pinpoint/events'
 import { getSession, setSession } from '@analytics/session-utils'
 
@@ -131,8 +131,6 @@ function awsPinpointNode(pluginConfig = {}) {
       if (!recordEvent) {
         return loadError()
       }
-      console.log(instance.user('userId'), '******* user ID *****')
-      console.log(payload, '******* payload *****')
       const data = formatEventData(payload.properties)
       recordEvent(payload.event, data)
     },

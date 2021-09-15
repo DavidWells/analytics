@@ -1,4 +1,4 @@
-import { initialize, getStorageKey } from './pinpoint'
+import { initialize, getStorageKey } from './pinpoint/browser'
 import { CHANNEL_TYPES } from './pinpoint/constants'
 import * as PINPOINT_EVENTS from './pinpoint/events'
 import { onUserActivity } from '@analytics/activity-utils'
