@@ -401,14 +401,12 @@ async function callAWS(eventsRequest, config) {
     body: JSON.stringify(eventsRequest),
   }
 
-  console.log(payload, '***** payload ******')
-
   const command = new AWS.PutEventsCommand({
     ApplicationId: pinpointAppId,
     EventsRequest: eventsRequest
   })
   const data = await pinpointClient.send(command)
-
+  console.log(data, '******* response from client send *******')
   if (data && data.Results) {
     // Process api responses
     const responses = Object.keys(data.Results).map(
