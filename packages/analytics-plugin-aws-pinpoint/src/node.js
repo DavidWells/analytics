@@ -1,16 +1,12 @@
-import { initialize, getStorageKey } from './pinpoint/index-node'
-import { CHANNEL_TYPES } from './pinpoint/constants'
+import { initialize } from './pinpoint/index-node'
 import * as PINPOINT_EVENTS from './pinpoint/events'
-import {
-  getSession,
-  setSession,
-} from '@analytics/session-utils'
+import { getSession, setSession } from '@analytics/session-utils'
 
 const config = {
   // Pinpoint service region
   pinpointRegion: 'us-east-1',
   // Custom event mapping
-  eventMapping: {}
+  eventMapping: {},
 }
 
 /**
@@ -18,7 +14,7 @@ const config = {
  * @link https://docs.aws.amazon.com/pinpoint/latest/developerguide/
  * @param {object} pluginConfig - Plugin settings
  * @param {string} pluginConfig.pinpointAppId - AWS Pinpoint app Id for client side tracking
- * @param {function} pluginConfig.getCredentials - Async function to get AWS Cognito creds 
+ * @param {function} pluginConfig.getCredentials - Async function to get AWS Cognito creds
  * @param {string} [pluginConfig.pinpointRegion] - AWS Pinpoint region. Defaults to us-east-1
  * @param {string} [pluginConfig.appTitle] - The title of the app that's recording the event.
  * @param {string} [pluginConfig.appPackageName] - The name of the app package, such as com.example.my_app.
@@ -33,35 +29,15 @@ const config = {
  * })
  */
 function awsPinpointNode(pluginConfig = {}) {
-  let recordEvent 
+  let recordEvent
   let updateEndpoint
-
-  // function stopSession() {
-  //   const currentSessionData = getSession()
-  //   if (pluginConfig.debug) {
-  //     console.log('Stop session', currentSessionData)
-  //   }
-  //   // Fire session stop event.
-  //   recordEvent(PINPOINT_EVENTS.SESSION_STOP, true)
-  // }
-
-  // function startNewSession() {
-  //   // Set new sessions.
-  //   const newSession = setSession(30)
-  //   if (pluginConfig.debug) {
-  //     console.log('START SESSION', newSession)
-  //   }
-
-  //   /* Fire session start event. */
-  //   recordEvent(PINPOINT_EVENTS.SESSION_START)
-  // }
 
   /* return plugin */
   return {
     name: 'aws-pinpoint',
     config: {
       ...config,
-      ...pluginConfig
+      ...pluginConfig,
     },
     bootstrap: (pluginApi) => {
       const { config, instance } = pluginApi
@@ -76,9 +52,8 @@ function awsPinpointNode(pluginConfig = {}) {
       }
     },
     initialize: ({ config, instance }) => {
-      console.log('5 - AWS Pinpoint Analytics Server Implementation')
       const { debug } = config
-      const logger = (debug) ? console.log : () => {}
+      const logger = debug ? console.log : () => {}
       /* Disable pinpoint if user is not yet identified. */
       const state = instance.getState()
       const userDetails = state.user || {}
@@ -90,13 +65,18 @@ function awsPinpointNode(pluginConfig = {}) {
       const initSessionData = getSession()
       logger('initSessionData', initSessionData)
       /* If anonId has changed, refresh session details */
-      if (initSessionData && initSessionData.anonId && initSessionData.anonId !== anonymousId) {
+      if (
+        initSessionData &&
+        initSessionData.anonId &&
+        initSessionData.anonId !== anonymousId
+      ) {
         logger('anonId different refresh session details')
         /* Set new session for new user */
         const newSessionForNewUser = setSession(30, {
           anonId: anonymousId,
           userId: userId,
         })
+        console.log('newSessionForNewUser', newSessionForNewUser)
         logger('newSessionForNewUser', newSessionForNewUser)
       }
 
@@ -141,7 +121,7 @@ function awsPinpointNode(pluginConfig = {}) {
       updateEndpoint = pinpointClient.updateEndpoint
 
       if (initSessionData && initSessionData.isNew) {
-        logger(`Start brand new session because cookie not found`)
+        logger(`Start brand new session`)
         /* Start new session if its new */
         recordEvent(PINPOINT_EVENTS.SESSION_START)
       }
@@ -155,7 +135,7 @@ function awsPinpointNode(pluginConfig = {}) {
       console.log(payload, '******* payload *****')
       const data = formatEventData(payload.properties)
       recordEvent(payload.event, data)
-   },
+    },
     /* Update endpoint details */
     identify: ({ payload }) => {
       const { userId, traits } = payload
@@ -164,16 +144,12 @@ function awsPinpointNode(pluginConfig = {}) {
       }
       const endpoint = {}
       const userInfo = {}
-  
+
       if (userId) {
         userInfo.UserId = userId
       }
       if (traits && Object.keys(traits).length) {
         userInfo.UserAttributes = traits
-      }
-      if (traits.email) {
-        endpoint.Address = traits.email,
-        endpoint.ChannelType = CHANNEL_TYPES.EMAIL
       }
       if (Object.keys(userInfo).length) {
         endpoint.User = userInfo
@@ -190,19 +166,22 @@ function loadError() {
 }
 
 function formatEventData(obj) {
-  return Object.keys(obj).reduce((acc, key) => {
-    const value = obj[key]
-    if (typeof value === 'number') {
-      acc.metrics[key] = value
+  return Object.keys(obj).reduce(
+    (acc, key) => {
+      const value = obj[key]
+      if (typeof value === 'number') {
+        acc.metrics[key] = value
+      }
+      if (typeof value === 'string' || typeof value === 'boolean') {
+        acc.attributes[key] = value
+      }
+      return acc
+    },
+    {
+      attributes: {},
+      metrics: {},
     }
-    if (typeof value === 'string' || typeof value === 'boolean') {
-      acc.attributes[key] = value
-    }
-    return acc
-  }, {
-    attributes: {},
-    metrics: {}
-  })
+  )
 }
 
 export { PINPOINT_EVENTS }

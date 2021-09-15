@@ -5,6 +5,7 @@ import smartQueue from '@analytics/queue-utils'
 import { setItem, getItem, removeItem } from '@analytics/localstorage-utils'
 import getEventName from './get-event-name'
 import * as PINPOINT_EVENTS from './events'
+import 'cross-fetch/polyfill'
 
 // TODO: Using import causes build to fail
 const AWS = require('@aws-sdk/client-pinpoint')
