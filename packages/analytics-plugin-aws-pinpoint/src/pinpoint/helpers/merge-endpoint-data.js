@@ -3,13 +3,14 @@ import {
   getSession,
   getTabSession,
   setTabSession,
-  getPageSession, 
+  getPageSession,
   setPageSession,
 } from '@analytics/session-utils'
 import { prepareAttributes, prepareMetrics } from './format-event'
 import { setItem, getItem, removeItem } from '@analytics/localstorage-utils'
-import inBrowser from '../utils/in-browser'
-import getClientInfo from '../utils/client-info'
+import inBrowser from '../../utils/in-browser'
+import getClientInfo from '../../utils/client-info'
+import { getStorageKey } from '..'
 
 let clientInfo
 if (inBrowser) {
@@ -20,10 +21,15 @@ const ENDPOINT_KEY = '__endpoint'
 
 let migrationRan = false
 export default async function mergeEndpointData(endpoint = {}, config = {}) {
-  const { getUserId, getEndpointId, enrichUserAttributes, endpointMigration } = config
+  const {
+    getUserId,
+    getEndpointId,
+    enrichUserAttributes,
+    endpointMigration,
+  } = config
   const context = grabContext(config)
-  const sessionKey = (context.sessionKey) ? context.sessionKey() : 'sessions'
-  const pageKey = (context.pageViewKey) ? context.pageViewKey() : 'pageViews'
+  const sessionKey = context.sessionKey ? context.sessionKey() : 'sessions'
+  const pageKey = context.pageViewKey ? context.pageViewKey() : 'pageViews'
 
   // const tabSessionInfo = getTabSession()
   let pageSessionInfo, pageSession
@@ -51,9 +57,10 @@ export default async function mergeEndpointData(endpoint = {}, config = {}) {
   const persistedEndpoint = getEndpoint(id)
   // const browserVersion = [clientInfo.model, clientInfo.version].join('/')
   const appVersionString = getAppVersionCode(config)
-  
-  const demographicInfo = inBrowser ? getBrowserDemographicInfo(appVersionString) : getServerDemographicInfo()
 
+  const demographicInfo = inBrowser
+    ? getBrowserDemographicInfo(appVersionString)
+    : getServerDemographicInfo(appVersionString)
   // console.log('demographicInfo', demographicInfo)
 
   const EndpointData = {
@@ -73,9 +80,9 @@ export default async function mergeEndpointData(endpoint = {}, config = {}) {
       // [`${sessionKey}Unix`]: sessionData.Unix
     },
     /** Indicates whether a user has opted out of receiving messages with one of the following values:
-    * ALL - User has opted out of all messages.
-    * NONE - Users has not opted out and receives all messages.
-    */
+     * ALL - User has opted out of all messages.
+     * NONE - Users has not opted out and receives all messages.
+     */
     // OptOut: 'STRING_VALUE',
   }
 
@@ -124,7 +131,10 @@ export default async function mergeEndpointData(endpoint = {}, config = {}) {
   // const enrichedAttributes = enrichUserFunc(userAttributes)
   // console.log('enrichedAttributes', enrichedAttributes)
   if (endpoint.User && endpoint.User.UserAttributes) {
-    endpoint.User.UserAttributes = await prepareAttributes(endpoint.User.UserAttributes, true)
+    endpoint.User.UserAttributes = await prepareAttributes(
+      endpoint.User.UserAttributes,
+      true
+    )
     // console.log('endpoint.User.UserAttributes', endpoint.User.UserAttributes)
   }
   endpoint.Attributes = await prepareAttributes(endpoint.Attributes, true)
@@ -149,20 +159,20 @@ export default async function mergeEndpointData(endpoint = {}, config = {}) {
   /* If this is first session, set values and return */
   const hasPreviousSession = endpoint.Attributes.lastSession
   if (!hasPreviousSession) {
-    endpoint.Attributes.lastSessionDate = [ sessionData.createdAt ]
-    endpoint.Attributes.lastSession = [ sessionData.id ]
+    endpoint.Attributes.lastSessionDate = [sessionData.createdAt]
+    endpoint.Attributes.lastSession = [sessionData.id]
     // @TODO persist tab info
     // endpoint.Attributes.lastTabSession = [ tabSessionInfo.id ]
-    endpoint.Attributes.lastPageSession = [ pageSession ]
+    endpoint.Attributes.lastPageSession = [pageSession]
     // Store the endpoint data.
     // console.log('Set initital endpoint info')
     return persistEndpoint(id, endpoint)
   }
-  
+
   /* If current sessionId is different than lastSession */
   if (hasPreviousSession && hasPreviousSession[0] !== sessionData.id) {
-    endpoint.Attributes.lastSessionDate = [ sessionData.createdAt ]
-    endpoint.Attributes.lastSession = [ sessionData.id ]
+    endpoint.Attributes.lastSessionDate = [sessionData.createdAt]
+    endpoint.Attributes.lastSession = [sessionData.id]
     endpoint.Metrics[sessionKey] += 1.0
     // console.log('Update lastSession info', sessionData.id)
   }
@@ -179,7 +189,10 @@ export default async function mergeEndpointData(endpoint = {}, config = {}) {
 
 function persistEndpoint(id, endpointData) {
   const endpointKey = getStorageKey(id)
-  const data = typeof endpointData === 'string' ? endpointData  : JSON.stringify(endpointData)
+  const data =
+    typeof endpointData === 'string'
+      ? endpointData
+      : JSON.stringify(endpointData)
   setItem(endpointKey, data)
   return endpointData
 }
@@ -191,18 +204,12 @@ function getEndpoint(id) {
   return {}
 }
 
-export function getStorageKey(id) {
-  return `${ENDPOINT_KEY}.${id}`
-}
-
 function getServerDemographicInfo(appVersionString) {
   const demographicInfo = {
-    // AppTitle/0.0.0. Maps to application.version_name in kinesis stream 
     AppVersion: appVersionString,
-    // Maker - OS name
-    Make: 'Javascript',
-    // Model - ...
-    Model: 'NodeJS'
+    Make: 'generic server',
+    Platform: 'Node.js',
+    PlatformVersion: process.version,
   }
 
   return demographicInfo
@@ -210,7 +217,7 @@ function getServerDemographicInfo(appVersionString) {
 
 function getBrowserDemographicInfo(appVersionString) {
   const demographicInfo = {
-    // AppTitle/0.0.0. Maps to application.version_name in kinesis stream 
+    // AppTitle/0.0.0. Maps to application.version_name in kinesis stream
     AppVersion: appVersionString,
     /* The locale of the endpoint, in the following format: 
        the ISO 639-1 alpha-2 code, followed by an underscore (_), 
@@ -229,7 +236,6 @@ function getBrowserDemographicInfo(appVersionString) {
     // Timezone: 'STRING_VALUE'
   }
 
-
   if (clientInfo.os && clientInfo.os.version) {
     demographicInfo.PlatformVersion = clientInfo.os.version
   }
@@ -240,7 +246,7 @@ function getBrowserDemographicInfo(appVersionString) {
 function getAppVersionCode(config) {
   const appName = config.appTitle || config.appPackageName || ''
   const appVersion = config.appVersionCode || '0.0.0'
-  return (appName) ? `${appName}@${appVersion}` : appVersion
+  return appName ? `${appName}@${appVersion}` : appVersion
 }
 
 /**
@@ -250,7 +256,7 @@ function getAppVersionCode(config) {
  * @param {Array} sourceArray
  */
 
- function overwriteMerge(_destinationArray, sourceArray) {
+function overwriteMerge(_destinationArray, sourceArray) {
   return sourceArray
 }
 

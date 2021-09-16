@@ -2,11 +2,11 @@ import {
   getSession,
   getTabSession,
   setTabSession,
-  getPageSession, 
+  getPageSession,
   setPageSession,
 } from '@analytics/session-utils'
-import inBrowser from '../utils/in-browser'
-import getClientInfo from '../utils/client-info'
+import inBrowser from '../../utils/in-browser'
+import getClientInfo from '../../utils/client-info'
 import getEventName from './get-event-name'
 import { uuid } from 'analytics-utils'
 import * as PINPOINT_EVENTS from './events'
@@ -21,14 +21,16 @@ export async function formatEvent(eventName, data = {}, config = {}) {
     enrichEventMetrics,
     debug,
   } = config
-  const logger = (debug) ? console.log : () => {}
+  const logger = debug ? console.log : () => {}
   const type = getEventName(eventName, eventMapping)
 
   const sessionData = getSession()
   // @TODO refactor session grabber
   const sessionId = data.sessionId || sessionData.id
   const sessionStart = data.sessionStart || sessionData.createdAt
-  const sessionStartUnix = (data.sessionStart) ? new Date(data.sessionStart).getTime() : sessionData.created
+  const sessionStartUnix = data.sessionStart
+    ? new Date(data.sessionStart).getTime()
+    : sessionData.created
   logger('event sessionData    ', JSON.stringify(sessionData))
 
   let pageSessionInfo, tabSessionData
@@ -41,17 +43,19 @@ export async function formatEvent(eventName, data = {}, config = {}) {
 
   const eventAttribs = data.attributes || {}
   const eventId = data.eventId || uuid()
-  const time = (data.time) ? new Date(data.time) : new Date()
+  const time = data.time ? new Date(data.time) : new Date()
   const timeStamp = time.toISOString()
   const sessionDuration = time.getTime() - sessionStartUnix
 
   const defaultEventAttributes = {
     date: timeStamp,
-    sessionId, // Event[id].Session.Id 
-    ...(!inBrowser) ? {} : { pageSession: pageSessionInfo.id }
+    sessionId, // Event[id].Session.Id
+    ...(!inBrowser ? {} : { pageSession: pageSessionInfo.id }),
   }
 
-  const extraAttributes = (enrichEventAttributes) ? await enrichEventAttributes() : {}
+  const extraAttributes = enrichEventAttributes
+    ? await enrichEventAttributes()
+    : {}
 
   /* Format attributes */
   const eventAttributes = {
@@ -76,7 +80,7 @@ export async function formatEvent(eventName, data = {}, config = {}) {
     year: time.getFullYear(),
   }
 
-  const extraMetrics = (enrichEventMetrics) ? await enrichEventMetrics() : {}
+  const extraMetrics = enrichEventMetrics ? await enrichEventMetrics() : {}
 
   const eventMetrics = {
     ...defaultMetrics,
@@ -146,11 +150,13 @@ export async function formatEvent(eventName, data = {}, config = {}) {
  * @param {Object} attributes
  * @param {Boolean} asArray If true ensure an array of strings is returned for each property
  */
- export async function prepareAttributes(attributes, asArray = false) {
+export async function prepareAttributes(attributes, asArray = false) {
   const sanitized = {}
   for (const name in attributes) {
-    const value = Array.isArray(attributes[name]) ? attributes[name] : [attributes[name]]
-    const prepValue = (asArray) ? value : value[0]
+    const value = Array.isArray(attributes[name])
+      ? attributes[name]
+      : [attributes[name]]
+    const prepValue = asArray ? value : value[0]
     // console.log(`name ${name}`, prepValue)
     const data = await prepareData(prepValue, sanitizeAttribute)
     /* Remove any null/undefined values */
@@ -159,8 +165,20 @@ export async function formatEvent(eventName, data = {}, config = {}) {
     }
   }
   return sanitized
- }
+}
 
+/**
+ * Prepares an object for inclusion in endpoint data or event data.
+ *
+ * @param {Object} metrics
+ */
+export async function prepareMetrics(metrics) {
+  const sanitized = {}
+  for (const name in metrics) {
+    sanitized[name] = await prepareData(metrics[name], sanitizeMetric)
+  }
+  return sanitized
+}
 
 /**
  * Resolves an attribute or metric value and sanitize it.
@@ -175,7 +193,7 @@ async function prepareData(value, sanitizeCallback) {
   return sanitizeCallback(value)
 }
 
- /**
+/**
  * Ensure value is a string or array of strings.
  *
  * @param {mixed} value
@@ -190,15 +208,7 @@ function sanitizeAttribute(value) {
   return isNullOrUndef(value) ? value : value.toString()
 }
 
-function notEmpty(val) {
-  return val !== null && typeof val !== 'undefined'
-}
-
-function isNullOrUndef(value) {
-  return value == null
-}
-
- /**
+/**
  * Ensure value is a single float.
  *
  * @param {mixed} value
@@ -207,15 +217,10 @@ function sanitizeMetric(value) {
   return parseFloat(Number(Array.isArray(value) ? value[0] : value))
 }
 
-/**
- * Prepares an object for inclusion in endpoint data or event data.
- *
- * @param {Object} metrics
- */
-export async function prepareMetrics(metrics) {
-  const sanitized = {}
-  for (const name in metrics) {
-    sanitized[name] = await prepareData(metrics[name], sanitizeMetric)
-  }
-  return sanitized
+function notEmpty(val) {
+  return val !== null && typeof val !== 'undefined'
+}
+
+function isNullOrUndef(value) {
+  return value == null
 }
