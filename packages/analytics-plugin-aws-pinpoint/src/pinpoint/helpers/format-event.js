@@ -5,7 +5,7 @@ import {
   getPageSession,
   setPageSession,
 } from '@analytics/session-utils'
-import { isBrowser } from '@analytics/type-utils'
+import inBrowser from '../../utils/in-browser'
 import getClientInfo from '../../utils/client-info'
 import getEventName from './get-event-name'
 import { uuid } from 'analytics-utils'
@@ -34,7 +34,7 @@ export async function formatEvent(eventName, data = {}, config = {}) {
   logger('event sessionData    ', JSON.stringify(sessionData))
 
   let pageSessionInfo, tabSessionData
-  if (isBrowser) {
+  if (inBrowser) {
     pageSessionInfo = getPageSession()
     tabSessionData = getTabSession()
     logger('event pageSessionInfo', JSON.stringify(pageSessionInfo))
@@ -50,7 +50,7 @@ export async function formatEvent(eventName, data = {}, config = {}) {
   const defaultEventAttributes = {
     date: timeStamp,
     sessionId, // Event[id].Session.Id
-    ...(!isBrowser ? {} : { pageSession: pageSessionInfo.id }),
+    ...(!inBrowser ? {} : { pageSession: pageSessionInfo.id }),
   }
 
   const extraAttributes = enrichEventAttributes
@@ -97,7 +97,7 @@ export async function formatEvent(eventName, data = {}, config = {}) {
   logger('eventAttributes', preparedData.attributes)
   logger('eventMetrics', preparedData.metrics)
 
-  if (isBrowser) {
+  if (inBrowser) {
     logger('clientInfo', getClientInfo())
   }
 
@@ -114,7 +114,7 @@ export async function formatEvent(eventName, data = {}, config = {}) {
       /* The title of the app that's recording the event. */
       AppTitle: appTitle,
       /* The version number of the app that's recording the event. Maps to application.version_code in kinesis stream */
-      ...(appVersionCode) ? {} : { AppVersionCode: appVersionCode },
+      AppVersionCode: appVersionCode,
       /* Event attributes - One or more custom attributes that are associated with the event. */
       Attributes: preparedData.attributes,
       /* The version of the SDK that's running on the client device. */

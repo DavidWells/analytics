@@ -1,5 +1,5 @@
-import { initialize } from './pinpoint/node'
-import * as PINPOINT_EVENTS from './pinpoint/events'
+import { initialize } from './pinpoint'
+import * as PINPOINT_EVENTS from './pinpoint/helpers/events'
 import { getSession, setSession } from '@analytics/session-utils'
 
 const config = {
@@ -127,7 +127,7 @@ function awsPinpointNode(pluginConfig = {}) {
       }
     },
     /* Track event & update endpoint details */
-    track: ({ payload, instance }) => {
+    track: ({ payload }) => {
       if (!recordEvent) {
         return loadError()
       }

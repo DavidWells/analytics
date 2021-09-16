@@ -8,14 +8,16 @@ import {
 } from '@analytics/session-utils'
 import { prepareAttributes, prepareMetrics } from './format-event'
 import { setItem, getItem, removeItem } from '@analytics/localstorage-utils'
-import { isBrowser, isString } from '@analytics/type-utils'
+import inBrowser from '../../utils/in-browser'
 import getClientInfo from '../../utils/client-info'
-import { getStorageKey, ENDPOINT_KEY } from './getStorageKey'
+import { getStorageKey } from '..'
 
 let clientInfo
-if (isBrowser) {
+if (inBrowser) {
   clientInfo = getClientInfo()
 }
+
+const ENDPOINT_KEY = '__endpoint'
 
 let migrationRan = false
 export default async function mergeEndpointData(endpoint = {}, config = {}) {
@@ -31,7 +33,7 @@ export default async function mergeEndpointData(endpoint = {}, config = {}) {
 
   // const tabSessionInfo = getTabSession()
   let pageSessionInfo, pageSession
-  if (isBrowser) {
+  if (inBrowser) {
     pageSessionInfo = getPageSession()
     pageSession = pageSessionInfo.id
   }
@@ -55,8 +57,10 @@ export default async function mergeEndpointData(endpoint = {}, config = {}) {
   const persistedEndpoint = getEndpoint(id)
   // const browserVersion = [clientInfo.model, clientInfo.version].join('/')
   const appVersionString = getAppVersionCode(config)
-  
-  const demographicInfo = isBrowser ? getBrowserDemographicInfo(appVersionString) : getServerDemographicInfo(appVersionString)
+
+  const demographicInfo = inBrowser
+    ? getBrowserDemographicInfo(appVersionString)
+    : getServerDemographicInfo(appVersionString)
   // console.log('demographicInfo', demographicInfo)
 
   const EndpointData = {
@@ -83,7 +87,7 @@ export default async function mergeEndpointData(endpoint = {}, config = {}) {
   }
 
   /* Add device attributes to endpoint */
-  if (isBrowser) {
+  if (inBrowser) {
     if (clientInfo.device && clientInfo.device.vendor) {
       EndpointData.Attributes.DeviceMake = [clientInfo.device.vendor]
     }
@@ -159,9 +163,7 @@ export default async function mergeEndpointData(endpoint = {}, config = {}) {
     endpoint.Attributes.lastSession = [sessionData.id]
     // @TODO persist tab info
     // endpoint.Attributes.lastTabSession = [ tabSessionInfo.id ]
-    if (pageSession) {
-      endpoint.Attributes.lastPageSession = [pageSession]
-    }
+    endpoint.Attributes.lastPageSession = [pageSession]
     // Store the endpoint data.
     // console.log('Set initital endpoint info')
     return persistEndpoint(id, endpoint)
@@ -187,7 +189,10 @@ export default async function mergeEndpointData(endpoint = {}, config = {}) {
 
 function persistEndpoint(id, endpointData) {
   const endpointKey = getStorageKey(id)
-  const data = isString(endpointData) ? endpointData : JSON.stringify(endpointData)
+  const data =
+    typeof endpointData === 'string'
+      ? endpointData
+      : JSON.stringify(endpointData)
   setItem(endpointKey, data)
   return endpointData
 }
