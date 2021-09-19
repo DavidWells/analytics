@@ -1,0 +1,57 @@
+{
+  "name": "@analytics/intercom",
+  "version": "1.0.0",
+  "description": "Intercom integration for 'analytics' module for browser & node",
+  "projectMeta": {
+    "provider": {
+      "name": "Intercom",
+      "url": "https://www.intercom.com//"
+    },
+    "platforms": {
+      "browser": "./src/browser.js",
+      "node": "./src/node.js"
+    }
+  },
+  "keywords": [
+    "analytics",
+    "analytics-project",
+    "analytics-plugin",
+    "intercom"
+  ],
+  "author": "Mathis Obadia <mathis.obadia@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "docs": "node ../analytics-cli/bin/run docs",
+    "build": "node ../../scripts/build/index.js",
+    "watch": "node ../../scripts/build/_watch.js",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish",
+    "es": "../../node_modules/.bin/babel-node ./testBabel.js"
+  },
+  "main": "lib/analytics-plugin-intercom.cjs.js",
+  "globalName": "analyticsIntercom",
+  "jsnext:main": "lib/analytics-plugin-intercom.es.js",
+  "module": "lib/analytics-plugin-intercom.es.js",
+  "browser": {
+    "./lib/analytics-plugin-intercom.cjs.js": "./lib/analytics-plugin-intercom.browser.cjs.js",
+    "./lib/analytics-plugin-intercom.es.js": "./lib/analytics-plugin-intercom.browser.es.js"
+  },
+  "files": [
+    "dist",
+    "lib",
+    "README.md"
+  ],
+  "homepage": "https://github.com/DavidWells/analytics#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidWells/analytics.git"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1"
+  },
+  "dependencies": {
+    "intercom-client": "^2.11.2"
+  }
+}
