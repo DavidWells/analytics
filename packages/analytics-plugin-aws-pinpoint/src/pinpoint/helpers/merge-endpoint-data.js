@@ -57,15 +57,8 @@ export default async function mergeEndpointData(endpoint = {}, config = {}) {
   const persistedEndpoint = getEndpoint(id)
   // const browserVersion = [clientInfo.model, clientInfo.version].join('/')
   const appVersionString = getAppVersionCode(config)
-<<<<<<< HEAD:packages/analytics-plugin-aws-pinpoint/src/pinpoint/helpers/merge-endpoint-data.js
-=======
   
   const demographicInfo = inBrowser ? getBrowserDemographicInfo(appVersionString) : getServerDemographicInfo(appVersionString)
->>>>>>> 9875b3452588390d5d92c38e0919549360b7befd:packages/analytics-plugin-aws-pinpoint/src/pinpoint/merge-endpoint-data.js
-
-  const demographicInfo = inBrowser
-    ? getBrowserDemographicInfo(appVersionString)
-    : getServerDemographicInfo(appVersionString)
   // console.log('demographicInfo', demographicInfo)
 
   const EndpointData = {
