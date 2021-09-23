@@ -5,7 +5,7 @@
  * @param {object|function} pluginConfig - Plugin settings or zero config perfume.js instance
  * @param {object} [pluginConfig.perfume] - perfume.js class. If not provided, a global window reference to Perfume will be used
  * @param {object} [pluginConfig.destinations] - Where perfume.js will send performance data
- * @param {string} [pluginConfig.category = prefume.js] - Name of event category. Default 'perfume.js'
+ * @param {string} [pluginConfig.category = perfume.js] - Name of event category. Default 'perfume.js'
  * @param {object} [pluginConfig.perfumeOptions] - Options to pass to perfume.js instance. See https://github.com/Zizzamia/perfume.js#perfume-custom-options
  * @return {*}
  * @example
@@ -18,10 +18,10 @@
  */
 function perfumeJsPlugin(pluginConfig = {}) {
   const conf = (typeof pluginConfig !== 'function') ? pluginConfig : {
-    prefume: pluginConfig
+    perfume: pluginConfig
   }
   return {
-    name: 'prefume.js',
+    name: 'perfume.js',
     config: conf,
     initialize: ({ instance, config }) => {
       const { perfume, destinations } = config
