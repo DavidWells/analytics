@@ -1,13 +1,9 @@
-<!--
+---
 title: Intercom
 description: Using the intercom plugin
--->
-
-# Intercom plugin for `analytics`
+---
 
 Integration with [intercom](https://intercom.com/) for [analytics](https://www.npmjs.com/package/analytics)
-
-For more information [see the docs](https://getanalytics.io/plugins/intercom/).
 
 <!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
 <details>
@@ -151,7 +147,6 @@ const analytics = Analytics({
 | Option | description |
 |:---------------------------|:-----------|
 | `appId` <br/>**required** - string| Your Intercom app id |
-
 
 ## Additional examples
 
@@ -332,7 +327,6 @@ Below are additional implementation examples.
   ```
 
 </details>
-
 
 <!-- AUTO-GENERATED-CONTENT:END -->
 

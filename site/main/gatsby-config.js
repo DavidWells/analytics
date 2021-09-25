@@ -35,6 +35,7 @@ module.exports = {
             'plugins/aws-pinpoint',
             'plugins/amplitude',
             'plugins/fullstory',
+            'plugins/intercom',
             'plugins/crazyegg',
             'plugins/gosquared',
             'plugins/simple-analytics',

@@ -6,7 +6,7 @@ description: Utility library for runtime type checking
 
 A tiny tree shakable utility library for runtime type checking.
 
-The entire package weighs in at <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`543 bytes`<!-- AUTO-GENERATED-CONTENT:END -->.
+The entire package weighs in at <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`657 bytes`<!-- AUTO-GENERATED-CONTENT:END -->.
 
 [See live demo](https://utils-types.netlify.app/).
 
@@ -47,6 +47,18 @@ import { isString } from '@analytics/types-utils'
 
 const xyz = 'hi'
 console.log(isString(xyz))
+// true
+```
+
+## `isNumber`
+
+Check if value is `number`
+
+```js
+import { isNumber } from '@analytics/types-utils'
+
+const xyz = 123
+console.log(isNumber(xyz))
 // true
 ```
 

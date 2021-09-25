@@ -111,6 +111,7 @@ const analytics = Analytics({
 | Option | description |
 |:---------------------------|:-----------|
 | `token` <br/>**required** - string| The mixpanel token associated to a mixpanel project |
+| `options` <br/>_optional_ - object| The mixpanel init options https://github.com/mixpanel/mixpanel-js/blob/8b2e1f7b/src/mixpanel-core.js#L87-L110 |
 | `pageEvent` <br/>_optional_ - string| Event name to use for page() events (default to page path) |
 | `customScriptSrc` <br/>_optional_ - string| Load mixpanel script from custom source |
 
