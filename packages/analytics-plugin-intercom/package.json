@@ -5,7 +5,7 @@
   "projectMeta": {
     "provider": {
       "name": "Intercom",
-      "url": "https://www.intercom.com//"
+      "url": "https://www.intercom.com/"
     },
     "platforms": {
       "browser": "./src/browser.js",
