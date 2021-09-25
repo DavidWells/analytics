@@ -1,6 +1,6 @@
 {
   "name": "@analytics/intercom",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Intercom integration for 'analytics' module for browser & node",
   "projectMeta": {
     "provider": {
