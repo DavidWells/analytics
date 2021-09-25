@@ -12,7 +12,7 @@ const config = {
   verticalPadding: undefined,
   /* Css selector of the custom launcher */
   customLauncherSelector: undefined,
-};
+}
 
 /**
  * intercom analytics plugin
