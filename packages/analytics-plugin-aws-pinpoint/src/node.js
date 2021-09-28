@@ -1,8 +1,13 @@
 import { initialize } from './pinpoint'
 import * as PINPOINT_EVENTS from './pinpoint/helpers/events'
+import loadError from './utils/load-error'
+import formatEventData from './utils/format-event-data'
+import bootstrap from './utils/bootstrap'
 import { getSession, setSession } from '@analytics/session-utils'
 
 const config = {
+  /* Disable anonymous MTU */
+  disableAnonymousTraffic: false,
   // Pinpoint service region
   pinpointRegion: 'us-east-1',
   // Custom event mapping
@@ -20,6 +25,7 @@ const config = {
  * @param {string} [pluginConfig.appPackageName] - The name of the app package, such as com.example.my_app.
  * @param {string} [pluginConfig.appVersionCode] - The version number of the app, such as 3.2.0
  * @param {string} [pluginConfig.fips] - Use the AWS FIPS service endpoint for Pinpoint
+ * @param {boolean} [pluginConfig.disableAnonymousTraffic] -  Disable anonymous events from firing
  * @return {object} Analytics plugin
  * @example
  *
@@ -39,21 +45,11 @@ function awsPinpointNode(pluginConfig = {}) {
       ...config,
       ...pluginConfig,
     },
-    bootstrap: (pluginApi) => {
-      const { config, instance } = pluginApi
-      /* Load aws-pinpoint script after userId exists */
-      if (!instance.user('userId')) {
-        instance.once('identifyStart', ({ plugins }) => {
-          const self = plugins['aws-pinpoint']
-          if (!self.loaded()) {
-            instance.loadPlugin('aws-pinpoint')
-          }
-        })
-      }
-    },
+    bootstrap: bootstrap(pluginConfig),
     initialize: ({ config, instance }) => {
       const { debug } = config
       const logger = debug ? console.log : () => {}
+      
       /* Disable pinpoint if user is not yet identified. */
       const state = instance.getState()
       const userDetails = state.user || {}
@@ -64,6 +60,7 @@ function awsPinpointNode(pluginConfig = {}) {
       /* Initialize session info */
       const initSessionData = getSession()
       logger('initSessionData', initSessionData)
+
       /* If anonId has changed, refresh session details */
       if (
         initSessionData &&
@@ -157,29 +154,6 @@ function awsPinpointNode(pluginConfig = {}) {
     },
     loaded: () => !!recordEvent,
   }
-}
-
-function loadError() {
-  throw new Error('Pinpoint not loaded')
-}
-
-function formatEventData(obj) {
-  return Object.keys(obj).reduce(
-    (acc, key) => {
-      const value = obj[key]
-      if (typeof value === 'number') {
-        acc.metrics[key] = value
-      }
-      if (typeof value === 'string' || typeof value === 'boolean') {
-        acc.attributes[key] = value
-      }
-      return acc
-    },
-    {
-      attributes: {},
-      metrics: {},
-    }
-  )
 }
 
 export { PINPOINT_EVENTS }

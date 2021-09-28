@@ -4,9 +4,10 @@ import { CHANNEL_TYPES } from './constants'
 import getClientInfo from '../../utils/client-info'
 import { getStorageKey } from '..'
 import { getItem } from '@analytics/localstorage-utils'
+import * as PINPOINT_EVENTS from './events'
 
 const clientInfo = getClientInfo()
-
+const { SESSION_START, SESSION_STOP } = PINPOINT_EVENTS
 const EMAIL_REGEX = /.+\@.+\..+/
 function isEmail(string) {
   return EMAIL_REGEX.test(string)
