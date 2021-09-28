@@ -1,6 +1,9 @@
 import { initialize, getStorageKey } from './pinpoint'
 import { CHANNEL_TYPES } from './pinpoint/helpers/constants'
 import * as PINPOINT_EVENTS from './pinpoint/helpers/events'
+import loadError from './utils/load-error'
+import formatEventData from './utils/format-event-data'
+import bootstrap from './utils/bootstrap'
 import { onUserActivity } from '@analytics/activity-utils'
 import { setItem, getItem, removeItem } from '@analytics/localstorage-utils'
 import {
@@ -89,7 +92,7 @@ function awsPinpointPlugin(pluginConfig = {}) {
       ...config,
       ...pluginConfig,
     },
-    bootstrap: bootstrap,
+    bootstrap: bootstrap(pluginConfig),
     initialize: ({ config, instance }) => {
       const { disableAnonymousTraffic, debug } = config
       const logger = debug ? console.log : () => {}
@@ -296,10 +299,6 @@ function awsPinpointPlugin(pluginConfig = {}) {
       if (traits && Object.keys(traits).length) {
         userInfo.UserAttributes = traits
       }
-      if (traits.email) {
-        ;(endpoint.Address = traits.email),
-          (endpoint.ChannelType = CHANNEL_TYPES.EMAIL)
-      }
       if (Object.keys(userInfo).length) {
         endpoint.User = userInfo
       }
@@ -314,29 +313,6 @@ function awsPinpointPlugin(pluginConfig = {}) {
     },
     loaded: () => !!recordEvent,
   }
-}
-
-function loadError() {
-  throw new Error('Pinpoint not loaded')
-}
-
-function formatEventData(obj) {
-  return Object.keys(obj).reduce(
-    (acc, key) => {
-      const value = obj[key]
-      if (typeof value === 'number') {
-        acc.metrics[key] = value
-      }
-      if (typeof value === 'string' || typeof value === 'boolean') {
-        acc.attributes[key] = value
-      }
-      return acc
-    },
-    {
-      attributes: {},
-      metrics: {},
-    }
-  )
 }
 
 function getTabs() {
