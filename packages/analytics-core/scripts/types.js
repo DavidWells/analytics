@@ -49,6 +49,9 @@ const typesFromJsDocs = content
   // Joins are used for modular JSDOC typedefs that support intellisense in VS Code.
   // 'jsdoc' cannot parse joins, so they are temporarily transpiled to unions by 'jsdoc-plugin-intersection'.
   .replace(/ \| /gm, ' & ')
+  // https://github.com/DavidWells/analytics/issues/218
+  .replace(/string & string\[\]/gm, 'string | string[]')
+  
 
   // Make types extensible
 const typeExtensions = `

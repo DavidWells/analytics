@@ -185,7 +185,7 @@ function analytics(config = {}) {
     /**
      * Enable analytics plugin
      * @typedef {Function} EnablePlugin
-     * @param  {String|Array} plugins - name of plugins(s) to disable
+     * @param  {string|string[]} plugins - name of plugins(s) to disable
      * @param  {Function} [callback] - callback after enable runs
      * @returns {Promise}
      * @example
@@ -211,7 +211,7 @@ function analytics(config = {}) {
     /**
      * Disable analytics plugin
      * @typedef {Function} DisablePlugin
-     * @param  {String|Array} plugins - name of integration(s) to disable
+     * @param  {string|string[]} plugins - name of integration(s) to disable
      * @param  {Function} callback - callback after disable runs
      * @returns {Promise}
      * @example
