@@ -21,6 +21,8 @@
   "author": "David Wells",
   "license": "MIT",
   "scripts": {
+    "test": "ava -v",
+    "test:watch": "ava -v --watch",
     "docs": "node ../analytics-cli/bin/run docs",
     "build": "node ../../scripts/build/index.js",
     "watch": "node ../../scripts/build/_watch.js",
@@ -48,6 +50,17 @@
     "type": "git",
     "url": "git+https://github.com/DavidWells/analytics.git"
   },
+  "ava": {
+    "files": [
+      "**/**/*.test.js"
+    ],
+    "require": [
+      "esm",
+      "@babel/register"
+    ],
+    "verbose": true,
+    "failFast": true
+  },
   "dependencies": {
     "@analytics/activity-utils": "^0.1.7",
     "@analytics/localstorage-utils": "^0.1.5",
@@ -63,6 +76,7 @@
   "devDependencies": {
     "@babel/core": "^7.2.2",
     "@babel/plugin-transform-runtime": "7.5.5",
-    "@babel/preset-env": "^7.3.1"
+    "@babel/preset-env": "^7.3.1",
+    "@babel/register": "^7.15.3"
   }
 }
