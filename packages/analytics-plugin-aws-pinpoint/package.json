@@ -59,7 +59,8 @@
       "@babel/register"
     ],
     "verbose": true,
-    "failFast": true
+    "failFast": true,
+    "failWithoutAssertions": false
   },
   "dependencies": {
     "@analytics/activity-utils": "^0.1.7",
@@ -77,6 +78,7 @@
     "@babel/core": "^7.2.2",
     "@babel/plugin-transform-runtime": "7.5.5",
     "@babel/preset-env": "^7.3.1",
-    "@babel/register": "^7.15.3"
+    "@babel/register": "^7.15.3",
+    "aws-sdk-client-mock": "^0.5.5"
   }
 }

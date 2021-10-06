@@ -1,13 +1,11 @@
 import test from 'ava'
-import sinon from 'sinon'
+import { mockClient } from 'aws-sdk-client-mock'
+import { PinpointClient, PutEventsCommand } from '@aws-sdk/client-pinpoint'
 import callAws from '../../../src/pinpoint/helpers/call-aws'
-import AWS from '@aws-sdk/client-pinpoint'
-
-let sinonSandbox
 
 const config = {
-  pinpointRegion: 'east-1',
-  pinpointAppId: 'appId',
+  pinpointRegion: 'east',
+  // pinpointAppId: 'appId',
   credentials: {
     accessKeyId: 'foo',
     secretAccessKey: 'bar',
@@ -23,21 +21,43 @@ const eventsRequest = {
   },
 }
 
-test.beforeEach((t) => {
-  sinonSandbox = sinon.createSandbox()
-})
-
-test.afterEach((t) => {
-  sinonSandbox.restore()
-})
+const pinpointMock = mockClient(PinpointClient)
 
 test('should send event data', async (t) => {
-  sinonSandbox.stub(AWS, 'PinpointClient')
-    .returns({
-      send: () => {
-        return 'test'
+  pinpointMock
+    .on(PutEventsCommand)
+    .resolves({
+      $metadata: {
+        attempts: 1,
+        cfId: 'foo',
+        extendedRequestId: 'bar',
+        httpStatusCode: 202,
+        requestId: 'baz',
+        totalRetryDelay: undefined
+      },
+      EventsResponse: {
+        Results: {
+          foo: 'lol',
+          bar: 100
+        }
       }
     })
-  const response = await callAws(eventsRequest, config)
-  console.log(response)
+  
+  const data = await callAws(eventsRequest, config)
+  t.deepEqual(data, {
+    $metadata: {
+      attempts: 1,
+      cfId: 'foo',
+      extendedRequestId: 'bar',
+      httpStatusCode: 202,
+      requestId: 'baz',
+      totalRetryDelay: undefined
+    },
+    EventsResponse: {
+      Results: {
+        foo: 'lol',
+        bar: 100
+      }
+    }
+  })
 })
