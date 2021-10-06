@@ -18,6 +18,7 @@ test.before(() => {
 test.beforeEach(() => {
   mergeEndpointDataStub.resetHistory()
 })
+
 test.afterEach(() => {
   mergeEndpointDataStub.resetHistory()
   sandbox.restore()
