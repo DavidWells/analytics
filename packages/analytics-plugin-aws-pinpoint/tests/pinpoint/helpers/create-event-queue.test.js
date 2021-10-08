@@ -4,32 +4,29 @@ import createEventQueue from '../../../src/pinpoint/helpers/create-event-queue'
 import * as formatEvent from '../../../src/pinpoint/helpers/format-event'
 import * as mergeEndpointData from '../../../src/pinpoint/helpers/merge-endpoint-data'
 
-let sandbox = sinon.createSandbox()
+let sandbox
 let formatEventStub
 let mergeEndpointDataStub
+let queue
 
-test.before(() => {
+test.beforeEach(() => {
+  sandbox = sinon.createSandbox()
+  queue = {
+    push: sandbox.fake(),
+    flush: sandbox.fake(),
+  }
   formatEventStub = sandbox.stub(formatEvent, 'formatEvent').resolves('event')
+  console.log(mergeEndpointData, '********* import mergeEndpointData in  eventqueue.test *****')
   mergeEndpointDataStub = sandbox
     .stub(mergeEndpointData, 'default')
     .resolves('endpoint')
 })
-
-test.beforeEach(() => {
-  mergeEndpointDataStub.resetHistory()
-})
-
+// [Function: mergeEndpointData] ******* function
 test.afterEach(() => {
-  mergeEndpointDataStub.resetHistory()
   sandbox.restore()
 })
 
 test('should call queue.push', async () => {
-  formatEventStub.resetHistory()
-  const queue = {
-    push: sandbox.fake(),
-    flush: sandbox.fake(),
-  }
   const eventData = { bar: 'bar' }
   const endpoint = undefined
   const queueEvent = createEventQueue(queue, { foo: 'foo' })
@@ -40,11 +37,6 @@ test('should call queue.push', async () => {
 })
 
 test('should call queue.flush if flush is true', async () => {
-  formatEventStub.resetHistory()
-  const queue = {
-    push: sandbox.fake(),
-    flush: sandbox.fake(),
-  }
   const queueEvent = createEventQueue(queue, { foo: 'foo' })
   const eventData = {}
   const endpoint = {}
@@ -55,11 +47,6 @@ test('should call queue.flush if flush is true', async () => {
 })
 
 test('should call queue.flush if eventData is boolean', async () => {
-  formatEventStub.resetHistory()
-  const queue = {
-    push: sandbox.fake(),
-    flush: sandbox.fake(),
-  }
   const queueEvent = createEventQueue(queue, { foo: 'foo' })
   const eventData = false
   const endpoint = {}
@@ -68,51 +55,30 @@ test('should call queue.flush if eventData is boolean', async () => {
 })
 
 test('should not call queue.flush if eventData is not boolean', async () => {
-  formatEventStub.resetHistory()
-  const queue = {
-    push: sandbox.fake(),
-    flush: sandbox.fake(),
-  }
   const queueEvent = createEventQueue(queue, { foo: 'foo' })
-  const eventData = 'lol' 
+  const eventData = 'lol'
   const endpoint = {}
   const response = await queueEvent('foo', eventData, endpoint)
   sandbox.assert.notCalled(queue.flush)
 })
 
 test('should call queue.flush if endpoint is boolean', async () => {
-  formatEventStub.resetHistory()
-  const queue = {
-    push: sandbox.fake(),
-    flush: sandbox.fake(),
-  }
   const queueEvent = createEventQueue(queue, { foo: 'foo' })
   const eventData = 'lol'
-  const endpoint = true 
+  const endpoint = true
   const response = await queueEvent('foo', eventData, endpoint)
   sandbox.assert.calledOnce(queue.flush)
 })
 
 test('should not call queue.flush if endpoint is not boolean', async () => {
-  formatEventStub.resetHistory()
-  mergeEndpointDataStub.resetHistory()
-  const queue = {
-    push: sandbox.fake(),
-    flush: sandbox.fake(),
-  }
   const queueEvent = createEventQueue(queue, { foo: 'foo' })
   const eventData = 'lol'
-  const endpoint = undefined 
+  const endpoint = undefined
   const response = await queueEvent('foo', eventData, endpoint)
   sandbox.assert.notCalled(queue.flush)
 })
 
 test('should call mergeEndpointData with endpoint data', async () => {
-  formatEventStub.resetHistory()
-  const queue = {
-    push: sandbox.fake(),
-    flush: sandbox.fake(),
-  }
   const queueEvent = createEventQueue(queue, { foo: 'foo' })
   const eventData = {}
   const endpoint = { baz: 'baz' }

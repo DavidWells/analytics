@@ -21,8 +21,8 @@
   "author": "David Wells",
   "license": "MIT",
   "scripts": {
-    "test": "ava -v",
-    "test:watch": "ava -v --watch",
+    "test": "ava -v -s",
+    "test:watch": "ava -v -s --watch",
     "docs": "node ../analytics-cli/bin/run docs",
     "build": "node ../../scripts/build/index.js",
     "watch": "node ../../scripts/build/_watch.js",
@@ -52,7 +52,8 @@
   },
   "ava": {
     "files": [
-      "**/**/*.test.js"
+      "**/**/*.test.js",
+      "**/*.test.js"
     ],
     "require": [
       "esm",

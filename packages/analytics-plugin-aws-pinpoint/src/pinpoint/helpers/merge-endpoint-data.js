@@ -10,7 +10,7 @@ import { prepareAttributes, prepareMetrics } from './format-event'
 import { setItem, getItem, removeItem } from '@analytics/localstorage-utils'
 import { isBrowser, isString } from '@analytics/type-utils'
 import getClientInfo from '../../utils/client-info'
-import { getStorageKey, ENDPOINT_KEY } from './getStorageKey'
+import { getStorageKey } from '../setup'
 
 let clientInfo
 if (isBrowser) {

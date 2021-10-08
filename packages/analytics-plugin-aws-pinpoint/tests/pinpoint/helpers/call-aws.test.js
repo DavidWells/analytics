@@ -24,25 +24,23 @@ const eventsRequest = {
 const pinpointMock = mockClient(PinpointClient)
 
 test('should send event data', async (t) => {
-  pinpointMock
-    .on(PutEventsCommand)
-    .resolves({
-      $metadata: {
-        attempts: 1,
-        cfId: 'foo',
-        extendedRequestId: 'bar',
-        httpStatusCode: 202,
-        requestId: 'baz',
-        totalRetryDelay: undefined
+  pinpointMock.on(PutEventsCommand).resolves({
+    $metadata: {
+      attempts: 1,
+      cfId: 'foo',
+      extendedRequestId: 'bar',
+      httpStatusCode: 202,
+      requestId: 'baz',
+      totalRetryDelay: undefined,
+    },
+    EventsResponse: {
+      Results: {
+        foo: 'lol',
+        bar: 100,
       },
-      EventsResponse: {
-        Results: {
-          foo: 'lol',
-          bar: 100
-        }
-      }
-    })
-  
+    },
+  })
+
   const data = await callAws(eventsRequest, config)
   t.deepEqual(data, {
     $metadata: {
@@ -51,13 +49,13 @@ test('should send event data', async (t) => {
       extendedRequestId: 'bar',
       httpStatusCode: 202,
       requestId: 'baz',
-      totalRetryDelay: undefined
+      totalRetryDelay: undefined,
     },
     EventsResponse: {
       Results: {
         foo: 'lol',
-        bar: 100
-      }
-    }
+        bar: 100,
+      },
+    },
   })
 })
