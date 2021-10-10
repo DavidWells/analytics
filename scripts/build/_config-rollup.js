@@ -1,16 +1,16 @@
 const path = require('path')
-const babel = require('rollup-plugin-babel')
+const babel = require('@rollup/plugin-babel').babel
 const minify = require('rollup-plugin-babel-minify')
-const replace = require('rollup-plugin-replace')
-const nodeResolve = require('rollup-plugin-node-resolve')
+const replace = require('@rollup/plugin-replace')
+const nodeResolve = require('@rollup/plugin-node-resolve').nodeResolve
 const removeNodeBuiltIns = require('rollup-plugin-node-builtins')
 const stripBanner = require('rollup-plugin-strip-banner')
 const compiler = require('@ampproject/rollup-plugin-closure-compiler')
-const commonjs = require('rollup-plugin-commonjs')
+const commonjs = require('@rollup/plugin-commonjs')
 const { sizeSnapshot } = require('rollup-plugin-size-snapshot')
 const { uglify } = require('rollup-plugin-uglify')
 const { terser } = require('rollup-plugin-terser')
-const json = require('rollup-plugin-json')
+const json = require('@rollup/plugin-json')
 
 process.env.NODE_ENV = 'production'
 let isProduction = process.env.NODE_ENV === 'production' && !process.env.ROLLUP_WATCH
@@ -51,7 +51,8 @@ module.exports = function generateConfig(directory) {
         }),
         babel({
           exclude: 'node_modules/**',
-          runtimeHelpers: true
+          babelHelpers: 'runtime',
+          skipPreflightCheck: true
         }),
         {
           transform(source) {
@@ -60,9 +61,12 @@ module.exports = function generateConfig(directory) {
         },
         removeNodeBuiltIns(),
         replace({
-          'process.browser': JSON.stringify(!!config.browser),
-          'process.env.NODE_ENV': isProduction ? "'production'" : "'development'",
-          'process.env.VERSION': JSON.stringify(pkg.version)
+          preventAssignment: true,
+          values: {
+            'process.browser': JSON.stringify(!!config.browser),
+            'process.env.NODE_ENV': isProduction ? "'production'" : "'development'",
+            'process.env.VERSION': JSON.stringify(pkg.version)
+          }
         }),
         commonjs({
           include: 'node_modules/**',
@@ -178,6 +182,7 @@ function getFormats(pkg) {
       output: {
         format: 'cjs',
         file: cjsBrowser,
+        exports: 'default'
       },
       browser: true
     },
@@ -194,6 +199,7 @@ function getFormats(pkg) {
       output: {
         format: 'cjs',
         file: cjsName,
+        exports: 'default'
       },
       browser: false
     },
