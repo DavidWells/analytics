@@ -10,12 +10,9 @@ import { prepareAttributes, prepareMetrics } from './format-event'
 import { setItem, getItem, removeItem } from '@analytics/localstorage-utils'
 import { isBrowser, isString } from '@analytics/type-utils'
 import getClientInfo from '../../utils/client-info'
-import { getStorageKey } from '../setup'
+import { getStorageKey } from '..'
 
-let clientInfo
-if (isBrowser) {
-  clientInfo = getClientInfo()
-}
+const ENDPOINT_KEY = '__endpoint'
 
 let migrationRan = false
 export default async function mergeEndpointData(endpoint = {}, config = {}) {
@@ -31,7 +28,9 @@ export default async function mergeEndpointData(endpoint = {}, config = {}) {
 
   // const tabSessionInfo = getTabSession()
   let pageSessionInfo, pageSession
-  if (isBrowser) {
+  let clientInfo
+  if (inBrowser) {
+    clientInfo = getClientInfo()
     pageSessionInfo = getPageSession()
     pageSession = pageSessionInfo.id
   }
@@ -55,8 +54,8 @@ export default async function mergeEndpointData(endpoint = {}, config = {}) {
   const persistedEndpoint = getEndpoint(id)
   // const browserVersion = [clientInfo.model, clientInfo.version].join('/')
   const appVersionString = getAppVersionCode(config)
-  
-  const demographicInfo = isBrowser ? getBrowserDemographicInfo(appVersionString) : getServerDemographicInfo(appVersionString)
+
+  const demographicInfo = getDemographicInfo(appVersionString, clientInfo)
   // console.log('demographicInfo', demographicInfo)
 
   const EndpointData = {
@@ -199,6 +198,12 @@ function getEndpoint(id) {
   return {}
 }
 
+function getDemographicInfo(appVersionString, clientInfo) {
+  return inBrowser
+    ? getBrowserDemographicInfo(appVersionString, clientInfo)
+    : getServerDemographicInfo(appVersionString)
+}
+
 function getServerDemographicInfo(appVersionString) {
   const demographicInfo = {
     AppVersion: appVersionString,
@@ -210,7 +215,7 @@ function getServerDemographicInfo(appVersionString) {
   return demographicInfo
 }
 
-function getBrowserDemographicInfo(appVersionString) {
+function getBrowserDemographicInfo(appVersionString, clientInfo) {
   const demographicInfo = {
     // AppTitle/0.0.0. Maps to application.version_name in kinesis stream
     AppVersion: appVersionString,

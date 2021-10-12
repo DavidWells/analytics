@@ -8,7 +8,7 @@ test('should return empty attributes and metrics if empty payload', (t) => {
   t.deepEqual(data.metrics, {})
 })
 
-test('should return attributes with string and boolean in payload', (t) => {
+test('should return attributes if payload contains string and boolean', (t) => {
   const payload = {
     foo: 'lol',
     bar: false,
@@ -23,7 +23,7 @@ test('should return attributes with string and boolean in payload', (t) => {
   t.deepEqual(data.metrics, {})
 })
 
-test('should return metrics with number in payload', (t) => {
+test('should return metrics if payload contains number', (t) => {
   const payload = {
     foo: 43,
     bar: 10.3,
@@ -34,6 +34,6 @@ test('should return metrics with number in payload', (t) => {
   t.deepEqual(data.metrics, {
     foo: 43,
     bar: 10.3,
-    baz: 0.343
+    baz: 0.343,
   })
 })

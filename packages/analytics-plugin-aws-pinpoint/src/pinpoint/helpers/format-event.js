@@ -10,7 +10,9 @@ import getClientInfo from '../../utils/client-info'
 import getEventName from './get-event-name'
 import { uuid } from 'analytics-utils'
 import * as PINPOINT_EVENTS from './events'
-
+export function test() {
+  return 'inside format event'
+}
 export async function formatEvent(eventName, data = {}, config = {}) {
   const {
     appTitle,
@@ -23,7 +25,8 @@ export async function formatEvent(eventName, data = {}, config = {}) {
   } = config
   const logger = debug ? console.log : () => {}
   const type = getEventName(eventName, eventMapping)
-
+  const respon = test()
+  console.log(respon)
   const sessionData = getSession()
   // @TODO refactor session grabber
   const sessionId = data.sessionId || sessionData.id

@@ -4,63 +4,52 @@ import createPinpointSender from '../../../src/pinpoint/helpers/create-pinpoint-
 import * as callAws from '../../../src/pinpoint/helpers/call-aws'
 import * as mergeEndpointData from '../../../src/pinpoint/helpers/merge-endpoint-data'
 
-let sandbox
 let mergeEndpointDataStub
 let callAwsStub
+let getEndpointIdFake
 
 test.beforeEach(() => {
-  sandbox = sinon.createSandbox()
-  mergeEndpointDataStub = sandbox.stub(mergeEndpointData, 'default').resolves({
-    requestId: 'id',
+  mergeEndpointDataStub = sinon.stub(mergeEndpointData, 'default').resolves({
+    ChannelType: 'fake channel'
   })
-  callAwsStub = sandbox.stub(callAws, 'default')
+  callAwsStub = sinon.stub(callAws, 'default')
+  getEndpointIdFake = sinon.fake.returns('id')
 })
 
 test.afterEach(() => {
-  sandbox.restore()
+  sinon.restore()
 })
 
 test('should return undefined if getEndpointId does not return id', async (t) => {
-  const getEndpointIdFake = sandbox.fake()
   const pinpointPutEvent = createPinpointSender({
-    getEndpointId: getEndpointIdFake,
+    getEndpointId: sinon.fake(),
   })
   const response = await pinpointPutEvent([], {})
   t.is(response, undefined)
 })
 
-test('should call mergeEndpointData if endpointInfo is provided', async () => {
-  const getEndpointIdFake = sandbox.fake.returns('id')
-  const endpointInfo = {
-    foo: 'foo',
-  }
-  const pinpointPutEvent = createPinpointSender({
-    getEndpointId: getEndpointIdFake,
-  })
-  const response = await pinpointPutEvent([], endpointInfo)
-  sandbox.assert.calledOnce(mergeEndpointDataStub)
-})
-
-test('should return valid response', async (t) => {
-  callAwsStub.returns('aws')
-  const getEndpointIdFake = sandbox.fake.resolves('id')
+test('should return valid endpoint data', async (t) => {
+  callAwsStub.resolves('aws')
   const config = {
     getEndpointId: getEndpointIdFake,
     debug: false,
   }
+  const endpointInfo = {
+    foo: 'foo',
+  }
   const pinpointPutEvent = createPinpointSender(config)
-  const returnObject = await pinpointPutEvent([], {})
+  const endpointData = await pinpointPutEvent(['bar', 'baz'], endpointInfo)
 
-  // TODO: build regex pattern to check for response.endpoint object
-  t.regex(JSON.stringify(returnObject.endpoint), /RequestId/)
-  t.is(returnObject.response, 'aws')
-  t.deepEqual(returnObject.events, [])
-  t.is(returnObject.error, undefined)
+  sinon.assert.calledOnce(mergeEndpointDataStub)
+  t.is(endpointData.endpoint.ChannelType, 'fake channel')
+  t.regex(JSON.stringify(endpointData.endpoint.RequestId), /\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b/)
+  t.is(endpointData.response, 'aws')
+  t.deepEqual(endpointData.events, ['bar', 'baz'])
+  t.is(endpointData.error, undefined)
 })
 
 test('should set error if callAws fails', async (t) => {
   callAwsStub.throws({ message: 'Error calling AWS' })
-  const getEndpointIdFake = sandbox.fake.resolves('id')
   const config = {
     getEndpointId: getEndpointIdFake,
     debug: false,

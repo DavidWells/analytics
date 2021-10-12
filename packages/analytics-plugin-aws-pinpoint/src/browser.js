@@ -1,4 +1,4 @@
-import { initialize, getStorageKey } from './pinpoint/initialize'
+import { initialize, getStorageKey } from './pinpoint'
 import { CHANNEL_TYPES } from './pinpoint/helpers/constants'
 import * as PINPOINT_EVENTS from './pinpoint/helpers/events'
 import loadError from './utils/load-error'
