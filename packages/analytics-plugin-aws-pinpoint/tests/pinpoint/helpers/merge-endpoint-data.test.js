@@ -3,14 +3,12 @@ import sinon from 'sinon'
 import * as inBrowser from '../../../src/utils/in-browser'
 import mergeEndpointData from '../../../src/pinpoint/helpers/merge-endpoint-data'
 import * as getClientInfo from '../../../src/utils/client-info'
-import * as formatEvent from '../../../src/pinpoint/helpers/format-event'
+import * as formatData from '../../../src/pinpoint/helpers/prepare-data'
 import deepmerge from 'deepmerge'
 
 let config
-let prepareAttributesStub
-let prepareMetricsStub
 let getClientInfoStub
-let deepMergeAllStub
+let deepMergeAllSpy
 
 test.beforeEach(() => {
   config = {
@@ -18,55 +16,50 @@ test.beforeEach(() => {
     getEndpointId: sinon.stub().resolves(),
     getUserId: sinon.stub(),
   }
-  prepareAttributesStub = sinon
-    .stub(formatEvent, 'prepareAttributes')
-    .resolves({
-      lastSessionDate: 'lastSessionDate',
-      lastSession: false,
-      lastPageSession: false,
-    })
-  prepareMetricsStub = sinon
-    .stub(formatEvent, 'prepareMetrics')
-    .callsFake(() => {
-      return { sessions: 'foo', pageViews: 'bar' }
-    })
+  sinon.stub(formatData, 'prepareAttributes').resolves({
+    DeviceMake: 'device make',
+    DeviceModel: 'device model',
+    DeviceType: 'device type',
+  })
+  sinon.stub(formatData, 'prepareMetrics').callsFake(() => {
+    return { sessions: 'foo', pageViews: 'bar' }
+  })
   getClientInfoStub = sinon.stub(getClientInfo, 'default').returns({
     device: {
-      vendor: 'vendor',
+      vendor: 'device vendor',
       model: 'device model',
-      type: 'type',
+      type: 'device type',
     },
     language: 'language',
     make: 'make',
     model: 'model',
     version: 'version',
-    platform: 'platform',
     os: {
       name: 'os name',
       version: 'os version',
     },
   })
-  deepMergeAllStub = sinon.stub(deepmerge, 'all').returns({
-    User: {
-      UserId: 'user id',
-      UserAttributes: {
-        userAttr1: 'userAttr1',
-        userAttr2: 'userAttr2',
-      },
-    },
-  })
+  deepMergeAllSpy = sinon.spy(deepmerge, 'all')
 })
 
 test.afterEach(() => {
   sinon.restore()
 })
 
-// // Browser tests
-test('should get client info', async () => {
+// Browser tests
+test('should get client info and set browser demographic info', async (t) => {
   sinon.replace(inBrowser, 'default', true)
   const endpoint = {}
   const data = await mergeEndpointData(endpoint, config)
+
   sinon.assert.calledOnce(getClientInfoStub)
+  sinon.assert.calledOnce(deepMergeAllSpy)
+  t.is(data.Demographic.Locale, 'language')
+  t.is(data.Demographic.Make, 'make')
+  t.is(data.Demographic.Model, 'model')
+  t.is(data.Demographic.ModelVersion, 'version')
+  t.is(data.Demographic.Platform, 'os name')
+  t.is(data.Demographic.PlatformVersion, 'os version')
 })
 
 // Node tests
@@ -82,39 +75,47 @@ test('should set attributes to endpoint data', async (t) => {
     JSON.stringify(data.Attributes.lastSession[0]),
     /\b\w+-\w+-\w+-\w+-\w+\b/
   )
+  t.is(data.Attributes.lastPageSession[0], undefined)
 })
 
 test('should set default location to empty object', async (t) => {
   const endpoint = {}
   const data = await mergeEndpointData(endpoint, config)
+
   t.deepEqual(data.Location, {})
 })
 
 test('should set server demographic info', async (t) => {
   const endpoint = {}
   const data = await mergeEndpointData(endpoint, config)
-  t.regex(JSON.stringify(data.Demographic.AppVersion), /\d+.\d+.\d+/)
-  t.is(data.Demographic.Make, 'generic server')
-  t.is(data.Demographic.Platform, 'Node.js')
-  t.regex(JSON.stringify(data.Demographic.PlatformVersion), /v\d+\.\d+\.\d+/)
+  const { AppVersion, Make, Platform, PlatformVersion } = data.Demographic
+
+  t.regex(JSON.stringify(AppVersion), /\d+.\d+.\d+/)
+  t.is(Make, 'generic server')
+  t.is(Platform, 'Node.js')
+  t.regex(JSON.stringify(PlatformVersion), /v\d+\.\d+\.\d+/)
 })
 
 test('should set user id', async (t) => {
   config.getUserId.resolves('user id')
   const endpoint = {}
   const data = await mergeEndpointData(endpoint, config)
+
   t.deepEqual(data.User, { UserId: 'user id' })
 })
 
 test('should set metrics', async (t) => {
   const endpoint = {}
   const data = await mergeEndpointData(endpoint, config)
+
   t.deepEqual(data.Metrics, { sessions: 'foo', pageViews: 'bar' })
 })
 
-test('should add endpoint info to endpoint data', async (t) => {
-  const endpoint = { foo: 'foo', baz: 'baz' }
+test('should merge endpoint data', async (t) => {
+  const endpoint = { foo: 'foo', baz: 'baz', bar: 4 }
   const data = await mergeEndpointData(endpoint, config)
+
   t.is(data.foo, 'foo')
   t.is(data.baz, 'baz')
+  t.is(data.bar, 4)
 })

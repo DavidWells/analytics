@@ -6,6 +6,22 @@ import { PinpointClient, PutEventsCommand } from '@aws-sdk/client-pinpoint'
 import { AwsClient } from 'aws4fetch'
 import * as inBrowser from '../../../src/utils/in-browser'
 
+let aws4fetchStub
+
+test.beforeEach(() => {
+  const response = {
+    json: () => {
+      return {
+        status: 200,
+        result: 'result',
+      }
+    },
+  }
+  aws4fetchStub = sinon
+    .stub(AwsClient.prototype, 'fetch')
+    .returns(Promise.resolve(response))
+})
+
 test.afterEach(() => {
   sinon.restore()
 })
@@ -28,16 +44,19 @@ const eventsRequest = {
   },
 }
 
-const pinpointMock = mockClient(PinpointClient)
-
-test('should call aws4fetch', async (t) => {
-  sinon.replace(inBrowser, 'default',
-  true)
-  const AwsClientStub = sinon.stub(AwsClient.prototype, 'fetch').resolves(Promise.resolve('fetch'))
+// Browser test
+test('should call using aws4fetch', async (t) => {
+  sinon.replace(inBrowser, 'default', true)
   const data = await callAws(eventsRequest, config)
+
+  sinon.assert.calledOnce(aws4fetchStub)
+  t.is(data.status, 200)
+  t.is(data.result, 'result')
 })
 
-test('should send event data', async (t) => {
+// Node test
+test('should call using aws pinpoint sdk', async (t) => {
+  const pinpointMock = mockClient(PinpointClient)
   pinpointMock.on(PutEventsCommand).resolves({
     $metadata: {
       attempts: 1,
@@ -54,8 +73,10 @@ test('should send event data', async (t) => {
       },
     },
   })
-
   const data = await callAws(eventsRequest, config)
+
+  sinon.assert.notCalled(aws4fetchStub)
+  t.is(pinpointMock.calls().length, 1)
   t.deepEqual(data, {
     $metadata: {
       attempts: 1,

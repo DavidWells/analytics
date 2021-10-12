@@ -1,4 +1,4 @@
-import { initialize } from './pinpoint/setup'
+import { initialize } from './pinpoint'
 import * as PINPOINT_EVENTS from './pinpoint/helpers/events'
 import loadError from './utils/load-error'
 import formatEventData from './utils/format-event-data'

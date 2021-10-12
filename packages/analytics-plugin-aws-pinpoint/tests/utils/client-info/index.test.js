@@ -4,6 +4,7 @@ import browserClientInfo from '../../../src/utils/client-info'
 
 test('should return empty object if window is undefined', (t) => {
   const info = browserClientInfo()
+
   t.deepEqual(info, {})
 })
 
@@ -11,8 +12,8 @@ test('should return empty object if window.navigator is undefined', (t) => {
   global.window = {
     location: 'location',
   }
-
   const info = browserClientInfo()
+
   t.deepEqual(info, {})
 })
 
@@ -24,8 +25,8 @@ test('should return valid client info', (t) => {
       language: 'test_lang',
     },
   }
-
   const info = browserClientInfo()
+
   t.is(info.platform, undefined)
   t.deepEqual(info.os, { name: 'MacOS', version: '8.8.8' })
   t.is(info.make, undefined)

@@ -1,10 +1,10 @@
 import test from 'ava'
 import sinon from 'sinon'
 import * as initialize from '../src/pinpoint'
-import clientSide from '../src/browser'
+import serverSide from '../src/node'
 import * as bootstrap from '../src/utils/bootstrap'
 
-test('should create pinpoint plugin for client', (t) => {
+test('should create pinpoint plugin for server', (t) => {
   sinon.stub(bootstrap, 'default').returns('bootstrap')
   sinon.stub(initialize, 'initialize').returns('initialize')
   const pluginConfig = {
@@ -14,8 +14,8 @@ test('should create pinpoint plugin for client', (t) => {
       secretAccessKey: 'secret',
     },
   }
-  const plugin = clientSide(pluginConfig)
-
+  const plugin = serverSide(pluginConfig)
+  
   t.is(plugin.name, 'aws-pinpoint')
   t.false(plugin.config.disableAnonymousTraffic)
   t.is(plugin.config.pinpointRegion, 'us-east-1')

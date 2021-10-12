@@ -55,9 +55,8 @@ export default async function callAws(eventsRequest, config) {
   const payload = {
     body: JSON.stringify(eventsRequest),
   }
-  // TODO: Not entirely sure if this is an okay way of doing this.
-  // Don't like it but couldn't think of another way in order to minimize duplicate code since server relies on sdk and browser relies on aws4fetch
-  if (process.browser) {
+  
+  if (inBrowser) {
     aws = new AwsClient(auth)
     data = await aws.fetch(endpointUrl, payload).then((d) => d.json())
   } else {

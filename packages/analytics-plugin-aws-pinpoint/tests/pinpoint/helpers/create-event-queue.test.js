@@ -37,6 +37,7 @@ test('should call queue.flush if flush is true', async () => {
   const endpoint = {}
   const flush = true
   const response = await queueEvent('foo', eventData, endpoint, flush)
+
   sinon.assert.calledOnce(queue.push)
   sinon.assert.calledOnce(queue.flush)
 })
@@ -46,6 +47,7 @@ test('should call queue.flush if eventData is boolean', async () => {
   const eventData = false
   const endpoint = {}
   const response = await queueEvent('foo', eventData, endpoint)
+
   sinon.assert.calledOnce(queue.push)
   sinon.assert.calledOnce(queue.flush)
 })
@@ -55,6 +57,7 @@ test('should not call queue.flush if eventData is not boolean', async () => {
   const eventData = 'lol'
   const endpoint = {}
   const response = await queueEvent('foo', eventData, endpoint)
+
   sinon.assert.calledOnce(queue.push)
   sinon.assert.notCalled(queue.flush)
 })
@@ -64,6 +67,7 @@ test('should call queue.flush if endpoint is boolean', async () => {
   const eventData = 'lol'
   const endpoint = true
   const response = await queueEvent('foo', eventData, endpoint)
+
   sinon.assert.calledOnce(queue.push)
   sinon.assert.calledOnce(queue.flush)
 })
@@ -73,6 +77,7 @@ test('should not call queue.flush if endpoint is not boolean', async () => {
   const eventData = 'lol'
   const endpoint = undefined
   const response = await queueEvent('foo', eventData, endpoint)
+
   sinon.assert.calledOnce(queue.push)
   sinon.assert.notCalled(queue.flush)
 })
@@ -82,6 +87,7 @@ test('should call mergeEndpointData with endpoint data', async () => {
   const eventData = {}
   const endpoint = { baz: 'baz' }
   const response = await queueEvent('foo', eventData, endpoint)
+
   sinon.assert.calledOnce(queue.push)
   sinon.assert.calledOnce(mergeEndpointDataStub)
   sinon.assert.notCalled(queue.flush)

@@ -6,7 +6,7 @@ import {
   getPageSession,
   setPageSession,
 } from '@analytics/session-utils'
-import { prepareAttributes, prepareMetrics } from './format-event'
+import { prepareAttributes, prepareMetrics } from './prepare-data'
 import { setItem, getItem, removeItem } from '@analytics/localstorage-utils'
 import { isBrowser, isString } from '@analytics/type-utils'
 import getClientInfo from '../../utils/client-info'

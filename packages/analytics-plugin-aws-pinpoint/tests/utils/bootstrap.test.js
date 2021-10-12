@@ -11,18 +11,20 @@ test('should call instance.once with true disableAnonymousTraffic and non existi
     },
   }
   const data = bootstrap(pluginApi)
+
   sinon.assert.calledOnce(pluginApi.instance.once)
 })
 
 test('should not call instance.once if disableAnonymous traffic false or user exists', () => {
   const pluginApi = {
-    config: { disableAnonymousTraffic: false},
+    config: { disableAnonymousTraffic: false },
     instance: {
       user: sinon.fake.returns(true),
-      once: sinon.fake()
+      once: sinon.fake(),
     },
   }
   const data = bootstrap(pluginApi)
+
   sinon.assert.notCalled(pluginApi.instance.once)
 })
 
@@ -38,9 +40,10 @@ test('should call instance.loadPlugin if plugin is not loaded', () => {
           },
         },
       }),
-      loadPlugin: sinon.fake()
+      loadPlugin: sinon.fake(),
     },
   }
   const data = bootstrap(pluginApi)
+
   sinon.assert.calledOnce(pluginApi.instance.loadPlugin)
 })
