@@ -42,5 +42,4 @@ test('should initialize pinpoint', async (t) => {
   t.is(typeof pinpointClient.updateEndpoint, 'function')
   t.is(pinpointClient.recordEvent, 'test queue')
   t.is(typeof pinpointClient.disable, 'function')
-  console.log(pinpointClient)
 })
