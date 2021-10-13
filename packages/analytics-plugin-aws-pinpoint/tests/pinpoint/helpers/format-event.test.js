@@ -3,7 +3,7 @@ import sinon from 'sinon'
 import * as inBrowser from '../../../src/utils/in-browser'
 import * as prepareData from '../../../src/pinpoint/helpers/prepare-data'
 import * as browserClientInfo from '../../../src/utils/client-info'
-import { formatEvent } from '../../../src/pinpoint/helpers/format-event'
+import formatEvent from '../../../src/pinpoint/helpers/format-event'
 
 test.beforeEach(() => {
   sinon.spy(browserClientInfo, 'default')

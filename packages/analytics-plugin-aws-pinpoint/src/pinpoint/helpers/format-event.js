@@ -12,7 +12,7 @@ import { uuid } from 'analytics-utils'
 import * as PINPOINT_EVENTS from './events'
 import { prepareAttributes, prepareMetrics } from './prepare-data'
 
-export async function formatEvent(eventName, data = {}, config = {}) {
+export default async function formatEvent(eventName, data = {}, config = {}) {
   const {
     appTitle,
     appPackageName,

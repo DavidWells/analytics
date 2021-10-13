@@ -1,5 +1,4 @@
 import test from 'ava'
-import sinon from 'sinon'
 import browserClientInfo from '../../../src/utils/client-info'
 
 test('should return empty object if window is undefined', (t) => {
@@ -27,11 +26,13 @@ test('should return valid client info', (t) => {
   }
   const info = browserClientInfo()
 
-  t.is(info.platform, undefined)
-  t.deepEqual(info.os, { name: 'MacOS', version: '8.8.8' })
-  t.is(info.make, undefined)
-  t.is(info.model, 'Edge')
-  t.is(info.version, '50')
-  t.is(info.name, 'Edge/50')
-  t.is(info.language, 'test_lang')
+  const { platform, os, make, model, version, name, language } = info
+
+  t.is(platform, undefined)
+  t.deepEqual(os, { name: 'MacOS', version: '8.8.8' })
+  t.is(make, undefined)
+  t.is(model, 'Edge')
+  t.is(version, '50')
+  t.is(name, 'Edge/50')
+  t.is(language, 'test_lang')
 })

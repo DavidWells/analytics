@@ -1,12 +1,10 @@
 import test from 'ava'
 import sinon from 'sinon'
-import * as initialize from '../src/pinpoint'
-import clientSide from '../src/browser'
 import * as bootstrap from '../src/utils/bootstrap'
+import clientSide from '../src/browser'
 
 test('should create pinpoint plugin for client', (t) => {
   sinon.stub(bootstrap, 'default').returns('bootstrap')
-  sinon.stub(initialize, 'initialize').returns('initialize')
   const pluginConfig = {
     pinpointAppId: 'foo',
     getCredentials: {

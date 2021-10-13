@@ -2,7 +2,7 @@ import test from 'ava'
 import sinon from 'sinon'
 import bootstrap from '../../src/utils/bootstrap'
 
-test('should call instance.once with true disableAnonymousTraffic and non existing user', () => {
+test('should call instance.once with disableAnonymousTraffic true and userId does not exist', () => {
   const pluginApi = {
     config: { disableAnonymousTraffic: true },
     instance: {
@@ -15,7 +15,7 @@ test('should call instance.once with true disableAnonymousTraffic and non existi
   sinon.assert.calledOnce(pluginApi.instance.once)
 })
 
-test('should not call instance.once if disableAnonymous traffic false or user exists', () => {
+test('should not call instance.once if disableAnonymousTraffic false or user exists', () => {
   const pluginApi = {
     config: { disableAnonymousTraffic: false },
     instance: {

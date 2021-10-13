@@ -1,8 +1,8 @@
 import test from 'ava'
 import sinon from 'sinon'
 import createPinpointSender from '../../../src/pinpoint/helpers/create-pinpoint-sender'
-import * as callAws from '../../../src/pinpoint/helpers/call-aws'
 import * as mergeEndpointData from '../../../src/pinpoint/helpers/merge-endpoint-data'
+import * as callAws from '../../../src/pinpoint/helpers/call-aws'
 
 let mergeEndpointDataStub
 let callAwsStub

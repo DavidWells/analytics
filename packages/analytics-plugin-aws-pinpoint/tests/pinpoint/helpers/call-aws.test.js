@@ -1,10 +1,10 @@
 import test from 'ava'
 import sinon from 'sinon'
+import { AwsClient } from 'aws4fetch'
+import * as inBrowser from '../../../src/utils/in-browser'
 import callAws from '../../../src/pinpoint/helpers/call-aws'
 import { mockClient } from 'aws-sdk-client-mock'
 import { PinpointClient, PutEventsCommand } from '@aws-sdk/client-pinpoint'
-import { AwsClient } from 'aws4fetch'
-import * as inBrowser from '../../../src/utils/in-browser'
 
 let aws4fetchStub
 
@@ -28,7 +28,6 @@ test.afterEach(() => {
 
 const config = {
   pinpointRegion: 'east',
-  // pinpointAppId: 'appId',
   credentials: {
     accessKeyId: 'foo',
     secretAccessKey: 'bar',

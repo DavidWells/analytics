@@ -1,7 +1,7 @@
 import test from 'ava'
 import sinon from 'sinon'
-import createEventQueue from '../../../src/pinpoint/helpers/create-event-queue'
 import * as formatEvent from '../../../src/pinpoint/helpers/format-event'
+import createEventQueue from '../../../src/pinpoint/helpers/create-event-queue'
 import * as mergeEndpointData from '../../../src/pinpoint/helpers/merge-endpoint-data'
 
 let mergeEndpointDataStub
@@ -12,7 +12,7 @@ test.beforeEach(() => {
     push: sinon.fake(),
     flush: sinon.fake(),
   }
-  sinon.stub(formatEvent, 'formatEvent').resolves()
+  sinon.stub(formatEvent, 'default').resolves()
   mergeEndpointDataStub = sinon
     .stub(mergeEndpointData, 'default')
     .resolves('endpoint')
@@ -88,7 +88,7 @@ test('should call mergeEndpointData with endpoint data', async () => {
   const endpoint = { baz: 'baz' }
   const response = await queueEvent('foo', eventData, endpoint)
 
-  sinon.assert.calledOnce(queue.push)
   sinon.assert.calledOnce(mergeEndpointDataStub)
+  sinon.assert.calledOnce(queue.push)
   sinon.assert.notCalled(queue.flush)
 })
