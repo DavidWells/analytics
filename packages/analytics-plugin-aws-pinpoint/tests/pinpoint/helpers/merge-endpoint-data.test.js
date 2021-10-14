@@ -51,15 +51,15 @@ test('should get client info and set browser demographic info', async (t) => {
   sinon.replace(inBrowser, 'default', true)
   const endpoint = {}
   const data = await mergeEndpointData(endpoint, config)
-
+  const { Locale, Make, Model, ModelVersion, Platform, PlatformVersion } = data.Demographic
   sinon.assert.calledOnce(getClientInfoStub)
   sinon.assert.calledOnce(deepMergeAllSpy)
-  t.is(data.Demographic.Locale, 'language')
-  t.is(data.Demographic.Make, 'make')
-  t.is(data.Demographic.Model, 'model')
-  t.is(data.Demographic.ModelVersion, 'version')
-  t.is(data.Demographic.Platform, 'os name')
-  t.is(data.Demographic.PlatformVersion, 'os version')
+  t.is(Locale, 'language')
+  t.is(Make, 'make')
+  t.is(Model, 'model')
+  t.is(ModelVersion, 'version')
+  t.is(Platform, 'os name')
+  t.is(PlatformVersion, 'os version')
 })
 
 // Node tests

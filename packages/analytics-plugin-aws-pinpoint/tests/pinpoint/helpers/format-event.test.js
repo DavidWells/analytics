@@ -49,7 +49,7 @@ test('should not call getClientInfo', async () => {
 test('should set Session.Duration and Session.StopTimestamp if eventName equals Session_Stop', async (t) => {
   const eventPayload = await formatEvent('_session.stop', data, config)
 
-  t.is(eventPayload.eventId.Session.Duration, 0)
+  t.regex(JSON.stringify(eventPayload.eventId.Session.Duration), /\d/)
   t.regex(
     JSON.stringify(eventPayload.eventId.Session.StopTimestamp),
     /\b[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]+Z\b/

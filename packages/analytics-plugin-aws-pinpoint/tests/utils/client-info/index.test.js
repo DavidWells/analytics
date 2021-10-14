@@ -16,6 +16,54 @@ test('should return empty object if window.navigator is undefined', (t) => {
   t.deepEqual(info, {})
 })
 
+test('should check opera match', (t) => {
+  global.window = {
+    location: 'location',
+    navigator: {
+      userAgent: '(Mac OS X 8_8_8) Opera/50',
+    },
+  }
+  const info = browserClientInfo()
+
+  const { model, version, name } = info
+
+  t.is(model, 'Opera')
+  t.is(version, '50')
+  t.is(name, 'Opera/50')
+})
+
+test('should check fallback match', (t) => {
+  global.window = {
+    location: 'location',
+    navigator: {
+      userAgent: '',
+    },
+  }
+  const info = browserClientInfo()
+
+  const { model, version, name } = info
+  console.log(info)
+  t.is(model, 'NA')
+  t.is(version, '0.0.0')
+  t.is(name, 'NA/0.0.0')
+})
+
+test('should check apple web kit match', (t) => {
+  global.window = {
+    location: 'location',
+    navigator: {
+      userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 8_8_8) AppleWebKit/537.36',
+    },
+  }
+  const info = browserClientInfo()
+
+  const { model, version, name } = info
+
+  t.is(model, 'AppleWebKit')
+  t.is(version, '537.36')
+  t.is(name, 'AppleWebKit/537.36')
+})
+
 test('should return valid client info', (t) => {
   global.window = {
     location: 'location',
