@@ -24,7 +24,6 @@ test('should check opera match', (t) => {
     },
   }
   const info = browserClientInfo()
-
   const { model, version, name } = info
 
   t.is(model, 'Opera')
@@ -40,9 +39,8 @@ test('should check fallback match', (t) => {
     },
   }
   const info = browserClientInfo()
-
   const { model, version, name } = info
-  console.log(info)
+
   t.is(model, 'NA')
   t.is(version, '0.0.0')
   t.is(name, 'NA/0.0.0')
@@ -56,7 +54,6 @@ test('should check apple web kit match', (t) => {
     },
   }
   const info = browserClientInfo()
-
   const { model, version, name } = info
 
   t.is(model, 'AppleWebKit')
@@ -73,7 +70,6 @@ test('should return valid client info', (t) => {
     },
   }
   const info = browserClientInfo()
-
   const { platform, os, make, model, version, name, language } = info
 
   t.is(platform, undefined)

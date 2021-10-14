@@ -6,9 +6,16 @@ import * as mergeEndpointData from '../../src/pinpoint/helpers/merge-endpoint-da
 import { initialize } from '../../src/pinpoint'
 import * as inBrowser from '../../src/utils/in-browser'
 
+let pinpointPutEventFake
+let createPinpointSenderStub
+
 test.beforeEach(() => {
   sinon.stub(createEventQueue, 'default').returns('test queue')
   sinon.stub(mergeEndpointData, 'default')
+  pinpointPutEventFake = sinon.fake.returns('pinpointPutEvent called')
+  createPinpointSenderStub = sinon
+    .stub(createPinpointSender, 'default')
+    .returns(pinpointPutEventFake)
 })
 
 test.afterEach(() => {
@@ -34,6 +41,15 @@ test('should not call window.addEventListener', async () => {
   const pinpointClient = initialize({ foo: 'foo' })
 
   sinon.assert.notCalled(global.window.addEventListener)
+})
+
+test('should call pinpointPutEvent if updateEndpoint is call', (t) => {
+  const pinpointClient = initialize({ foo: 'foo' })
+  const response = pinpointClient.updateEndpoint({})
+
+  sinon.assert.calledOnce(createPinpointSenderStub)
+  sinon.assert.calledOnce(pinpointPutEventFake)
+  t.is(response, 'pinpointPutEvent called')
 })
 
 test('should initialize pinpoint', async (t) => {
