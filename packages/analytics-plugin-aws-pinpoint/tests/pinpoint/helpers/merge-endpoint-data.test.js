@@ -50,8 +50,17 @@ test.afterEach(() => {
 test('should get client info and set browser demographic info', async (t) => {
   sinon.replace(inBrowser, 'default', true)
   const endpoint = {}
-  const data = await mergeEndpointData(endpoint, config)
-  const { Locale, Make, Model, ModelVersion, Platform, PlatformVersion } = data.Demographic
+  const {
+    Demographic: {
+      Locale,
+      Make,
+      Model,
+      ModelVersion,
+      Platform,
+      PlatformVersion,
+    },
+  } = await mergeEndpointData(endpoint, config)
+
   sinon.assert.calledOnce(getClientInfoStub)
   sinon.assert.calledOnce(deepMergeAllSpy)
   t.is(Locale, 'language')
@@ -87,8 +96,9 @@ test('should set default location to empty object', async (t) => {
 
 test('should set server demographic info', async (t) => {
   const endpoint = {}
-  const data = await mergeEndpointData(endpoint, config)
-  const { AppVersion, Make, Platform, PlatformVersion } = data.Demographic
+  const {
+    Demographic: { AppVersion, Make, Platform, PlatformVersion },
+  } = await mergeEndpointData(endpoint, config)
 
   t.regex(JSON.stringify(AppVersion), /\d+.\d+.\d+/)
   t.is(Make, 'generic server')
@@ -113,9 +123,9 @@ test('should set metrics', async (t) => {
 
 test('should merge endpoint data', async (t) => {
   const endpoint = { foo: 'foo', baz: 'baz', bar: 4 }
-  const data = await mergeEndpointData(endpoint, config)
+  const {foo, baz, bar } = await mergeEndpointData(endpoint, config)
 
-  t.is(data.foo, 'foo')
-  t.is(data.baz, 'baz')
-  t.is(data.bar, 4)
+  t.is(foo, 'foo')
+  t.is(baz, 'baz')
+  t.is(bar, 4)
 })

@@ -23,8 +23,7 @@ test('should check opera match', (t) => {
       userAgent: '(Mac OS X 8_8_8) Opera/50',
     },
   }
-  const info = browserClientInfo()
-  const { model, version, name } = info
+  const { model, version, name } = browserClientInfo()
 
   t.is(model, 'Opera')
   t.is(version, '50')
@@ -38,8 +37,7 @@ test('should check fallback match', (t) => {
       userAgent: '',
     },
   }
-  const info = browserClientInfo()
-  const { model, version, name } = info
+  const { model, version, name } = browserClientInfo()
 
   t.is(model, 'NA')
   t.is(version, '0.0.0')
@@ -50,11 +48,11 @@ test('should check apple web kit match', (t) => {
   global.window = {
     location: 'location',
     navigator: {
-      userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 8_8_8) AppleWebKit/537.36',
+      userAgent:
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 8_8_8) AppleWebKit/537.36',
     },
   }
-  const info = browserClientInfo()
-  const { model, version, name } = info
+  const { model, version, name } = browserClientInfo()
 
   t.is(model, 'AppleWebKit')
   t.is(version, '537.36')
@@ -69,8 +67,7 @@ test('should return valid client info', (t) => {
       language: 'test_lang',
     },
   }
-  const info = browserClientInfo()
-  const { platform, os, make, model, version, name, language } = info
+  const { platform, os, make, model, version, name, language } = browserClientInfo()
 
   t.is(platform, undefined)
   t.deepEqual(os, { name: 'MacOS', version: '8.8.8' })

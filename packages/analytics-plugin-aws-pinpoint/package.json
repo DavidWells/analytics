@@ -23,7 +23,6 @@
   "scripts": {
     "test": "ava -v -s",
     "test:watch": "ava -v -s --watch",
-    "coverage": "c8 ava -s",
     "docs": "node ../analytics-cli/bin/run docs",
     "build": "node ../../scripts/build/index.js",
     "watch": "node ../../scripts/build/_watch.js",
@@ -80,7 +79,6 @@
     "@babel/plugin-transform-runtime": "7.5.5",
     "@babel/preset-env": "^7.3.1",
     "@babel/register": "^7.15.3",
-    "aws-sdk-client-mock": "^0.5.5",
-    "c8": "^7.10.0"
+    "aws-sdk-client-mock": "^0.5.5"
   }
 }
