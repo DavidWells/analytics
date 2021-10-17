@@ -29,12 +29,12 @@ const config = {
  * @return {object} Analytics plugin
  * @example
  *
- * awsPinpointNode({
+ * awsPinpointPlugin({
  *   pinpointAppId: '938bebb1ae954e123133213160f2b3be4',
  *   getCredentials: () => Auth.currentCredentials(),
  * })
  */
-function awsPinpointNode(pluginConfig = {}) {
+function awsPinpointPlugin(pluginConfig = {}) {
   let recordEvent
   let updateEndpoint
 
@@ -157,4 +157,4 @@ function awsPinpointNode(pluginConfig = {}) {
 
 export { PINPOINT_EVENTS }
 
-export default awsPinpointNode
+export default awsPinpointPlugin
