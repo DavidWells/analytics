@@ -159,7 +159,9 @@ export default async function mergeEndpointData(endpoint = {}, config = {}) {
     endpoint.Attributes.lastSession = [sessionData.id]
     // @TODO persist tab info
     // endpoint.Attributes.lastTabSession = [ tabSessionInfo.id ]
-    endpoint.Attributes.lastPageSession = [pageSession]
+    if (pageSession) {
+      endpoint.Attributes.lastPageSession = [pageSession]
+    }
     // Store the endpoint data.
     // console.log('Set initital endpoint info')
     return persistEndpoint(id, endpoint)

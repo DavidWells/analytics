@@ -114,7 +114,7 @@ export async function formatEvent(eventName, data = {}, config = {}) {
       /* The title of the app that's recording the event. */
       AppTitle: appTitle,
       /* The version number of the app that's recording the event. Maps to application.version_code in kinesis stream */
-      AppVersionCode: appVersionCode,
+      ...(appVersionCode) ? {} : { AppVersionCode: appVersionCode },
       /* Event attributes - One or more custom attributes that are associated with the event. */
       Attributes: preparedData.attributes,
       /* The version of the SDK that's running on the client device. */
