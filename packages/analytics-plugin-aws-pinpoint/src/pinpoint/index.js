@@ -7,13 +7,9 @@ import * as PINPOINT_EVENTS from './helpers/events'
 
 const { SESSION_START, SESSION_STOP } = PINPOINT_EVENTS
 
-const ENDPOINT_KEY = '__endpoint'
-
 function noOp() {
   return {}
 }
-
-export { ENDPOINT_KEY }
 
 export function initialize(config = {}) {
   // @TODO clean up
@@ -81,10 +77,6 @@ function stopSessionFactory(queueEvent) {
   return () => {
     queueEvent(SESSION_STOP, true)
   }
-}
-
-export function getStorageKey(id) {
-  return `${ENDPOINT_KEY}.${id}`
 }
 
 /* @TODO wire up beacon */
