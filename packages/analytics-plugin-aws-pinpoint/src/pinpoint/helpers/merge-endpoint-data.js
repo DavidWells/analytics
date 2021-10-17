@@ -8,16 +8,14 @@ import {
 } from '@analytics/session-utils'
 import { prepareAttributes, prepareMetrics } from './format-event'
 import { setItem, getItem, removeItem } from '@analytics/localstorage-utils'
-import { isBrowser } from '@analytics/type-utils'
+import { isBrowser, isString } from '@analytics/type-utils'
 import getClientInfo from '../../utils/client-info'
-import { getStorageKey } from '..'
+import { getStorageKey, ENDPOINT_KEY } from './getStorageKey'
 
 let clientInfo
 if (isBrowser) {
   clientInfo = getClientInfo()
 }
-
-const ENDPOINT_KEY = '__endpoint'
 
 let migrationRan = false
 export default async function mergeEndpointData(endpoint = {}, config = {}) {
@@ -187,10 +185,7 @@ export default async function mergeEndpointData(endpoint = {}, config = {}) {
 
 function persistEndpoint(id, endpointData) {
   const endpointKey = getStorageKey(id)
-  const data =
-    typeof endpointData === 'string'
-      ? endpointData
-      : JSON.stringify(endpointData)
+  const data = isString(endpointData) ? endpointData : JSON.stringify(endpointData)
   setItem(endpointKey, data)
   return endpointData
 }
