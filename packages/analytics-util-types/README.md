@@ -18,22 +18,22 @@ This package exposes re-usable runtime type checking functions. This is useful f
 
 ## How to install
 
-Install `@analytics/types-utils` from [npm](https://www.npmjs.com/package/@analytics/types-utils).
+Install `@analytics/type-utils` from [npm](https://www.npmjs.com/package/@analytics/type-utils).
 
 ```bash
-npm install @analytics/types-utils
+npm install @analytics/type-utils
 ```
 
 ## API
 
-Below is the api for `@analytics/types-utils`.
+Below is the api for `@analytics/type-utils`.
 
 ## `isBrowser`
 
 Check if currently in browser context
 
 ```js
-import { isBrowser } from '@analytics/types-utils'
+import { isBrowser } from '@analytics/type-utils'
 
 if (isBrowser) {
   console.log('do things in browser env')
@@ -45,7 +45,7 @@ if (isBrowser) {
 Check if value is `string`
 
 ```js
-import { isString } from '@analytics/types-utils'
+import { isString } from '@analytics/type-utils'
 
 const xyz = 'hi'
 console.log(isString(xyz))
@@ -57,7 +57,7 @@ console.log(isString(xyz))
 Check if value is `number`
 
 ```js
-import { isNumber } from '@analytics/types-utils'
+import { isNumber } from '@analytics/type-utils'
 
 const xyz = 123
 console.log(isNumber(xyz))
@@ -69,7 +69,7 @@ console.log(isNumber(xyz))
 Check if value is `boolean`
 
 ```js
-import { isBoolean } from '@analytics/types-utils'
+import { isBoolean } from '@analytics/type-utils'
 
 const myBool = true
 console.log(isBoolean(myBool))
@@ -81,7 +81,7 @@ console.log(isBoolean(myBool))
 Check if value is `array`
 
 ```js
-import { isArray } from '@analytics/types-utils'
+import { isArray } from '@analytics/type-utils'
 
 const myArr = ['x', 'y']
 console.log(isArray(myArr))
@@ -93,7 +93,7 @@ console.log(isArray(myArr))
 Check if value is `object`
 
 ```js
-import { isObject } from '@analytics/types-utils'
+import { isObject } from '@analytics/type-utils'
 
 const myObj = { cool: 'hello' }
 console.log(isObject(myObj))
@@ -105,7 +105,7 @@ console.log(isObject(myObj))
 Check if value is `undefined`
 
 ```js
-import { isUndefined } from '@analytics/types-utils'
+import { isUndefined } from '@analytics/type-utils'
 
 let myval
 console.log(isUndefined(myval))
@@ -117,7 +117,7 @@ console.log(isUndefined(myval))
 Check if value is regular expression.
 
 ```js
-import { isRegex } from '@analytics/types-utils'
+import { isRegex } from '@analytics/type-utils'
 
 let myval = /pattern/gm
 console.log(isRegex(myval))
@@ -129,7 +129,7 @@ console.log(isRegex(myval))
 Check if value is a `noOp` function.
 
 ```js
-import { isNoOp } from '@analytics/types-utils'
+import { isNoOp } from '@analytics/type-utils'
 
 function empty () { }
 console.log(isNoOp(isNoOp))
@@ -161,7 +161,7 @@ console.log(isTruthy(function() { })) // true
 Check if value is a a DOM node.
 
 ```js
-import { isElement } from '@analytics/types-utils'
+import { isElement } from '@analytics/type-utils'
 
 const formElement = document.querySelector('.my-form')
 console.log(isElement(formElement))
@@ -174,7 +174,7 @@ console.log(isElement(formElement))
 Check if value is a list of DOM nodes.
 
 ```js
-import { isNodeList } from '@analytics/types-utils'
+import { isNodeList } from '@analytics/type-utils'
 
 const buttons = document.querySelectorAll('button')
 console.log(isNodeList(buttons))
@@ -186,7 +186,7 @@ console.log(isNodeList(buttons))
 Check if value is a `noOp` function.
 
 ```js
-import { isForm } from '@analytics/types-utils'
+import { isForm } from '@analytics/type-utils'
 
 const formElement = document.querySelector('.my-form')
 console.log(isForm(formElement))

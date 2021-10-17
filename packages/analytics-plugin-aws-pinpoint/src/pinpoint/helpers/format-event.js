@@ -5,7 +5,7 @@ import {
   getPageSession,
   setPageSession,
 } from '@analytics/session-utils'
-import { isBrowser } from '@analytics/types-utils'
+import { isBrowser } from '@analytics/type-utils'
 import getClientInfo from '../../utils/client-info'
 import getEventName from './get-event-name'
 import { uuid } from 'analytics-utils'
