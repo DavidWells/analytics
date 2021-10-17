@@ -1,4 +1,4 @@
-import { isElement } from '@analytics/type-utils'
+import { isElement, isFunction } from '@analytics/type-utils'
 import toArray from './toArray'
 import isInsideForm from './isInsideForm'
 import { getForms } from './getForms'
@@ -40,7 +40,7 @@ function capsFirstChar(str) {
 function getCallback() {
   return Array.prototype.slice.call(arguments).reduce((acc, arg) => {
     if (acc) return acc
-    if (typeof arg === 'function') {
+    if (isFunction(arg)) {
       return arg
     }
     return acc
