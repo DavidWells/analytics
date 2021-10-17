@@ -33,7 +33,7 @@ export function initialize(config = {}) {
     },
     {
       max: 10, // limit... event limit is 100 for pinpoint
-      interval: 3000, // 3s
+      interval: config.flushInterval || 3000, // 3s
       throttle: true, // Ensure only max is processed at interval
       // onPause: (queue) => {},
       // onEmpty: () => {}
