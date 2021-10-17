@@ -5,10 +5,11 @@
   "projectMeta": {
     "provider": {
       "name": "AWSPinpoint",
-      "url": "https://www.aws-pinpoint.com/"
+      "url": "https://aws.amazon.com/pinpoint/"
     },
     "platforms": {
-      "browser": "./src/browser.js"
+      "browser": "./src/browser.js",
+      "node": "./src/node.js"
     }
   },
   "keywords": [
@@ -42,7 +43,7 @@
     "lib",
     "README.md"
   ],
-  "homepage": "https://github.com/DavidWells/analytics#readme",
+  "homepage": "https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-aws-pinpoint",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/DavidWells/analytics.git"
