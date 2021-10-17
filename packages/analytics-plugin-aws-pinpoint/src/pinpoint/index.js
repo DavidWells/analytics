@@ -1,9 +1,9 @@
 import smartQueue from '@analytics/queue-utils'
+import { isBrowser } from '@analytics/types-utils'
 import createEventQueue from './helpers/create-event-queue'
 import mergeEndpointData from './helpers/merge-endpoint-data'
 import createPinpointSender from './helpers/create-pinpoint-sender'
 import * as PINPOINT_EVENTS from './helpers/events'
-import inBrowser from '../utils/in-browser'
 
 const { SESSION_START, SESSION_STOP } = PINPOINT_EVENTS
 
@@ -68,7 +68,7 @@ export function initialize(config = {}) {
 }
 
 function onWindowUnload(queueEvent) {
-  if (!inBrowser) {
+  if (!isBrowser) {
     return noOp
   }
   const stopSessionHandler = stopSessionFactory(queueEvent)
