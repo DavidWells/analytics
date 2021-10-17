@@ -93,7 +93,7 @@ function awsPinpointPlugin(pluginConfig = {}) {
       ...config,
       ...pluginConfig,
     },
-    bootstrap: bootstrap(pluginConfig),
+    bootstrap: bootstrap,
     initialize: ({ config, instance }) => {
       const { disableAnonymousTraffic, debug } = config
       const logger = debug ? console.log : () => {}
