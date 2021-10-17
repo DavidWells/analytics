@@ -73,7 +73,6 @@ function awsPinpointNode(pluginConfig = {}) {
           anonId: anonymousId,
           userId: userId,
         })
-        console.log('newSessionForNewUser', newSessionForNewUser)
         logger('newSessionForNewUser', newSessionForNewUser)
       }
 
