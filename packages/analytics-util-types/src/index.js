@@ -58,6 +58,14 @@ export function isBoolean(x) {
 }
 
 /** 
+ * @param x
+ * @return {x is boolean}
+ */
+export function isNull(x) {
+  return x === null
+}
+
+/** 
  * @template T
  * @param x
  * @return {x is Array<T>}
@@ -106,6 +114,16 @@ export function isNoOp(func) {
   const noOpStr = noOp.toString()
   const funcString = (func.toString().match(emptyFunc) || [''])[0].replace(emptyFunc, noOpStr)
   return noOpStr === funcString
+}
+
+/**
+ * Check if value is truthy
+ * @param {*} value 
+ * @return {Boolean} - is truthy value
+ */
+export function isTruthy(v) {
+  if (isString(v) && v.toLowerCase() === 'false') return false
+  return !!v
 }
 
 /** 

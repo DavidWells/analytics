@@ -136,6 +136,26 @@ console.log(isNoOp(isNoOp))
 // true
 ```
 
+## `isTruthy`
+
+Check if value is truthy.
+
+```js
+import { isTruthy } from '@analytics/types-utils'
+
+console.log(isTruthy('')) // false
+console.log(isTruthy('false')) // false
+console.log(isTruthy('FALSE')) // false
+console.log(isTruthy(0)) // false
+console.log(isTruthy(null)) // false
+console.log(isTruthy(undefined)) // false
+console.log(isTruthy('true')) // true
+console.log(isTruthy(1)) // true
+console.log(isTruthy({})) // true
+console.log(isTruthy([])) // true
+console.log(isTruthy(function() { })) // true
+```
+
 ## `isElement`
 
 Check if value is a a DOM node.
