@@ -8,12 +8,12 @@ import {
 } from '@analytics/session-utils'
 import { prepareAttributes, prepareMetrics } from './format-event'
 import { setItem, getItem, removeItem } from '@analytics/localstorage-utils'
-import inBrowser from '../../utils/in-browser'
+import { isBrowser } from '@analytics/types-utils'
 import getClientInfo from '../../utils/client-info'
 import { getStorageKey } from '..'
 
 let clientInfo
-if (inBrowser) {
+if (isBrowser) {
   clientInfo = getClientInfo()
 }
 
@@ -33,7 +33,7 @@ export default async function mergeEndpointData(endpoint = {}, config = {}) {
 
   // const tabSessionInfo = getTabSession()
   let pageSessionInfo, pageSession
-  if (inBrowser) {
+  if (isBrowser) {
     pageSessionInfo = getPageSession()
     pageSession = pageSessionInfo.id
   }
@@ -58,7 +58,7 @@ export default async function mergeEndpointData(endpoint = {}, config = {}) {
   // const browserVersion = [clientInfo.model, clientInfo.version].join('/')
   const appVersionString = getAppVersionCode(config)
   
-  const demographicInfo = inBrowser ? getBrowserDemographicInfo(appVersionString) : getServerDemographicInfo(appVersionString)
+  const demographicInfo = isBrowser ? getBrowserDemographicInfo(appVersionString) : getServerDemographicInfo(appVersionString)
   // console.log('demographicInfo', demographicInfo)
 
   const EndpointData = {
@@ -85,7 +85,7 @@ export default async function mergeEndpointData(endpoint = {}, config = {}) {
   }
 
   /* Add device attributes to endpoint */
-  if (inBrowser) {
+  if (isBrowser) {
     if (clientInfo.device && clientInfo.device.vendor) {
       EndpointData.Attributes.DeviceMake = [clientInfo.device.vendor]
     }
