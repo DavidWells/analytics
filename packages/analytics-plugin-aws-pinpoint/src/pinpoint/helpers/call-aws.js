@@ -1,7 +1,10 @@
-import inBrowser from '../../utils/in-browser'
 import { AwsClient } from 'aws4fetch'
-// TODO: Using import causes build to fail
-const AWS = require('@aws-sdk/client-pinpoint')
+
+let AWS
+if (!process.browser) {
+  // TODO: Using import causes build to fail
+  AWS = require('@aws-sdk/client-pinpoint')
+}
 
 const RETRYABLE_CODES = [429, 500]
 const ACCEPTED_CODES = [202]
@@ -51,7 +54,7 @@ export default async function callAws(eventsRequest, config) {
   }
   // TODO: Not entirely sure if this is an okay way of doing this.
   // Don't like it but couldn't think of another way in order to minimize duplicate code since server relies on sdk and browser relies on aws4fetch
-  if (inBrowser) {
+  if (process.browser) {
     aws = new AwsClient(auth)
     data = await aws.fetch(endpointUrl, payload).then((d) => d.json())
   } else {
