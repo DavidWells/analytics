@@ -8,7 +8,7 @@ import {
 } from '@analytics/session-utils'
 import { prepareAttributes, prepareMetrics } from './format-event'
 import { setItem, getItem, removeItem } from '@analytics/localstorage-utils'
-import { isBrowser } from '@analytics/types-utils'
+import { isBrowser } from '@analytics/type-utils'
 import getClientInfo from '../../utils/client-info'
 import { getStorageKey } from '..'
 

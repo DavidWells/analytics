@@ -1,5 +1,5 @@
 import smartQueue from '@analytics/queue-utils'
-import { isBrowser } from '@analytics/types-utils'
+import { isBrowser } from '@analytics/type-utils'
 import createEventQueue from './helpers/create-event-queue'
 import mergeEndpointData from './helpers/merge-endpoint-data'
 import createPinpointSender from './helpers/create-pinpoint-sender'
