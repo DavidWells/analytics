@@ -45,7 +45,7 @@ function awsPinpointPlugin(pluginConfig = {}) {
       ...config,
       ...pluginConfig,
     },
-    bootstrap: bootstrap(pluginConfig),
+    bootstrap: bootstrap,
     initialize: ({ config, instance }) => {
       const { debug } = config
       const logger = debug ? console.log : () => {}
@@ -79,6 +79,8 @@ function awsPinpointPlugin(pluginConfig = {}) {
       /* Initialize pinpoint client */
       const pinpointClient = initialize({
         ...config,
+        // flushInterval
+        flushInterval: config.flushInterval || 500,
         // The title of the app that's recording the event.
         appTitle: config.appTitle || app,
         // The package name of the app that's recording the event.

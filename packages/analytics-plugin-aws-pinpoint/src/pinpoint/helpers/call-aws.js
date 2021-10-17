@@ -23,6 +23,9 @@ export default async function callAws(eventsRequest, config) {
   } = config
 
   const auth = await getAuth(credentials, getCredentials)
+  if (debug) {
+    console.log('pinpoint auth', auth)
+  }
 
   const lambda_region = lambdaRegion || pinpointRegion
   const pinpoint_region = pinpointRegion || lambdaRegion
@@ -58,6 +61,7 @@ export default async function callAws(eventsRequest, config) {
     aws = new AwsClient(auth)
     data = await aws.fetch(endpointUrl, payload).then((d) => d.json())
   } else {
+
     aws = new AWS.PinpointClient({
       credentials: auth,
       region: pinpointRegion,
