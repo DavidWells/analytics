@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-types/compare/@analytics/type-utils@0.3.1...@analytics/type-utils@0.4.0) (2021-10-17)
+
+
+### Features
+
+* add truthy check ([5d47089](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-types/commit/5d47089))
+
+
+
+
+
 ## [0.3.1](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-types/compare/@analytics/type-utils@0.3.0...@analytics/type-utils@0.3.1) (2021-08-05)
 
 **Note:** Version bump only for package @analytics/type-utils

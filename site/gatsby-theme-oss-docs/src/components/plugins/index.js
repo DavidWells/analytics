@@ -12,9 +12,10 @@ export const SupportedPlugins = () => {
   const supportedTools = tools.filter((tool) => {
     return tool.url
   }).map((tool) => {
+    const imageUrl = tool.image.startsWith('http') ? tool.image : `${cdnRoot}/${tool.image}`
     return (
       <Link key={tool.name} to={`/plugins/${tool.name}/`} className='provider'>
-        <img alt={tool.name} src={`${cdnRoot}/${tool.image}`} />
+        <img alt={tool.name} src={imageUrl} />
       </Link>
     )
   })
@@ -68,11 +69,16 @@ var tools = [
     image: 'fullstory.svg',
     url: 'https://getanalytics.io/plugins/fullstory/'
   },
-  // {
-  //   name: 'aws-pinpoint',
-  //   image: 'aws-pinpoint.svg',
-  //   url: 'https://getanalytics.io/plugins/aws-pinpoint/'
-  // },
+  {
+    name: 'aws-pinpoint',
+    image: 'amazon-pinpoint.png',
+    url: 'https://getanalytics.io/plugins/aws-pinpoint/'
+  },
+  {
+    name: 'intercom',
+    image: 'intercom.svg',
+    url: 'https://getanalytics.io/plugins/intercom/'
+  },
   {
     name: 'amplitude',
     image: 'amplitude.svg',

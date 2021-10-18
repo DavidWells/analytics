@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.7](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-cookie/compare/@analytics/cookie-utils@0.2.6...@analytics/cookie-utils@0.2.7) (2021-10-17)
+
+
+### Bug Fixes
+
+* change temp key to value cookie value ([1708369](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-cookie/commit/1708369)), closes [#223](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-cookie/issues/223)
+
+
+
+
+
 ## [0.2.6](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-cookie/compare/@analytics/cookie-utils@0.2.5...@analytics/cookie-utils@0.2.6) (2021-07-28)
 
 **Note:** Version bump only for package @analytics/cookie-utils

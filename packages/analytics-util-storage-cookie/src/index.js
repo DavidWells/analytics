@@ -1,5 +1,6 @@
 import { get, set, remove, undef } from '@analytics/global-storage-utils'
 
+const tmp = '__x'
 let isSupported = hasCookies()
 
 /**
@@ -35,10 +36,10 @@ function hasCookies() {
   }
   try {
     // Try to set cookie
-    cookie(undef, '1')
-    isSupported = document.cookie.indexOf(undef) !== -1
+    cookie(tmp, tmp)
+    isSupported = document.cookie.indexOf(tmp) !== -1
     // Cleanup cookie
-    removeCookie(undef)
+    removeCookie(tmp)
   } catch (e) {
     isSupported = false
   }

@@ -14,6 +14,7 @@ export function onChange(formElement, options = {}, callback) {
   if (!isBrowser) return
   const type = 'change'
   const [settings, forms] = args(formElement, options, callback, type)
+
   // Attach Listeners
   const listeners = forms.map((form) => {
     const handler = changeHandler(settings, form, type)
