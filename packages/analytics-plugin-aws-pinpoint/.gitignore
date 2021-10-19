@@ -2,7 +2,6 @@ dist
 node_modules
 lib
 *.log
-coverage
 
 # IDE stuff
 **/.idea

@@ -6,14 +6,16 @@ import {
   getPageSession,
   setPageSession,
 } from '@analytics/session-utils'
-import { prepareAttributes, prepareMetrics } from './prepare-data'
+import { prepareAttributes, prepareMetrics } from './format-event'
 import { setItem, getItem, removeItem } from '@analytics/localstorage-utils'
-import { isString } from '@analytics/type-utils'
-import inBrowser from '../../utils/in-browser'
+import { isBrowser, isString } from '@analytics/type-utils'
 import getClientInfo from '../../utils/client-info'
-import { getStorageKey } from './getStorageKey'
+import { getStorageKey, ENDPOINT_KEY } from './getStorageKey'
 
-const ENDPOINT_KEY = '__endpoint'
+let clientInfo
+if (isBrowser) {
+  clientInfo = getClientInfo()
+}
 
 let migrationRan = false
 export default async function mergeEndpointData(endpoint = {}, config = {}) {
@@ -29,9 +31,7 @@ export default async function mergeEndpointData(endpoint = {}, config = {}) {
 
   // const tabSessionInfo = getTabSession()
   let pageSessionInfo, pageSession
-  let clientInfo
-  if (inBrowser) {
-    clientInfo = getClientInfo()
+  if (isBrowser) {
     pageSessionInfo = getPageSession()
     pageSession = pageSessionInfo.id
   }
@@ -55,8 +55,8 @@ export default async function mergeEndpointData(endpoint = {}, config = {}) {
   const persistedEndpoint = getEndpoint(id)
   // const browserVersion = [clientInfo.model, clientInfo.version].join('/')
   const appVersionString = getAppVersionCode(config)
-
-  const demographicInfo = getDemographicInfo(appVersionString, clientInfo)
+  
+  const demographicInfo = isBrowser ? getBrowserDemographicInfo(appVersionString) : getServerDemographicInfo(appVersionString)
   // console.log('demographicInfo', demographicInfo)
 
   const EndpointData = {
@@ -83,7 +83,7 @@ export default async function mergeEndpointData(endpoint = {}, config = {}) {
   }
 
   /* Add device attributes to endpoint */
-  if (inBrowser) {
+  if (isBrowser) {
     if (clientInfo.device && clientInfo.device.vendor) {
       EndpointData.Attributes.DeviceMake = [clientInfo.device.vendor]
     }
@@ -199,12 +199,6 @@ function getEndpoint(id) {
   return {}
 }
 
-function getDemographicInfo(appVersionString, clientInfo) {
-  return inBrowser
-    ? getBrowserDemographicInfo(appVersionString, clientInfo)
-    : getServerDemographicInfo(appVersionString)
-}
-
 function getServerDemographicInfo(appVersionString) {
   const demographicInfo = {
     AppVersion: appVersionString,
@@ -216,7 +210,7 @@ function getServerDemographicInfo(appVersionString) {
   return demographicInfo
 }
 
-function getBrowserDemographicInfo(appVersionString, clientInfo) {
+function getBrowserDemographicInfo(appVersionString) {
   const demographicInfo = {
     // AppTitle/0.0.0. Maps to application.version_name in kinesis stream
     AppVersion: appVersionString,
