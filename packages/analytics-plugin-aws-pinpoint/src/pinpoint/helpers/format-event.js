@@ -5,13 +5,14 @@ import {
   getPageSession,
   setPageSession,
 } from '@analytics/session-utils'
-import { isBrowser } from '@analytics/type-utils'
+import inBrowser from '../../utils/in-browser'
 import getClientInfo from '../../utils/client-info'
 import getEventName from './get-event-name'
 import { uuid } from 'analytics-utils'
 import * as PINPOINT_EVENTS from './events'
+import { prepareAttributes, prepareMetrics } from './prepare-data'
 
-export async function formatEvent(eventName, data = {}, config = {}) {
+export default async function formatEvent(eventName, data = {}, config = {}) {
   const {
     appTitle,
     appPackageName,
@@ -23,7 +24,6 @@ export async function formatEvent(eventName, data = {}, config = {}) {
   } = config
   const logger = debug ? console.log : () => {}
   const type = getEventName(eventName, eventMapping)
-
   const sessionData = getSession()
   // @TODO refactor session grabber
   const sessionId = data.sessionId || sessionData.id
@@ -34,7 +34,7 @@ export async function formatEvent(eventName, data = {}, config = {}) {
   logger('event sessionData    ', JSON.stringify(sessionData))
 
   let pageSessionInfo, tabSessionData
-  if (isBrowser) {
+  if (inBrowser) {
     pageSessionInfo = getPageSession()
     tabSessionData = getTabSession()
     logger('event pageSessionInfo', JSON.stringify(pageSessionInfo))
@@ -50,7 +50,7 @@ export async function formatEvent(eventName, data = {}, config = {}) {
   const defaultEventAttributes = {
     date: timeStamp,
     sessionId, // Event[id].Session.Id
-    ...(!isBrowser ? {} : { pageSession: pageSessionInfo.id }),
+    ...(!inBrowser ? {} : { pageSession: pageSessionInfo.id }),
   }
 
   const extraAttributes = enrichEventAttributes
@@ -97,7 +97,7 @@ export async function formatEvent(eventName, data = {}, config = {}) {
   logger('eventAttributes', preparedData.attributes)
   logger('eventMetrics', preparedData.metrics)
 
-  if (isBrowser) {
+  if (inBrowser) {
     logger('clientInfo', getClientInfo())
   }
 
@@ -114,7 +114,7 @@ export async function formatEvent(eventName, data = {}, config = {}) {
       /* The title of the app that's recording the event. */
       AppTitle: appTitle,
       /* The version number of the app that's recording the event. Maps to application.version_code in kinesis stream */
-      ...(appVersionCode) ? {} : { AppVersionCode: appVersionCode },
+      ...(appVersionCode) ? { AppVersionCode: appVersionCode } : {},
       /* Event attributes - One or more custom attributes that are associated with the event. */
       Attributes: preparedData.attributes,
       /* The version of the SDK that's running on the client device. */
@@ -142,85 +142,4 @@ export async function formatEvent(eventName, data = {}, config = {}) {
   }
 
   return eventPayload
-}
-
-/**
- * Prepares an object for inclusion in endpoint data or event data.
- *
- * @param {Object} attributes
- * @param {Boolean} asArray If true ensure an array of strings is returned for each property
- */
-export async function prepareAttributes(attributes, asArray = false) {
-  const sanitized = {}
-  for (const name in attributes) {
-    const value = Array.isArray(attributes[name])
-      ? attributes[name]
-      : [attributes[name]]
-    const prepValue = asArray ? value : value[0]
-    // console.log(`name ${name}`, prepValue)
-    const data = await prepareData(prepValue, sanitizeAttribute)
-    /* Remove any null/undefined values */
-    if (!isNullOrUndef(data)) {
-      sanitized[name] = data
-    }
-  }
-  return sanitized
-}
-
-/**
- * Prepares an object for inclusion in endpoint data or event data.
- *
- * @param {Object} metrics
- */
-export async function prepareMetrics(metrics) {
-  const sanitized = {}
-  for (const name in metrics) {
-    sanitized[name] = await prepareData(metrics[name], sanitizeMetric)
-  }
-  return sanitized
-}
-
-/**
- * Resolves an attribute or metric value and sanitize it.
- *
- * @param {mixed} value
- * @param {Function} sanitizeCallback
- */
-async function prepareData(value, sanitizeCallback) {
-  if (typeof value === 'function') {
-    value = await value()
-  }
-  return sanitizeCallback(value)
-}
-
-/**
- * Ensure value is a string or array of strings.
- *
- * @param {mixed} value
- */
-function sanitizeAttribute(value) {
-  // If null or undefined
-  if (value == null) return
-  if (Array.isArray(value)) {
-    return value.filter(notEmpty).map((val) => val.toString())
-  }
-  // @TODO guard against null here
-  return isNullOrUndef(value) ? value : value.toString()
-}
-
-/**
- * Ensure value is a single float.
- *
- * @param {mixed} value
- */
-function sanitizeMetric(value) {
-  return parseFloat(Number(Array.isArray(value) ? value[0] : value))
-}
-
-function notEmpty(val) {
-  return val !== null && typeof val !== 'undefined'
-}
-
-function isNullOrUndef(value) {
-  return value == null
 }
