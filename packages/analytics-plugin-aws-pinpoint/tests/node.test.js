@@ -4,7 +4,6 @@ import * as bootstrap from '../src/utils/bootstrap'
 import serverSide from '../src/node'
 
 test('should create pinpoint plugin for server', (t) => {
-  sinon.stub(bootstrap, 'default').returns('bootstrap')
   const pluginConfig = {
     pinpointAppId: 'foo',
     getCredentials: {
@@ -23,7 +22,7 @@ test('should create pinpoint plugin for server', (t) => {
     accessKeyId: 'id',
     secretAccessKey: 'secret',
   })
-  t.is(plugin.bootstrap, 'bootstrap')
+  t.is(typeof plugin.bootstrap, 'function')
   t.is(typeof plugin.initialize, 'function')
   t.is(typeof plugin.track, 'function')
   t.is(typeof plugin.identify, 'function')

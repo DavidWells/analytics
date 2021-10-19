@@ -1,7 +1,7 @@
 import test from 'ava'
 import sinon from 'sinon'
 import { AwsClient } from 'aws4fetch'
-import * as inBrowser from '../../../src/utils/in-browser'
+import process from 'process'
 import callAws from '../../../src/pinpoint/helpers/call-aws'
 import { mockClient } from 'aws-sdk-client-mock'
 import { PinpointClient, PutEventsCommand } from '@aws-sdk/client-pinpoint'
@@ -45,7 +45,7 @@ const eventsRequest = {
 
 // Browser test
 test('should call using aws4fetch', async (t) => {
-  sinon.replace(inBrowser, 'default', true)
+  process.browser = true
   const data = await callAws(eventsRequest, config)
 
   sinon.assert.calledOnce(aws4fetchStub)
@@ -55,6 +55,7 @@ test('should call using aws4fetch', async (t) => {
 
 // Node test
 test('should call using aws pinpoint sdk', async (t) => {
+  process.browser = false
   const pinpointMock = mockClient(PinpointClient)
   pinpointMock.on(PutEventsCommand).resolves({
     $metadata: {

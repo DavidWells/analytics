@@ -8,9 +8,10 @@ import {
 } from '@analytics/session-utils'
 import { prepareAttributes, prepareMetrics } from './prepare-data'
 import { setItem, getItem, removeItem } from '@analytics/localstorage-utils'
-import { isBrowser, isString } from '@analytics/type-utils'
+import { isString } from '@analytics/type-utils'
+import inBrowser from '../../utils/in-browser'
 import getClientInfo from '../../utils/client-info'
-import { getStorageKey } from '..'
+import { getStorageKey } from './getStorageKey'
 
 const ENDPOINT_KEY = '__endpoint'
 
@@ -82,7 +83,7 @@ export default async function mergeEndpointData(endpoint = {}, config = {}) {
   }
 
   /* Add device attributes to endpoint */
-  if (isBrowser) {
+  if (inBrowser) {
     if (clientInfo.device && clientInfo.device.vendor) {
       EndpointData.Attributes.DeviceMake = [clientInfo.device.vendor]
     }

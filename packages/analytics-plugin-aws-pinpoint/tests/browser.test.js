@@ -23,7 +23,7 @@ test('should create pinpoint plugin for client', (t) => {
     accessKeyId: 'id',
     secretAccessKey: 'secret',
   })
-  t.is(plugin.bootstrap, 'bootstrap')
+  t.is(typeof plugin.bootstrap, 'function')
   t.is(typeof plugin.initialize, 'function')
   t.is(typeof plugin.track, 'function')
   t.is(typeof plugin.identify, 'function')

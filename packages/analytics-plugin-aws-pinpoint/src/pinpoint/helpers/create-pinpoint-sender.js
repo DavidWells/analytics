@@ -2,8 +2,7 @@ import { uuid } from 'analytics-utils'
 import callAws from './call-aws'
 import { CHANNEL_TYPES } from './constants'
 import getClientInfo from '../../utils/client-info'
-import mergeEndpointData from './merge-endpoint-data'
-import { getStorageKey } from '..'
+import { getStorageKey } from './getStorageKey'
 import { getItem } from '@analytics/localstorage-utils'
 import * as PINPOINT_EVENTS from './events'
 import mergeEndpointData from './merge-endpoint-data'
@@ -27,8 +26,11 @@ export default function createPinpointSender(config = {}) {
       return
     }
 
-    const hasEndpoint = typeof endpointInfo === 'object' && Object.keys(endpointInfo).length
-    const endpoint = !hasEndpoint ? getEndpoint(id) : await mergeEndpointData(endpointInfo, config)
+    const hasEndpoint =
+      typeof endpointInfo === 'object' && Object.keys(endpointInfo).length
+    const endpoint = !hasEndpoint
+      ? getEndpoint(id)
+      : await mergeEndpointData(endpointInfo, config)
 
     let channelType = endpoint.ChannelType
     // If email is set, set email channel

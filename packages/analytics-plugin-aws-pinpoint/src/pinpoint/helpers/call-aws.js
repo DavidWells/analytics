@@ -56,7 +56,7 @@ export default async function callAws(eventsRequest, config) {
     body: JSON.stringify(eventsRequest),
   }
   
-  if (inBrowser) {
+  if (process.browser) {
     aws = new AwsClient(auth)
     data = await aws.fetch(endpointUrl, payload).then((d) => d.json())
   } else {
