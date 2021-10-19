@@ -57,38 +57,24 @@ test('should set Session.Duration and Session.StopTimestamp if eventName equals 
 })
 
 test('should return valid eventPayload object', async (t) => {
-  const {
-    eventId: {
-      EventType,
-      Timestamp,
-      AppPackageName,
-      AppTitle,
-      AppVersionCode,
-      Attributes,
-      Metrics,
-      Session: {
-        Id,
-        StartTimestamp
-      }
-    }
-   } = await formatEvent('test', data, config)
+  const eventPayload = await formatEvent('test', data, config)
 
-  t.is(EventType, 'test')
+  t.is(eventPayload.eventId.EventType, 'test')
   t.regex(
-    JSON.stringify(Timestamp),
+    JSON.stringify(eventPayload.eventId.Timestamp),
     /\b[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]+Z\b/
   )
-  t.is(AppPackageName, 'foo')
-  t.is(AppTitle, 'test')
-  t.is(AppVersionCode, '1.0')
-  t.is(Attributes, 'prepareData.attributes')
-  t.is(Metrics, 'prepareData.metrics')
+  t.is(eventPayload.eventId.AppPackageName, 'foo')
+  t.is(eventPayload.eventId.AppTitle, 'test')
+  t.is(eventPayload.eventId.AppVersionCode, '1.0')
+  t.is(eventPayload.eventId.Attributes, 'prepareData.attributes')
+  t.is(eventPayload.eventId.Metrics, 'prepareData.metrics')
   t.regex(
-    JSON.stringify(Id),
+    JSON.stringify(eventPayload.eventId.Session.Id),
     /\b\w+-\w+-\w+-\w+-\w+\b/
   )
   t.regex(
-    JSON.stringify(StartTimestamp),
+    JSON.stringify(eventPayload.eventId.Session.StartTimestamp),
     /\b[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]+Z\b/
   )
 })

@@ -43,7 +43,7 @@ test('should not call window.addEventListener', async () => {
   sinon.assert.notCalled(global.window.addEventListener)
 })
 
-test('should call pinpointPutEvent if updateEndpoint is called', (t) => {
+test('should call pinpointPutEvent if updateEndpoint is call', (t) => {
   const pinpointClient = initialize({ foo: 'foo' })
   const response = pinpointClient.updateEndpoint({})
 
