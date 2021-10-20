@@ -1,11 +1,11 @@
 {
-  "name": "@analytics/segment",
-  "version": "1.1.1",
-  "description": "Segment integration for 'analytics' module for browser & node",
+  "name": "@analytics/intercom",
+  "version": "1.0.1",
+  "description": "Intercom integration for 'analytics' module for browser & node",
   "projectMeta": {
     "provider": {
-      "name": "Segment",
-      "url": "https://segment.com/"
+      "name": "Intercom",
+      "url": "https://www.intercom.com/"
     },
     "platforms": {
       "browser": "./src/browser.js",
@@ -16,10 +16,9 @@
     "analytics",
     "analytics-project",
     "analytics-plugin",
-    "segment",
-    "segmentio"
+    "intercom"
   ],
-  "author": "David Wells",
+  "author": "Mathis Obadia <mathis.obadia@gmail.com>",
   "license": "MIT",
   "scripts": {
     "docs": "node ../analytics-cli/bin/run docs",
@@ -30,13 +29,13 @@
     "release:major": "npm version major && npm publish",
     "es": "../../node_modules/.bin/babel-node ./testBabel.js"
   },
-  "main": "lib/analytics-plugin-segment.cjs.js",
-  "globalName": "analyticsSegment",
-  "jsnext:main": "lib/analytics-plugin-segment.es.js",
-  "module": "lib/analytics-plugin-segment.es.js",
+  "main": "lib/analytics-plugin-intercom.cjs.js",
+  "globalName": "analyticsIntercom",
+  "jsnext:main": "lib/analytics-plugin-intercom.es.js",
+  "module": "lib/analytics-plugin-intercom.es.js",
   "browser": {
-    "./lib/analytics-plugin-segment.cjs.js": "./lib/analytics-plugin-segment.browser.cjs.js",
-    "./lib/analytics-plugin-segment.es.js": "./lib/analytics-plugin-segment.browser.es.js"
+    "./lib/analytics-plugin-intercom.cjs.js": "./lib/analytics-plugin-intercom.browser.cjs.js",
+    "./lib/analytics-plugin-intercom.es.js": "./lib/analytics-plugin-intercom.browser.es.js"
   },
   "files": [
     "dist",
@@ -53,6 +52,6 @@
     "@babel/preset-env": "^7.3.1"
   },
   "dependencies": {
-    "analytics-node": "^3.5.0"
+    "intercom-client": "^2.11.2"
   }
 }

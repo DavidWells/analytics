@@ -122,8 +122,9 @@ function segmentPlugin(pluginConfig = {}) {
       if (typeof analytics === 'undefined') return
       const properties = payload.properties || {}
       const name = properties.name || properties.title
+      const category = properties.category
       
-      analytics.page(name, properties, {
+      analytics.page(category, name, properties, {
         integrations: config.integrations,
         ...payload.options,
       })

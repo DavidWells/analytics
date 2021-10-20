@@ -8,7 +8,7 @@ description: Utility library for runtime type checking
 
 A tiny tree shakable utility library for runtime type checking.
 
-The entire package weighs in at <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`543 bytes`<!-- AUTO-GENERATED-CONTENT:END -->.
+The entire package weighs in at <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`657 bytes`<!-- AUTO-GENERATED-CONTENT:END -->.
 
 [See live demo](https://utils-types.netlify.app/).
 
@@ -134,6 +134,26 @@ import { isNoOp } from '@analytics/types-utils'
 function empty () { }
 console.log(isNoOp(isNoOp))
 // true
+```
+
+## `isTruthy`
+
+Check if value is truthy.
+
+```js
+import { isTruthy } from '@analytics/types-utils'
+
+console.log(isTruthy('')) // false
+console.log(isTruthy('false')) // false
+console.log(isTruthy('FALSE')) // false
+console.log(isTruthy(0)) // false
+console.log(isTruthy(null)) // false
+console.log(isTruthy(undefined)) // false
+console.log(isTruthy('true')) // true
+console.log(isTruthy(1)) // true
+console.log(isTruthy({})) // true
+console.log(isTruthy([])) // true
+console.log(isTruthy(function() { })) // true
 ```
 
 ## `isElement`

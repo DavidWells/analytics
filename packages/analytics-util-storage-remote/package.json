@@ -1,6 +1,6 @@
 {
   "name": "@analytics/remote-storage-utils",
-  "version": "0.4.11",
+  "version": "0.4.12",
   "description": "Storage utilities for cross domain localStorage access, with permissions",
   "author": "David Wells",
   "license": "MIT",
@@ -48,8 +48,8 @@
     "@babel/preset-env": "^7.4.5"
   },
   "dependencies": {
-    "@analytics/type-utils": "^0.3.1",
-    "analytics-utils": "^1.0.3",
+    "@analytics/type-utils": "^0.4.0",
+    "analytics-utils": "^1.0.4",
     "cross-storage": "^1.0.0"
   }
 }

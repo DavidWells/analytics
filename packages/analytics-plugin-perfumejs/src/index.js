@@ -5,7 +5,7 @@
  * @param {object|function} pluginConfig - Plugin settings or zero config perfume.js instance
  * @param {object} [pluginConfig.perfume] - perfume.js class. If not provided, a global window reference to Perfume will be used
  * @param {object} [pluginConfig.destinations] - Where perfume.js will send performance data
- * @param {string} [pluginConfig.category = prefume.js] - Name of event category. Default 'perfume.js'
+ * @param {string} [pluginConfig.category = perfume.js] - Name of event category. Default 'perfume.js'
  * @param {object} [pluginConfig.perfumeOptions] - Options to pass to perfume.js instance. See https://github.com/Zizzamia/perfume.js#perfume-custom-options
  * @return {*}
  * @example
@@ -18,13 +18,13 @@
  */
 function perfumeJsPlugin(pluginConfig = {}) {
   const conf = (typeof pluginConfig !== 'function') ? pluginConfig : {
-    prefume: pluginConfig
+    perfume: pluginConfig
   }
   return {
-    name: 'prefume.js',
+    name: 'perfume.js',
     config: conf,
     initialize: ({ instance, config }) => {
-      const { perfume, destinations } = config
+      const { perfume, destinations, metricNames = metrics } = config
       const perfumeOptions = config.perfumeOptions || {}
       const PerfumeInstance = (typeof Perfume !== 'undefined') ? Perfume : perfume
       // Don't initialize if perfume.js not included
@@ -33,19 +33,6 @@ function perfumeJsPlugin(pluginConfig = {}) {
         return false
       }
 
-      /* See https://github.com/Zizzamia/perfume.js#performance-audits */
-      const metricNames = [
-        'fp', // firstPaint
-        'fcp', // firstContentfulPaint
-        'lcp', // largestContentfulPaint
-        'lcpFinal', // largestContentfulPaintFinal
-        'fid', // firstInputDelay
-        'cls', // cumulativeLayoutShift
-        'clsFinal', // cumulativeLayoutShiftFinal
-        'tbt', // totalBlockingTime
-        'tbt10S', // totalBlockingTime10S
-        'tbtFinal' // totalBlockingTimeFinal
-      ]
       /* Where data should send */
       const dataSinks = (!destinations) ? { all: true } : destinations
       /* Initialize perfume.js tracker */
@@ -73,5 +60,19 @@ function perfumeJsPlugin(pluginConfig = {}) {
     }
   }
 }
+
+/* See https://github.com/Zizzamia/perfume.js#performance-audits */
+export const metrics = [
+  'fp', // firstPaint
+  'fcp', // firstContentfulPaint
+  'lcp', // largestContentfulPaint
+  'lcpFinal', // largestContentfulPaintFinal
+  'fid', // firstInputDelay
+  'cls', // cumulativeLayoutShift
+  'clsFinal', // cumulativeLayoutShiftFinal
+  'tbt', // totalBlockingTime
+  'tbt10S', // totalBlockingTime10S
+  'tbtFinal' // totalBlockingTimeFinal
+];
 
 export default perfumeJsPlugin

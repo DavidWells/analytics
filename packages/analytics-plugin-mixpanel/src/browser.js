@@ -3,6 +3,8 @@
  * @link https://getanalytics.io/plugins/mixpanel/
  * @param {object} pluginConfig - Plugin settings
  * @param {string} pluginConfig.token - The mixpanel token associated to a mixpanel project
+ * @param {object} [pluginConfig.options] - The mixpanel init options https://github.com/mixpanel/mixpanel-js/blob/8b2e1f7b/src/mixpanel-core.js#L87-L110
+ * @param {string} [pluginConfig.pageEvent] - Event name to use for page() events (default to page path)
  * @param {string} [pluginConfig.customScriptSrc] - Load mixpanel script from custom source
  * @return {object} Analytics plugin
  * @example
@@ -17,7 +19,7 @@ function mixpanelPlugin(pluginConfig = {}) {
     config: pluginConfig,
     /* https://developer.mixpanel.com/docs/javascript-full-api-reference#mixpanelinit */
     initialize: ({ config }) => {
-      const { token, customScriptSrc } = config;
+      const { token, customScriptSrc, options = {} } = config;
       if (!token) {
         throw new Error("No mixpanel token defined");
       }
@@ -118,7 +120,7 @@ function mixpanelPlugin(pluginConfig = {}) {
         }
       })(document, window.mixpanel || []);
 
-      mixpanel.init(config.token, { batch_requests: true });
+      mixpanel.init(config.token, { batch_requests: true, ...options });
     },
     /**
      * Identify a visitor in mixpanel
@@ -141,9 +143,7 @@ function mixpanelPlugin(pluginConfig = {}) {
      * the path as tracked event and search parameters as properties
      */
     page: ({ payload }) => {
-      mixpanel.track(payload.properties.path, {
-        search: payload.properties.search,
-      });
+      mixpanel.track(pluginConfig.pageEvent || payload.properties.path, payload.properties);
     },
     /* https://developer.mixpanel.com/docs/javascript-full-api-reference#mixpaneltrack */
     track: ({ payload }) => {
