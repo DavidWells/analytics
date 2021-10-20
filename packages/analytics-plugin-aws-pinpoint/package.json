@@ -21,6 +21,9 @@
   "author": "David Wells",
   "license": "MIT",
   "scripts": {
+    "test": "ava -v -s",
+    "test:watch": "ava -v -s --watch",
+    "coverage": "c8 ava -s",
     "docs": "node ../analytics-cli/bin/run docs",
     "build": "node ../../scripts/build/index.js",
     "watch": "node ../../scripts/build/_watch.js",
@@ -48,11 +51,23 @@
     "type": "git",
     "url": "git+https://github.com/DavidWells/analytics.git"
   },
+  "ava": {
+    "files": [
+      "**/**/*.test.js"
+    ],
+    "require": [
+      "esm",
+      "@babel/register"
+    ],
+    "verbose": true,
+    "failFast": true,
+    "failWithoutAssertions": false
+  },
   "dependencies": {
     "@analytics/activity-utils": "^0.1.7",
     "@analytics/localstorage-utils": "^0.1.5",
     "@analytics/queue-utils": "^0.1.1",
-    "@analytics/session-utils": "^0.1.11",
+    "@analytics/session-utils": "^0.1.10",
     "@analytics/type-utils": "^0.3.1",
     "@aws-sdk/client-pinpoint": "^3.31.0",
     "analytics-plugin-tab-events": "^0.2.0",
@@ -63,6 +78,9 @@
   "devDependencies": {
     "@babel/core": "^7.2.2",
     "@babel/plugin-transform-runtime": "7.5.5",
-    "@babel/preset-env": "^7.3.1"
+    "@babel/preset-env": "^7.3.1",
+    "@babel/register": "^7.15.3",
+    "aws-sdk-client-mock": "^0.5.5",
+    "c8": "^7.10.0"
   }
 }

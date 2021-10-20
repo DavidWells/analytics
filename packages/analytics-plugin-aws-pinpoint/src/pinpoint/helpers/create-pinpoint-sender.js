@@ -26,8 +26,11 @@ export default function createPinpointSender(config = {}) {
       return
     }
 
-    const hasEndpoint = typeof endpointInfo === 'object' && Object.keys(endpointInfo).length
-    const endpoint = !hasEndpoint ? getEndpoint(id) : await mergeEndpointData(endpointInfo, config)
+    const hasEndpoint =
+      typeof endpointInfo === 'object' && Object.keys(endpointInfo).length
+    const endpoint = !hasEndpoint
+      ? getEndpoint(id)
+      : await mergeEndpointData(endpointInfo, config)
 
     let channelType = endpoint.ChannelType
     // If email is set, set email channel
