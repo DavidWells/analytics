@@ -1,4 +1,4 @@
-import { formatEvent } from './format-event'
+import formatEvent from './format-event'
 import mergeEndpointData from './merge-endpoint-data'
 import * as PINPOINT_EVENTS from './events'
 
