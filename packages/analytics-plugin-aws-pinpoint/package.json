@@ -5,10 +5,11 @@
   "projectMeta": {
     "provider": {
       "name": "AWSPinpoint",
-      "url": "https://www.aws-pinpoint.com/"
+      "url": "https://aws.amazon.com/pinpoint/"
     },
     "platforms": {
-      "browser": "./src/browser.js"
+      "browser": "./src/browser.js",
+      "node": "./src/node.js"
     }
   },
   "keywords": [
@@ -42,7 +43,7 @@
     "lib",
     "README.md"
   ],
-  "homepage": "https://github.com/DavidWells/analytics#readme",
+  "homepage": "https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-aws-pinpoint",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/DavidWells/analytics.git"
@@ -52,6 +53,8 @@
     "@analytics/localstorage-utils": "^0.1.5",
     "@analytics/queue-utils": "^0.1.1",
     "@analytics/session-utils": "^0.1.11",
+    "@analytics/type-utils": "^0.3.1",
+    "@aws-sdk/client-pinpoint": "^3.31.0",
     "analytics-plugin-tab-events": "^0.2.0",
     "analytics-utils": "^1.0.4",
     "aws4fetch": "^1.0.13",
