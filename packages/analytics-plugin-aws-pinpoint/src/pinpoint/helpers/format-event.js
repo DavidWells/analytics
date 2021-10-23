@@ -5,12 +5,12 @@ import {
   getPageSession,
   setPageSession,
 } from '@analytics/session-utils'
-import inBrowser from '../../utils/in-browser'
+import { isBrowser } from '@analytics/type-utils'
+import { uuid } from 'analytics-utils'
 import getClientInfo from '../../utils/client-info'
 import getEventName from './get-event-name'
-import { uuid } from 'analytics-utils'
-import * as PINPOINT_EVENTS from './events'
 import { prepareAttributes, prepareMetrics } from './prepare-data'
+import * as PINPOINT_EVENTS from './events'
 
 export default async function formatEvent(eventName, data = {}, config = {}) {
   const {
@@ -34,7 +34,7 @@ export default async function formatEvent(eventName, data = {}, config = {}) {
   logger('event sessionData    ', JSON.stringify(sessionData))
 
   let pageSessionInfo, tabSessionData
-  if (inBrowser) {
+  if (isBrowser) {
     pageSessionInfo = getPageSession()
     tabSessionData = getTabSession()
     logger('event pageSessionInfo', JSON.stringify(pageSessionInfo))
@@ -50,7 +50,7 @@ export default async function formatEvent(eventName, data = {}, config = {}) {
   const defaultEventAttributes = {
     date: timeStamp,
     sessionId, // Event[id].Session.Id
-    ...(!inBrowser ? {} : { pageSession: pageSessionInfo.id }),
+    ...(!isBrowser ? {} : { pageSession: pageSessionInfo.id }),
   }
 
   const extraAttributes = enrichEventAttributes
@@ -97,7 +97,7 @@ export default async function formatEvent(eventName, data = {}, config = {}) {
   logger('eventAttributes', preparedData.attributes)
   logger('eventMetrics', preparedData.metrics)
 
-  if (inBrowser) {
+  if (isBrowser) {
     logger('clientInfo', getClientInfo())
   }
 

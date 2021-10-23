@@ -27,9 +27,9 @@ export function initialize(config = {}) {
 
   const queue = smartQueue(
     async (events, rest) => {
-      events.forEach((event) => logger('>>>>> PROCESS queue', event))
+      events.forEach((event) => logger('> Queue event', event))
       const response = await pinpointPutEvent(events, {})
-      logger('>>>>> PROCESS queue response', response)
+      logger('> Queue response', response)
     },
     {
       max: 10, // limit... event limit is 100 for pinpoint

@@ -8,8 +8,7 @@ import {
 } from '@analytics/session-utils'
 import { prepareAttributes, prepareMetrics } from './prepare-data'
 import { setItem, getItem, removeItem } from '@analytics/localstorage-utils'
-import { isString } from '@analytics/type-utils'
-import inBrowser from '../../utils/in-browser'
+import { isString, isBrowser } from '@analytics/type-utils'
 import getClientInfo from '../../utils/client-info'
 import { getStorageKey } from './getStorageKey'
 
@@ -30,7 +29,7 @@ export default async function mergeEndpointData(endpoint = {}, config = {}) {
   // const tabSessionInfo = getTabSession()
   let pageSessionInfo, pageSession
   let clientInfo
-  if (inBrowser) {
+  if (isBrowser) {
     clientInfo = getClientInfo()
     pageSessionInfo = getPageSession()
     pageSession = pageSessionInfo.id
@@ -83,7 +82,7 @@ export default async function mergeEndpointData(endpoint = {}, config = {}) {
   }
 
   /* Add device attributes to endpoint */
-  if (inBrowser) {
+  if (isBrowser) {
     if (clientInfo.device && clientInfo.device.vendor) {
       EndpointData.Attributes.DeviceMake = [clientInfo.device.vendor]
     }
@@ -200,7 +199,7 @@ function getEndpoint(id) {
 }
 
 function getDemographicInfo(appVersionString, clientInfo) {
-  return inBrowser
+  return isBrowser
     ? getBrowserDemographicInfo(appVersionString, clientInfo)
     : getServerDemographicInfo(appVersionString)
 }

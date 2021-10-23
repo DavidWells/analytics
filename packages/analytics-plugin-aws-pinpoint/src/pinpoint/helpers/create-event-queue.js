@@ -1,5 +1,6 @@
 import formatEvent from './format-event'
 import mergeEndpointData from './merge-endpoint-data'
+import { isBoolean } from '@analytics/type-utils'
 import * as PINPOINT_EVENTS from './events'
 
 // TODO use beacon
@@ -8,11 +9,11 @@ const BEACON_SUPPORTED = typeof navigator !== 'undefined' && navigator && typeof
 
 export default function createEventQueue(queue, config = {}) {
   return async function queueEvent(eventName, eventData = {}, endpoint = {}, flush = false) {
-    if (typeof eventData === 'boolean') {
+    if (isBoolean(eventData)) {
       eventData = {}
       flush = eventData
     }
-    if (typeof endpoint === 'boolean') {
+    if (isBoolean(endpoint)) {
       endpoint = {}
       flush = endpoint
     }
