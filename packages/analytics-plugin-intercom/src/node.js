@@ -1,12 +1,14 @@
+import { isEmail } from '@analytics/type-utils'
+
 let Intercom;
 if (!process.browser) {
-  Intercom = require("intercom-client");
+  Intercom = require('intercom-client');
 }
 
 const defaultConfig = {
   /* Your intercom app id */
   appId: null,
-};
+}
 
 /**
  * Segment serverside analytics plugin
@@ -25,12 +27,12 @@ function intercomPlugin(userConfig = {}) {
   const config = {
     ...defaultConfig,
     ...userConfig,
-  };
+  }
 
-  const client = new Intercom.Client({ token: config.appId });
+  const client = new Intercom.Client({ token: config.appId })
 
   return {
-    name: "intercom",
+    name: 'intercom',
     config: config,
     // Custom intercom methods
     methods: {
@@ -39,32 +41,37 @@ function intercomPlugin(userConfig = {}) {
     },
     /* page view */
     page: ({ payload, config }) => {
-      console.log(
-        "page event not yet implemented, doesn't seem to be available from node sdk"
-      );
+      console.log('page event not yet implemented, doesn\'t seem to be available from node sdk')
     },
     /* track event */
     track: ({ payload, config }) => {
-      const { userId } = payload;
+      const { userId } = payload
       if (!userId && !anonymousId) {
-        throw new Error(
-          "Missing userId. You must include one to make intercom call"
-        );
+        throw new Error('Missing userId. You must include one to make intercom call')
       }
       const data = {
         event_name: payload.event,
         created_at: Math.floor(new Date().getTime() / 1000),
         user_id: userId,
         metadata: payload.properties,
-      };
-      client.events.create(data);
+      }
+      client.events.create(data)
     },
     /* identify user */
     identify: ({ payload }) => {
-      const { userId, traits } = payload;
-      client.users.create({ email: userId, custom_attributes: traits });
+      const { userId, traits } = payload
+
+      const email = isEmail(userId) ? userId : traits.email
+      if (!email) {
+        throw new Error('Missing email. userId or traits.email must be set')
+      }
+
+      client.users.create({
+        email: email, 
+        custom_attributes: traits
+      })
     },
-  };
+  }
 }
 
-export default intercomPlugin;
+export default intercomPlugin
