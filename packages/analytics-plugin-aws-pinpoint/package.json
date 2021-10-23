@@ -1,6 +1,6 @@
 {
   "name": "@analytics/aws-pinpoint",
-  "version": "0.6.20",
+  "version": "0.7.0",
   "description": "AWS Pinpoint integration for 'analytics' module",
   "projectMeta": {
     "provider": {

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/DavidWells/analytics/compare/@analytics/aws-pinpoint@0.6.20...@analytics/aws-pinpoint@0.7.0) (2021-10-23)
+
+
+### Features
+
+* add node.js AWS pinpoint integration ([90f8f6e](https://github.com/DavidWells/analytics/commit/90f8f6e))
+
+
+
+
+
 ## [0.6.20](https://github.com/DavidWells/analytics/compare/@analytics/aws-pinpoint@0.6.19...@analytics/aws-pinpoint@0.6.20) (2021-10-17)
 
 **Note:** Version bump only for package @analytics/aws-pinpoint
