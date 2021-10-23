@@ -14,6 +14,7 @@ const config = {
   eventMapping: {},
 }
 
+
 /**
  * AWS Pinpoint analytics Node integration
  * @link https://docs.aws.amazon.com/pinpoint/latest/developerguide/
