@@ -35,7 +35,7 @@ function amplitudePlugin(pluginConfig = {}) {
     config: pluginConfig,
     // For Amplitude options, see https://amplitude.github.io/Amplitude-JavaScript/Options
     initialize: ({ config }) => {
-      const { apiKey, customScriptSrc, options = {} } = config
+      const { apiKey, customScriptSrc, integritySha = '', options = {} } = config
       if (!apiKey) {
         throw new Error("Amplitude project API key is not defined")
       }
@@ -48,14 +48,18 @@ function amplitudePlugin(pluginConfig = {}) {
         return
       }
       
-      const scriptSrc = customScriptSrc ? customScriptSrc : 'https://cdn.amplitude.com/libs/amplitude-8.1.0-min.gz.js';
+      const scriptSrc = customScriptSrc ? customScriptSrc : 'https://cdn.amplitude.com/libs/amplitude-8.1.0-min.gz.js'
+      // Fix https://bit.ly/3m7EBGi
+      const integrity = integritySha || 'sha384-u0hlTAJ1tNefeBKwiBNwB4CkHZ1ck4ajx/pKmwWtc+IufKJiCQZ+WjJIi+7C6Ntm'
 
       // Initialize amplitude js
       (function(e, t) {
         var n = e.amplitude || { _q: [], _iq: {} };
         var r = t.createElement("script");
         r.type = "text/javascript";
-        r.integrity = "sha384-u0hlTAJ1tNefeBKwiBNwB4CkHZ1ck4ajx/pKmwWtc+IufKJiCQZ+WjJIi+7C6Ntm";
+        if (integrity) {
+          r.integrity = integrity
+        }
         r.crossOrigin = "anonymous";
         r.async = true;
         r.src = scriptSrc;
