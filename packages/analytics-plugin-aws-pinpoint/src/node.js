@@ -80,7 +80,7 @@ function awsPinpointPlugin(pluginConfig = {}) {
       const pinpointClient = initialize({
         ...config,
         // flushInterval
-        flushInterval: config.flushInterval || 500,
+        flushInterval: config.flushInterval || 200,
         // The title of the app that's recording the event.
         appTitle: config.appTitle || app,
         // The package name of the app that's recording the event.
