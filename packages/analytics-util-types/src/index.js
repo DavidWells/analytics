@@ -126,6 +126,16 @@ export function isTruthy(v) {
   return !!v
 }
 
+/**
+ * Check if value is email
+ * @param {*} str 
+ * @return {Boolean} - is email like value
+ */
+export function isEmail(str) {
+  if (str.length > 320) return false
+  return /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(str)
+}
+
 /** 
  * @param obj
  * @return {obj is NodeList}

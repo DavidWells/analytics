@@ -156,6 +156,19 @@ console.log(isTruthy([])) // true
 console.log(isTruthy(function() { })) // true
 ```
 
+## `isEmail`
+
+Check if value is an email.
+
+```js
+import { isEmail } from '@analytics/type-utils'
+
+console.log(isEmail('email@email.com'))
+// true
+console.log(isEmail('other-thing'))
+// false
+```
+
 ## `isElement`
 
 Check if value is a a DOM node.
