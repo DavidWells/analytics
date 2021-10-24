@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0](https://github.com/DavidWells/analytics/compare/@analytics/amplitude@0.0.4...@analytics/amplitude@0.1.0) (2021-10-24)
+
+
+### Features
+
+* add support for session Id in amplitude [#203](https://github.com/DavidWells/analytics/issues/203) ([86b797b](https://github.com/DavidWells/analytics/commit/86b797b))
+
+
+
+
+
 ## [0.0.4](https://github.com/DavidWells/analytics/compare/@analytics/amplitude@0.0.3...@analytics/amplitude@0.0.4) (2021-10-23)
 
 
