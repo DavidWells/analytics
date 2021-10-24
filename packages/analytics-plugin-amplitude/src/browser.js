@@ -50,8 +50,14 @@ function amplitudePlugin(pluginConfig = {}) {
       }
       
       const scriptSrc = customScriptSrc ? customScriptSrc : 'https://cdn.amplitude.com/libs/amplitude-8.1.0-min.gz.js'
+
       // Fix https://bit.ly/3m7EBGi
-      const integrity = integritySha || 'sha384-u0hlTAJ1tNefeBKwiBNwB4CkHZ1ck4ajx/pKmwWtc+IufKJiCQZ+WjJIi+7C6Ntm';
+      let integrity
+      if (integritySha) {
+        integrity = integritySha
+      } else if (!customScriptSrc) {
+        integrity = 'sha384-u0hlTAJ1tNefeBKwiBNwB4CkHZ1ck4ajx/pKmwWtc+IufKJiCQZ+WjJIi+7C6Ntm'
+      }
 
       // Initialize amplitude js
       ;(function(e, t) {
