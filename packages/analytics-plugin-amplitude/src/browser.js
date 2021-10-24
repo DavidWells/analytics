@@ -54,8 +54,10 @@ function amplitudePlugin(pluginConfig = {}) {
       // Fix https://bit.ly/3m7EBGi
       let integrity
       if (integritySha) {
+        // Use custom sha if provided
         integrity = integritySha
       } else if (!customScriptSrc) {
+        // Use default 'https://cdn.amplitude.com/libs/amplitude-8.1.0-min.gz.js' sha
         integrity = 'sha384-u0hlTAJ1tNefeBKwiBNwB4CkHZ1ck4ajx/pKmwWtc+IufKJiCQZ+WjJIi+7C6Ntm'
       }
 
@@ -64,6 +66,7 @@ function amplitudePlugin(pluginConfig = {}) {
         var n = e.amplitude || { _q: [], _iq: {} };
         var r = t.createElement("script");
         r.type = "text/javascript";
+        // Only apply integrity sha if provided or default script source
         if (integrity) {
           r.integrity = integrity
         }
