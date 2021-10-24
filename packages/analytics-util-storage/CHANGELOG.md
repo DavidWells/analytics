@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.14](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-storage/compare/@analytics/storage-utils@0.2.13...@analytics/storage-utils@0.2.14) (2021-10-24)
+
+**Note:** Version bump only for package @analytics/storage-utils
+
+
+
+
+
 ## [0.2.13](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-storage/compare/@analytics/storage-utils@0.2.12...@analytics/storage-utils@0.2.13) (2021-10-17)
 
 **Note:** Version bump only for package @analytics/storage-utils

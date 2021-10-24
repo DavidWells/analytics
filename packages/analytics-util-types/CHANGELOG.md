@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-types/compare/@analytics/type-utils@0.4.0...@analytics/type-utils@0.5.0) (2021-10-24)
+
+
+### Features
+
+* add isEmail to types ([0ced368](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-types/commit/0ced368))
+
+
+
+
+
 # [0.4.0](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-types/compare/@analytics/type-utils@0.3.1...@analytics/type-utils@0.4.0) (2021-10-17)
 
 

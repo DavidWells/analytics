@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.5](https://github.com/DavidWells/analytics/compare/analytics-utils@1.0.4...analytics-utils@1.0.5) (2021-10-24)
+
+**Note:** Version bump only for package analytics-utils
+
+
+
+
+
 ## [1.0.4](https://github.com/DavidWells/analytics/compare/analytics-utils@1.0.3...analytics-utils@1.0.4) (2021-10-17)
 
 **Note:** Version bump only for package analytics-utils
