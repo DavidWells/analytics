@@ -6,6 +6,7 @@
  * @param {object} pluginConfig - Plugin settings
  * @param {string} pluginConfig.apiKey - Amplitude project API key
  * @param {object} pluginConfig.options - Amplitude SDK options
+ * @param {string} pluginConfig.initialSessionId - Set initial session ID
  * @return {*}
  * @example
  *
@@ -35,7 +36,7 @@ function amplitudePlugin(pluginConfig = {}) {
     config: pluginConfig,
     // For Amplitude options, see https://amplitude.github.io/Amplitude-JavaScript/Options
     initialize: ({ config }) => {
-      const { apiKey, customScriptSrc, integritySha = '', options = {} } = config
+      const { apiKey, initialSessionId, customScriptSrc, integritySha = '', options = {} } = config
       if (!apiKey) {
         throw new Error("Amplitude project API key is not defined")
       }
@@ -120,6 +121,11 @@ function amplitudePlugin(pluginConfig = {}) {
       })(window, document);
       // See options at https://amplitude.github.io/Amplitude-JavaScript/Options/
       window.amplitude.init(config.apiKey, null, options, initComplete)
+
+      // Set initial session id. Ref https://bit.ly/3vElAym
+      if (initialSessionId) {
+        setTimeout(() => setSessionId(initialSessionId), 10)
+      }
     },
 
     page: ({ payload: { properties, options } }) => {
@@ -140,7 +146,29 @@ function amplitudePlugin(pluginConfig = {}) {
     },
 
     loaded: () => amplitudeInitCompleted,
+
+    // https://getanalytics.io/plugins/writing-plugins/#adding-custom-methods
+    methods: {
+      /**
+       * analytics.plugins['amplitude'].setSessionId('your-id')
+       */
+      setSessionId: setSessionId,
+    }
   }
+}
+
+/**
+ * Set Amplitude session ID. Ref https://bit.ly/3vElAym
+ * @param {string} sessionId - Minimum visit length before first page ping event fires
+ */
+function setSessionId(sessionId) {
+  if (typeof window.amplitude === 'undefined') {
+    console.log('Amplitude not loaded yet')
+    return false
+  }
+  const amplitudeInstance = window.amplitude.getInstance()
+  amplitudeInstance.setSessionId(sessionId)
+  amplitudeInstance.enableTracking()
 }
 
 export default amplitudePlugin

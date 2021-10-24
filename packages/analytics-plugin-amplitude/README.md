@@ -246,3 +246,42 @@ Below are additional implementation examples.
 
 
 <!-- AUTO-GENERATED-CONTENT:END (PLUGIN_DOCS) -->
+
+
+## Setting Custom Session Ids
+
+You can set a session id like so
+
+```js
+import Analytics from 'analytics'
+import amplitudePlugin from '@analytics/amplitude'
+
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    amplitudePlugin({
+      apiKey: 'token',
+    })
+  ]
+})
+
+// Run custom method https://getanalytics.io/plugins/writing-plugins/#adding-custom-methods
+analytics.plugins['amplitude'].setSessionId('your-id')
+```
+
+Or via the `initialSessionId` config value
+
+```js
+import Analytics from 'analytics'
+import amplitudePlugin from '@analytics/amplitude'
+
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    amplitudePlugin({
+      apiKey: 'token',
+      initialSessionId: 'xyz-123'
+    })
+  ]
+})
+```
