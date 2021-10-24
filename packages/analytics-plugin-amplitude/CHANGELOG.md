@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.2](https://github.com/DavidWells/analytics/compare/@analytics/amplitude@0.1.1...@analytics/amplitude@0.1.2) (2021-10-24)
+
+
+### Bug Fixes
+
+* integrity sha ([70e7c1d](https://github.com/DavidWells/analytics/commit/70e7c1d))
+
+
+
+
+
 ## [0.1.1](https://github.com/DavidWells/analytics/compare/@analytics/amplitude@0.1.0...@analytics/amplitude@0.1.1) (2021-10-24)
 
 
