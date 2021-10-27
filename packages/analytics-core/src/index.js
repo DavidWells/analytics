@@ -52,9 +52,7 @@ import enrichMeta from './utils/enrichMeta'
 function analytics(config = {}) {
   const customReducers = config.reducers || {}
   const initialUser = config.initialUser || {}
-  // @TODO add custom value reolvers for userId and anonId
-  // const resolvers = config.resolvers || {}
-  
+
   /* Parse plugins array */
   const parsedOptions = (config.plugins || []).reduce((acc, plugin) => {
     if (isFunction(plugin)) {
@@ -115,7 +113,7 @@ function analytics(config = {}) {
     middlewares: [],
     events: []
   })
-  
+
   /* Storage by default is set to global & is not persisted */
   const storage = (config.storage) ? config.storage : {
     getItem: get,
@@ -125,7 +123,12 @@ function analytics(config = {}) {
 
   const getUserProp = getUserPropFunc(storage)
 
-  // mutable intregrations object for dynamic loading
+  const resolvers = config.resolvers || {
+    getUserId: (instance, payload) => getUserProp(ID, instance, payload),
+    getAnonId: (instance, payload) => getUserProp(ANONID, instance, payload)
+  }
+
+  // mutable integrations object for dynamic loading
   let customPlugins = parsedOptions.plugins
 
   /* Grab all registered events from plugins loaded */
@@ -167,8 +170,8 @@ function analytics(config = {}) {
   }
 
   /**
-   * Async Management methods for plugins. 
-   * 
+   * Async Management methods for plugins.
+   *
    * This is also where [custom methods](https://bit.ly/329vFXy) are loaded into the instance.
    * @typedef {Object} Plugins
    * @property {EnablePlugin} enable - Set storage value
@@ -265,7 +268,7 @@ function analytics(config = {}) {
     // Merge in custom plugin methods
     ...parsedOptions.methods
   }
-  
+
   /**
    * Analytic instance returned from initialization
    * @typedef {Object} AnalyticsInstance
@@ -334,7 +337,7 @@ function analytics(config = {}) {
       /* sets temporary in memory id. Not to be relied on */
       set(tempKey(ID), id)
 
-      const resolvedId = id || data.userId || getUserProp(ID, instance, data)
+      const resolvedId = id || data.userId || resolvers.getUserId({ instance })
 
       return new Promise((resolve) => {
         store.dispatch({
@@ -404,14 +407,17 @@ function analytics(config = {}) {
       const data = isObject(eventName) ? eventName : (payload || {})
       const opts = isObject(options) ? options : {}
 
+      const userId = resolvers.getUserId(instance, data)
+      const anonymousId = resolvers.getAnonId(instance, data)
+
       return new Promise((resolve) => {
         store.dispatch({
           type: EVENTS.trackStart,
           event: name,
           properties: data,
           options: opts,
-          userId: getUserProp(ID, instance, payload),
-          anonymousId: getUserProp(ANONID, instance, payload),
+          userId,
+          anonymousId,
         }, resolve, [payload, options, callback])
       })
     },
@@ -460,21 +466,16 @@ function analytics(config = {}) {
       const d = isObject(data) ? data : {}
       const opts = isObject(options) ? options : {}
 
-      /*
-      // @TODO add custom value reolvers for userId and anonId
-      if (resolvers.getUserId) {
-        const asyncUserId = await resolvers.getUserId()
-        console.log('x', x)
-      }
-      */
+      const userId = resolvers.getUserId(instance, d)
+      const anonymousId = resolvers.getAnonId(instance, d)
 
       return new Promise((resolve) => {
         store.dispatch({
           type: EVENTS.pageStart,
           properties: getPageData(d),
           options: opts,
-          userId: getUserProp(ID, instance, d),
-          anonymousId: getUserProp(ANONID, instance, d),
+          userId,
+          anonymousId,
         }, resolve, [data, options, callback])
       })
     },
@@ -497,10 +498,10 @@ function analytics(config = {}) {
      */
     user: (key) => {
       if (key === ID || key === 'id') {
-        return getUserProp(ID, instance)
+        return resolvers.getUserId(instance, null)
       }
       if (key === ANONID || key === 'anonId') {
-        return getUserProp(ANONID, instance)
+        return resolvers.getAnonId(instance, null)
       }
       const user = instance.getState('user')
       if (!key) return user
@@ -872,7 +873,7 @@ function analytics(config = {}) {
     }
     return acc
   }, {})
-  
+
   const initialState = {
     context: initialConfig,
     user: visitorInfo,
@@ -926,7 +927,7 @@ function analytics(config = {}) {
 
   const enabledPlugins = pluginKeys.filter((name) => parsedOptions.pluginEnabled[name])
   const disabledPlugins = pluginKeys.filter((name) => !parsedOptions.pluginEnabled[name])
- 
+
   /* Register analytic plugins */
   store.dispatch({
     type: EVENTS.registerPlugins,
