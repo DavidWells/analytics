@@ -531,8 +531,8 @@ function analytics(config = {}) {
      *
      * @example
      *
-     * analytics.ready() => {
-     *   console.log('all plugins have loaded or were skipped', payload)
+     * analytics.ready((payload) => {
+     *   console.log('all plugins have loaded or were skipped', payload);
      * })
      */
     ready: (callback) => {
