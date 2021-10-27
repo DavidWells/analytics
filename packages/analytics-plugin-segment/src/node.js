@@ -1,17 +1,18 @@
-
-let Analytics
+let Analytics;
 if (!process.browser) {
-  Analytics = require('analytics-node')
+  Analytics = require("analytics-node");
 }
 
 const defaultConfig = {
   /* Your segment write key */
   writeKey: null,
-  /* Segment sdk flushInterval. Docs https://bit.ly/2H2jJMb */
-  flushInterval: 3,
+  /* Segment sdk options. Docs https://bit.ly/2H2jJMb */
+  flushInterval: 1000,
+  flushAt: 3,
+  enable: true,
   /* Disable anonymous MTU */
-  disableAnonymousTraffic: false
-}
+  disableAnonymousTraffic: false,
+};
 
 /**
  * Segment serverside analytics plugin
@@ -31,79 +32,86 @@ const defaultConfig = {
 function segmentPlugin(userConfig = {}) {
   const config = {
     ...defaultConfig,
-    ...userConfig
-  }
+    ...userConfig,
+  };
   const client = new Analytics(config.writeKey, {
-    flushInterval: config.flushInterval
-  })
+    ...config,
+  });
 
   return {
-    name: 'segment',
+    name: "segment",
     config: config,
     // Custom segment methods
     methods: {
       // Segment group call https://segment.com/docs/connections/sources/catalog/libraries/server/node/#group
       group(groupId, traits = {}, options = {}, callback) {
-        const analyticsInstance = this.instance
-        const user = analyticsInstance.user()
-        const userId = options.userId || user.userId
-        const anonymousId = options.anonymousId || user.anonymousId
-        client.group({
-          ...(anonymousId ? { anonymousId } : {}),
-          ...(userId ? { userId } : {}),
-          groupId: groupId,
-          traits: traits,
-        }, callback)
+        const analyticsInstance = this.instance;
+        const user = analyticsInstance.user();
+        const userId = options.userId || user.userId;
+        const anonymousId = options.anonymousId || user.anonymousId;
+        client.group(
+          {
+            ...(anonymousId ? { anonymousId } : {}),
+            ...(userId ? { userId } : {}),
+            groupId: groupId,
+            traits: traits,
+          },
+          callback
+        );
       },
       // Function for using analytics-node client in other methods
       getClient: () => client,
     },
     /* page view */
     page: ({ payload, config }) => {
-      const { userId, anonymousId } = payload
+      const { userId, anonymousId } = payload;
       if (!userId && !anonymousId) {
-        throw new Error('Missing userId and anonymousId. You must include one to make segment call')
+        throw new Error(
+          "Missing userId and anonymousId. You must include one to make segment call"
+        );
       }
 
       const data = {
         properties: payload.properties,
         anonymousId,
-        userId
-      }
+        userId,
+      };
 
-      client.page(data)
+      client.page(data);
     },
     /* track event */
     track: ({ payload, config }) => {
-      const { userId, anonymousId } = payload
+      const { userId, anonymousId } = payload;
       if (!userId && !anonymousId) {
-        throw new Error('Missing userId and anonymousId. You must include one to make segment call')
+        throw new Error(
+          "Missing userId and anonymousId. You must include one to make segment call"
+        );
       }
 
       const data = {
         event: payload.event,
-        properties: payload.properties
-      }
+        properties: payload.properties,
+      };
 
       if (userId) {
-        data.userId = userId
+        data.userId = userId;
       } else {
-        data.anonymousId = anonymousId
+        data.anonymousId = anonymousId;
       }
 
       // Save boat loads of cash
       if (config.disableAnonymousTraffic && !userId) {
-        return false
+        return false;
       }
 
-      client.track(data)
+      client.track(data);
     },
     /* identify user */
     identify: ({ payload }) => {
-      const { userId, traits } = payload
-      client.identify({ userId, traits })
+      const { userId, traits } = payload;
+      client.identify({ userId, traits });
     },
-  }
+  };
 }
 
-export default segmentPlugin
+export default segmentPlugin;
