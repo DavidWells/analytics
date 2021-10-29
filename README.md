@@ -422,8 +422,8 @@ Fire callback on analytics ready event
 **Example**
 
 ```js
-analytics.ready() => {
-  console.log('all plugins have loaded or were skipped', payload)
+analytics.ready((payload) => {
+  console.log('all plugins have loaded or were skipped', payload);
 })
 ```
 
