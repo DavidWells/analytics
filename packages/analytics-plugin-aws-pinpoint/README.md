@@ -8,7 +8,7 @@ Integration with [AWS Pinpoint](https://aws.amazon.com/pinpoint/) for [analytics
 
 Amazon Pinpoint is a flexible and scalable outbound and inbound marketing communications service. You can connect with customers over channels like email, SMS, push, or voice.
 
-This package weighs in at <!-- AUTO-GENERATED-CONTENT:START (pkgSize:src=./dist/@analytics/aws-pinpoint.min.js) -->`14.23kb`<!-- AUTO-GENERATED-CONTENT:END --> gzipped.
+This package weighs in at <!-- AUTO-GENERATED-CONTENT:START (pkgSize:src=./dist/@analytics/aws-pinpoint.min.js) -->`14.42kb`<!-- AUTO-GENERATED-CONTENT:END --> gzipped.
 
 [View the docs](https://getanalytics.io/plugins/aws-pinpoint/).
 
@@ -22,6 +22,9 @@ This package weighs in at <!-- AUTO-GENERATED-CONTENT:START (pkgSize:src=./dist/
 - [Browser usage](#browser-usage)
   - [Browser API](#browser-api)
   - [Configuration options for browser](#configuration-options-for-browser)
+- [Server-side usage](#server-side-usage)
+  - [Server-side API](#server-side-api)
+  - [Configuration options for server-side](#configuration-options-for-server-side)
 - [Additional examples](#additional-examples)
 - [Authenticating](#authenticating)
 
@@ -41,7 +44,7 @@ npm install @analytics/aws-pinpoint
 
 ## How to use
 
-The `@analytics/aws-pinpoint` package works in [the browser](#browser-usage) and on [the server](#server-usage) in [Node.js](https://nodejs.org/en/). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
+The `@analytics/aws-pinpoint` package works in [the browser](#browser-usage) and [server-side in Node.js](#server-side-usage). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
 
 Below is an example of how to use the browser plugin.
 
@@ -76,13 +79,13 @@ analytics.identify('user-id-xyz', {
 
 ```
 
-After initializing `analytics` with the `awsPinpointPlugin` plugin, data will be sent into AWSPinpoint whenever [analytics.page](https://getanalytics.io/api/#analyticspage), [analytics.track](https://getanalytics.io/api/#analyticstrack), or [analytics.identify](https://getanalytics.io/api/#analyticsidentify) are called.
+After initializing `analytics` with the `awsPinpointPlugin` plugin, data will be sent into AWSPinpoint whenever [analytics.track](https://getanalytics.io/api/#analyticstrack), or [analytics.identify](https://getanalytics.io/api/#analyticsidentify) are called.
 
 See [additional implementation examples](#additional-examples) for more details on using in your project.
 
 ## Platforms Supported
 
-The `@analytics/aws-pinpoint` package works in [the browser](#browser-usage)
+The `@analytics/aws-pinpoint` package works in [the browser](#browser-usage) and [server-side in Node.js](#server-side-usage)
 
 ## Browser usage
 
@@ -111,14 +114,27 @@ const analytics = Analytics({
 
 ```
 
-## Server usage
+### Configuration options for browser
 
-The AWSPinpoint server side Node.js plugin works with these analytic api methods:
+| Option | description |
+|:---------------------------|:-----------|
+| `pinpointAppId` <br/>**required** - string| AWS Pinpoint app Id for client side tracking |
+| `getCredentials` <br/>**required** - function| Async function to get AWS Cognito creds |
+| `pinpointRegion` <br/>_optional_ - string| AWS Pinpoint region. Defaults to us-east-1 |
+| `appTitle` <br/>_optional_ - string| The title of the app that's recording the event. |
+| `appPackageName` <br/>_optional_ - string| The name of the app package, such as com.example.my_app. |
+| `appVersionCode` <br/>_optional_ - string| The version number of the app, such as 3.2.0 |
+| `fips` <br/>_optional_ - string| Use the AWS FIPS service endpoint for Pinpoint |
+| `disableAnonymousTraffic` <br/>_optional_ - boolean| Disable anonymous events from firing |
+
+## Server-side usage
+
+The AWSPinpoint server-side node.js plugin works with these analytic api methods:
 
 - **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to AWSPinpoint
 - **[analytics.identify](https://getanalytics.io/api/#analyticsidentify)** - Identify visitors and send details to AWSPinpoint
 
-### Server API
+### Server-side API
 
 ```js
 import Analytics from 'analytics'
@@ -128,15 +144,15 @@ const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
     awsPinpointPlugin({
-      pinpoingAppId: '938bebb1ae954e123133213160f2b3be4',
-      getCredentials: () => Auth.currentCredentials() 
+      pinpointAppId: '938bebb1ae954e123133213160f2b3be4',
+      getCredentials: () => Auth.currentCredentials()
     })
   ]
 })
 
 ```
 
-### Configuration options for browser
+### Configuration options for server-side
 
 | Option | description |
 |:---------------------------|:-----------|
@@ -153,6 +169,75 @@ const analytics = Analytics({
 ## Additional examples
 
 Below are additional implementation examples.
+
+<details>
+  <summary>Server-side ES6</summary>
+
+  ```js
+  import Analytics from 'analytics'
+  import awsPinpointPlugin from '@analytics/aws-pinpoint'
+
+  const analytics = Analytics({
+    app: 'awesome-app',
+    plugins: [
+      awsPinpointPlugin({
+        pinpointAppId: '938bebb1ae954e123133213160f2b3be4',
+        getCredentials: () => Auth.currentCredentials()
+      })
+      // ...other plugins
+    ]
+  })
+
+  /* Track a custom event */
+  analytics.track('cartCheckout', {
+    item: 'pink socks',
+    price: 20
+  })
+
+  /* Identify a visitor */
+  analytics.identify('user-id-xyz', {
+    firstName: 'bill',
+    lastName: 'murray'
+  })
+
+  ```
+
+</details>
+
+<details>
+  <summary>Server-side Node.js with common JS</summary>
+
+  If using node, you will want to import the `.default`
+
+  ```js
+  const analyticsLib = require('analytics').default
+  const awsPinpointPlugin = require('@analytics/aws-pinpoint').default
+
+  const analytics = analyticsLib({
+    app: 'my-app-name',
+    plugins: [
+      awsPinpointPlugin({
+        pinpointAppId: '938bebb1ae954e123133213160f2b3be4',
+        getCredentials: () => Auth.currentCredentials()
+      })
+    ]
+  })
+
+  /* Track a custom event */
+  analytics.track('cartCheckout', {
+    item: 'pink socks',
+    price: 20
+  })
+
+  /* Identify a visitor */
+  analytics.identify('user-id-xyz', {
+    firstName: 'bill',
+    lastName: 'murray'
+  })
+
+  ```
+
+</details>
 
 <details>
   <summary>Using in HTML</summary>

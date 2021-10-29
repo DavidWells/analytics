@@ -584,7 +584,7 @@ Enable analytics plugin
 
 **Arguments**
 
-- **plugins** <code>String</code>|<code>Array</code> - name of plugins(s) to disable
+- **plugins** <code>string</code>|<code>Array</code>.&lt;<code>string</code>&gt; - name of plugins(s) to disable
 - **[callback]** (optional) <code>Function</code> - callback after enable runs
 
 **Example**
@@ -606,7 +606,7 @@ Disable analytics plugin
 
 **Arguments**
 
-- **plugins** <code>String</code>|<code>Array</code> - name of integration(s) to disable
+- **plugins** <code>string</code>|<code>Array</code>.&lt;<code>string</code>&gt; - name of integration(s) to disable
 - **callback** <code>Function</code> - callback after disable runs
 
 **Example**
