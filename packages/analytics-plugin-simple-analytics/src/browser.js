@@ -72,13 +72,12 @@ export default function simpleAnalyticsPlugin(pluginConfig = {}) {
         throw new Error(`${src} failed to load.`)
       })
     },
-    /* https://docs.simpleanalytics.com/events
+    /* https://docs.simpleanalytics.com/events */
     track: ({ payload }) => {
       var saEventFunction = window[config.saGlobal] || window.sa_event || window.sa
       if (!saEventFunction) return false
       saEventFunction(payload.event)
     },
-    */
     /* Verify script loaded */
     loaded: () => {
       return !!isLoaded
