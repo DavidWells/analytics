@@ -1,4 +1,4 @@
-/* global sa */
+/* global sa, sa_event */
 
 /**
  * Simple Analytics plugin
@@ -19,12 +19,44 @@ export default function simpleAnalyticsPlugin(pluginConfig = {}) {
     config: pluginConfig,
     // https://docs.simpleanalytics.com/script
     initialize: ({ config }) => {
+      // Allow for a custom domain
+      // https://docs.simpleanalytics.com/bypass-ad-blockers
       const domain = config.customDomain || 'scripts.simpleanalyticscdn.com'
+
+      // Setup script
       const src = `https://${domain}/latest.js`
       const script = document.createElement('script')
       script.type = 'text/javascript'
       script.async = true
       script.src = `${src}`
+
+      // Allow overwriting domain name
+      // https://docs.simpleanalytics.com/dnt
+      if (config.hostname) script.dataset.hostname = config.hostname;
+
+      // Allow collecting DNT visitors
+      // https://docs.simpleanalytics.com/dnt
+      if (config.collectDnt) script.dataset.collectDnt = 'true';
+
+      // Allow hash mode
+      // https://docs.simpleanalytics.com/hash-mode
+      if (config.mode) script.dataset.mode = config.mode;
+
+      // Add ignore pages
+      // https://docs.simpleanalytics.com/ignore-pages
+      if (config.ignorePages) script.dataset.ignorePages = config.ignorePages;
+
+      // Overwrite SA global for events
+      // https://docs.simpleanalytics.com/events#the-variable-sa_event-is-already-used
+      if (config.saGlobal) script.dataset.saGlobal = config.saGlobal;
+
+      // Disable auto collect if needed
+      // https://docs.simpleanalytics.com/trigger-custom-page-views#use-custom-collection-anyway
+      if (config.autoCollect) script.dataset.autoCollect = config.autoCollect;
+
+      // Allow onload callback
+      // https://docs.simpleanalytics.com/trigger-custom-page-views#use-custom-collection-anyway
+      if (config.onloadCallback) script.onload = config.onloadCallback;
 
       // Append the script to the DOM
       const el = document.getElementsByTagName('script')[0]
@@ -39,12 +71,12 @@ export default function simpleAnalyticsPlugin(pluginConfig = {}) {
       script.addEventListener('error', () => {
         throw new Error(`${src} failed to load.`)
       })
-      // Todo load analytics script via users subdomain for custom event tracking
     },
     /* https://docs.simpleanalytics.com/events
     track: ({ payload }) => {
-      if (typeof sa === 'undefined') return false
-      sa(payload.event)
+      var saEventFunction = window[config.saGlobal] || window.sa_event || window.sa
+      if (!saEventFunction) return false
+      saEventFunction(payload.event)
     },
     */
     /* Verify script loaded */
