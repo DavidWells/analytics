@@ -31,7 +31,7 @@ export default function simpleAnalyticsPlugin(pluginConfig = {}) {
       script.src = `${src}`
 
       // Allow overwriting domain name
-      // https://docs.simpleanalytics.com/dnt
+      // https://docs.simpleanalytics.com/overwrite-domain-name
       if (config.hostname) script.dataset.hostname = config.hostname;
 
       // Allow collecting DNT visitors
