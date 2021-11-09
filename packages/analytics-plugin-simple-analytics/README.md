@@ -84,7 +84,7 @@ const analytics = Analytics({
 | `saGlobal` <br/>_optional_ - string       | Overwrite SA global for events. https://docs.simpleanalytics.com/events#the-variable-sa_event-is-already-used           |
 | `autoCollect` <br/>_optional_ - boolean   | Disable auto collect if needed. https://docs.simpleanalytics.com/trigger-custom-page-views#use-custom-collection-anyway |
 | `onloadCallback` <br/>_optional_ - string | Allow onload callback. https://docs.simpleanalytics.com/trigger-custom-page-views#use-custom-collection-anyway          |
-| `hostname` <br/>_optional_ - string       | Allow overwriting domain name. https://docs.simpleanalytics.com/dnt                                                     |
+| `hostname` <br/>_optional_ - string       | Allow overwriting domain name. https://docs.simpleanalytics.com/overwrite-domain-name                                                   |
 
 ## Additional examples
 
