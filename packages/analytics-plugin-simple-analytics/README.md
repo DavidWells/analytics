@@ -49,7 +49,15 @@ const analytics = Analytics({
   plugins: [simpleAnalyticsPlugin()]
 })
 
+/* Track a custom event */
+analytics.track('cartCheckout', {
+  item: 'pink socks',
+  price: 20
+})
+
 ```
+
+After initializing `analytics` with the `exports` plugin, data will be sent into Simple Analytics whenever or [analytics.track](https://getanalytics.io/api/#analyticstrack) are called.
 
 See [additional implementation examples](#additional-examples) for more details on using in your project.
 
@@ -59,7 +67,9 @@ The `@analytics/simple-analytics` package works in [the browser](#browser-usage)
 
 ## Browser usage
 
-See below from browser API
+The Simple Analytics client side browser plugin works with these analytic api methods:
+
+- **[analytics.track](https://getanalytics.io/api/#analyticstrack)** - Track custom events and send to Simple Analytics
 
 ### Browser API
 
@@ -75,16 +85,18 @@ const analytics = Analytics({
 ```
 
 ### Configuration options for browser
-| Option                                    | description                                                                                                             |
-| :---------------------------------------- | :---------------------------------------------------------------------------------------------------------------------- |
-| `customDomain` <br/>_optional_ - string   | Custom domain for simple analytics script. https://docs.simpleanalytics.com/script                                      |
-| `collectDnt` <br/>_optional_ - boolean    | Allow collecting DNT visitors. https://docs.simpleanalytics.com/dnt                                                     |
-| `mode` <br/>_optional_ - string           | Allow hash mode. https://docs.simpleanalytics.com/hash-mode                                                             |
-| `ignorePages` <br/>_optional_ - string    | Add ignore pages. https://docs.simpleanalytics.com/ignore-pages                                                         |
-| `saGlobal` <br/>_optional_ - string       | Overwrite SA global for events. https://docs.simpleanalytics.com/events#the-variable-sa_event-is-already-used           |
-| `autoCollect` <br/>_optional_ - boolean   | Disable auto collect if needed. https://docs.simpleanalytics.com/trigger-custom-page-views#use-custom-collection-anyway |
-| `onloadCallback` <br/>_optional_ - string | Allow onload callback. https://docs.simpleanalytics.com/trigger-custom-page-views#use-custom-collection-anyway          |
-| `hostname` <br/>_optional_ - string       | Allow overwriting domain name. https://docs.simpleanalytics.com/overwrite-domain-name                                                   |
+
+| Option | description |
+|:---------------------------|:-----------|
+| `customDomain` <br/>_optional_ - string| Custom domain for simple analytics script. https://docs.simpleanalytics.com/script |
+| `hostname` <br/>_optional_ - string| Allow overwriting domain name https://docs.simpleanalytics.com/overwrite-domain-name |
+| `collectDnt` <br/>_optional_ - boolean| Allow collecting DNT visitors https://docs.simpleanalytics.com/dnt |
+| `mode` <br/>_optional_ - string| Allow hash mode https://docs.simpleanalytics.com/hash-mode |
+| `ignorePages` <br/>_optional_ - string| Add ignore pages https://docs.simpleanalytics.com/ignore-pages |
+| `saGlobal` <br/>_optional_ - string| Overwrite SA global for events https://docs.simpleanalytics.com/events#the-variable-sa_event-is-already-used |
+| `autoCollect` <br/>_optional_ - boolean| Overwrite SA global for events https://docs.simpleanalytics.com/trigger-custom-page-views#use-custom-collection-anyway |
+| `onloadCallback` <br/>_optional_ - string| Allow onload callback https://docs.simpleanalytics.com/trigger-custom-page-views#use-custom-collection-anyway |
+
 
 ## Additional examples
 
@@ -107,6 +119,12 @@ Below are additional implementation examples.
         var Analytics = _analytics.init({
           app: 'my-app-name',
           plugins: [simpleAnalyticsPlugin()]
+        })
+
+        /* Track a custom event */
+        analytics.track('cartCheckout', {
+          item: 'pink socks',
+          price: 20
         })
       </script>
     </head>
@@ -145,6 +163,12 @@ Below are additional implementation examples.
             simpleAnalyticsPlugin()
             // ... add any other third party analytics plugins
           ]
+        })
+
+        /* Track a custom event */
+        analytics.track('cartCheckout', {
+          item: 'pink socks',
+          price: 20
         })
       </script>
     </head>

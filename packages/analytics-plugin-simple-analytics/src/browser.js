@@ -4,15 +4,15 @@
  * Simple Analytics plugin
  * @link https://getanalytics.io/plugins/simple-analytics/
  * @link https://docs.simpleanalytics.com/
- * @param {object} [pluginConfig] - Plugin settings
- * @param {string} [pluginConfig.customDomain] - Custom domain for simple analytics script. https://docs.simpleanalytics.com/script
- * @param {string} [pluginConfig.hostname] - Allow overwriting domain name https://docs.simpleanalytics.com/overwrite-domain-name
- * @param {string} [pluginConfig.collectDnt] - Allow collecting DNT visitors https://docs.simpleanalytics.com/dnt
- * @param {string} [pluginConfig.mode] - Allow hash mode https://docs.simpleanalytics.com/hash-mode
- * @param {string} [pluginConfig.ignorePages] - Add ignore pages https://docs.simpleanalytics.com/ignore-pages
- * @param {string} [pluginConfig.saGlobal] - Overwrite SA global for events https://docs.simpleanalytics.com/events#the-variable-sa_event-is-already-used
- * @param {string} [pluginConfig.autoCollect] - Overwrite SA global for events https://docs.simpleanalytics.com/trigger-custom-page-views#use-custom-collection-anyway
- * @param {string} [pluginConfig.onloadCallback] -  Allow onload callback https://docs.simpleanalytics.com/trigger-custom-page-views#use-custom-collection-anyway
+ * @param {object}  [pluginConfig] - Plugin settings
+ * @param {string}  [pluginConfig.customDomain] - Custom domain for simple analytics script. https://docs.simpleanalytics.com/script
+ * @param {string}  [pluginConfig.hostname] - Allow overwriting domain name https://docs.simpleanalytics.com/overwrite-domain-name
+ * @param {boolean} [pluginConfig.collectDnt] - Allow collecting DNT visitors https://docs.simpleanalytics.com/dnt
+ * @param {string}  [pluginConfig.mode] - Allow hash mode https://docs.simpleanalytics.com/hash-mode
+ * @param {string}  [pluginConfig.ignorePages] - Add ignore pages https://docs.simpleanalytics.com/ignore-pages
+ * @param {string}  [pluginConfig.saGlobal] - Overwrite SA global for events https://docs.simpleanalytics.com/events#the-variable-sa_event-is-already-used
+ * @param {boolean} [pluginConfig.autoCollect] - Overwrite SA global for events https://docs.simpleanalytics.com/trigger-custom-page-views#use-custom-collection-anyway
+ * @param {string}  [pluginConfig.onloadCallback] -  Allow onload callback https://docs.simpleanalytics.com/trigger-custom-page-views#use-custom-collection-anyway
  * @return {object} Analytics plugin
  * @example
  *
