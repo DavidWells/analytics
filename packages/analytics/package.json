@@ -17,6 +17,12 @@
     "monitoring",
     "pageviews"
   ],
+  "funding": [
+    {
+      "type": "GitHub Sponsors",
+      "url": "https://github.com/sponsors/davidwells"
+    }
+  ],
   "author": "David Wells <hello@davidwells.io>",
   "license": "MIT",
   "main": "lib/analytics.cjs.js",
