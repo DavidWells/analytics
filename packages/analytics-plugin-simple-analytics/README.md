@@ -75,11 +75,16 @@ const analytics = Analytics({
 ```
 
 ### Configuration options for browser
-
-| Option | description |
-|:---------------------------|:-----------|
-| `customDomain` <br/>_optional_ - string| Custom domain for simple analytics script.  https://docs.simpleanalytics.com/script |
-
+| Option                                    | description                                                                                                             |
+| :---------------------------------------- | :---------------------------------------------------------------------------------------------------------------------- |
+| `customDomain` <br/>_optional_ - string   | Custom domain for simple analytics script. https://docs.simpleanalytics.com/script                                      |
+| `collectDnt` <br/>_optional_ - boolean    | Allow collecting DNT visitors. https://docs.simpleanalytics.com/dnt                                                     |
+| `mode` <br/>_optional_ - string           | Allow hash mode. https://docs.simpleanalytics.com/hash-mode                                                             |
+| `ignorePages` <br/>_optional_ - string    | Add ignore pages. https://docs.simpleanalytics.com/ignore-pages                                                         |
+| `saGlobal` <br/>_optional_ - string       | Overwrite SA global for events. https://docs.simpleanalytics.com/events#the-variable-sa_event-is-already-used           |
+| `autoCollect` <br/>_optional_ - boolean   | Disable auto collect if needed. https://docs.simpleanalytics.com/trigger-custom-page-views#use-custom-collection-anyway |
+| `onloadCallback` <br/>_optional_ - string | Allow onload callback. https://docs.simpleanalytics.com/trigger-custom-page-views#use-custom-collection-anyway          |
+| `hostname` <br/>_optional_ - string       | Allow overwriting domain name. https://docs.simpleanalytics.com/overwrite-domain-name                                                   |
 
 ## Additional examples
 
