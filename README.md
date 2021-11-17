@@ -735,13 +735,16 @@ The `analytics` has a robust plugin system. Here is a list of currently availabl
 Below are plugins created outside of this repo:
 
 <!-- AUTO-GENERATED-CONTENT:START (EXTERNAL_PLUGINS) -->
+- [ActiveCampaign](https://github.com/deevus/analytics-plugin-activecampaign) Adds Analytics support for ActiveCampaign
 - [analytics-fetch](https://www.npmjs.com/package/@standardorg/analytics-fetch) Integration with the browser's fetch API for analytics
 - [Facebook tracking pixel](https://github.com/DavidWells/analytics/issues/54#issuecomment-735413632) Send data to Facebook Tracking pixel
 - [Indicative](https://www.npmjs.com/package/analytics-plugin-indicative) Adds Analytics support for Indicative
 - [Logrocket](https://www.npmjs.com/package/analytics-plugin-logrocket) Adds Analytics support for LogRocket
 - [Plausible](https://www.npmjs.com/package/analytics-plugin-plausible) Adds Analytics support for Plausible
+- [ProfitWell](https://github.com/deevus/analytics-plugin-profitwell) Adds Analytics support for ProfitWell
 - [Reddit Pixel](https://www.npmjs.com/package/analytics-plugin-reddit-pixel) Adds Analytics support for Reddit Pixel
 - [Splitbee](https://www.npmjs.com/package/analytics-plugin-splitbee) Adds Analytics support for Splitbee
+- [Tapfiliate](https://github.com/deevus/analytics-plugin-tapfiliate) Adds Analytics support for Tapfiliate
 - [Yandex](https://github.com/pechischev/analytics-yandex-metric-plugin) Send data to Yandex metrica
 - [Add a plugin link](https://github.com/DavidWells/analytics/blob/master/external-plugins.json)
 <!-- AUTO-GENERATED-CONTENT:END -->

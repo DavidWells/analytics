@@ -38,5 +38,20 @@
     "name": "Splitbee",
     "url": "https://www.npmjs.com/package/analytics-plugin-splitbee",
     "description": "Adds Analytics support for Splitbee"
+  },
+  {
+    "name": "ActiveCampaign",
+    "url": "https://github.com/deevus/analytics-plugin-activecampaign",
+    "description": "Adds Analytics support for ActiveCampaign"
+  },
+  {
+    "name": "ProfitWell",
+    "url": "https://github.com/deevus/analytics-plugin-profitwell",
+    "description": "Adds Analytics support for ProfitWell"
+  },
+  {
+    "name": "Tapfiliate",
+    "url": "https://github.com/deevus/analytics-plugin-tapfiliate",
+    "description": "Adds Analytics support for Tapfiliate"
   }
 ]
