@@ -17,6 +17,7 @@
     "**/CHANGELOG.md",
     "**/package-lock.json",
     "**/test/**",
+    "packages/**/**.html",
     "lerna.json",
     "package.json",
     "README.md"
