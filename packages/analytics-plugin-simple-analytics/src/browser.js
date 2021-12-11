@@ -18,7 +18,7 @@
  *
  * simpleAnalyticsPlugin()
  */
-export default function simpleAnalyticsPlugin(pluginConfig = {}) {
+function simpleAnalyticsPlugin(pluginConfig = {}) {
   let isLoaded = false
   // Allow for userland overides of base methods
   return {
@@ -91,3 +91,5 @@ export default function simpleAnalyticsPlugin(pluginConfig = {}) {
     }
   }
 }
+
+export default simpleAnalyticsPlugin
