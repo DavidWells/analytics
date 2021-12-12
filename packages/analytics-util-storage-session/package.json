@@ -1,6 +1,6 @@
 {
   "name": "@analytics/session-storage-utils",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Tiny SessionStorage utility library",
   "author": "David Wells",
   "license": "MIT",
@@ -50,6 +50,6 @@
     "watchlist": "^0.2.3"
   },
   "dependencies": {
-    "@analytics/global-storage-utils": "^0.1.2"
+    "@analytics/global-storage-utils": "^0.1.3"
   }
 }

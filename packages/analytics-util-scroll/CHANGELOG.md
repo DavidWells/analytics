@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.16](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-scroll/compare/@analytics/scroll-utils@0.1.15...@analytics/scroll-utils@0.1.16) (2021-12-12)
+
+**Note:** Version bump only for package @analytics/scroll-utils
+
+
+
+
+
 ## [0.1.15](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-scroll/compare/@analytics/scroll-utils@0.1.14...@analytics/scroll-utils@0.1.15) (2021-10-24)
 
 **Note:** Version bump only for package @analytics/scroll-utils

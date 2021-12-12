@@ -1,6 +1,6 @@
 {
   "name": "analytics-util-params",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Url Parameter helper functions",
   "author": "David Wells",
   "license": "MIT",
