@@ -1,10 +1,11 @@
+export const GLOBAL = 'global'
+
+export const undef = 'undefined'
+
 export const globalContext =
   (typeof self === 'object' && self.self === self && self) ||
   (typeof global === 'object' && global.global === global && global) ||
   this
-
-
-export const undef = 'undefined'
 
 /**
  * Get value from global context
@@ -33,3 +34,18 @@ export function set(key, value) {
 export function remove(key) {
   set(key)
 }
+
+/*
+// () => localStorage)
+// () => sessionStorage)
+export function isSupported(getStorage) {
+  try {
+    const testKey = '__' + undef
+    getStorage().setItem(testKey, testKey)
+    getStorage().removeItem(testKey)
+    return true
+  } catch (e) {
+    return false
+  }
+}
+*/

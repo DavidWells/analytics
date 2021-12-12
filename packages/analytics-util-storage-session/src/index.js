@@ -1,5 +1,7 @@
 import { get, set, remove, undef } from '@analytics/global-storage-utils'
 
+const SESSION_STORAGE = 'sessionStorage'
+
 let isSupported = hasSessionStorage()
 
 /**
@@ -17,7 +19,6 @@ function hasSessionStorage() {
   }
   return isSupported
 }
-
 
 /**
  * Get value from sessionStorage or fallback to global window
@@ -43,6 +44,7 @@ function removeSessionItem(key) {
 }
 
 export {
+  SESSION_STORAGE,
   hasSessionStorage,
   getSessionItem,
   setSessionItem,
