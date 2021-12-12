@@ -155,3 +155,7 @@ onceOnlyFunc()
 onceOnlyFunc()
 // nothing fired
 ```
+
+### Alternative libs
+
+- https://github.com/azu/ui-event-observer

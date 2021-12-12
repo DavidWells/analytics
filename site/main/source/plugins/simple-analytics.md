@@ -39,7 +39,7 @@ Below is an example of how to use the browser plugin.
 
 ```js
 import Analytics from 'analytics'
-import exports from '@analytics/simple-analytics'
+import simpleAnalyticsPlugin from '@analytics/simple-analytics'
 
 const analytics = Analytics({
   app: 'awesome-app',
@@ -54,7 +54,7 @@ analytics.track('cartCheckout', {
 
 ```
 
-After initializing `analytics` with the `exports` plugin, data will be sent into Simple Analytics whenever or [analytics.track](https://getanalytics.io/api/#analyticstrack) are called.
+After initializing `analytics` with the `simpleAnalyticsPlugin` plugin, data will be sent into Simple Analytics whenever or [analytics.track](https://getanalytics.io/api/#analyticstrack) are called.
 
 See [additional implementation examples](#additional-examples) for more details on using in your project.
 
@@ -72,7 +72,7 @@ The Simple Analytics client side browser plugin works with these analytic api me
 
 ```js
 import Analytics from 'analytics'
-import exports from '@analytics/simple-analytics'
+import simpleAnalyticsPlugin from '@analytics/simple-analytics'
 
 const analytics = Analytics({
   app: 'awesome-app',
@@ -114,7 +114,7 @@ Below are additional implementation examples.
         /* Initialize analytics */
         var Analytics = _analytics.init({
           app: 'my-app-name',
-          plugins: [simpleAnalyticsPlugin()]
+          plugins: [simpleAnalytics()]
         })
 
         /* Track a custom event */
@@ -156,7 +156,7 @@ Below are additional implementation examples.
           app: 'analytics-html-demo',
           debug: true,
           plugins: [
-            simpleAnalyticsPlugin()
+            simpleAnalytics()
             // ... add any other third party analytics plugins
           ]
         })
