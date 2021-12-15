@@ -337,7 +337,7 @@ function analytics(config = {}) {
       /* sets temporary in memory id. Not to be relied on */
       set(tempKey(ID), id)
 
-      const resolvedId = id || data.userId || resolvers.getUserId({ instance })
+      const resolvedId = id || data.userId || resolvers.getUserId(instance, data)
 
       return new Promise((resolve) => {
         store.dispatch({
