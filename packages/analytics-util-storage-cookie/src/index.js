@@ -1,6 +1,8 @@
 import { get, set, remove, undef } from '@analytics/global-storage-utils'
 
+const COOKIE = 'cookie'
 const tmp = '__x'
+
 let isSupported = hasCookies()
 
 /**
@@ -92,6 +94,7 @@ function cookie(name, value, ttl, path, domain, secure) {
 }
 
 export {
+  COOKIE,
   hasCookies,
   setCookie,
   getCookie,

@@ -4,7 +4,7 @@ pageTitle: SessionStorage Utils
 description: Utility library for managing HTML SessionStorage
 ---
 
-A tiny sessionStorage utility library with fallbacks in <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`280 bytes`<!-- AUTO-GENERATED-CONTENT:END -->.
+A tiny sessionStorage utility library with fallbacks in <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`307 bytes`<!-- AUTO-GENERATED-CONTENT:END -->.
 
 This module will automatically fail back to global window storage if `sessionStorage` is not available.
 

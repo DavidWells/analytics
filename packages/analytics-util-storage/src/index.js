@@ -1,15 +1,8 @@
-import { set, get, remove, globalContext } from '@analytics/global-storage-utils'
-import { getCookie, setCookie, removeCookie, hasCookies } from '@analytics/cookie-utils'
-import { hasLocalStorage } from '@analytics/localstorage-utils'
-import { isUndefined, isString } from '@analytics/type-utils'
+import { set, get, remove, globalContext, GLOBAL } from '@analytics/global-storage-utils'
+import { getCookie, setCookie, removeCookie, hasCookies, COOKIE } from '@analytics/cookie-utils'
+import { hasLocalStorage, LOCAL_STORAGE } from '@analytics/localstorage-utils'
+import { isUndefined, isString, ANY, ALL } from '@analytics/type-utils'
 import parse from './utils/parse'
-
-// Constants
-export const ALL = '*'
-export const ANY = 'any'
-export const LOCAL_STORAGE = 'localStorage'
-export const COOKIE = 'cookie'
-export const GLOBAL = 'global'
 
 // Verify support
 const hasStorage = hasLocalStorage()
@@ -69,37 +62,27 @@ export function setItem(key, value, options) {
   /* 1. Try localStorage */
   if (useLocal(type)) {
     // console.log('SET as localstorage', saveValue)
-    data[LOCAL_STORAGE] = {
-      location: LOCAL_STORAGE,
-      current: value, 
-      previous: parse(localStorage.getItem(key))
-    }
+    data[LOCAL_STORAGE] = format(LOCAL_STORAGE, value, parse(localStorage.getItem(key)))
     // Set LocalStorage item
     localStorage.setItem(key, saveValue)
     if (setFirst) {
       return data[LOCAL_STORAGE]
     }
   }
+
   /* 2. Fallback to cookie */
   if (useCookie(type)) {
     // console.log('SET as cookie', saveValue)
-    data[COOKIE] = {
-      location: COOKIE,
-      current: value,
-      previous: parse(getCookie(key))
-    }
+    data[COOKIE] = format(COOKIE, value, parse(getCookie(key)))
     // Set Cookie
     setCookie(key, saveValue)
     if (setFirst) {
       return data[COOKIE]
     }
   }
+
   /* 3. Fallback to window/global */
-  data[GLOBAL] = {
-    location: GLOBAL, 
-    current: value,
-    previous: get(key)
-  }
+  data[GLOBAL] = format(GLOBAL, value, get(key))
   // Set global value
   set(key, value)
   // Return set value(s)
@@ -163,7 +146,31 @@ function useType(storage, type) {
   return (storage === ANY || storage === type || useAll(storage))
 }
 
+/**
+ * Format response
+ * @param {string} location 
+ * @param {*} current - current value
+ * @param {*} previous - previous value
+ * @returns 
+ */
+function format(location, current, previous) {
+  return { location, current, previous }
+}
+
+// const TYPES = {
+//   ALL,
+//   ANY,
+//   GLOBAL,
+//   COOKIE,
+//   LOCAL_STORAGE,
+// }
+
 export {
+  ALL,
+  ANY,
+  GLOBAL,
+  COOKIE,
+  LOCAL_STORAGE,
   getCookie,
   setCookie,
   removeCookie,

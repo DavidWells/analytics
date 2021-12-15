@@ -1,5 +1,7 @@
 import { get, set, remove, undef } from '@analytics/global-storage-utils'
 
+const LOCAL_STORAGE = 'localStorage'
+
 let isSupported = hasLocalStorage()
 
 /**
@@ -50,6 +52,7 @@ function removeItem(key) {
 }
 
 export {
+  LOCAL_STORAGE,
   hasLocalStorage,
   getItem,
   setItem,

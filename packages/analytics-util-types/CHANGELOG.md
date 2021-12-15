@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.1](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-types/compare/@analytics/type-utils@0.5.0...@analytics/type-utils@0.5.1) (2021-12-12)
+
+**Note:** Version bump only for package @analytics/type-utils
+
+
+
+
+
 # [0.5.0](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-types/compare/@analytics/type-utils@0.4.0...@analytics/type-utils@0.5.0) (2021-10-24)
 
 

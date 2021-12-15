@@ -51,3 +51,9 @@ qss                    x 391,393 ops/sec ±0.99% (91 runs sampled)
 [jQuery Param](https://api.jquery.com/jquery.param/)
 [URL spec](https://url.spec.whatwg.org/#url-query-string)
 [](https://www.moesif.com/blog/technical/api-design/REST-API-Design-Best-Practices-for-Parameters-and-Query-String-Usage/#)
+
+
+## Alt libraries
+
+- https://github.com/Sage/jsurl
+- https://github.com/QubitProducts/urlite
