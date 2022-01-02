@@ -16,6 +16,14 @@ export const ALL = '*'
 export const NONE = 'none'
 export const HIDDEN = 'hidden'
 
+/* DOM Constants */
+export const FORM = 'form'
+export const INPUT = 'input'
+export const BUTTON = 'button'
+export const SELECT = 'select'
+export const CHANGE = 'change'
+export const SUBMIT = 'submit'
+
 /* ────────────────────
 Environment checks
 ─────────────────────── */
@@ -55,34 +63,43 @@ export const isJsDom = (isBrowser && window.name === 'nodejs') || (typeof naviga
 Type checks
 ─────────────────────── */
 
+export function typeOf(type, val) {
+  return typeof val === type
+}
+
 /** 
  * Check if value is function.
  * @param x
  * @return {x is Function}
  */
-export function isFunction(x) {
-  return typeof x === FUNCTION
-}
-
-/** 
- * Check if value is ES2015 `class`.
- * @param x
- * @return {x is Class}
- */
-export function isClass(x) {
-  if (isFunction(x)) {
-    return /^class /.test(Function.prototype.toString.call(x))
-  }
-  return false
-}
+export const isFunction = typeOf.bind(null, FUNCTION)
 
 /** 
  * Check if value is string.
  * @param x
  * @return {x is string}
  */
-export function isString(x) {
-  return typeof x === STRING
+export const isString = typeOf.bind(null, STRING)
+
+/** 
+ * Check if value is undefined.
+ * @param x
+ * @return {x is undefined}
+ */
+export const isUndefined = typeOf.bind(null, UNDEFINED)
+
+/** 
+ * @param x
+ * @return {x is boolean}
+ */
+export const isBoolean = typeOf.bind(null, BOOLEAN)
+
+/** 
+ * @param x
+ * @return {x is boolean}
+ */
+export function isNull(x) {
+  return x === null
 }
 
 /** 
@@ -112,28 +129,15 @@ export function isNumber(n) {
 }
 
 /** 
- * Check if value is undefined.
+ * Check if value is ES2015 `class`.
  * @param x
- * @return {x is undefined}
+ * @return {x is Class}
  */
-export function isUndefined(x) {
-  return typeof x === UNDEFINED
-}
-
-/** 
- * @param x
- * @return {x is boolean}
- */
-export function isBoolean(x) {
-  return typeof x === BOOLEAN
-}
-
-/** 
- * @param x
- * @return {x is boolean}
- */
-export function isNull(x) {
-  return x === null
+export function isClass(x) {
+  if (isFunction(x)) {
+    return /^class /.test(Function.prototype.toString.call(x))
+  }
+  return false
 }
 
 /** 
@@ -306,7 +310,23 @@ export function isNodeList(obj) {
 export function isElement(element, type) {
   const isEl = element instanceof Element || element instanceof HTMLDocument
   if (!isEl || !type) return isEl
-  return element.nodeName === type.toUpperCase()
+  return isNodeType(element, type)
+}
+
+/**
+ * Check if element is specific DOMNode type
+ * @param {HTMLElement|*} element
+ * @param {String} type
+ * @return {boolean}
+ */
+export function isNodeType(element, type = '') {
+  return element && element.nodeName === type.toUpperCase()
+}
+
+function bindArgs(fn, ...boundArgs) {
+  return function(...args) {
+    return fn(...args, ...boundArgs)
+  }
 }
 
 /**
@@ -314,34 +334,28 @@ export function isElement(element, type) {
  * @param {HTMLElement} element
  * @return {boolean} 
  */
-export const isForm = bindArgs(isElement, 'form')
+export const isForm = bindArgs(isElement, FORM)
 
 /**
  * Check if element is button element
  * @param {HTMLElement} element
  * @return {boolean} 
  */
-export const isButton = bindArgs(isElement, 'button')
+export const isButton = bindArgs(isElement, BUTTON)
 
 /**
  * Check if element is input element
  * @param {HTMLElement} element
  * @return {boolean} 
  */
-export const isInput = bindArgs(isElement, 'input')
+export const isInput = bindArgs(isElement, INPUT)
 
 /**
  * Check if element is select element
  * @param {HTMLElement} element
  * @return {boolean} 
  */
-export const isSelect = bindArgs(isElement, 'select')
-
-function bindArgs(fn, ...boundArgs) {
-  return function(...args) {
-    return fn(...args, ...boundArgs)
-  }
-}
+export const isSelect = bindArgs(isElement, SELECT)
 
 /**
  * Check if DOM element is hidden
