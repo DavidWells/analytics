@@ -13,16 +13,34 @@ export const NUMBER = 'number'
 export const noOp = () => {}
 export const ANY = 'any'
 export const ALL = '*'
+export const NONE = 'none'
+export const HIDDEN = 'hidden'
 
 /* ────────────────────
 Environment checks
 ─────────────────────── */
+/** @type {Object} */
+const PROCESS = typeof process !== UNDEFINED ? process : {}
+
+/** @type {String} */
+export const ENV = PROCESS.env?.NODE_ENV || ''
+
+/** @type {Boolean} */
+export const isProd = ENV === 'production'
+
+/** @type {Boolean} */
+export const isStaging = ENV === 'staging'
+
+/** @type {Boolean} */
+export const isDev = ENV === 'development'
 
 /** @type {Boolean} */
 export const isBrowser = typeof window !== UNDEFINED
+/** @type {Boolean} */
+export const isLocalHost = isBrowser && window.location.hostname === 'localhost'
 
 /** @type {Boolean} */
-export const isNode = typeof process !== UNDEFINED && process.versions != null && process.versions.node != null
+export const isNode = PROCESS.versions != null && PROCESS.versions.node != null
 
 /** @type {Boolean} */
 export const isDeno = typeof Deno !== UNDEFINED && typeof Deno.core !== UNDEFINED;
@@ -127,12 +145,16 @@ export function isArray(x) {
   return Object.prototype.toString.call(x) === '[object Array]'
 }
 
+export function isObjectLike(obj) {
+  return obj && (typeof obj === OBJECT || obj !== null)
+}
+
 /** 
  * @param obj
  * @return {obj is Object}
  */
 export function isObject(obj) {
-  if (typeof obj !== OBJECT || obj === null) return false
+  if (!isObjectLike(obj)) return false
 
   let proto = obj
   while (Object.getPrototypeOf(proto) !== null) {
@@ -159,8 +181,8 @@ export function isObject(obj) {
    isPrimitive(null) =>  true
    isPrimitive(undefined) =>  true
  */
-export function isPrimitive (x) {
-  if (x === null) return true
+export function isPrimitive(x) {
+  if (isNull(x)) return true
   switch (typeof x) {
     case STRING:
     case NUMBER:
@@ -191,6 +213,31 @@ export function isPromise(x) {
  */
 export function isRegex(value) {
   return value instanceof RegExp
+}
+
+/**
+ * Check if value error like (i.e has the name and message properties, both of which are strings)
+ * @param obj - Object to check
+ * @return {Boolean} If object is error-like
+ * via https://github.com/Luke-zhang-04/utils/blob/master/src/typeGuards.ts#L62
+ * @example
+ *
+ * ```js
+ * isErrorLike(new Error()) // True
+ * isErrorLike({name: "Error!", message: "This is an error", other: 0}) // True
+ * isErrorLike({}) // False
+ * isErrorLike({name: "Error", message: null}) // False
+ *
+ * // Works as a typguard
+ * const something = {name: "Error", message: "This is an error"} as unknown
+ *
+ * if (isErrorLike(something)) {
+ *   console.log(something.name) // No Typescript error
+ * }
+ * ```
+ */
+export function isErrorLike(obj) {
+  return isObjectLike(obj) && isString(obj.message) && isString(obj.name)
 }
 
 /** 
@@ -230,6 +277,15 @@ export function isEmail(str) {
   return /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(str)
 }
 
+/**
+ * Check if value is ISO date e.g. '2022-01-02T06:45:28.547Z'
+ * @param {*} str
+ * @return {Boolean} - is email like value
+ */
+export function isIsoDate(str) {
+  return /^\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)$/.test(str)
+}
+
 /* ────────────────────
 HTML Element checks
 ─────────────────────── */
@@ -247,8 +303,10 @@ export function isNodeList(obj) {
  * @param {HTMLElement|*} element
  * @return {boolean} 
  */
-export function isElement(element) {
-  return element instanceof Element || element instanceof HTMLDocument
+export function isElement(element, type) {
+  const isEl = element instanceof Element || element instanceof HTMLDocument
+  if (!isEl || !type) return isEl
+  return element.nodeName === type.toUpperCase()
 }
 
 /**
@@ -256,22 +314,47 @@ export function isElement(element) {
  * @param {HTMLElement} element
  * @return {boolean} 
  */
-export function isForm(element) {
-  return isElement(element) && element.nodeName === 'FORM'
+export const isForm = bindArgs(isElement, 'form')
+
+/**
+ * Check if element is button element
+ * @param {HTMLElement} element
+ * @return {boolean} 
+ */
+export const isButton = bindArgs(isElement, 'button')
+
+/**
+ * Check if element is input element
+ * @param {HTMLElement} element
+ * @return {boolean} 
+ */
+export const isInput = bindArgs(isElement, 'input')
+
+/**
+ * Check if element is select element
+ * @param {HTMLElement} element
+ * @return {boolean} 
+ */
+export const isSelect = bindArgs(isElement, 'select')
+
+function bindArgs(fn, ...boundArgs) {
+  return function(...args) {
+    return fn(...args, ...boundArgs)
+  }
 }
 
 /**
  * Check if DOM element is hidden
  * @param {HTMLElement|null|undefined} element
- * @param {HTMLElement|null|undefined} until 
- * @return {boolean} 
+ * @param {HTMLElement|null|undefined} until
+ * @return {boolean}
  */
 export function isHidden(element, until) {
-  if (!element || getComputedStyle(element).visibility === 'hidden') return true
+  if (!element || getComputedStyle(element).visibility === HIDDEN) return true
 
   while (element) {
     if (until != null && element === until) return false
-    if (getComputedStyle(element).display === 'none') return true
+    if (getComputedStyle(element).display === NONE) return true
     element = element.parentElement
   }
 
