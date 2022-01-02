@@ -48,3 +48,7 @@ const detachScrollListener = onScrollChange({
 // Detach listener
 detachScrollListener()
 ```
+
+## Alternative libraries
+
+- [Update On Scroll (uos)](https://github.com/vaneenige/uos)
