@@ -75,7 +75,7 @@ const config = {
       // console.log(sizeData)
       return `\`${sizeData.size}\``
     },
-    PLUGINS(content, options) {
+    PLUGINSXX(content, options) {
       const base = path.resolve('packages')
       const packages = fs.readdirSync(path.resolve('packages'))
         .filter(pkg => !/^\./.test(pkg))
@@ -98,6 +98,36 @@ const config = {
         }).concat('- Add yours! 👇')
         .join('\n')
       return packages
+    },
+    PLUGINS: function(content, options) {
+      const base = path.resolve('packages')
+      const packages = fs.readdirSync(path.resolve('packages'))
+        .filter(pkg => !/^\./.test(pkg))
+        .filter(pkg => pkg !== 'analytics')
+        .map(pkg => ([pkg, JSON.parse(fs.readFileSync(path.join(base, pkg, 'package.json'), 'utf8'))]))
+        .filter(([pkg, json]) => {
+          return json.private !== true
+        })
+        // alphabetize list
+        .sort((a, b) => {
+          const one = a[1]
+          const two = b[1]
+          var textA = one.name.toLowerCase()
+          var textB = two.name.toLowerCase()
+          return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
+        })
+
+      let md =  '| Plugin | Stats | Version |\n'
+       md += '|:---------------------------|:-----------:|:-----------:|\n'
+
+      packages.forEach(([pkg , json]) => {
+          const { name, version, description } = json
+          md += `| **[${name}](https://github.com/DavidWells/analytics/tree/master/packages/${pkg})** <br/>`
+          md += ` ${description} | `
+          md += ` ![Downloads](https://img.shields.io/npm/dm/${name}.svg) | `
+          md += ` **${version}** |\n`
+      });
+      return md.replace(/^\s+|\s+$/g, '')
     },
     EXTERNAL_PLUGINS(content, options) {
       const externalPackages = require('../external-plugins.json')
