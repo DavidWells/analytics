@@ -1,3 +1,5 @@
+import { FORM } from '@analytics/type-utils'
+
 /* https://github.com/insin/get-form-data */
 
 const NODE_LIST_CLASSES = {
@@ -24,7 +26,7 @@ const TRIM_RE = /^\s+|\s+$/g
 const {slice} = Array.prototype
 const {toString} = Object.prototype
 
-const formErr = `Invalid form`
+const formErr = 'Invalid ' + FORM
 /**
  * @param {HTMLFormElement} form
  * @param {Object} options

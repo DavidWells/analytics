@@ -1,4 +1,4 @@
-import { isFunction, isForm } from '@analytics/type-utils'
+import { isFunction, isForm, SUBMIT } from '@analytics/type-utils'
 import submitForm from './submit'
 import filterValues from '../utils/filter'
 import { getFormData } from '../utils/getFormValues'
@@ -21,7 +21,7 @@ export default function interceptForm(opts = {}, element, type) {
     }
     if (!debug) {
       /* Release form */
-      form.removeEventListener('submit', intercept, false)
+      form.removeEventListener(SUBMIT, intercept, false)
       /* Submit original form */
       submitForm(form, { timeout: 0 })
     }

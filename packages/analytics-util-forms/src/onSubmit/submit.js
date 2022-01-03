@@ -1,5 +1,5 @@
 import toArray from '../utils/toArray'
-import { isFunction } from '@analytics/type-utils'
+import { isFunction, BUTTON, SUBMIT } from '@analytics/type-utils'
 
 export default function submitForm(form, options = { timeout: 0 }) {
   const { timeout } = options
@@ -8,7 +8,7 @@ export default function submitForm(form, options = { timeout: 0 }) {
       form.submit()
       return false
     } else if (isFunction(form.click)) {
-      const buttons = form.querySelectorAll('button')
+      const buttons = form.querySelectorAll(BUTTON)
       if (buttons.length) {
         buttons[0].click()
         return false
@@ -16,7 +16,7 @@ export default function submitForm(form, options = { timeout: 0 }) {
     }
 
     toArray(form.elements).forEach((input) => {
-      if (input.type === 'submit' && input.name === 'submit') {
+      if (input.type === SUBMIT && input.name === SUBMIT) {
         input.click()
       }
     })
