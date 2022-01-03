@@ -6,7 +6,7 @@ description: Utility library for runtime type checking
 
 A tiny tree shakable utility library for runtime type checking.
 
-The entire package weighs in at <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`1.07kb`<!-- AUTO-GENERATED-CONTENT:END -->.
+The entire package weighs in at <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`1.49kb`<!-- AUTO-GENERATED-CONTENT:END -->.
 
 [See live demo](https://utils-types.netlify.app/).
 
@@ -212,6 +212,24 @@ import { isPromise } from '@analytics/type-utils'
 const myPromise = Promise.resolve()
 console.log(isPromise(myPromise))
 // true
+```
+
+## `isErrorLike`
+
+Check if value is javascript `isErrorLike`
+
+```ts
+import { isErrorLike } from '@analytics/type-utils'
+
+isErrorLike(new Error()) // True
+isErrorLike({ name: "Error!", message: "This is an error", other: 0 }) // True
+isErrorLike({}) // False
+isErrorLike({ name: "Error", message: null }) // False
+// Works as a typguard
+const something = {name: "Error", message: "This is an error"} as unknown
+if (isErrorLike(something)) {
+  console.log(something.name) // No Typescript error
+}
 ```
 
 ## `isRegex`
