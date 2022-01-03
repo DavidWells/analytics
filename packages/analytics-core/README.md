@@ -1,6 +1,6 @@
 # Analytics Core
 
-![npm](https://img.shields.io/npm/dw/analytics?style=flat-square) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@analytics/core?style=flat-square) ![GitHub](https://img.shields.io/github/license/davidwells/analytics?style=flat-square)
+![npm](https://img.shields.io/npm/dm/analytics?style=flat-square) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/analytics?style=flat-square) ![GitHub](https://img.shields.io/github/license/davidwells/analytics?style=flat-square)
 
 A lightweight analytics abstraction library for tracking page views, custom events, & identify visitors. 
 

@@ -2,7 +2,7 @@
   <img src="https://user-images.githubusercontent.com/532272/110860586-cc927e00-8271-11eb-95c7-44bdda78ab2a.png" width="450" />
 </a>
 
-![npm](https://img.shields.io/npm/dw/analytics?style=flat-square) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/analytics?style=flat-square) ![GitHub](https://img.shields.io/github/license/davidwells/analytics?style=flat-square)
+![npm](https://img.shields.io/npm/dm/analytics?style=flat-square) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/analytics?style=flat-square) ![GitHub](https://img.shields.io/github/license/davidwells/analytics?style=flat-square)
 
 A lightweight analytics abstraction library for tracking page views, custom events, & identify visitors. 
 
