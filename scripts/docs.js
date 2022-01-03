@@ -118,13 +118,15 @@ const config = {
         })
 
       let md =  '| Plugin | Stats | Version |\n'
-       md += '|:---------------------------|:-----------:|:-----------:|\n'
-
+       md += '|:---------------------------|:---------------:|:-----------:|\n'
+      // const spacing = 'ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ'
+      // const spacing = ' ︎ ︎ ︎ ︎ ︎ ︎ ︎ ︎ ︎ ︎ ︎ ︎'
+      const spacing = ''
       packages.forEach(([pkg , json]) => {
           const { name, version, description } = json
           md += `| **[${name}](https://github.com/DavidWells/analytics/tree/master/packages/${pkg})** <br/>`
           md += ` ${description} | `
-          md += ` ![Downloads](https://img.shields.io/npm/dm/${name}.svg) | `
+          md += `${spacing}<img width="300" height="24" src="https://img.shields.io/npm/dm/${name}.svg">${spacing} | `
           md += ` **${version}** |\n`
       });
       return md.replace(/^\s+|\s+$/g, '')
