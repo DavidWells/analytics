@@ -34,6 +34,7 @@
   "globalName": "analyticsSegment",
   "jsnext:main": "lib/analytics-plugin-segment.es.js",
   "module": "lib/analytics-plugin-segment.es.js",
+  "typings": "index.d.ts",
   "browser": {
     "./lib/analytics-plugin-segment.cjs.js": "./lib/analytics-plugin-segment.browser.cjs.js",
     "./lib/analytics-plugin-segment.es.js": "./lib/analytics-plugin-segment.browser.es.js"
@@ -41,7 +42,7 @@
   "files": [
     "dist",
     "lib",
-    "README.md"
+    "index.d.ts"
   ],
   "homepage": "https://github.com/DavidWells/analytics#readme",
   "repository": {
@@ -50,9 +51,13 @@
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
-    "@babel/preset-env": "^7.3.1"
+    "@babel/preset-env": "^7.3.1",
+    "analytics": "^0.7.21"
   },
   "dependencies": {
     "analytics-node": "^3.5.0"
+  },
+  "peerDependencies": {
+    "analytics": "^0.7.21"
   }
 }
