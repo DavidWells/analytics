@@ -1,37 +1,19 @@
-import { get, set, remove, undef } from '@analytics/global-storage-utils'
+import { get, set, remove, hasSupport, wrap } from '@analytics/global-storage-utils'
 
 const LOCAL_STORAGE = 'localStorage'
-
-let isSupported = hasLocalStorage()
 
 /**
  * Check if browser has access to LocalStorage
  * @returns {Boolean}
  */
-function hasLocalStorage() {
-  if (typeof isSupported !== undef) return isSupported
-  isSupported = true
-  try {
-    if (typeof localStorage === undef || typeof JSON === undef) {
-      isSupported = false
-    }
-    // test for safari private
-    localStorage.setItem(undef, undef)
-    localStorage.removeItem(undef)
-  } catch (err) {
-    isSupported = false
-  }
-  return isSupported
-}
+const hasLocalStorage = hasSupport.bind(null, LOCAL_STORAGE)
 
 /**
  * Get value from localStorage or fallback to global window
  * @param {string} key - Key of value to get
  * @returns {*} value
  */
-function getItem(key) {
-  return isSupported ? localStorage.getItem(key) : get(key)
-}
+const getItem = wrap(LOCAL_STORAGE, 'getItem', get)
 
 /**
  * Set value to localStorage or fallback to global window
@@ -39,17 +21,13 @@ function getItem(key) {
  * @param {*} value 
  * @returns value
  */
-function setItem(key, value) {
-  return isSupported ? localStorage.setItem(key, value) : set(key, value)
-}
+const setItem = wrap(LOCAL_STORAGE, 'setItem', set)
 
 /**
  * Remove value from localStorage or fallback to global window
  * @param {string} key - Key of value to remove
  */
-function removeItem(key) {
-  return isSupported ? localStorage.removeItem(key) : remove(key)
-}
+const removeItem = wrap(LOCAL_STORAGE, 'removeItem', remove)
 
 export {
   LOCAL_STORAGE,

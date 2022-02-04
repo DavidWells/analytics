@@ -35,6 +35,39 @@ export function remove(key) {
   set(key)
 }
 
+/**
+ * Wrap localStorage & session storage checks
+ * @param {string} type - localStorage or sessionStorage
+ * @param {string} storageOperation - getItem, setItem, removeItem
+ * @param {function} fallbackFunction - fallback function
+ */
+export function wrap(type, operation, fallback) {
+  let fn
+  try {
+    if (hasSupport(type)) {
+      const storage = window[type]
+      fn = storage[operation].bind(storage)
+    }
+  } catch(e) {}
+  return fn || fallback
+}
+
+const cache = {}
+export function hasSupport(type) {
+  if (typeof cache[type] !== undef) {
+    return cache[type]
+  }
+  try {
+    const storage = window[type]
+    // test for private safari
+    storage.setItem(undef, undef)
+    storage.removeItem(undef)
+  } catch (err) {
+    return cache[type] = false
+  }
+  return cache[type] = true
+}
+
 /*
 // () => localStorage)
 // () => sessionStorage)
