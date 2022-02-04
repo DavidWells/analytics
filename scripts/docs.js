@@ -126,7 +126,7 @@ const config = {
           const { name, version, description } = json
           md += `| **[${name}](https://github.com/DavidWells/analytics/tree/master/packages/${pkg})** <br/>`
           md += ` ${description} | `
-          md += `${spacing}<img width="300" height="24" src="https://img.shields.io/npm/dm/${name}.svg">${spacing} | `
+          md += `<a href="https://www.npmjs.com/package/${name}"><img width="360" height="22" src="https://img.shields.io/npm/dm/${name}.svg"></a> | `
           md += ` **${version}** |\n`
       });
       return md.replace(/^\s+|\s+$/g, '')
