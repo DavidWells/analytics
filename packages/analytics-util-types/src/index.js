@@ -256,7 +256,7 @@ export function isErrorLike(obj) {
 export function isNoOp(func) {
   if (!isFunction(func)) return false
   const emptyFunc = /{(\r|\n|\s)*}/gm
-  const noOpStr = noOp.toString()
+  const noOpStr = noOp + ''
   const funcString = (func.toString().match(emptyFunc) || [''])[0].replace(emptyFunc, noOpStr)
   return noOpStr === funcString
 }
