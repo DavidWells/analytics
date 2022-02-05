@@ -1,6 +1,6 @@
 {
   "name": "@analytics/scroll-utils",
-  "version": "0.1.18",
+  "version": "0.1.19",
   "description": "Scroll utility library to fire events on scroll",
   "author": "David Wells",
   "license": "MIT",
@@ -48,7 +48,7 @@
     "watchlist": "^0.2.3"
   },
   "dependencies": {
-    "@analytics/type-utils": "^0.5.3",
-    "analytics-utils": "^1.0.8"
+    "@analytics/type-utils": "^0.5.4",
+    "analytics-utils": "^1.0.9"
   }
 }

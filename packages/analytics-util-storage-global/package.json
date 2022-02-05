@@ -1,6 +1,6 @@
 {
   "name": "@analytics/global-storage-utils",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Tiny global storage utility library",
   "author": "David Wells",
   "license": "MIT",
@@ -50,6 +50,6 @@
     "watchlist": "^0.2.3"
   },
   "dependencies": {
-    "@analytics/type-utils": "^0.5.3"
+    "@analytics/type-utils": "^0.5.4"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@analytics/localstorage-utils",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Tiny LocalStorage utility library",
   "author": "David Wells",
   "license": "MIT",
@@ -49,6 +49,6 @@
     "watchlist": "^0.2.3"
   },
   "dependencies": {
-    "@analytics/global-storage-utils": "^0.1.3"
+    "@analytics/global-storage-utils": "^0.1.4"
   }
 }

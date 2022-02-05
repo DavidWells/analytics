@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.7](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-localstorage/compare/@analytics/localstorage-utils@0.1.6...@analytics/localstorage-utils@0.1.7) (2022-02-05)
+
+**Note:** Version bump only for package @analytics/localstorage-utils
+
+
+
+
+
 ## [0.1.6](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-localstorage/compare/@analytics/localstorage-utils@0.1.5...@analytics/localstorage-utils@0.1.6) (2021-12-12)
 
 **Note:** Version bump only for package @analytics/localstorage-utils

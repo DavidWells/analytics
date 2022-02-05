@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-storage/compare/@analytics/storage-utils@0.2.17...@analytics/storage-utils@0.3.0) (2022-02-05)
+
+
+### Features
+
+* add sessionStorage support to storage utils ([0b7373b](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-storage/commit/0b7373b))
+
+
+
+
+
 ## [0.2.17](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-storage/compare/@analytics/storage-utils@0.2.16...@analytics/storage-utils@0.2.17) (2022-01-03)
 
 **Note:** Version bump only for package @analytics/storage-utils
