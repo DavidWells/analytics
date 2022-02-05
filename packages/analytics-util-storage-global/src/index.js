@@ -1,19 +1,22 @@
+import { OBJECT, PREFIX, UNDEFINED } from '@analytics/type-utils'
+
 export const GLOBAL = 'global'
 
-export const undef = 'undefined'
+export const KEY = PREFIX + GLOBAL + PREFIX
 
-export const globalContext =
-  (typeof self === 'object' && self.self === self && self) ||
-  (typeof global === 'object' && global.global === global && global) ||
-  this
+export const globalContext = (typeof self === OBJECT && self.self === self && self) || (typeof global === OBJECT && global[GLOBAL] === global && global) || this
 
+/* initialize global object */
+if (!globalContext[KEY]) {
+  globalContext[KEY] = {}
+}
 /**
  * Get value from global context
  * @param {string} key - Key of value to get
  * @returns {*} value
  */
 export function get(key) {
-  return globalContext[key]
+  return globalContext[KEY][key]
 }
 
 /**
@@ -23,8 +26,7 @@ export function get(key) {
  * @returns value
  */
 export function set(key, value) {
-  globalContext[key] = value
-  return value
+  return globalContext[KEY][key] = value
 }
 
 /**
@@ -32,7 +34,7 @@ export function set(key, value) {
  * @param {string} key - Key of value to remove
  */
 export function remove(key) {
-  set(key)
+  delete globalContext[KEY][key]
 }
 
 /**
@@ -54,14 +56,14 @@ export function wrap(type, operation, fallback) {
 
 const cache = {}
 export function hasSupport(type) {
-  if (typeof cache[type] !== undef) {
+  if (typeof cache[type] !== UNDEFINED) {
     return cache[type]
   }
   try {
     const storage = window[type]
     // test for private safari
-    storage.setItem(undef, undef)
-    storage.removeItem(undef)
+    storage.setItem(UNDEFINED, UNDEFINED)
+    storage.removeItem(UNDEFINED)
   } catch (err) {
     return cache[type] = false
   }

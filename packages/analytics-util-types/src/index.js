@@ -15,6 +15,7 @@ export const ANY = 'any'
 export const ALL = '*'
 export const NONE = 'none'
 export const HIDDEN = 'hidden'
+export const PREFIX = '__'
 
 /* DOM Constants */
 export const FORM = 'form'

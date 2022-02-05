@@ -2,7 +2,7 @@
 import { getBrowserLocale, getTimeZone, uuid } from 'analytics-utils'
 import { isBrowser } from '@analytics/type-utils'
 import EVENTS from '../events'
-import { LIBRARY_NAME } from '../utils/internalConstants'
+import { LIB_NAME } from '../utils/internalConstants'
 import getOSNameNode from '../utils/getOSName/node'
 import getOSNameBrowser from '../utils/getOSName/browser'
 
@@ -32,7 +32,7 @@ const initialState = {
   },
   userAgent: (isBrowser) ? navigator.userAgent : 'node', // https://github.com/bestiejs/platform.js
   library: {
-    name: LIBRARY_NAME,
+    name: LIB_NAME,
     // TODO fix version number. npm run publish:patch has wrong version
     version: process.env.VERSION
   },

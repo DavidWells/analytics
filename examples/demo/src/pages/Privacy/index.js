@@ -7,18 +7,18 @@ export default class App extends Component {
   constructor (props, context) {
     super(props, context)
     this.state = {
-      history: window.__analytics__ || []
+      history: window.__global__.analytics || []
     }
   }
   componentDidMount() {
     this.listener = analytics.on('*', ({ payload }) => {
       this.setState({
-        history: window.__analytics__.concat(payload)
+        history: window.__global__.analytics.concat(payload)
       })
     })
     this.sync = setInterval(() => {
       this.setState({
-        history: window.__analytics__
+        history: window.__global__.analytics
       })
     }, 1000)
   }
