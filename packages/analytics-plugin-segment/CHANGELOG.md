@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.3](https://github.com/DavidWells/analytics/compare/@analytics/segment@1.1.2...@analytics/segment@1.1.3) (2022-01-02)
+
+**Note:** Version bump only for package @analytics/segment
+
+
+
+
+
+## [1.1.2](https://github.com/DavidWells/analytics/compare/@analytics/segment@1.1.1...@analytics/segment@1.1.2) (2021-10-29)
+
+**Note:** Version bump only for package @analytics/segment
+
+
+
+
+
 ## [1.1.1](https://github.com/DavidWells/analytics/compare/@analytics/segment@1.1.0...@analytics/segment@1.1.1) (2021-09-14)
 
 **Note:** Version bump only for package @analytics/segment

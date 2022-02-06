@@ -1,6 +1,6 @@
 {
   "name": "@analytics/core",
-  "version": "0.10.15",
+  "version": "0.10.22",
   "description": "Lightweight analytics library for tracking events, page views, & identifying users. Works with any third party analytics provider via an extendable plugin system.",
   "keywords": [
     "analytics",
@@ -8,6 +8,12 @@
     "metrics",
     "telemetry",
     "stats"
+  ],
+  "funding": [
+    {
+      "type": "GitHub Sponsors",
+      "url": "https://github.com/sponsors/davidwells"
+    }
   ],
   "author": "David Wells <hello@davidwells.io>",
   "license": "MIT",
@@ -48,9 +54,9 @@
   ],
   "typings": "lib/types.d.ts",
   "dependencies": {
-    "@analytics/global-storage-utils": "^0.1.2",
-    "@analytics/type-utils": "^0.3.1",
-    "analytics-utils": "^1.0.3"
+    "@analytics/global-storage-utils": "^0.1.4",
+    "@analytics/type-utils": "^0.5.4",
+    "analytics-utils": "^1.0.9"
   },
   "ava": {
     "files": [

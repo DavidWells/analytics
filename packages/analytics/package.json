@@ -1,6 +1,6 @@
 {
   "name": "analytics",
-  "version": "0.7.15",
+  "version": "0.7.22",
   "description": "Lightweight analytics library for tracking events, page views, & identifying users. Works with any third party analytics provider via an extendable plugin system.",
   "keywords": [
     "analytics",
@@ -16,6 +16,12 @@
     "statistics",
     "monitoring",
     "pageviews"
+  ],
+  "funding": [
+    {
+      "type": "GitHub Sponsors",
+      "url": "https://github.com/sponsors/davidwells"
+    }
   ],
   "author": "David Wells <hello@davidwells.io>",
   "license": "MIT",
@@ -56,8 +62,8 @@
   ],
   "typings": "lib/types.d.ts",
   "dependencies": {
-    "@analytics/core": "^0.10.15",
-    "@analytics/storage-utils": "^0.2.12"
+    "@analytics/core": "^0.10.22",
+    "@analytics/storage-utils": "^0.3.0"
   },
   "ava": {
     "files": [

@@ -1,4 +1,6 @@
-import { get, set, remove, undef } from '@analytics/global-storage-utils'
+import { get, set, remove } from '@analytics/global-storage-utils'
+
+export const COOKIE = 'cookie'
 
 let isSupported = hasCookies()
 
@@ -7,7 +9,7 @@ let isSupported = hasCookies()
  * @param  {string} name - key of cookie
  * @return {string} value of cookie
  */
-const getCookie = cookie
+export const getCookie = cookie
 
 /**
  * Set a cookie value
@@ -15,13 +17,13 @@ const getCookie = cookie
  * @param {string} value - value of cookie
  * @param {string} days  - days to keep cookie
  */
-const setCookie = cookie
+export const setCookie = cookie
 
 /**
  * Remove a cookie value.
  * @param {string} name  - key of cookie
  */
-function removeCookie(name) {
+export function removeCookie(name) {
   return isSupported ? cookie(name, '', -1) : remove(name) 
 }
 
@@ -29,16 +31,17 @@ function removeCookie(name) {
  * Check if browser has cookie support
  * @returns {boolean}
  */
-function hasCookies() {
-  if (typeof isSupported !== undef) {
+export function hasCookies() {
+  if (typeof isSupported !== 'undefined') {
     return isSupported
   }
+  const tmp = COOKIE + COOKIE
   try {
     // Try to set cookie
-    cookie(undef, '1')
-    isSupported = document.cookie.indexOf(undef) !== -1
+    cookie(tmp, tmp)
+    isSupported = document.cookie.indexOf(tmp) !== -1
     // Cleanup cookie
-    removeCookie(undef)
+    removeCookie(tmp)
   } catch (e) {
     isSupported = false
   }
@@ -67,32 +70,22 @@ function hasCookies() {
     cookie('test', '', -1) // destroy
 */
 function cookie(name, value, ttl, path, domain, secure) {
-  if (typeof window === undef) return
+  if (typeof window === 'undefined') return
   const isSet = arguments.length > 1
   /* If cookies not supported fallback to global */
-  if (!isSupported) (isSet) ? set(name, value) : get(name)
+  if (isSupported === false) (isSet) ? set(name, value) : get(name)
   /* Set values */
   if (isSet) {
-    // eslint-disable-next-line no-return-assign
     return document.cookie = name + '=' + encodeURIComponent(value) +
-      // eslint-disable-next-line operator-linebreak
-        ((!ttl) ? '' :
-          // Has TTL set expiration on cookie
-          '; expires=' + new Date(+new Date() + (ttl * 1000)).toUTCString() +
-          // If path set path
-          ((!path) ? '' : '; path=' + path) +
-          // If domain set domain
-          ((!domain) ? '' : '; domain=' + domain) +
-          // If secure set secure
-          ((!secure) ? '' : '; secure'))
+      /* Set TTL set expiration on cookie */
+      ((!ttl) ? '' : '; expires=' + new Date(+new Date() + (ttl * 1000)).toUTCString() +
+      // If path set path
+      ((!path) ? '' : '; path=' + path) +
+      // If domain set domain
+      ((!domain) ? '' : '; domain=' + domain) +
+      // If secure set secure
+      ((!secure) ? '' : '; secure'))
   }
   /* Get values */
   return decodeURIComponent((('; ' + document.cookie).split('; ' + name + '=')[1] || '').split(';')[0])
-}
-
-export {
-  hasCookies,
-  setCookie,
-  getCookie,
-  removeCookie
 }

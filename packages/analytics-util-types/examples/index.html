@@ -2,7 +2,8 @@
 <html>
   <head>
     <title>Type utils</title>
-    <script type="text/javascript" src="./browser/types-utils.js" charset="utf-8"></script>
+    <script type="text/javascript" src="./browser/type-utils.js" charset="utf-8"></script>
+    <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVQI12P4//8/AAX+Av7czFnnAAAAAElFTkSuQmCC">
     <style media="screen">
       html {
         padding: 20px;
@@ -64,7 +65,7 @@
   
     <script type="text/javascript">
       console.log('Type utils API', utilTypes)
-      const { isString, isBoolean, isArray, isObject, isUndefined } = utilTypes
+      const { isString, isBoolean, isArray, isObject, isFunction, isUndefined, isNull } = utilTypes
 
       const xyz = 'hi'
       console.log('isString', isString(xyz))
@@ -80,6 +81,14 @@
   
       const myObj = { cool: 'hello' }
       console.log('isObject', isObject(myObj))
+      // true
+
+      function myFunc() {}
+      console.log('isFunction', isFunction(myFunc))
+      // true
+      
+      var nullThing = null
+      console.log('isNull', isNull(nullThing))
       // true
 
       let value

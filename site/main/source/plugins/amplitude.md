@@ -19,6 +19,7 @@ This analytics plugin will load Amplitude integration into your application.
   - [Browser API](#browser-api)
   - [Configuration options for browser](#configuration-options-for-browser)
 - [Additional examples](#additional-examples)
+- [Setting Custom Session Ids](#setting-custom-session-ids)
 
 </details>
 <!-- AUTO-GENERATED-CONTENT:END -->
@@ -119,6 +120,7 @@ const analytics = Analytics({
 |:---------------------------|:-----------|
 | `apiKey` <br/>**required** - string| Amplitude project API key |
 | `options` <br/>**required** - object| Amplitude SDK options |
+| `initialSessionId` <br/>**required** - string| Set initial session ID |
 
 ## Additional examples
 
@@ -240,3 +242,41 @@ Below are additional implementation examples.
 </details>
 
 <!-- AUTO-GENERATED-CONTENT:END (PLUGIN_DOCS) -->
+
+## Setting Custom Session Ids
+
+You can set a session id like so
+
+```js
+import Analytics from 'analytics'
+import amplitudePlugin from '@analytics/amplitude'
+
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    amplitudePlugin({
+      apiKey: 'token',
+    })
+  ]
+})
+
+// Run custom method https://getanalytics.io/plugins/writing-plugins/#adding-custom-methods
+analytics.plugins['amplitude'].setSessionId('your-id')
+```
+
+Or via the `initialSessionId` config value
+
+```js
+import Analytics from 'analytics'
+import amplitudePlugin from '@analytics/amplitude'
+
+const analytics = Analytics({
+  app: 'awesome-app',
+  plugins: [
+    amplitudePlugin({
+      apiKey: 'token',
+      initialSessionId: 'xyz-123'
+    })
+  ]
+})
+```

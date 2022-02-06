@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.4](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-types/compare/@analytics/type-utils@0.5.3...@analytics/type-utils@0.5.4) (2022-02-05)
+
+**Note:** Version bump only for package @analytics/type-utils
+
+
+
+
+
+## [0.5.3](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-types/compare/@analytics/type-utils@0.5.2...@analytics/type-utils@0.5.3) (2022-01-03)
+
+**Note:** Version bump only for package @analytics/type-utils
+
+
+
+
+
+## [0.5.2](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-types/compare/@analytics/type-utils@0.5.1...@analytics/type-utils@0.5.2) (2022-01-02)
+
+**Note:** Version bump only for package @analytics/type-utils
+
+
+
+
+
+## [0.5.1](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-types/compare/@analytics/type-utils@0.5.0...@analytics/type-utils@0.5.1) (2021-12-12)
+
+**Note:** Version bump only for package @analytics/type-utils
+
+
+
+
+
+# [0.5.0](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-types/compare/@analytics/type-utils@0.4.0...@analytics/type-utils@0.5.0) (2021-10-24)
+
+
+### Features
+
+* add isEmail to types ([0ced368](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-types/commit/0ced368))
+
+
+
+
+
+# [0.4.0](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-types/compare/@analytics/type-utils@0.3.1...@analytics/type-utils@0.4.0) (2021-10-17)
+
+
+### Features
+
+* add truthy check ([5d47089](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-types/commit/5d47089))
+
+
+
+
+
 ## [0.3.1](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-types/compare/@analytics/type-utils@0.3.0...@analytics/type-utils@0.3.1) (2021-08-05)
 
 **Note:** Version bump only for package @analytics/type-utils

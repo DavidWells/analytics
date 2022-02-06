@@ -1,0 +1,60 @@
+{
+  "name": "@analytics/redact-utils",
+  "version": "0.0.7",
+  "description": "Utility library for redacting event data",
+  "author": "David Wells",
+  "license": "MIT",
+  "homepage": "https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-redact#readme",
+  "repository": "https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-redact",
+  "keywords": [
+    "analytics",
+    "analytics-project",
+    "analytics-util",
+    "events",
+    "redact",
+    "redaction"
+  ],
+  "source": "src/index.js",
+  "main": "dist/analytics-util-redact.js",
+  "exports": "./dist/analytics-util-redact.modern.js",
+  "module": "dist/analytics-util-redact.module.js",
+  "unpkg": "dist/analytics-util-redact.umd.js",
+  "scripts": {
+    "test": "ava --verbose",
+    "watch": "ava --watch --verbose",
+    "example": "npm run sync && serve ./dist -l 5000",
+    "open": "open-cli http://localhost:5000",
+    "serve": "concurrently \"npm:example\" \"npm:open\"",
+    "build": "microbundle --name analyticsUtilRedact",
+    "dev": "microbundle watch",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish"
+  },
+  "files": [
+    "lib",
+    "dist",
+    "package.json",
+    "package-lock.json",
+    "README.md"
+  ],
+  "devDependencies": {
+    "@babel/register": "7.5.5",
+    "ava": "^3.15.0",
+    "concurrently": "^6.0.1",
+    "microbundle": "^0.13.0",
+    "open-cli": "^6.0.1",
+    "serve": "^11.3.2"
+  },
+  "ava": {
+    "require": [
+      "esm",
+      "@babel/register"
+    ],
+    "verbose": true,
+    "failFast": true
+  },
+  "dependencies": {
+    "@analytics/type-utils": "^0.5.4"
+  }
+}

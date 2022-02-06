@@ -2,7 +2,8 @@
 <html>
   <head>
     <title>Cookie utils</title>
-    <script type="text/javascript" src="./analytics-util-cookie.umd.js" charset="utf-8"></script>
+    <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVQI12P4//8/AAX+Av7czFnnAAAAAElFTkSuQmCC">
+    <script type="text/javascript" src="./browser/cookie-utils.umd.js" charset="utf-8"></script>
     <style media="screen">
       html {
         padding: 0 20px;
@@ -71,7 +72,7 @@
   
     <script type="text/javascript">
       const { getCookie, setCookie, removeCookie, hasCookies } = utilCookies
-      console.log('utilGlobalStorage API', utilCookies)
+      console.log('utilCookies API', utilCookies)
       console.log('Are cookies supported?', (hasCookies() ? 'Yes': 'No'))
 
       const getButton = document.querySelector('#get')

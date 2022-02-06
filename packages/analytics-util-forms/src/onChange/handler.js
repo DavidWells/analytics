@@ -1,4 +1,4 @@
-import { isForm, isFunction } from '@analytics/type-utils'
+import { isForm, isFunction, INPUT } from '@analytics/type-utils'
 import filterValues from '../utils/filter'
 import { getFormData, getInputData, getValue } from '../utils/getFormValues'
 
@@ -8,7 +8,7 @@ export default function changeHandler(opts, element, type) {
     const input = event.target
     const name = input.name || input.id // || lookupParentNodeText()
     if (!name) {
-      throw new Error(`Invalid input ${input}. Missing name & id`)
+      throw new Error(`Invalid ${INPUT} ${input}. Missing name & id`)
     }
     const value = grabVal(name, input, element)
     /* Filter sensitive values */

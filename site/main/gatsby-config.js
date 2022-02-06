@@ -62,6 +62,7 @@ module.exports = {
             'utils/localstorage',
             'utils/remote-storage',
             'utils/session-storage',
+            'utils/redaction',
             'utils/types',
           ],
           Tutorials: [

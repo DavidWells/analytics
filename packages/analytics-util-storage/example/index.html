@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>Storage utils</title>
+    <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVQI12P4//8/AAX+Av7czFnnAAAAAElFTkSuQmCC">
     <script type="text/javascript" src="./browser/storage-utils.js" charset="utf-8"></script>
     <style media="screen">
       html {
@@ -96,6 +97,12 @@
             <button id="remove-cookie">Remove "keyThree" cookie value</button>
           </div>
           <div>
+            <h3>SessionStorage <span id="value-session"></span></h3>
+            <button id="set-session">Set "keySession" session value</button>
+            <button id="get-session">Get "keySession" session value</button>
+            <button id="remove-session">Remove "keySession" session value</button>
+          </div>
+          <div>
             <h3>Window <span id="value-window"></span></h3>
             <button id="set-window">Set "keyFour" window value</button>
             <button id="get-window">Get "keyFour" window value</button>
@@ -129,6 +136,10 @@
       const getButtonCookie = document.querySelector('#get-cookie')
       const updateButtonCookie = document.querySelector('#set-cookie')
       const removeButtonCookie = document.querySelector('#remove-cookie')
+
+      const getButtonSession = document.querySelector('#get-session')
+      const updateButtonSession = document.querySelector('#set-session')
+      const removeButtonSession = document.querySelector('#remove-session')
 
       const getButtonWindow = document.querySelector('#get-window')
       const updateButtonWindow = document.querySelector('#set-window')
@@ -205,6 +216,25 @@
         const value = removeItem(keyThree, 'cookie')
         renderData(value, '', e)
         console.log(`Cleared cookie "${keyThree}" value`, value)
+      })
+
+      /* SessionStorage Example */
+      const keyFive = 'keySession'
+      getButtonSession.addEventListener('click', (e) => {
+        const value = getItem(keyFive, 'sessionStorage')
+        console.log(`Get sessionStorage "${keyFive}" value`, value)
+        renderData(value)
+      })
+      updateButtonSession.addEventListener('click', (e) => {
+        const updatedValue = new Date().getTime()
+        const value = setItem(keyFive, updatedValue, 'sessionStorage')
+        console.log(`Update sessionStorage "${keyFive}" value`, value)
+        renderData(value, updatedValue, e)
+      })
+      removeButtonSession.addEventListener('click', (e) => {
+        const value = removeItem(keyFive, 'sessionStorage')
+        renderData(value, '', e)
+        console.log(`Cleared sessionStorage "${keyFive}" value`, value)
       })
 
       /* Window Example */

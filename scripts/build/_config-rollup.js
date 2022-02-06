@@ -42,6 +42,11 @@ module.exports = function generateConfig(directory) {
       cache: false,
       external: externs,
       output: config.output,
+      // commonjs: {
+      //  namedExports: {
+      //    'cross-storage': ['CrossStorageClient', 'CrossStorageHub'],
+      //  }
+      // },
       plugins: [
         stripBanner({
           exclude: 'node_modules/**/*',
@@ -69,7 +74,11 @@ module.exports = function generateConfig(directory) {
           }
         }),
         commonjs({
-          include: 'node_modules/**',
+          include: [
+            'node_modules/**',
+            // 'node_modules/.pnpm/**',
+            '../../node_modules/.pnpm/**'
+          ]
           // ignore: [ 'conditional-runtime-dependency' ]
         }),
         ...[

@@ -6,7 +6,7 @@ description: Utility library for managing HTML cookies
 
 # Cookie Utilities
 
-A tiny cookie utility library with fallbacks in <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`444 bytes`<!-- AUTO-GENERATED-CONTENT:END -->.
+A tiny cookie utility library with fallbacks in <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`472 bytes`<!-- AUTO-GENERATED-CONTENT:END -->.
 
 This module will automatically fail back to global window storage if `cookies` are not available.
 

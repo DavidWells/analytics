@@ -1,18 +1,13 @@
-import { set, get, remove, globalContext } from '@analytics/global-storage-utils'
-import { getCookie, setCookie, removeCookie, hasCookies } from '@analytics/cookie-utils'
-import { hasLocalStorage } from '@analytics/localstorage-utils'
-import { isUndefined, isString } from '@analytics/type-utils'
+import { set, get, remove, globalContext, GLOBAL } from '@analytics/global-storage-utils'
+import { getCookie, setCookie, removeCookie, hasCookies, COOKIE } from '@analytics/cookie-utils'
+import { hasLocalStorage, LOCAL_STORAGE } from '@analytics/localstorage-utils'
+import { hasSessionStorage, SESSION_STORAGE } from '@analytics/session-storage-utils'
+import { isUndefined, isString, ANY, ALL } from '@analytics/type-utils'
 import parse from './utils/parse'
-
-// Constants
-export const ALL = '*'
-export const ANY = 'any'
-export const LOCAL_STORAGE = 'localStorage'
-export const COOKIE = 'cookie'
-export const GLOBAL = 'global'
 
 // Verify support
 const hasStorage = hasLocalStorage()
+const hasSessionSupport = hasSessionStorage()
 const hasCookiesSupport = hasCookies()
 
 /**
@@ -39,11 +34,18 @@ export function getItem(key, options) {
     return cookieVal
   }
 
-  /* 3. Fallback to window/global. */
+  /* 3. Fallback to sessionStorage */
+  const sessionVal = useSession(type) ? parse(sessionStorage.getItem(key)) : undefined
+  if (getFirst && sessionVal) {
+    return sessionVal
+  }
+
+  /* 4. Fallback to window/global. */
   const globalValue = get(key)
 
   return getFirst ? globalValue : {
     localStorage: localValue,
+    sessionStorage: sessionVal,
     cookie: cookieVal,
     global: globalValue
   }
@@ -69,37 +71,38 @@ export function setItem(key, value, options) {
   /* 1. Try localStorage */
   if (useLocal(type)) {
     // console.log('SET as localstorage', saveValue)
-    data[LOCAL_STORAGE] = {
-      location: LOCAL_STORAGE,
-      current: value, 
-      previous: parse(localStorage.getItem(key))
-    }
+    data[LOCAL_STORAGE] = format(LOCAL_STORAGE, value, parse(localStorage.getItem(key)))
     // Set LocalStorage item
     localStorage.setItem(key, saveValue)
     if (setFirst) {
       return data[LOCAL_STORAGE]
     }
   }
+
   /* 2. Fallback to cookie */
   if (useCookie(type)) {
     // console.log('SET as cookie', saveValue)
-    data[COOKIE] = {
-      location: COOKIE,
-      current: value,
-      previous: parse(getCookie(key))
-    }
+    data[COOKIE] = format(COOKIE, value, parse(getCookie(key)))
     // Set Cookie
     setCookie(key, saveValue)
     if (setFirst) {
       return data[COOKIE]
     }
   }
-  /* 3. Fallback to window/global */
-  data[GLOBAL] = {
-    location: GLOBAL, 
-    current: value,
-    previous: get(key)
+
+  /* 3. Try sessionStorage */
+  if (useSession(type)) {
+    // console.log('SET as localstorage', saveValue)
+    data[SESSION_STORAGE] = format(SESSION_STORAGE, value, parse(sessionStorage.getItem(key)))
+    // Set sessionStorage item
+    sessionStorage.setItem(key, saveValue)
+    if (setFirst) {
+      return data[SESSION_STORAGE]
+    }
   }
+
+  /* 4. Fallback to window/global */
+  data[GLOBAL] = format(GLOBAL, value, get(key))
   // Set global value
   set(key, value)
   // Return set value(s)
@@ -118,17 +121,22 @@ export function removeItem(key, options) {
   const values = getItem(key, ALL)
 
   const data = {}
+  /* 1. Try localStorage */
   if (!isUndefined(values.localStorage) && useLocal(type)) {
-    /* 1. Try localStorage */
     localStorage.removeItem(key)
     data[LOCAL_STORAGE] = values.localStorage
   }
+  /* 2. Fallback to cookie */
   if (!isUndefined(values.cookie) && useCookie(type)) {
-    /* 2. Fallback to cookie */
     removeCookie(key)
     data[COOKIE] = values.cookie
   }
-  /* 3. Fallback to window/global */
+  /* 3. Try sessionStorage */
+  if (!isUndefined(values.sessionStorage) && useSession(type)) {
+    sessionStorage.removeItem(key)
+    data[SESSION_STORAGE] = values.sessionStorage
+  }
+  /* 4. Fallback to window/global */
   if (!isUndefined(values.global) && useGlobal(type)) {
     remove(key)
     data[GLOBAL] = values.global
@@ -155,6 +163,11 @@ function useCookie(storage) {
   return hasCookiesSupport && useType(storage, COOKIE)
 }
 
+function useSession(storage) {
+  // If has sessionStorage and storage option not defined, or is set to 'sessionStorage' or '*'
+  return hasSessionSupport && useType(storage, SESSION_STORAGE)
+}
+
 function useAll(storage) {
   return storage === ALL || storage === 'all'
 }
@@ -163,7 +176,31 @@ function useType(storage, type) {
   return (storage === ANY || storage === type || useAll(storage))
 }
 
+/**
+ * Format response
+ * @param {string} location 
+ * @param {*} current - current value
+ * @param {*} previous - previous value
+ * @returns 
+ */
+function format(location, current, previous) {
+  return { location, current, previous }
+}
+
+// const TYPES = {
+//   ALL,
+//   ANY,
+//   GLOBAL,
+//   COOKIE,
+//   LOCAL_STORAGE,
+// }
+
 export {
+  ALL,
+  ANY,
+  GLOBAL,
+  COOKIE,
+  LOCAL_STORAGE,
   getCookie,
   setCookie,
   removeCookie,

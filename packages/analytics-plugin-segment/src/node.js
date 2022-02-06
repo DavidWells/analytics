@@ -7,8 +7,11 @@ if (!process.browser) {
 const defaultConfig = {
   /* Your segment write key */
   writeKey: null,
-  /* Segment sdk flushInterval. Docs https://bit.ly/2H2jJMb */
-  flushInterval: 3,
+  /* Segment sdk config options. Docs https://bit.ly/2H2jJMb */
+  flushInterval: 1000,
+  flushAt: 1,
+  /* enable or disable flush */
+  enable: true,
   /* Disable anonymous MTU */
   disableAnonymousTraffic: false
 }
@@ -34,7 +37,7 @@ function segmentPlugin(userConfig = {}) {
     ...userConfig
   }
   const client = new Analytics(config.writeKey, {
-    flushInterval: config.flushInterval
+    ...config
   })
 
   return {

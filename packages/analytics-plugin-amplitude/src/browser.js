@@ -6,6 +6,7 @@
  * @param {object} pluginConfig - Plugin settings
  * @param {string} pluginConfig.apiKey - Amplitude project API key
  * @param {object} pluginConfig.options - Amplitude SDK options
+ * @param {string} pluginConfig.initialSessionId - Set initial session ID
  * @return {*}
  * @example
  *
@@ -35,7 +36,7 @@ function amplitudePlugin(pluginConfig = {}) {
     config: pluginConfig,
     // For Amplitude options, see https://amplitude.github.io/Amplitude-JavaScript/Options
     initialize: ({ config }) => {
-      const { apiKey, customScriptSrc, options = {} } = config
+      const { apiKey, initialSessionId, customScriptSrc, integritySha = '', options = {} } = config
       if (!apiKey) {
         throw new Error("Amplitude project API key is not defined")
       }
@@ -48,14 +49,27 @@ function amplitudePlugin(pluginConfig = {}) {
         return
       }
       
-      const scriptSrc = customScriptSrc ? customScriptSrc : 'https://cdn.amplitude.com/libs/amplitude-8.1.0-min.gz.js';
+      const scriptSrc = customScriptSrc ? customScriptSrc : 'https://cdn.amplitude.com/libs/amplitude-8.1.0-min.gz.js'
+
+      // Fix https://bit.ly/3m7EBGi
+      let integrity
+      if (integritySha) {
+        // Use custom sha if provided
+        integrity = integritySha
+      } else if (!customScriptSrc) {
+        // Use default 'https://cdn.amplitude.com/libs/amplitude-8.1.0-min.gz.js' sha
+        integrity = 'sha384-u0hlTAJ1tNefeBKwiBNwB4CkHZ1ck4ajx/pKmwWtc+IufKJiCQZ+WjJIi+7C6Ntm'
+      }
 
       // Initialize amplitude js
-      (function(e, t) {
+      ;(function(e, t) {
         var n = e.amplitude || { _q: [], _iq: {} };
         var r = t.createElement("script");
         r.type = "text/javascript";
-        r.integrity = "sha384-u0hlTAJ1tNefeBKwiBNwB4CkHZ1ck4ajx/pKmwWtc+IufKJiCQZ+WjJIi+7C6Ntm";
+        // Only apply integrity sha if provided or default script source
+        if (integrity) {
+          r.integrity = integrity
+        }
         r.crossOrigin = "anonymous";
         r.async = true;
         r.src = scriptSrc;
@@ -115,7 +129,12 @@ function amplitudePlugin(pluginConfig = {}) {
         e.amplitude = n
       })(window, document);
       // See options at https://amplitude.github.io/Amplitude-JavaScript/Options/
-      window.amplitude.init(config.apiKey, null, options, initComplete)
+      window.amplitude.init(config.apiKey, null, options, initComplete);
+
+      // Set initial session id. Ref https://bit.ly/3vElAym
+      if (initialSessionId) {
+        setTimeout(() => setSessionId(initialSessionId), 10)
+      }
     },
 
     page: ({ payload: { properties, options } }) => {
@@ -136,7 +155,29 @@ function amplitudePlugin(pluginConfig = {}) {
     },
 
     loaded: () => amplitudeInitCompleted,
+
+    // https://getanalytics.io/plugins/writing-plugins/#adding-custom-methods
+    methods: {
+      /**
+       * analytics.plugins['amplitude'].setSessionId('your-id')
+       */
+      setSessionId: setSessionId,
+    }
   }
+}
+
+/**
+ * Set Amplitude session ID. Ref https://bit.ly/3vElAym
+ * @param {string} sessionId - Minimum visit length before first page ping event fires
+ */
+function setSessionId(sessionId) {
+  if (typeof window.amplitude === 'undefined') {
+    console.log('Amplitude not loaded yet')
+    return false
+  }
+  const amplitudeInstance = window.amplitude.getInstance()
+  amplitudeInstance.setSessionId(sessionId)
+  amplitudeInstance.enableTracking()
 }
 
 export default amplitudePlugin

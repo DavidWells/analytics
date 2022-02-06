@@ -137,3 +137,22 @@ function throttle(callback, limit) {
     }
   }
 }
+
+
+function addUnloadEvent(unloadEvent) {
+  let executed = false
+  let fn = () => {
+    if (!executed) {
+      executed = true
+      unloadEvent()
+    }
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+      fn()
+    }
+  })
+  window.addEventListener('pagehide', fn)
+  window.addEventListener('beforeunload', fn)
+  window.onbeforeunload = fn
+}
