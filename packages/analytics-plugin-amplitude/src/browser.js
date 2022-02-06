@@ -50,14 +50,23 @@ function amplitudePlugin(pluginConfig = {}) {
       }
       
       const scriptSrc = customScriptSrc ? customScriptSrc : 'https://cdn.amplitude.com/libs/amplitude-8.1.0-min.gz.js'
+
       // Fix https://bit.ly/3m7EBGi
-      const integrity = integritySha || 'sha384-u0hlTAJ1tNefeBKwiBNwB4CkHZ1ck4ajx/pKmwWtc+IufKJiCQZ+WjJIi+7C6Ntm'
+      let integrity
+      if (integritySha) {
+        // Use custom sha if provided
+        integrity = integritySha
+      } else if (!customScriptSrc) {
+        // Use default 'https://cdn.amplitude.com/libs/amplitude-8.1.0-min.gz.js' sha
+        integrity = 'sha384-u0hlTAJ1tNefeBKwiBNwB4CkHZ1ck4ajx/pKmwWtc+IufKJiCQZ+WjJIi+7C6Ntm'
+      }
 
       // Initialize amplitude js
-      (function(e, t) {
+      ;(function(e, t) {
         var n = e.amplitude || { _q: [], _iq: {} };
         var r = t.createElement("script");
         r.type = "text/javascript";
+        // Only apply integrity sha if provided or default script source
         if (integrity) {
           r.integrity = integrity
         }
@@ -120,7 +129,7 @@ function amplitudePlugin(pluginConfig = {}) {
         e.amplitude = n
       })(window, document);
       // See options at https://amplitude.github.io/Amplitude-JavaScript/Options/
-      window.amplitude.init(config.apiKey, null, options, initComplete)
+      window.amplitude.init(config.apiKey, null, options, initComplete);
 
       // Set initial session id. Ref https://bit.ly/3vElAym
       if (initialSessionId) {

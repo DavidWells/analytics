@@ -4,13 +4,14 @@ pageTitle: Storage Utils
 description: Utility library for persisting data
 ---
 
-A tiny storage utility library with fallback mechanism in <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`875 bytes`<!-- AUTO-GENERATED-CONTENT:END -->.
+A tiny storage utility library with fallback mechanism in <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`999 bytes`<!-- AUTO-GENERATED-CONTENT:END -->.
 
 By default, `@analytics/storage-utils` will persist values in browser in this order:
 
-1. `localStorage`
+1. Try `localStorage`
 2. If no `localStorage`, use `cookies`
-3. If no `cookies`, use `global` window
+3. If no `cookies`, use `sessionStorage`
+4. If no `sessionStorage`, use `global` window
 
 If you want to specify which storage mechanism to use, use the `options` parameter.
 
@@ -41,6 +42,10 @@ setItem('key', 'otherValue', { storage: 'localStorage' })
 setItem('keyTwo', 'cookieVal',  { storage: 'cookie' })
 // { value: "cookieVal", oldValue: "null", location: "cookie" }
 
+/* Set value from specifically sessionStorage */
+setItem('keyThree', 'xyz', { storage: 'sessionStorage' })
+// { value: "cookieVal", oldValue: "null", location: "sessionStorage" }
+
 /* Set value from specifically the global window (or global this in node.js) */
 setItem('keyThree', 'xyz', { storage: 'global' })
 // { value: "cookieVal", oldValue: "null", location: "cookie" }
@@ -67,6 +72,9 @@ const getLocalStorageValue = getItem('key', { storage: 'localStorage' })
 
 /* Get value to specifically cookie */
 const getCookieValue = getItem('key', { storage: 'cookie' })
+
+// Get value to specifically sessionStorage
+const getSessionStorageValue = getItem('key', { storage: 'sessionStorage' })
 
 /* Get value from specifically the global window (or global this in node.js) */
 const getGlobalValue = getItem('key', { storage: 'global' })
@@ -95,6 +103,9 @@ removeItem('key', { storage: 'localStorage' })
 
 /* Remove value to specifically cookie */
 removeItem('keyTwo', { storage: 'cookie' })
+
+/* Remove value to specifically sessionStorage */
+removeItem('key', { storage: 'sessionStorage' })
 
 /* Remove value to specifically global */
 removeItem('keyThree', { storage: 'global' })

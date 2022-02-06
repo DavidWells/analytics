@@ -8,7 +8,7 @@ description: Utility library for runtime type checking
 
 A tiny tree shakable utility library for runtime type checking.
 
-The entire package weighs in at <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`657 bytes`<!-- AUTO-GENERATED-CONTENT:END -->.
+The entire package weighs in at <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`1.5kb`<!-- AUTO-GENERATED-CONTENT:END -->.
 
 [See live demo](https://utils-types.netlify.app/).
 
@@ -37,6 +37,54 @@ import { isBrowser } from '@analytics/type-utils'
 
 if (isBrowser) {
   console.log('do things in browser env')
+}
+```
+
+## `isNode`
+
+Check if currently in Node.js context
+
+```js
+import { isNode } from '@analytics/type-utils'
+
+if (isNode) {
+  console.log('do things in node env')
+}
+```
+
+## `isDeno`
+
+Check if currently in Deno context
+
+```js
+import { isDeno } from '@analytics/type-utils'
+
+if (isDeno) {
+  console.log('do things in deno env')
+}
+```
+
+## `isWebWorker`
+
+Check if currently in WebWorker context
+
+```js
+import { isWebWorker } from '@analytics/type-utils'
+
+if (isWebWorker) {
+  console.log('do things in webworker env')
+}
+```
+
+## `isJsDom`
+
+Check if currently in JSDOM context
+
+```js
+import { isJsDom } from '@analytics/type-utils'
+
+if (isJsDom) {
+  console.log('do things in JSDOM env')
 }
 ```
 
@@ -76,6 +124,26 @@ console.log(isBoolean(myBool))
 // true
 ```
 
+## `isPrimitive`
+
+Check if value is primitive JS value.
+
+```js
+import { isPrimitive } from '@analytics/type-utils'
+
+isPrimitive(true) // =>  true
+isPrimitive({}) // => false
+isPrimitive(0) // =>  true
+isPrimitive('1') // =>  true
+isPrimitive(1.1) // =>  true
+isPrimitive(NaN) // =>  true
+isPrimitive(Infinity) // =>  true
+isPrimitive(function() {}) // => false
+isPrimitive(Date), // => false
+isPrimitive(null) // =>  true
+isPrimitive(undefined) // =>  true
+```
+
 ## `isArray`
 
 Check if value is `array`
@@ -110,6 +178,60 @@ import { isUndefined } from '@analytics/type-utils'
 let myval
 console.log(isUndefined(myval))
 // true
+```
+
+## `isFunction`
+
+Check if value is `function`
+
+```js
+import { isFunction } from '@analytics/type-utils'
+
+function xyz() {}
+console.log(isFunction(xyz))
+// true
+```
+
+## `isClass`
+
+Check if value is javascript `class`
+
+```js
+import { isClass } from '@analytics/type-utils'
+
+class MyClass {}
+console.log(isClass(MyClass))
+// true
+```
+
+## `isPromise`
+
+Check if value is javascript `promise`
+
+```js
+import { isPromise } from '@analytics/type-utils'
+
+const myPromise = Promise.resolve()
+console.log(isPromise(myPromise))
+// true
+```
+
+## `isErrorLike`
+
+Check if value is javascript `isErrorLike`
+
+```ts
+import { isErrorLike } from '@analytics/type-utils'
+
+isErrorLike(new Error()) // True
+isErrorLike({ name: "Error!", message: "This is an error", other: 0 }) // True
+isErrorLike({}) // False
+isErrorLike({ name: "Error", message: null }) // False
+// Works as a typguard
+const something = {name: "Error", message: "This is an error"} as unknown
+if (isErrorLike(something)) {
+  console.log(something.name) // No Typescript error
+}
 ```
 
 ## `isRegex`

@@ -1,4 +1,4 @@
-import { isBrowser } from '@analytics/type-utils'
+import { isBrowser, SUBMIT } from '@analytics/type-utils'
 import formatArgs from '../utils/args'
 import submitHandler from './handler'
 
@@ -11,15 +11,14 @@ import submitHandler from './handler'
  */
 export function onSubmit(formElement, options = {}, callback) {
   if (!isBrowser) return
-  const type = 'submit'
-  const [settings, forms] = formatArgs(formElement, options, callback, type)
+  const [settings, forms] = formatArgs(formElement, options, callback, SUBMIT)
   // Attach Listeners
   const listeners = forms.map((form) => {
-    const handler = submitHandler(settings, form, type)
-    form.addEventListener(type, handler, false)
+    const handler = submitHandler(settings, form, SUBMIT)
+    form.addEventListener(SUBMIT, handler, false)
     // Detach event listeners
     return () => {
-      form.removeEventListener(type, handler, false)
+      form.removeEventListener(SUBMIT, handler, false)
     }
   })
   return () => {

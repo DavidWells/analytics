@@ -159,6 +159,8 @@ test('Parse other complex params', (t) => {
   &fields[]=name
   &fields[]=default_goal_name
   `
+  // https://github.com/Sage/jsurl/
+  // ~(Target~'Offer~Method~'findAll~fields~(~'id~'name~'default_goal_name)~filters~(has_setting_off~false~has_goals_enabled~(TRUE~1)~status~'active))
   const encodedUrl = encodeURI(format(url))
   const obj = paramsParse(encodedUrl)
   t.is(typeof obj, 'object')

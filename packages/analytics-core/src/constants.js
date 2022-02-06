@@ -5,7 +5,7 @@
  * @property {USER_ID} USER_ID - Visitor Id localstorage key
  * @property {USER_TRAITS} USER_TRAITS - Visitor traits localstorage key
  */
-import { PREFIX } from './utils/internalConstants'
+import { PREFIX } from '@analytics/type-utils'
 
 /**
  * Anonymous visitor Id localstorage key
