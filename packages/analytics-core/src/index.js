@@ -15,7 +15,7 @@ import queue from './modules/queue'
 import page, { getPageData } from './modules/page'
 import context, { makeContext } from './modules/context'
 import user, { getUserPropFunc, tempKey, getPersistedUserData } from './modules/user'
-// Utils
+/* Utils */
 import { watch } from './utils/handleNetworkEvents'
 import { Debug, composeWithDebug } from './utils/debug'
 import heartBeat from './utils/heartbeat'
