@@ -41,8 +41,8 @@ const original = {
     },
   },
 }
-log('original', original)
 const encoded = redactObject(original)
+console.log(encoded)
 /*
 {
   hi: 'awesome',
@@ -75,8 +75,8 @@ const encoded = {
     'JG5pY2U=': { _: [ 'JGxvbA==' ], 'JGxvbA==': 'dGhpcyB3aWxsIGJlIGVuY29kZWQ=' }
   }
 }
-
 const decoded = restoreObject(original)
+console.log(decoded)
 /*
 {
   hi: 'awesome',
@@ -93,6 +93,7 @@ const decoded = restoreObject(original)
 
 // Restore and remove $ prefix
 const decodedClean = restoreObject(original, true)
+console.log(decodedClean)
 /*
 {
   hi: 'awesome',
