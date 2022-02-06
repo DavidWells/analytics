@@ -50,7 +50,7 @@ module.exports = function generateConfig(directory) {
           jsnext: true
         }),
         babel({
-          exclude: 'node_modules/**',
+          exclude: /node_modules/,
           runtimeHelpers: true
         }),
         {
@@ -65,7 +65,7 @@ module.exports = function generateConfig(directory) {
           'process.env.VERSION': JSON.stringify(pkg.version)
         }),
         commonjs({
-          include: 'node_modules/**',
+          include: /node_modules/
           // ignore: [ 'conditional-runtime-dependency' ]
         }),
         ...[
