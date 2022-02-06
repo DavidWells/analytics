@@ -54,7 +54,6 @@ const defaultConfig = {
  * @return {Object} Analytics plugin
  *
  * @example
- *
  * // Minimal recommended configuration
  * snowplowPlugin({
  *   name: 'snowplow',
