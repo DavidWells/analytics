@@ -1,8 +1,10 @@
 const path = require('path')
-const chalk = require('chalk')
+const safeChalk = require('safe-chalk')
 const gzipSize = require('gzip-size')
 const brotliSize = require('brotli-size')
 const prettyBytes = require('pretty-bytes')
+
+const chalk = safeChalk()
 
 function formatSize(size, filename, type, raw) {
   const pretty = raw ? `${size}B` : prettyBytes(size)
