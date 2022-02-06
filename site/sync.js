@@ -63,7 +63,7 @@ async function updateContents(file, docsPath) {
   // Only sync content with frontmatter
   if (content.startsWith('<!--')) {
     const newContent = formatContent(content)
-    console.log('newContent', newContent)
+    // console.log('newContent', newContent)
     await fs.writeFile(docsPath, newContent)
     console.log(`Docs synced to ${docsPath}`)
   }
