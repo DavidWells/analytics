@@ -1,6 +1,6 @@
 {
   "name": "@analytics/redact-utils",
-  "version": "0.0.7",
+  "version": "0.1.0",
   "description": "Utility library for redacting event data",
   "author": "David Wells",
   "license": "MIT",

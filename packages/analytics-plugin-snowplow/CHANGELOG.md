@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/DavidWells/analytics/compare/@analytics/snowplow@0.2.5...@analytics/snowplow@0.3.0) (2022-02-06)
+
+
+### chore
+
+* BREAKING CHANGE update snowplow from v2 to v3 ([03d4570](https://github.com/DavidWells/analytics/commit/03d4570cbcc49781f5a3f2e54f8a8fd84e7e0c0a))
+
+
+### BREAKING CHANGES
+
+* update snowplow from v2 to v3
+
+Signed-off-by: David Wells <>
+
+
+
+
+
 ## [0.2.5](https://github.com/DavidWells/analytics/compare/@analytics/snowplow@0.2.4...@analytics/snowplow@0.2.5) (2021-03-20)
 
 

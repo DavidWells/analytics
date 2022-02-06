@@ -1,6 +1,6 @@
 {
   "name": "@analytics/snowplow",
-  "version": "0.2.5",
+  "version": "0.3.0",
   "description": "Snowplow integration for 'analytics' module for browser & node",
   "projectMeta": {
     "provider": {
@@ -55,8 +55,6 @@
     "@babel/preset-env": "^7.3.1"
   },
   "dependencies": {
-    "@snowplow/browser-tracker": "^3.1.5",
-    "@snowplow/node-tracker": "^3.1.5",
     "@snowplow/browser-plugin-ad-tracking": "^3.1.5",
     "@snowplow/browser-plugin-client-hints": "^3.1.5",
     "@snowplow/browser-plugin-consent": "^3.1.5",
@@ -70,6 +68,8 @@
     "@snowplow/browser-plugin-optimizely-x": "^3.1.5",
     "@snowplow/browser-plugin-performance-timing": "^3.1.5",
     "@snowplow/browser-plugin-site-tracking": "^3.1.5",
-    "@snowplow/browser-plugin-timezone": "^3.1.5"
+    "@snowplow/browser-plugin-timezone": "^3.1.5",
+    "@snowplow/browser-tracker": "^3.1.5",
+    "@snowplow/node-tracker": "^3.1.5"
   }
 }

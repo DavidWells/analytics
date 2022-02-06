@@ -1,6 +1,6 @@
 {
   "name": "@analytics/queue-utils",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Dependency free queue processor",
   "author": "David Wells",
   "license": "MIT",
