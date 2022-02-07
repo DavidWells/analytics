@@ -10,7 +10,7 @@ let osName
 let referrer
 let locale
 let timeZone
-if (process.browser) {
+if (BROWSER) {
   osName = getOSNameBrowser()
   referrer = (isBrowser) ? document.referrer : null
   locale = getBrowserLocale()
@@ -34,7 +34,7 @@ const initialState = {
   library: {
     name: LIB_NAME,
     // TODO fix version number. npm run publish:patch has wrong version
-    version: process.env.VERSION
+    version: VERSION
   },
   timezone: timeZone,
   locale: locale,

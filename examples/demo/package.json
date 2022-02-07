@@ -10,6 +10,7 @@
     "deploy": "netlify deploy --dir build --prod"
   },
   "dependencies": {
+    "@analytics/core": "file:../../packages/analytics-core",
     "@analytics/cookie-utils": "file:../../packages/analytics-util-storage-cookie",
     "@analytics/crazy-egg": "file:../../packages/analytics-plugin-crazy-egg",
     "@analytics/customerio": "file:../../packages/analytics-plugin-customerio",
