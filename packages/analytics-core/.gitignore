@@ -1,5 +1,6 @@
 # node / npm
 node_modules
+_temp-types
 temp-types
 package-lock.json
 

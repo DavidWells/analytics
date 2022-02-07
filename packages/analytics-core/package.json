@@ -22,7 +22,7 @@
   "main": "dist/server/analytics.js",
   "module": "dist/server/analytics.module.js",
   "unpkg": "dist/server/analytics.umd.js",
-  "types": "./types/index.d.ts",
+  "types": "dist/types.d.ts",
   "browser": {
     "./dist/server/analytics.js": "./dist/client/analytics.js",
     "./dist/server/analytics.umd.js": "./dist/client/analytics.umd.js",
@@ -32,9 +32,9 @@
   "scripts": {
     "test": "ava -v",
     "test:watch": "ava -v --watch",
-    "clean": "rimraf lib dist && mkdirp lib dist",
+    "clean": "rimraf _temp-types dist && mkdirp _temp-types dist",
     "prebuild": "npm run clean && npm run types",
-    "types": "../../node_modules/.bin/jsdoc -t ../../node_modules/tsd-jsdoc/dist -r ./src/ -d temp-types && node scripts/types.js",
+    "types": "../../node_modules/.bin/jsdoc -t ../../node_modules/tsd-jsdoc/dist -r ./src/ -d _temp-types && node scripts/types.js",
     "build": "node ../../scripts/build/index.js",
     "postbuild": "npm run minify-dist && node ./scripts/postbuild.js",
     "watch": "node ../../scripts/build/_watch.js",

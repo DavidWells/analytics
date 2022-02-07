@@ -5,22 +5,22 @@
   "license": "MIT",
   "amdName": "_analytics",
   "source": "../src/index.js",
-  "main": "./dist/server/analytics.js",
-  "module": "./dist/server/analytics.module.js",
-  "unpkg": "./dist/server/analytics.umd.js",
+  "main": "./dist/server/analytics-core.js",
+  "module": "./dist/server/analytics-core.module.js",
+  "unpkg": "./dist/server/analytics-core.umd.js",
   "exports": {
-		".": {
-			"require": "./dist/server/analytics.js",
-			"import": "./dist/server/analytics.module.js"
-		}
-	},
-  "types": "./types/index.d.ts",
+    ".": {
+      "require": "./dist/server/analytics-core.js",
+      "import": "./dist/server/analytics-core.module.js"
+    }
+  },
+  "typings": "../lib/types.d.ts",
   "sideEffects": false,
   "scripts": {
     "clean": "rimraf dist ../dist/server",
     "prebuild": "npm run clean",
-    "build": "microbundle --define NODE_ENV=production,BROWSER=false,SERVER=true,VERSION=1.1.1",
-    "gen-esm": "gen-esm-wrapper ./dist/server/analytics.js ./dist/server/index.mjs",
+    "build": "microbundle --define NODE_ENV=production,BROWSER=false,SERVER=true,VERSION=1.1.1 --generateTypes false",
+    "gen-esm": "gen-esm-wrapper ./dist/server/analytics-core.js ./dist/server/index.mjs",
     "copy": "mkdirp ../dist && cp -rf dist/. ../dist",
     "postbuild": "npm run gen-esm && npm run copy"
   },
@@ -33,39 +33,9 @@
     "lib",
     "README.md"
   ],
-  "typings": "lib/types.d.ts",
   "dependencies": {
     "@analytics/global-storage-utils": "^0.1.4",
     "@analytics/type-utils": "^0.5.4",
     "analytics-utils": "^1.0.9"
-  },
-  "ava": {
-    "files": [
-      "**/**/*.test.js"
-    ],
-    "require": [
-      "esm",
-      "@babel/register"
-    ],
-    "verbose": true,
-    "failFast": true,
-    "sources": [
-      "**/*.{js,jsx}"
-    ]
-  },
-  "devDependencies": {
-    "@babel/core": "7.17.0",
-    "@babel/plugin-proposal-class-properties": "7.16.7",
-    "@babel/plugin-transform-runtime": "7.17.0",
-    "@babel/preset-env": "7.16.11",
-    "@babel/register": "7.17.0",
-    "@babel/runtime": "7.17.0",
-    
-    "ava": "^2.2.0",
-    "microbundle": "^0.14.2",
-    "mkdirp": "^0.5.1",
-    "npm-run-all": "^4.1.5",
-    "rimraf": "^2.6.3",
-    "sinon": "7.2.3"
   }
 }

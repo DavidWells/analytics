@@ -21,14 +21,7 @@ import { Debug, composeWithDebug } from './utils/debug'
 import heartBeat from './utils/heartbeat'
 import ensureArray from './utils/ensureArray'
 import enrichMeta from './utils/enrichMeta'
-
-if (BROWSER) {
-  console.log('IS browser')
-}
-
-if (SERVER) {
-  console.log('IS server')
-}
+import './pluginTypeDef'
 
 /**
  * Analytics library configuration
@@ -62,13 +55,13 @@ function analytics(config = {}) {
   const initialUser = config.initialUser || {}
   // @TODO add custom value reolvers for userId and anonId
   // const resolvers = config.resolvers || {}
-  if (BROWSER) {
-    console.log('INIT browser')
-  }
+  // if (BROWSER) {
+  //   console.log('INIT browser')
+  // }
 
-  if (SERVER) {
-    console.log('INIT SERVER')
-  }
+  // if (SERVER) {
+  //   console.log('INIT SERVER')
+  // }
   
   /* Parse plugins array */
   const parsedOptions = (config.plugins || []).reduce((acc, plugin) => {
