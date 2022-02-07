@@ -48,9 +48,18 @@
     "url": "https://github.com/DavidWells/analytics"
   },
   "files": [
-    "dist",
-    "client",
-    "server",
+    "dist/**/*.js",
+    "dist/**/*.js.map",
+    "dist/**/*.d.ts",
+    "dist/**/package.json",
+    "client/**/*.js",
+    "client/**/*.js.map",
+    "client/**/*.d.ts",
+    "client/**/package.json",
+    "server/**/*.js",
+    "server/**/*.js.map",
+    "server/**/*.d.ts",
+    "server/**/package.json",
     "README.md"
   ],
   "dependencies": {
