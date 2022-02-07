@@ -1,3 +1,5 @@
+const analytics = require('analytics')
+
 const mainEntry = require('@analytics/core')
 console.log('mainEntry', mainEntry)
 
@@ -7,7 +9,7 @@ console.log('server', server)
 const client = require('@analytics/core/client')
 console.log('client', client)
 
-const instance = client.Analytics({
+const instance = server.Analytics({
   app: 'node-app',
   plugins: []
 })

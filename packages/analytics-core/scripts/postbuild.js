@@ -1,6 +1,10 @@
 const fs = require('fs')
 const path = require('path')
 
+/*
+No longer in use. To remove
+*/
+
 const filePath = path.join(__dirname, '..', 'dist/@analytics/core.min.js')
 
 // TODO map to urls

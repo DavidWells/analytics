@@ -28,32 +28,20 @@
     "./dist/server/analytics-core.umd.js": "./dist/client/analytics-core.umd.js",
     "./dist/server/analytics-core.module.js": "./dist/client/analytics-core.module.js"
   },
-  "exports": {
-    ".": {
-      "require": "./dist/server/analytics-core.js",
-      "import": "./dist/server/analytics-core.module.js"
-    }
-  },
   "sideEffects": false,
   "scripts": {
     "test": "ava -v",
     "test:watch": "ava -v --watch",
-    "clean": "rimraf _temp-types dist && mkdirp _temp-types dist",
-    "prebuild": "npm run clean && npm run types",
+    "prebuild": "rimraf dist _temp-types",
+    "build": "npm run build-client && npm run build-server",
+    "build-client": "cd client && npm run build",
+    "build-server": "cd server && npm run build",
     "types": "../../node_modules/.bin/jsdoc -t ../../node_modules/tsd-jsdoc/dist -r ./src/ -d _temp-types && node scripts/types.js",
-    "build": "node ../../scripts/build/index.js",
-    "postbuild": "npm run minify-dist && node ./scripts/postbuild.js",
-    "watch": "node ../../scripts/build/_watch.js",
-    "minify-dist": "uglifyjs -mc < dist/@analytics/core.js > dist/@analytics/core.min.js",
+    "postbuild": "npm run types",
     "publish": "git push origin && git push origin --tags",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
-    "release:major": "npm version major && npm publish",
-    "prenew": "rimraf lib dist",
-    "new": "npm run build-client && npm run build-server",
-    "build-client": "cd client && npm run build",
-    "build-server": "cd server && npm run build",
-    "postnew": "npm run types"
+    "release:major": "npm version major && npm publish"
   },
   "repository": {
     "type": "git",
@@ -61,10 +49,10 @@
   },
   "files": [
     "dist",
-    "lib",
+    "client",
+    "server",
     "README.md"
   ],
-  "typings": "lib/types.d.ts",
   "dependencies": {
     "@analytics/global-storage-utils": "^0.1.4",
     "@analytics/type-utils": "^0.5.4",

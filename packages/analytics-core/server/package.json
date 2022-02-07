@@ -1,38 +1,21 @@
 {
-  "name": "analytics/serverside",
+  "name": "@analytics/core",
   "private": true,
-  "version": "0.10.23",
   "license": "MIT",
   "amdName": "_analytics",
   "source": "../src/index.js",
-  "main": "./dist/server/analytics-core.js",
-  "module": "./dist/server/analytics-core.module.js",
-  "unpkg": "./dist/server/analytics-core.umd.js",
-  "exports": {
-    ".": {
-      "require": "./dist/server/analytics-core.js",
-      "import": "./dist/server/analytics-core.module.js"
-    }
-  },
-  "typings": "../lib/types.d.ts",
+  "main": "../dist/server/analytics-core.js",
+  "module": "../dist/server/analytics-core.module.js",
+  "unpkg": "../dist/server/analytics-core.umd.js",
+  "types": "../dist/types.d.ts",
   "sideEffects": false,
   "scripts": {
     "clean": "rimraf dist ../dist/server",
     "prebuild": "npm run clean",
     "build": "microbundle --define NODE_ENV=production,BROWSER=false,SERVER=true,VERSION=1.1.1 --generateTypes false",
-    "gen-esm": "gen-esm-wrapper ./dist/server/analytics-core.js ./dist/server/index.mjs",
-    "copy": "mkdirp ../dist && cp -rf dist/. ../dist",
-    "postbuild": "npm run gen-esm && npm run copy"
+    "gen-esm": "gen-esm-wrapper ../dist/server/analytics-core.js ../dist/server/index.mjs",
+    "postbuild": "npm run gen-esm"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/DavidWells/analytics"
-  },
-  "files": [
-    "dist",
-    "lib",
-    "README.md"
-  ],
   "dependencies": {
     "@analytics/global-storage-utils": "^0.1.4",
     "@analytics/type-utils": "^0.5.4",
