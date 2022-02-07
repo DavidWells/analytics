@@ -5,22 +5,24 @@
   "license": "MIT",
   "amdName": "_analytics",
   "source": "../src/index.js",
-  "main": "../dist/server/analytics.js",
-  "module": "../dist/server/analytics.module.js",
-  "unpkg": "../dist/server/analytics.umd.js",
+  "main": "./dist/server/analytics.js",
+  "module": "./dist/server/analytics.module.js",
+  "unpkg": "./dist/server/analytics.umd.js",
   "exports": {
 		".": {
-			"require": "../dist/server/analytics.js",
-			"import": "../dist/server/analytics.module.js"
+			"require": "./dist/server/analytics.js",
+			"import": "./dist/server/analytics.module.js"
 		}
 	},
   "types": "./types/index.d.ts",
   "sideEffects": false,
   "scripts": {
-    "types": "../../../node_modules/.bin/jsdoc -t ../../../node_modules/tsd-jsdoc/dist -r ../src/ -d ../temp-types && node ../scripts/types.js",
-    "clean": "rimraf \"*.js\" && rimraf \"*.js.map\"",
-    "prebuild": "npm run clean && npm run types",
-    "build": "microbundle --define NODE_ENV=production,BROWSER=false,SERVER=true,VERSION=1.1.1"
+    "clean": "rimraf dist ../dist/server",
+    "prebuild": "npm run clean",
+    "build": "microbundle --define NODE_ENV=production,BROWSER=false,SERVER=true,VERSION=1.1.1",
+    "gen-esm": "gen-esm-wrapper ./dist/server/analytics.js ./dist/server/index.mjs",
+    "copy": "mkdirp ../dist && cp -rf dist/. ../dist",
+    "postbuild": "npm run gen-esm && npm run copy"
   },
   "repository": {
     "type": "git",

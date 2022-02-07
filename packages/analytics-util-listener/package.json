@@ -48,7 +48,7 @@
   "devDependencies": {
     "concurrently": "^6.1.0",
     "esm": "^3.2.25",
-    "microbundle": "^0.13.0",
+    "microbundle": "^0.14.2",
     "servor": "^4.0.2",
     "uvu": "^0.5.1",
     "watchlist": "^0.2.3"
