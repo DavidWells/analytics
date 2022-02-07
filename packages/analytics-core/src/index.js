@@ -22,6 +22,10 @@ import heartBeat from './utils/heartbeat'
 import ensureArray from './utils/ensureArray'
 import enrichMeta from './utils/enrichMeta'
 
+if (BROWSER) {
+  console.log('No')
+}
+
 /**
  * Analytics library configuration
  *
@@ -958,7 +962,7 @@ function analytics(config = {}) {
     }
   })
 
-  if (process.browser) {
+  if (BROWSER) {
     /* Watch for network events */
     watch((offline) => {
       store.dispatch({

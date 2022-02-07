@@ -17,15 +17,16 @@
   ],
   "author": "David Wells <hello@davidwells.io>",
   "license": "MIT",
-  "main": "lib/analytics.cjs.js",
-  "globalName": {
-    "name": "_analytics"
-  },
-  "jsnext:main": "lib/analytics.es.js",
-  "module": "lib/analytics.es.js",
+  "amdName": "_analytics",
+  "source": "src/index.js",
+  "main": "dist/server/analytics.js",
+  "module": "dist/server/analytics.module.js",
+  "unpkg": "dist/server/analytics.umd.js",
+  "types": "./types/index.d.ts",
   "browser": {
-    "./lib/analytics.cjs.js": "./lib/analytics.browser.cjs.js",
-    "./lib/analytics.es.js": "./lib/analytics.browser.es.js"
+    "./dist/server/analytics.js": "./dist/client/analytics.js",
+    "./dist/server/analytics.umd.js": "./dist/client/analytics.umd.js",
+    "./dist/server/analytics.module.js": "./dist/client/analytics.module.js"
   },
   "sideEffects": false,
   "scripts": {
@@ -41,7 +42,13 @@
     "publish": "git push origin && git push origin --tags",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
-    "release:major": "npm version major && npm publish"
+    "release:major": "npm version major && npm publish",
+    "prexbuild": "rimraf lib dist",
+    "new": "npm run build-client && npm run build-server",
+    "build-client": "cd client && npm run build",
+    "build-server": "cd server && npm run build",
+    "xbuild": "microbundle --define NODE_ENV=production,BROWSER=true,VERSION=1.1.1 && npm run xbuild:dev",
+    "xbuild:dev": "microbundle build --no-compress --define NODE_ENV=production,BROWSER=true,VERSION=1.1.1 --external none -f iife,umd -o dist/cdn"
   },
   "repository": {
     "type": "git",
@@ -79,7 +86,9 @@
     "@babel/preset-env": "7.16.11",
     "@babel/register": "7.17.0",
     "@babel/runtime": "7.17.0",
+    
     "ava": "^2.2.0",
+    "microbundle": "^0.14.2",
     "mkdirp": "^0.5.1",
     "npm-run-all": "^4.1.5",
     "rimraf": "^2.6.3",

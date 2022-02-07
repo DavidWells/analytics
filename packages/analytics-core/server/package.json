@@ -1,0 +1,69 @@
+{
+  "name": "analytics/serverside",
+  "private": true,
+  "version": "0.10.23",
+  "license": "MIT",
+  "amdName": "_analytics",
+  "source": "../src/index.js",
+  "main": "../dist/server/analytics.js",
+  "module": "../dist/server/analytics.module.js",
+  "unpkg": "../dist/server/analytics.umd.js",
+  "exports": {
+		".": {
+			"require": "../dist/server/analytics.js",
+			"import": "../dist/server/analytics.module.js"
+		}
+	},
+  "types": "./types/index.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "types": "../../../node_modules/.bin/jsdoc -t ../../../node_modules/tsd-jsdoc/dist -r ../src/ -d ../temp-types && node ../scripts/types.js",
+    "clean": "rimraf \"*.js\" && rimraf \"*.js.map\"",
+    "prebuild": "npm run clean && npm run types",
+    "build": "microbundle --define NODE_ENV=production,BROWSER=false,SERVER=true,VERSION=1.1.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DavidWells/analytics"
+  },
+  "files": [
+    "dist",
+    "lib",
+    "README.md"
+  ],
+  "typings": "lib/types.d.ts",
+  "dependencies": {
+    "@analytics/global-storage-utils": "^0.1.4",
+    "@analytics/type-utils": "^0.5.4",
+    "analytics-utils": "^1.0.9"
+  },
+  "ava": {
+    "files": [
+      "**/**/*.test.js"
+    ],
+    "require": [
+      "esm",
+      "@babel/register"
+    ],
+    "verbose": true,
+    "failFast": true,
+    "sources": [
+      "**/*.{js,jsx}"
+    ]
+  },
+  "devDependencies": {
+    "@babel/core": "7.17.0",
+    "@babel/plugin-proposal-class-properties": "7.16.7",
+    "@babel/plugin-transform-runtime": "7.17.0",
+    "@babel/preset-env": "7.16.11",
+    "@babel/register": "7.17.0",
+    "@babel/runtime": "7.17.0",
+    
+    "ava": "^2.2.0",
+    "microbundle": "^0.14.2",
+    "mkdirp": "^0.5.1",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^2.6.3",
+    "sinon": "7.2.3"
+  }
+}
