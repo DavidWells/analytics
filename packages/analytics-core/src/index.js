@@ -241,6 +241,12 @@ function analytics(config = {}) {
         }, resolve, [callback])
       })
     },
+    
+    // Future feature?
+    // get: () => {
+    //   return store.getState('plugins')
+    // },
+
     /*
      * Load registered analytic providers.
      * @param  {String} plugins - integration namespace
@@ -814,7 +820,6 @@ function analytics(config = {}) {
      * @type {Array}
      */
     events: {
-      all: allSystemEvents,
       core: coreEvents,
       plugins: allPluginEvents,
       // byType: (type) => {} @Todo grab logic from engine and give inspectable events
@@ -1000,8 +1005,6 @@ function analytics(config = {}) {
 // Duplicated strings
 const before = 'before'
 const after = 'after'
-
-export default analytics
 
 /*
  * analytics.init exported for standalone browser build
