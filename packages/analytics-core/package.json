@@ -19,14 +19,20 @@
   "license": "MIT",
   "amdName": "_analytics",
   "source": "src/index.js",
-  "main": "dist/server/analytics.js",
-  "module": "dist/server/analytics.module.js",
-  "unpkg": "dist/server/analytics.umd.js",
+  "main": "dist/server/analytics-core.js",
+  "module": "dist/server/analytics-core.module.js",
+  "unpkg": "dist/server/analytics-core.umd.js",
   "types": "dist/types.d.ts",
   "browser": {
-    "./dist/server/analytics.js": "./dist/client/analytics.js",
-    "./dist/server/analytics.umd.js": "./dist/client/analytics.umd.js",
-    "./dist/server/analytics.module.js": "./dist/client/analytics.module.js"
+    "./dist/server/analytics-core.js": "./dist/client/analytics-core.js",
+    "./dist/server/analytics-core.umd.js": "./dist/client/analytics-core.umd.js",
+    "./dist/server/analytics-core.module.js": "./dist/client/analytics-core.module.js"
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/server/analytics-core.js",
+      "import": "./dist/server/analytics-core.module.js"
+    }
   },
   "sideEffects": false,
   "scripts": {
@@ -70,7 +76,8 @@
     ],
     "require": [
       "esm",
-      "@babel/register"
+      "@babel/register",
+      "./tests/_setup.js"
     ],
     "verbose": true,
     "failFast": true,
