@@ -122,6 +122,7 @@ function snowplowPlugin(pluginConfig = {}) {
 
   return {
     name: config.name,
+    config: config,
     initialize: () => {
       const { collectorUrl, name, trackerSettings } = config;
       if (!collectorUrl) {
