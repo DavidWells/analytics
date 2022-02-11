@@ -33,7 +33,7 @@
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
-    "deploy": "npm run build:dev && npm run sync && netlify deploy --prod --dir dist --site $npm_package_netlifySiteId"
+    "deploy": "npm run build:dev && npm run sync && netlify deploy --prod --dir dist --site 418b86ce-6faa-41cd-997f-5d5616f34e2c"
   },
   "files": [
     "lib",
