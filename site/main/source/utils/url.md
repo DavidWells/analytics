@@ -1,10 +1,8 @@
-<!--
+---
 title: Javascript URL utils
 pageTitle: URL Utils
 description: Utility library for working with URLs
--->
-
-# URL Utilities
+---
 
 A tiny utility library for working with URLs in <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`391 bytes`<!-- AUTO-GENERATED-CONTENT:END -->.
 
