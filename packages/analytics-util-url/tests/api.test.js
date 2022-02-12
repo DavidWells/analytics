@@ -19,7 +19,7 @@ test('parseUrl', async (context) => {
     hostname: 'www.cool.com',
     port: '',
     path: '',
-    query: '',
+    search: '',
     hash: ''
   })
 
@@ -28,7 +28,7 @@ test('parseUrl', async (context) => {
     hostname: 'www.cool.com',
     port: '',
     path: '/my-path',
-    query: '',
+    search: '',
     hash: ''
   })
 
@@ -37,7 +37,7 @@ test('parseUrl', async (context) => {
     hostname: 'www.cool.com',
     port: '',
     path: '/my-path/here',
-    query: '',
+    search: '',
     hash: ''
   })
 
@@ -46,7 +46,7 @@ test('parseUrl', async (context) => {
     hostname: 'www.cool.com',
     port: '',
     path: '/my-path/here',
-    query: 'hello=true',
+    search: 'hello=true',
     hash: ''
   })
 
@@ -55,7 +55,7 @@ test('parseUrl', async (context) => {
     hostname: 'www.cool.com',
     port: '',
     path: '/my-path/here',
-    query: 'hello=true',
+    search: 'hello=true',
     hash: 'my-hash=cool'
   })
 
@@ -64,7 +64,7 @@ test('parseUrl', async (context) => {
     hostname: 'whatever.funky.cool.com',
     port: '',
     path: '',
-    query: '',
+    search: '',
     hash: ''
   })
 })
