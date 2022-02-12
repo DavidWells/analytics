@@ -68,6 +68,7 @@ module.exports = {
           ],
           Tutorials: [
             'tutorials/getting-started',
+            '[Creating plugins](https://getanalytics.io/plugins/)',
             'tutorials/typesafe-analytics',
             'tutorials/handling-campaign-url-parameters',
             'tutorials/sending-provider-specific-events',
