@@ -20,7 +20,8 @@ test('parseUrl', async (context) => {
     port: '',
     path: '',
     search: '',
-    hash: ''
+    hash: '',
+    href: 'https://www.cool.com'
   })
 
   assert.equal(parseUrl('https://www.cool.com/my-path'), {
@@ -29,7 +30,8 @@ test('parseUrl', async (context) => {
     port: '',
     path: '/my-path',
     search: '',
-    hash: ''
+    hash: '',
+    href: 'https://www.cool.com/my-path'
   })
 
   assert.equal(parseUrl('https://www.cool.com/my-path/here'), {
@@ -38,7 +40,8 @@ test('parseUrl', async (context) => {
     port: '',
     path: '/my-path/here',
     search: '',
-    hash: ''
+    hash: '',
+    href: 'https://www.cool.com/my-path/here'
   })
 
   assert.equal(parseUrl('https://www.cool.com/my-path/here?hello=true'), {
@@ -47,7 +50,8 @@ test('parseUrl', async (context) => {
     port: '',
     path: '/my-path/here',
     search: 'hello=true',
-    hash: ''
+    hash: '',
+    href: 'https://www.cool.com/my-path/here?hello=true'
   })
 
   assert.equal(parseUrl('https://www.cool.com/my-path/here?hello=true#my-hash=cool'), {
@@ -56,7 +60,8 @@ test('parseUrl', async (context) => {
     port: '',
     path: '/my-path/here',
     search: 'hello=true',
-    hash: 'my-hash=cool'
+    hash: 'my-hash=cool',
+    href: 'https://www.cool.com/my-path/here?hello=true#my-hash=cool'
   })
 
   assert.equal(parseUrl('https://whatever.funky.cool.com'), {
@@ -65,7 +70,8 @@ test('parseUrl', async (context) => {
     port: '',
     path: '',
     search: '',
-    hash: ''
+    hash: '',
+    href: 'https://whatever.funky.cool.com'
   })
 })
 

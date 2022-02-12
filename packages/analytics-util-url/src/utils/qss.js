@@ -1,16 +1,17 @@
 // Modifed qss https://github.com/lukeed/qss
-import { PREFIX } from '@analytics/type-utils'
 
+const P = '_'
 const N = 'null'
 const T = 'true'
 const F = 'false'
-const nullStr =  PREFIX + N
-const trueStr = PREFIX + T
-const falseStr = PREFIX + F
+const nullStr =  P + N
+const trueStr = P + T
+const falseStr = P + F
 
 export function encode(obj, pfx) {
   var k, i, tmp, str = ''
   for (k in obj) {
+    // if (k === '__proto__' || k === 'constructor') break;
     if ((tmp = obj[k]) !== void 0) {
       if (Array.isArray(tmp)) {
         for (i = 0; i < tmp.length; i++) {
@@ -33,11 +34,12 @@ function format(str) {
   return str
 }
 
-export function decode(str) {
+export function decode(str = '') {
   var tmp, k, out = {}, arr = str.split('&')
   while ((tmp = arr.shift())) {
     tmp = tmp.split('=')
     k = tmp.shift()
+    if (k === '__proto__' || k === 'constructor') break;
     if (out[k] !== void 0) {
       out[k] = [].concat(out[k], toValue(tmp.shift()))
     } else {
