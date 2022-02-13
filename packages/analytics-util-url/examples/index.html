@@ -72,6 +72,7 @@
       <h2>URL utils demo</h2>
       <p>Open up console to see logs.</p>
       <button id="normal">Load normal params</button>
+      <button id="multi">Load multi params</button>
       <button id="structured">Load structured params</button>
       <button id="compressed">Load compressed params</button>
       <pre id="val"></pre>
@@ -139,6 +140,7 @@
       console.log('defaultBrowser', defaultBrowser)
 
       const loadNormal = document.querySelector('#normal')
+      const loadMulti = document.querySelector('#multi')
       const loadStructured = document.querySelector('#structured')
       const loadCompressed = document.querySelector('#compressed')
       const valueDiv = document.querySelector('#val')
@@ -146,7 +148,12 @@
       valueDiv.innerHTML = window.location.search
       
       loadNormal.addEventListener('click', () => {
-        const value = `?utm_source=the_source&utm_medium=camp%20med&utm_term=Bought%20keyword&utm_content=Funny%20Text&utm_campaign=400kpromo`
+        const value = `?utm_source=the_source&utm_medium=camp%20med&utm_term=Bought%20keyword&utm_content=Funny%20Text&utm_campaign=400kpromo&custom=thing#with-hash=value&stuff=hi`
+        window.location.href = `${window.location.origin}${value}`
+      })
+
+      loadMulti.addEventListener('click', () => {
+        const value = `?foo=1&foo=2&foo=3&bar=4&bar=5&bar=6#foo=a&foo=b&foo=c&hash=thing&otherThing=hi&cripty=nice`
         window.location.href = `${window.location.origin}${value}`
       })
 
