@@ -28,7 +28,7 @@
     "sync": "cp examples/index.html dist",
     "watch:dev": "microbundle watch --external none -f iife,umd -o dist/browser --no-compress",
     "watch:test": "watchlist src tests examples -- npm t",
-    "build": "microbundle && npm run build:dev",
+    "build": "microbundle --define NODE_ENV=production && npm run build:dev",
     "build:dev": "microbundle build --external none -f iife,umd -o dist/browser",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
@@ -50,5 +50,8 @@
     "servor": "^4.0.2",
     "uvu": "^0.5.1",
     "watchlist": "^0.2.3"
+  },
+  "dependencies": {
+    "@analytics/type-utils": "workspace:^0.5.4"
   }
 }

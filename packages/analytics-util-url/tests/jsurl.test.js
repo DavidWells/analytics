@@ -1,27 +1,27 @@
 
 import { test } from 'uvu'
 import * as assert from 'uvu/assert'
-import { stringifySearch, parseSearch } from '../src'
+import { compressParams, decompressParams } from '../src'
 
 // test.before.each(ENV.reset);
 test.after(() => console.log('tests done'))
 
-test('stringifySearch', async (context) => {
-  const string = stringifySearch(testObj)
+test('compressParams', async (context) => {
+  const string = compressParams(testObj)
   // console.log('string', string)
   assert.equal(string, result)
 
-  const parsed = parseSearch(string)
+  const parsed = decompressParams(string)
   // console.log('parsed', parsed)
   assert.equal(parsed, testObj)
 })
 
 test('other', async (context) => {
-  const string = stringifySearch({"Target":"Report","Method":"getStats","fields":["Offer.name","Advertiser.company","Stat.clicks","Stat.conversions","Stat.cpa","Stat.payout","Stat.date","Stat.offer_id","Affiliate.company"],"groups":["Stat.offer_id","Stat.date"],"limit":"9999","filters":{"Stat.affiliate_id":{"conditional":"EQUAL_TO","values":"1831"}}})
+  const string = compressParams({"Target":"Report","Method":"getStats","fields":["Offer.name","Advertiser.company","Stat.clicks","Stat.conversions","Stat.cpa","Stat.payout","Stat.date","Stat.offer_id","Affiliate.company"],"groups":["Stat.offer_id","Stat.date"],"limit":"9999","filters":{"Stat.affiliate_id":{"conditional":"EQUAL_TO","values":"1831"}}})
   console.log('string', string)
   // assert.equal(string, result)
 
-  const parsed = parseSearch(string)
+  const parsed = decompressParams(string)
   console.log('parsed', parsed)
   // assert.equal(parsed, testObj)
 })

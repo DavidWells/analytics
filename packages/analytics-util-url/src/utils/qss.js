@@ -1,4 +1,7 @@
-// Modifed qss https://github.com/lukeed/qss
+// Modified qss https://github.com/lukeed/qss
+import { decodeUri } from './decodeUri'
+import { encodeUri } from './encodeUri'
+import { isReserved } from './reserved'
 
 const P = '_'
 const N = 'null'
@@ -11,27 +14,26 @@ const falseStr = P + F
 export function encode(obj, pfx) {
   var k, i, tmp, str = ''
   for (k in obj) {
-    // if (k === '__proto__' || k === 'constructor') break;
     if ((tmp = obj[k]) !== void 0) {
       if (Array.isArray(tmp)) {
         for (i = 0; i < tmp.length; i++) {
           str && (str += '&')
-          str += encodeURIComponent(k) + '=' + encodeURIComponent(format(tmp[i]))
+          str += format(k, tmp[i])
         }
       } else {
         str && (str += '&')
-        str += encodeURIComponent(k) + '=' + encodeURIComponent(format(tmp))
+        str += format(k, tmp)
       }
     }
   }
   return (pfx || '') + str
 }
 
-function format(str) {
-  if (str === null) return nullStr
-  if (str === T) return trueStr
-  if (str === F) return falseStr
-  return str
+function format(k, v) {
+  if (v === null) v = nullStr
+  if (v === T) v = trueStr
+  if (v === F) v = falseStr
+  return encodeUri(k) + '=' + encodeUri(v)
 }
 
 export function decode(str = '') {
@@ -39,7 +41,7 @@ export function decode(str = '') {
   while ((tmp = arr.shift())) {
     tmp = tmp.split('=')
     k = tmp.shift()
-    if (k === '__proto__' || k === 'constructor') break;
+    if (isReserved(k)) break;
     if (out[k] !== void 0) {
       out[k] = [].concat(out[k], toValue(tmp.shift()))
     } else {
@@ -51,7 +53,7 @@ export function decode(str = '') {
 
 function toValue(mix) {
   if (!mix) return ''
-  var str = decodeURIComponent(mix)
+  var str = decodeUri(mix)
   if (str === nullStr) return null
   if (str === trueStr) return T
   if (str === falseStr) return F

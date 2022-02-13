@@ -1,20 +1,19 @@
-import { isString } from '@analytics/type-utils'
+import { isString, isBrowser } from '@analytics/type-utils'
 import { encode, decode } from './utils/qss'
 import { parse, stringify } from './utils/jsurl'
+import { decodeUri } from './utils/decodeUri'
+import { encodeUri } from './utils/encodeUri'
+import { isReserved } from './utils/reserved'
 
 const URL_REGEX = /^(https?)?(?:[\:\/]*)([a-z0-9\.-]*)(?:\:(\d+))?(\/[^?#]*)?(?:\?([^#]*))?(?:#(.*))?$/i
 
-/* Zero dependency backward compatible url parser */
-export function parseUrl(url = '') {
-  const match = url.match(URL_REGEX)
-  return {
-    protocol: match[1] || '',
-    hostname: match[2] || '',
-    port: match[3] || '',
-    path: match[4] || '',
-    search: match[5] || '',
-    hash: match[6] || '',
-  }
+/**
+ * Check if string is URL like
+ * @param {string} url 
+ * @returns 
+ */
+export function isUrlLike(url = '') {
+  return isString(url) && Boolean(url.match(URL_REGEX)[0])
 }
 
 /**
@@ -23,7 +22,33 @@ export function parseUrl(url = '') {
  * @returns 
  */
 export function isUrl(url = '') {
-  return Boolean(url.match(URL_REGEX))
+  if (!isUrlLike(url)) return false
+  const parts = parseUrl(url)
+  return Boolean(parts.href && parts.protocol && parts.hostname)
+}
+
+/**
+ * Check if URL is internal
+ * @param {string} url
+ * @param {string?} currentUrl
+ * @returns {boolean}
+ */
+export function isInternal(url = '', currentUrl) {
+  return parseUrl(url).hostname === getLocation(currentUrl).hostname
+}
+
+/**
+ * Check if URL is external
+ * @param {string} url
+ * @param {string?} currentUrl
+ * @returns {boolean}
+ */
+export function isExternal(url, currentUrl) {
+  return !isInternal(url, currentUrl)
+}
+
+export function getLocation(url) {
+  return (!url && isBrowser) ? window.location : parseUrl(url)
 }
 
 /**
@@ -36,7 +61,7 @@ export function isUrl(url = '') {
  *  > subdomain.my-site.com
  */
 export function getHost(url) {
-  return parseUrl(url).hostname
+  return getLocation(url).hostname
 }
 
 /**
@@ -48,9 +73,8 @@ export function getHost(url) {
  *  getDomain('https://subdomain.my-site.com/')
  *  > my-site.com
  */
-export function getDomain(url = '') {
-  const host = getHost(url)
-  return host.split('.').slice(-2).join('.')
+export function getDomain(url) {
+  return getHost(url).split('.').slice(-2).join('.')
 }
 
 /**
@@ -62,10 +86,9 @@ export function getDomain(url = '') {
  *  getSubDomain('https://subdomain.my-site.com/')
  *  > subdomain
  */
-export function getSubDomain(url = '') {
-  const host = getHost(url)
-  const sections = host.split('.')
-  if (sections.length < 2) return
+export function getSubDomain(url) {
+  const sections = getHost(url).split('.')
+  if (sections.length < 2) return ''
   return sections.slice(0, -2).join('.')
 }
 
@@ -82,42 +105,80 @@ export function trimTld(baseDomain) {
   return (arr.length > 1) ? arr.slice(0, -1).join('.') : baseDomain
 }
 
-
-function trimSearch(s) {
-  return s.charAt(0) === '?' ? s.substring(1) : s
-}
-
 /**
- * Get search string from given url
+ * Get search param values from URL
  * @param  {string} [url] - optional url string. If no url, window.location.search will be used
  * @return {string} url search string
  */
-function getSearch(url = '') {
-  if (!url && isBrowser) return window.location.search.substring(1)
-  return trimSearch(isUrl(url) ? parseUrl(url).search : url)
+export const getSearch = get.bind(null, '?', true)
+
+/**
+ * Get search param value from URL
+ * @param  {string} key - Key of param to get
+ * @param  {string} [url] - optional url to search. If no url, window.location.search will be used
+ * @return {*} value of param
+ */
+export const getSearchValue = get.bind(null, '?', true, null)
+
+/**
+ * Get hash string from given url
+ * @param  {string} [url] - optional url string. If no url, window.location.hash will be used
+ * @return {string} url hash string
+ */
+export const getHash = get.bind(null, '#', true)
+
+const kind = {
+  '?': ['search', getSearch ],
+  '#': ['hash', getHash ]
+}
+
+function trim(s) {
+   return (s.charAt(0) === '#' || s.charAt(0) === '?') ? s.substring(1) : s
+}
+
+function get(prefix, parse, url, key, otherUrl) {
+  const str = trim(getLocation(url || otherUrl)[kind[prefix][0]])
+  if (!parse) return str
+  const v = decode(str)
+  return (key) ? v[key] : v
 }
 
 /**
- * Decode URI string
- *
- * @param {String} s string to decode
- * @returns {String} decoded string
- * @example
- * decode("Bought%20keyword)
- * => "Bought keyword"
+ * Get hash param value from URL
+ * @param  {string} key - Key of param to get
+ * @param  {string} [url] - optional url to search. If no url, window.location.hash will be used
+ * @return {*} value of param
  */
-export function decodeUri(s) {
-  try {
-    return decodeURIComponent(s.replace(/\+/g, ' '))
-  } catch (e) {
-    return null
+export const getHashValue = get.bind(null, '#', true, null)
+
+
+/**
+ * Zero dependency backward compatible url parser
+ * @param {string} url 
+ * @returns {object}
+ */
+export function parseUrl(url = '') {
+  const match = url.match(URL_REGEX)
+  return {
+    href: match[0] || '',
+    protocol: match[1] || '',
+    hostname: match[2] || '',
+    port: match[3] || '',
+    path: match[4] || '',
+    search: match[5] || '',
+    hash: match[6] || '',
   }
 }
 
-export function getParams(query) {
+/**
+ * Parse URL query params
+ * @param {*} query 
+ * @returns 
+ */
+function parseLogic(prefix, query) {
   let temp
   let params = Object.create(null)
-  query = getSearch(query)
+  query = trim(getLocation(query)[kind[prefix][0]])
   const re = /([^&=]+)=?([^&]*)/g
 
   while (temp = re.exec(query)) {
@@ -145,16 +206,27 @@ function assign(obj, keyPath, value) {
   var lastKeyIndex = keyPath.length - 1
   for (var i = 0; i < lastKeyIndex; ++i) {
     var key = keyPath[i]
-    if (key === '__proto__' || key === 'constructor') break;
-    if (!(key in obj)) { 
-      obj[key] = {} 
-    }
+    if (isReserved(key)) break;
+    if (!(key in obj)) obj[key] = {}
     obj = obj[key]
   }
   obj[keyPath[lastKeyIndex]] = value
 }
 
-export function stringifySearch(search) {
+export const parseSearch = parseLogic.bind(null, '?')
+
+export const parseHash = parseLogic.bind(null, '#')
+
+export const parseParams = (x) => {
+  console.log('x', x)
+  return {
+    search: parseSearch(x),
+    hash: parseHash(x)
+  }
+}
+
+// name compress
+export function compressParams(search) {
   search = Object.assign({}, search)
   Object.keys(search).forEach((key) => {
     const val = search[key]
@@ -169,9 +241,9 @@ export function stringifySearch(search) {
   const searchStr = encode(search).toString()
   return searchStr ? `?${searchStr}` : ''
 }
-
-export function parseSearch(searchStr) {
-  let query = decode(getSearch(searchStr))
+// name decompress
+export function decompressParams(searchStr) {
+  let query = getSearch(searchStr)
   // Try to parse any query params that might be json
   for (let key in query) {
     const value = query[key]
@@ -184,6 +256,13 @@ export function parseSearch(searchStr) {
   return query
 }
 
+/* export qss */
+export {
+  encode,
+  decode,
+  encodeUri,
+  decodeUri
+}
 
 /*
 Char counts
