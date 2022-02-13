@@ -10,7 +10,7 @@ const URL_REGEX = /^(https?)?(?:[\:\/]*)([a-z0-9\.-]*)(?:\:(\d+))?(\/[^?#]*)?(?:
 /**
  * Check if string is URL like
  * @param {string} url 
- * @returns 
+ * @returns {boolean}
  */
 export function isUrlLike(url = '') {
   return isString(url) && Boolean(url.match(URL_REGEX)[0])
@@ -19,7 +19,7 @@ export function isUrlLike(url = '') {
 /**
  * Check if string is URL
  * @param {string} url 
- * @returns 
+ * @returns {boolean}
  */
 export function isUrl(url = '') {
   if (!isUrlLike(url)) return false
@@ -30,7 +30,7 @@ export function isUrl(url = '') {
 /**
  * Check if URL is internal
  * @param {string} url
- * @param {string?} currentUrl
+ * @param {string} [currentUrl]
  * @returns {boolean}
  */
 export function isInternal(url = '', currentUrl) {
@@ -40,7 +40,7 @@ export function isInternal(url = '', currentUrl) {
 /**
  * Check if URL is external
  * @param {string} url
- * @param {string?} currentUrl
+ * @param {string} [currentUrl]
  * @returns {boolean}
  */
 export function isExternal(url, currentUrl) {
@@ -65,9 +65,9 @@ export function getHost(url) {
 }
 
 /**
- * Get host domain of url
+ * Get base domain of url
  * @param  {String} url - href of page
- * @return {String} base hostname of page
+ * @return {String} base domain of page
  *
  * @example
  *  getDomain('https://subdomain.my-site.com/')
@@ -78,7 +78,7 @@ export function getDomain(url) {
 }
 
 /**
- * Get host domain of url
+ * Get sub domain of url
  * @param  {String} url - href of page
  * @return {String} sub domain of page
  *
@@ -94,21 +94,21 @@ export function getSubDomain(url) {
 
 /**
  * Remove TLD from domain string
- * @param  {String} baseDomain - host name of site
+ * @param  {String} domain - host name of site
  * @return {String}
  * @example
  *  trimTld('google.com')
  *  > google
  */
-export function trimTld(baseDomain) {
-  const arr = baseDomain.split('.')
-  return (arr.length > 1) ? arr.slice(0, -1).join('.') : baseDomain
+export function trimTld(domain) {
+  const arr = domain.split('.')
+  return (arr.length > 1) ? arr.slice(0, -1).join('.') : domain
 }
 
 /**
  * Get search param values from URL
  * @param  {string} [url] - optional url string. If no url, window.location.search will be used
- * @return {string} url search string
+ * @return {*} url search object
  */
 export const getSearch = get.bind(null, '?', true)
 
@@ -123,7 +123,7 @@ export const getSearchValue = get.bind(null, '?', true, null)
 /**
  * Get hash string from given url
  * @param  {string} [url] - optional url string. If no url, window.location.hash will be used
- * @return {string} url hash string
+ * @return {*} url hash object
  */
 export const getHash = get.bind(null, '#', true)
 
@@ -132,8 +132,13 @@ const kind = {
   '#': ['hash', getHash ]
 }
 
+/**
+ * Trim leading ? or #
+ * @param {String} s 
+ * @returns trimmed string
+ */
 function trim(s) {
-   return (s.charAt(0) === '#' || s.charAt(0) === '?') ? s.substring(1) : s
+  return (s.charAt(0) === '#' || s.charAt(0) === '?') ? s.substring(1) : s
 }
 
 function get(prefix, parse, url, key, otherUrl) {
@@ -151,11 +156,21 @@ function get(prefix, parse, url, key, otherUrl) {
  */
 export const getHashValue = get.bind(null, '#', true, null)
 
+/** 
+ * @typedef {object} UrlDetails
+ * @property {string} href
+ * @property {string} protocol
+ * @property {string} hostname
+ * @property {string} port
+ * @property {string} path
+ * @property {string} search
+ * @property {string} hash
+ */
 
 /**
  * Zero dependency backward compatible url parser
  * @param {string} url 
- * @returns {object}
+ * @returns {UrlDetails}
  */
 export function parseUrl(url = '') {
   const match = url.match(URL_REGEX)
@@ -173,6 +188,13 @@ export function parseUrl(url = '') {
 /**
  * Parse URL query params
  * @param {*} query 
+ * @returns 
+ */
+
+/**
+ * Parse url into object
+ * @param {'?'|'#'} prefix - Type of 
+ * @param {string} query - URL or query string
  * @returns 
  */
 function parseLogic(prefix, query) {
@@ -213,12 +235,21 @@ function assign(obj, keyPath, value) {
   obj[keyPath[lastKeyIndex]] = value
 }
 
+/**
+ * Parse search params
+ * @param  {string} [urlOrSearchString] - optional url string. If no url, window.location.search will be used
+ * @return {object} url search object
+ */
 export const parseSearch = parseLogic.bind(null, '?')
 
+/**
+ * Parse search params
+ * @param  {string} [urlOrHashString] - optional url string. If no url, window.location.hash will be used
+ * @return {object} url search object
+ */
 export const parseHash = parseLogic.bind(null, '#')
 
 export const parseParams = (x) => {
-  console.log('x', x)
   return {
     search: parseSearch(x),
     hash: parseHash(x)

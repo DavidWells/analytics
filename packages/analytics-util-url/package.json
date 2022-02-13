@@ -52,6 +52,6 @@
     "watchlist": "^0.2.3"
   },
   "dependencies": {
-    "@analytics/type-utils": "workspace:^0.5.4"
+    "@analytics/type-utils": "^0.5.4"
   }
 }
