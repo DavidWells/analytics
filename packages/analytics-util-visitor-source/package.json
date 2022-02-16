@@ -1,7 +1,7 @@
 {
   "name": "@analytics/visitor-source",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Get visitor source",
   "author": "David Wells",
   "license": "MIT",
@@ -54,6 +54,6 @@
   },
   "dependencies": {
     "@analytics/type-utils": "^0.5.4",
-    "@analytics/url-utils": "^0.1.0"
+    "@analytics/url-utils": "^0.1.1"
   }
 }
