@@ -1,0 +1,8 @@
+export const AFFILIATE = 'Affiliate'
+export const CAMPAIGN = 'Campaign'
+export const DIRECT = 'Inbound Link'
+export const INTERNAL = 'Internal Link'
+export const SEARCH = 'Search'
+export const SOCIAL = 'Social'
+export const UNKNOWN = 'Unknown'
+export const NA = 'na'
