@@ -456,6 +456,29 @@ importers:
       servor: 4.0.2
       watchlist: 0.2.3
 
+  packages/analytics-util-lead-source:
+    specifiers:
+      '@analytics/storage-utils': ^0.3.0
+      '@analytics/type-utils': ^0.5.4
+      '@analytics/url-utils': workspace:^0.1.0
+      concurrently: ^6.1.0
+      esm: ^3.2.25
+      microbundle: ^0.14.2
+      servor: ^4.0.2
+      uvu: ^0.5.1
+      watchlist: ^0.2.3
+    dependencies:
+      '@analytics/storage-utils': link:../analytics-util-storage
+      '@analytics/type-utils': link:../analytics-util-types
+      '@analytics/url-utils': link:../analytics-util-url
+    devDependencies:
+      concurrently: 6.3.0
+      esm: 3.2.25
+      microbundle: 0.14.2
+      servor: 4.0.2
+      uvu: 0.5.2
+      watchlist: 0.2.3
+
   packages/analytics-util-listener:
     specifiers:
       '@analytics/type-utils': ^0.5.4
@@ -2670,7 +2693,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.17.0
-      '@babel/helper-plugin-utils': 7.14.5
+      '@babel/helper-plugin-utils': 7.16.7
     dev: true
 
   /@babel/plugin-syntax-async-generators/7.8.4_@babel+core@7.5.5:
@@ -2745,7 +2768,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.17.0
-      '@babel/helper-plugin-utils': 7.14.5
+      '@babel/helper-plugin-utils': 7.16.7
     dev: true
 
   /@babel/plugin-syntax-dynamic-import/7.8.3_@babel+core@7.5.5:
@@ -2956,7 +2979,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.17.0
-      '@babel/helper-plugin-utils': 7.14.5
+      '@babel/helper-plugin-utils': 7.16.7
     dev: true
 
   /@babel/plugin-syntax-optional-catch-binding/7.8.3_@babel+core@7.5.5:
