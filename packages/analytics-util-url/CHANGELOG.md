@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-url/compare/@analytics/url-utils@0.1.1...@analytics/url-utils@0.2.0) (2022-02-16)
+
+
+### Features
+
+* add getUrl for clean urls ([7e86cb7](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-url/commit/7e86cb7e94ad223aa45bce79bfd05fd1bcff3a98))
+
+
+
+
+
 ## [0.1.1](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-url/compare/@analytics/url-utils@0.1.0...@analytics/url-utils@0.1.1) (2022-02-16)
 
 **Note:** Version bump only for package @analytics/url-utils
