@@ -4,7 +4,8 @@ import * as assert from 'uvu/assert'
 import { 
   parseUrl, 
   getHost, 
-  getDomain, 
+  getDomain,
+  getUrl,
   getSubDomain,
   getSearch,
   getSearchValue,
@@ -98,6 +99,20 @@ test('parseUrl', async () => {
 //     href: 'NA'
 //   })
 // })
+
+test('getUrl', async () => {
+  assert.equal(getUrl('http://localhost:8081'), 'http://localhost:8081')
+  assert.equal(getUrl('http://localhost:8081/'), 'http://localhost:8081')
+  assert.equal(getUrl('http://localhost:8081/?cool=true#hash=true'), 'http://localhost:8081')
+  assert.equal(getUrl('http://localhost:8081/path-to-my'), 'http://localhost:8081/path-to-my')
+  assert.equal(getUrl('http://localhost:8081/path-to-my?cool=true#hash=true'), 'http://localhost:8081/path-to-my')
+  assert.equal(getUrl('https://cool.com'), 'https://cool.com')
+  assert.equal(getUrl('https://cool.com/'), 'https://cool.com')
+  assert.equal(getUrl('https://nice.wow.awesome.cool.com'), 'https://nice.wow.awesome.cool.com')
+  assert.equal(getUrl('https://nice.wow.awesome.cool.com/'), 'https://nice.wow.awesome.cool.com')
+  assert.equal(getUrl('http://nice.com/wow/?cool=true'), 'http://nice.com/wow')
+  assert.equal(getUrl('http://nice.com/wow/?cool=true#hash=true'), 'http://nice.com/wow')
+})
 
 test('getHost', async () => {
   assert.equal(getHost('https://www.cool.com'), 'www.cool.com')

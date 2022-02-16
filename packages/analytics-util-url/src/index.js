@@ -152,10 +152,9 @@ export function getHost(url) {
  *  > https://subdomain.my-site.com/path-to/page/here
  */
 export function getUrl(url) {
-  const { protocol, hostname, pathname } = getLocation(url)
-  const page = `${protocol}://${hostname}${pathname}`
-  const last = page.charAt(page.length - 1)
-  return (last === '/') ? page.slice(0, -1) : page
+  const { protocol, hostname, pathname, port } = getLocation(url)
+  const path = (pathname.charAt(pathname.length - 1) === '/') ? pathname.slice(0, -1) : pathname
+  return `${protocol}://${hostname}${(port) ? `:${port}` : '' }${path}`
 }
 
 /**
