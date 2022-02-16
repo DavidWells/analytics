@@ -1,4 +1,4 @@
-import { isString, isBrowser, isRegex } from '@analytics/type-utils'
+import { isBrowser, isString, isUndefined, isRegex } from '@analytics/type-utils'
 import { decodeUri } from './utils/decodeUri'
 import { encodeUri } from './utils/encodeUri'
 import { isReserved } from './utils/reserved'
@@ -7,19 +7,74 @@ import { parse, stringify } from './utils/jsurl'
 
 const HASH = '#'
 const SEARCH = '?'
+const ALL = /.*/
+const kind = {
+  '#': 'hash',
+  '?': 'search',
+}
+
+/******************************************************************************************
+ * General Utilities
+ ******************************************************************************************/
 
 /**
  * URL Regex pattern
+ * @type {RegExp}
  */
 export const URL_REGEX = /^(https?)?(?:[\:\/]*)([a-z0-9\.-]*)(?:\:(\d+))?(\/[^?#]*)?(?:\?([^#]*))?(?:#(.*))?$/i
+
+/** 
+ * @typedef {object} UrlDetails
+ * @property {string} href
+ * @property {string} protocol
+ * @property {string} hostname
+ * @property {string} port
+ * @property {string} path
+ * @property {string} search
+ * @property {string} hash
+ */
+
+/**
+ * Zero dependency backward compatible url parser
+ * @param {string} url 
+ * @returns {UrlDetails}
+ */
+export function parseUrl(url = '') {
+  const match = url.match(URL_REGEX)
+  return {
+    href: match[0] || '',
+    protocol: match[1] || '',
+    hostname: match[2] || '',
+    port: match[3] || '',
+    path: match[4] || '',
+    search: match[5] || '',
+    hash: match[6] || '',
+  }
+}
+
+
+/* export qss */
+export {
+  encode,
+  decode,
+  encodeUri,
+  decodeUri
+}
+
+
+/******************************************************************************************
+ * Type checkers utilities
+ ******************************************************************************************/
 
 /**
  * Check if string is URL like
  * @param {string} url 
  * @returns {boolean}
  */
-export function isUrlLike(url = '') {
-  return isString(url) && Boolean(url.match(URL_REGEX)[0])
+export function isUrlLike(url) {
+  if (!isString(url)) return false
+  const match = url.match(URL_REGEX)
+  return match && (match[2].indexOf('.') > -1 || isLocalHost(match[2]))
 }
 
 /**
@@ -49,12 +104,30 @@ export function isInternal(url, currentUrl) {
  * @param {string} [currentUrl]
  * @returns {boolean}
  */
-export function isExternal(url = '', currentUrl) {
+export function isExternal(url, currentUrl) {
   return parseUrl(url).hostname !== getLocation(currentUrl).hostname
 }
 
+/**
+ * Check if URL is localhost
+ * @param {string} url
+ * @returns {boolean}
+ */
+export function isLocalHost(url = '') {
+  return url.indexOf('localhost') !== -1 || url.indexOf('127.0.0.1') !== -1
+}
+
+/******************************************************************************************
+ * Getters
+ ******************************************************************************************/
+
+/**
+ * Get location data of URL
+ * @param {string} url
+ * @returns {object}
+ */
 export function getLocation(url) {
-  return (!url && isBrowser) ? window.location : parseUrl(url)
+  return (isUndefined(url) && isBrowser) ? window.location : parseUrl(url)
 }
 
 /**
@@ -111,92 +184,233 @@ export function trimTld(domain) {
   return (arr.length > 1) ? arr.slice(0, -1).join('.') : domain
 }
 
-/**
- * Get search param values from URL
- * @param  {string} [url] - optional url string. If no url, window.location.search will be used
- * @return {*} url search object
- */
-export const getSearch = get.bind(null, SEARCH, true)
+// GET logic
+function get(prefix, url, keyOrAsString, otherUrl) {
+  const str = getString((url || otherUrl), prefix)
+  if (keyOrAsString === true) return str
+  const v = decode(str)
+  return (keyOrAsString) ? v[keyOrAsString] : v
+}
+
+function getString(url, prefix) {
+  const s = getLocation(url)[kind[prefix]]
+  return (s.charAt(0) === prefix) ? s.substring(1) : s
+}
 
 /**
- * Get search param value from URL
+ * Strip a query parameter from a url string
+ * @param  {string} url   - url with query parameters
+ * @param  {string} param - parameter to strip
+ * @return {string} cleaned url
+ */
+export function paramsClean(prefix, search, param) {
+  const isPattern = isRegex(param)
+  if (!isPattern && search.indexOf(param) === -1) {
+    return url
+  }
+  // remove all matching params from URL
+  const match = (isPattern) ? param.source : `\\b${param}\\b`
+  const regex = new RegExp(`(\\&|\\${prefix})(${match})(=?[_A-Za-z0-9"+=.\\/\\-@%]+)?`, 'g')
+  // console.log('regex', regex)
+  const cleanSearch = search.replace(regex, '').replace(/^&/, prefix)
+  // replace search params with clean params
+  return url.replace(search, cleanSearch)
+}
+
+/**
+ * Removes params from url
+ * @param {'?'|'#'} prefix - Type of location data
+ * @param {string|RegExp} param - param key to remove from current URL
+ */
+function removeParamByKey(prefix, param = ALL, url) {
+  const location = getLocation(url)
+  const search = prefix + getString(url, prefix)
+  const isPattern = isRegex(param)
+  if (!isPattern && search.indexOf(param) === -1) {
+    return url
+  }
+  const match = (isPattern) ? param.source : `\\b${param}\\b`
+  const regex = new RegExp(`(\\&|\\${prefix})(${match})(=?[_A-Za-z0-9"+=.\\/\\-@%]+)?`, 'g')
+  const cleanSearch = search.replace(regex, '').replace(/^&/, prefix)
+  // replace search params with clean params
+  const cleanUrl = location.href.replace(search, cleanSearch)
+  if (isBrowser && !url && location.href !== cleanUrl) {
+    const { history } = window
+    if (!history && !history.replaceState) return
+    /* replace URL with history API */
+    history.replaceState({}, '', cleanUrl)
+  }
+  return cleanUrl
+}
+
+/******************************************************************************************
+ * Search Utilities
+ ******************************************************************************************/
+
+/** 
+ * KeyValueObject
+ * @typedef {{[key: string]: any}} KeyValueObject
+ */
+
+/** 
+ * Search values
+ * @typedef {KeyValueObject} SearchValues
+ */
+
+/**
+ * Get search param value from URL as object. If no url, window.location.search will be used.
+ * If key passed in will return specific value if found.
+ * @callback GetSearch
+ * @param  {string} [url] - optional url to search. Default: window.location.search
+ * @param  {string|boolean} [keyOrReturnAsStringBool] - optional key to look for. Or boolean set to string
+ * @return {SearchValues|string|*} url search object
+ */
+
+/** @type {GetSearch} */
+export const getSearch = get.bind(null, SEARCH)
+
+/**
+ * Get search param value by key from URL
+ * @callback GetSearchValue
  * @param  {string} key - Key of param to get
  * @param  {string} [url] - optional url to search. If no url, window.location.search will be used
  * @return {*} value of param
  */
-export const getSearchValue = get.bind(null, SEARCH, true, null)
+/** @type {GetSearchValue} */
+export const getSearchValue = get.bind(null, SEARCH, null)
 
 /**
- * Get hash string from given url
- * @param  {string} [url] - optional url string. If no url, window.location.hash will be used
- * @return {*} url hash object
+ * Remove search param from url in browser
+ * @callback RemoveSearch
+ * @param  {string|RegExp} keyOrRegexPattern - param key to remove from current URL
+ * @param  {string} [url] - optional url clean. If supplied browser won't update current URL bar
+ * @return {string} cleanedUrl
  */
-export const getHash = get.bind(null, HASH, true)
+/** @type {RemoveSearch} */
+export const removeSearch = removeParamByKey.bind(null, SEARCH)
 
-const kind = {
-  '?': ['search', getSearch ],
-  '#': ['hash', getHash ]
-}
 
-/**
- * Trim leading ? or #
- * @param {String} s 
- * @returns trimmed string
- */
-function trim(s) {
-  const start = s.charAt(0)
-  return (start === HASH || start === SEARCH) ? s.substring(1) : s
-}
-
-function get(prefix, parse, url, key, otherUrl) {
-  const str = trim(getLocation(url || otherUrl)[kind[prefix][0]])
-  if (!parse) return str
-  const v = decode(str)
-  return (key) ? v[key] : v
-}
-
-/**
- * Get hash param value from URL
- * @param  {string} key - Key of param to get
- * @param  {string} [url] - optional url to search. If no url, window.location.hash will be used
- * @return {*} value of param
- */
-export const getHashValue = get.bind(null, HASH, true, null)
+/******************************************************************************************
+ * Hash Utilities
+ ******************************************************************************************/
 
 /** 
- * @typedef {object} UrlDetails
- * @property {string} href
- * @property {string} protocol
- * @property {string} hostname
- * @property {string} port
- * @property {string} path
- * @property {string} search
- * @property {string} hash
+ * Hash values
+ * @typedef {KeyValueObject} HashValues
  */
 
 /**
- * Zero dependency backward compatible url parser
- * @param {string} url 
- * @returns {UrlDetails}
+ * Get hash param value from URL as object. If no url, window.location.hash will be used.
+ * If key passed in will return specific value if found.
+ * @callback GetHash
+ * @param  {string} [url] - optional url to search. Default: window.location.hash
+ * @param  {string|boolean} [keyOrReturnAsStringBool] - optional key to look for. Or boolean set to string
+ * @return {HashValues|string|*} url hash object
  */
-export function parseUrl(url = '') {
-  const match = url.match(URL_REGEX)
+
+/** @type {GetHash} */
+export const getHash = get.bind(null, HASH)
+
+/**
+ * Get specific hash value from URL. If no url, window.location.hash will be used
+ * @callback GetHashValue
+ * @param  {string} key - Key of param to get
+ * @param  {string} [url] - optional url to search. Default: window.location.hash
+ * @return {*} value of param
+ */
+/** @type {GetHashValue} */
+export const getHashValue = get.bind(null, HASH, null)
+
+
+/**
+ * Remove hash param from hash url in browser
+ * @callback RemoveHash
+ * @param  {string|RegExp} keyOrRegexPattern - param key to remove from current URL
+ * @param  {string} [url] - optional url clean. If supplied browser won't update current URL bar
+ * @return {string} cleanedUrl
+ */
+/** @type {RemoveHash} */
+export const removeHash = removeParamByKey.bind(null, HASH)
+
+/******************************************************************************************
+ * Param Utilities
+ ******************************************************************************************/
+
+/**
+ * @typedef ParamDetails
+ * @property {SearchValues} search - values from search
+ * @property {HashValues} hash - values from hash
+ */
+
+/**
+ * Get hash and search params
+ * @param {string} [key] key to look for
+ * @returns {ParamDetails}
+ */
+export const getParams = (key) => {
   return {
-    href: match[0] || '',
-    protocol: match[1] || '',
-    hostname: match[2] || '',
-    port: match[3] || '',
-    path: match[4] || '',
-    search: match[5] || '',
-    hash: match[6] || '',
+    search: getSearch(key),
+    hash: getHash(key)
   }
 }
 
 /**
- * Parse URL query params
- * @param {*} query 
- * @returns 
+ * Remove values from hash and search
+ * @param {string|RegExp} [key] key to remove
+ * @returns {void}
  */
+export const removeParams = (key) => {
+  removeSearch(key)
+  removeHash(key)
+}
+
+/******************************************************************************************
+ * Compress params
+ ******************************************************************************************/
+
+/**
+ * Compress search params object to string
+ * @param {object} search 
+ * @returns {string}
+ */
+export function compressParams(search) {
+  search = Object.assign({}, search)
+  Object.keys(search).forEach((key) => {
+    const val = search[key]
+    if (isUndefined(val)) {
+      delete search[key]
+    } else if (val && typeof val === 'object' && val !== null) {
+      try {
+        search[key] = stringify(val)
+      } catch (err) {}
+    }
+  })
+  const searchStr = encode(search).toString()
+  return searchStr ? `?${searchStr}` : ''
+}
+
+/**
+ * Decompress search params
+ * @param {string} searchStr 
+ * @returns {object}
+ */
+export function decompressParams(searchStr) {
+  let query = getSearch(searchStr)
+  // Try to parse any query params that might be json
+  for (let key in query) {
+    const value = query[key]
+    if (isString(value)) {
+      try {
+        query[key] = parse(value)
+      } catch (err) {}
+    }
+  }
+  return query
+}
+
+/******************************************************************************************
+ * Complex object parsers
+ ******************************************************************************************/
 
 /**
  * Parse url into object
@@ -207,7 +421,7 @@ export function parseUrl(url = '') {
 function parseLogic(prefix, query) {
   let temp
   let params = Object.create(null)
-  query = trim(getLocation(query)[kind[prefix][0]])
+  query = (isUrlLike(query) || !query) ? getString(query, prefix) : query
   const re = /([^&=]+)=?([^&]*)/g
 
   while (temp = re.exec(query)) {
@@ -247,120 +461,23 @@ function assign(obj, keyPath, value) {
  * @param  {string} [urlOrSearchString] - optional url string. If no url, window.location.search will be used
  * @return {object} url search object
  */
-export const parseSearch = parseLogic.bind(null, SEARCH)
+export const complexParseSearch = parseLogic.bind(null, SEARCH)
 
 /**
  * Parse search params
  * @param  {string} [urlOrHashString] - optional url string. If no url, window.location.hash will be used
  * @return {object} url search object
  */
-export const parseHash = parseLogic.bind(null, HASH)
+export const complexParseHash = parseLogic.bind(null, HASH)
 
-export const parseParams = (x) => {
+
+export const complexParseParams = (key) => {
   return {
-    search: parseSearch(x),
-    hash: parseHash(x)
+    search: complexParseSearch(key),
+    hash: complexParseHash(key)
   }
 }
 
-/**
- * Compress search params object to string
- * @param {object} search 
- * @returns {string}
- */
-export function compressParams(search) {
-  search = Object.assign({}, search)
-  Object.keys(search).forEach((key) => {
-    const val = search[key]
-    if (typeof val === 'undefined' || val === undefined) {
-      delete search[key]
-    } else if (val && typeof val === 'object' && val !== null) {
-      try {
-        search[key] = stringify(val)
-      } catch (err) {}
-    }
-  })
-  const searchStr = encode(search).toString()
-  return searchStr ? `?${searchStr}` : ''
-}
-
-/**
- * Decompress search params
- * @param {string} searchStr 
- * @returns {object}
- */
-export function decompressParams(searchStr) {
-  let query = getSearch(searchStr)
-  // Try to parse any query params that might be json
-  for (let key in query) {
-    const value = query[key]
-    if (isString(value)) {
-      try {
-        query[key] = parse(value)
-      } catch (err) {}
-    }
-  }
-  return query
-}
-
-
-/**
- * Strip a query parameter from a url string
- * @param  {string} url   - url with query parameters
- * @param  {string} param - parameter to strip
- * @return {string} cleaned url
- */
-export function paramsClean(url, param, prefix = SEARCH) {
-  const search = prefix + trim(getLocation(url)[kind[prefix][0]])
-  const isPattern = isRegex(param)
-  if (!search || !isPattern && search.indexOf(param) === -1) {
-    return url
-  }
-  // remove all matching params from URL
-  const match = (isPattern) ? param.source : `\\b${param}\\b`
-  const regex = new RegExp(`(\\&|\\${prefix})(${match})(=?[_A-Za-z0-9"+=.\\/\\-@%]+)?`, 'g')
-  // console.log('regex', regex)
-  const cleanSearch = search.replace(regex, '').replace(/^&/, prefix)
-  // replace search params with clean params
-  return url.replace(search, cleanSearch)
-}
-
-/**
- * Removes params from url in browser
- * @param {'?'|'#'} prefix - Type of location data
- * @param {string} param - param key to remove from current URL
- */
-function paramsRemove(prefix, param) {
-  if (!isBrowser) return
-  const { history, location } = window
-  if (!history && !history.replaceState) return 
-  const url = location.href
-  const cleanUrl = paramsClean(url, param, prefix)
-  /* replace URL with history API */
-  if (url !== cleanUrl) {
-    history.replaceState({}, '', cleanUrl)
-  }
-}
-
-/**
- * Remove param from search url in browser
- * @param  {string} param - param key to remove from current URL
- */
-export const searchRemove = paramsRemove.bind(null, SEARCH)
-
-/**
- * Remove param from hash url in browser
- * @param  {string} param - param key to remove from current URL
- */
-export const hashRemove = paramsRemove.bind(null, HASH)
-
-/* export qss */
-export {
-  encode,
-  decode,
-  encodeUri,
-  decodeUri
-}
 
 /*
 Char counts

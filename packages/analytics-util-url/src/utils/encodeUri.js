@@ -1,8 +1,8 @@
 /**
  * Encode URI string
  *
- * @param {String} s string to decode
- * @returns {String} decoded string
+ * @param {String} s string to encode
+ * @returns {String} encoded string
  * @example
  * encodeUri("Bought keyword")
  * => "Bought%20keyword"

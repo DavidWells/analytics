@@ -59,15 +59,6 @@ test('(encode) array - nested', t => {
 	assert.is.not(out, val, 'does NOT match native value')
 })
 
-test('(encode) prefix', t => {
-	let foo = encode({ foo:123, bar:'baz' }, '?')
-	assert.is(foo, '?foo=123&bar=baz', 'treats second args as prefix')
-	let bar = encode({ foo:123 }, false)
-	assert.is(bar, 'foo=123', 'ignores falsey prefixes')
-	let baz = encode({ foo:123 }, 'http://baz.com/a/b/c?')
-	assert.is(baz, 'http://baz.com/a/b/c?foo=123', 'keeps entire prefix')
-})
-
 test('(decode) simple', t => {
 	let str = 'foo=foo&bar=bar1&bar=bar2'
 	let out = decode(str)

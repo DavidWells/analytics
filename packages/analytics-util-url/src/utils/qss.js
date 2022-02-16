@@ -11,7 +11,12 @@ const nullStr =  P + N
 const trueStr = P + T
 const falseStr = P + F
 
-export function encode(obj, pfx) {
+/**
+ * Returns the formatted querystring.
+ * @param {KeyValueObject} obj - The object that contains all query parameter keys & their values.
+ * @returns {String}
+ */
+export function encode(obj) {
   var k, i, tmp, str = ''
   for (k in obj) {
     if ((tmp = obj[k]) !== void 0) {
@@ -26,7 +31,7 @@ export function encode(obj, pfx) {
       }
     }
   }
-  return (pfx || '') + str
+  return str
 }
 
 function format(k, v) {
@@ -36,6 +41,11 @@ function format(k, v) {
   return encodeUri(k) + '=' + encodeUri(v)
 }
 
+/**
+ * Returns an Object with decoded keys and values.
+ * @param {String} str - The query string, without its leading ? character.
+ * @returns {KeyValueObject}
+ */
 export function decode(str = '') {
   var tmp, k, out = {}, arr = str.split('&')
   while ((tmp = arr.shift())) {
@@ -51,9 +61,9 @@ export function decode(str = '') {
   return out
 }
 
-function toValue(mix) {
-  if (!mix) return ''
-  var str = decodeUri(mix)
+function toValue(v) {
+  if (!v) return ''
+  var str = decodeUri(v)
   if (str === nullStr) return null
   if (str === trueStr) return T
   if (str === falseStr) return F
