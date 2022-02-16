@@ -3,10 +3,10 @@ import {
   AFFILIATE,
   CAMPAIGN,
   DIRECT,
+  INBOUND,
   INTERNAL,
   SOCIAL,
   SEARCH,
-  UNKNOWN,
   NA,
 } from '../constants'
 
@@ -71,7 +71,7 @@ export function parseReferrer(referrer = '', currentUrl) {
   console.log('params', params)
   /** */
   let result = {
-    type: (!referrer) ? UNKNOWN : (external) ? DIRECT : INTERNAL,
+    type: (!referrer) ? DIRECT : (external) ? INBOUND : INTERNAL,
     referrer: referrer,
     isExternal: external,
     ts: new Date().toISOString()
