@@ -152,6 +152,10 @@
       console.log(parseReferrer('http://glocal.com/second-page', baseUrl))
       console.log(parseReferrer('http://glocal.com/third-page', baseUrl))
 
+      /* Sub domains */
+      console.log(parseReferrer('http://my-sub-domain.xyz.com/third-page', 'http://my-sub-domain.xyz.com/'))
+      console.log(parseReferrer('http://my-sub-domain.xyz.com/xyz-page', 'http://xyz.com/'))
+
       /* Unknown */
       console.log(parseReferrer(''))
 

@@ -4,15 +4,11 @@ import * as assert from 'uvu/assert'
 import { 
   parseReferrer, 
   AFFILIATE,
-  AGENT,
-  DISPLAY,
   DIRECT,
-  PAID_SEARCH,
-  PAID_SOCIAL,
+  INBOUND,
   SOCIAL,
   SEARCH,
   NA,
-  UNKNOWN,
 } from '../src'
 
 test.after(() => console.log('tests done'))
@@ -22,7 +18,8 @@ test('API is exposed', async () => {
 })
 
 function clean(obj) {
-  delete obj.ts
+  delete obj.date
+  delete obj.entry
   return obj
 }
 
@@ -81,12 +78,12 @@ test('parseReferrer search', async () => {
   })
 })
 
-test('parseReferrer direct', async () => {
+test('parseReferrer inbound link', async () => {
   const urlOne = 'https://github.com'
   const one = parseReferrer(urlOne)
   // console.log('direct one', one)
-  assert.equal(clean(one), { 
-    type: DIRECT,
+  assert.equal(clean(one), {
+    type: INBOUND,
     domain: 'github.com',
     hostname: 'github.com',
     referrer: urlOne,
@@ -96,8 +93,8 @@ test('parseReferrer direct', async () => {
   const urlTwo = 'https://lololol.coool.com/path/to/thing-xyz'
   const two = parseReferrer(urlTwo)
   // console.log('direct two', two)
-  assert.equal(clean(two), { 
-    type: DIRECT,
+  assert.equal(clean(two), {
+    type: INBOUND,
     domain: 'coool.com',
     hostname: 'lololol.coool.com',
     referrer: urlTwo,
@@ -107,7 +104,7 @@ test('parseReferrer direct', async () => {
   const inbound = parseReferrer('http://hahaa.site-xyz.com/lol', 'http://glocal.com/')
   // console.log('inbound', inbound)
   assert.equal(clean(inbound), {
-    type: DIRECT,
+    type: INBOUND,
     domain: 'site-xyz.com',
     hostname: 'hahaa.site-xyz.com',
     referrer: "http://hahaa.site-xyz.com/lol",
@@ -121,7 +118,7 @@ test('parseReferrer social', async () => {
   console.log('twitterSocial', twitterSocial)
   assert.equal(clean(twitterSocial), {
     type: SOCIAL,
-    domain: 'twitter.com',
+    value: 'twitter.com',
     hostname: 'twitter.com',
     referrer: twitterUrl,
     isExternal: true
@@ -132,7 +129,7 @@ test('parseReferrer social', async () => {
   console.log('fbSocial', fbSocial)
   assert.equal(clean(fbSocial), {
     type: SOCIAL,
-    domain: 'facebook.com',
+    value: 'facebook.com',
     hostname: 'facebook.com',
     referrer: fbUrl,
     isExternal: true

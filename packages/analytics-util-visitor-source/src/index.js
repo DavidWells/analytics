@@ -29,9 +29,10 @@ export function getVisitorSource({
   currentUrl,
   mapper
 }) {
+  const location = getLocation(currentUrl)
   const refData = parseReferrer(
     getReferrer(referrer), // Referrer
-    getLocation(currentUrl).href // Current Href
+    location.href // Current Href
   )
   return (mapper) ? mapper(refData) : refData
 }

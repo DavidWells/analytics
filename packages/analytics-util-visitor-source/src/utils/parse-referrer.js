@@ -1,4 +1,13 @@
-import { parseUrl, getSearch, isExternal, getDomain, trimTld } from '@analytics/url-utils'
+import { 
+  parseUrl, 
+  getSearch,
+  decode,
+  getUrl, 
+  getDomain,
+  isExternal, 
+  trimTrailingSlash,
+  trimTld 
+} from '@analytics/url-utils'
 import {
   AFFILIATE,
   CAMPAIGN,
@@ -60,39 +69,49 @@ const socials = [
  * @returns {ReferralData}
  */
 export function parseReferrer(referrer = '', currentUrl) {
-  const urlData = parseUrl(referrer)
-  const domain = getDomain(urlData.hostname)
+  const { search, hash, hostname } = parseUrl(currentUrl)
+  const currentDomain = getDomain(hostname)
+  const refData = parseUrl(referrer)
+  const refDomain = getDomain(refData.hostname)
+  const params = decode(search)
+  const isInternal = currentDomain === refDomain
+  const isSubDomain = isInternal && (hostname !== refData.hostname)
   const external = isExternal(referrer, currentUrl)
-  const params = currentUrl ? getSearch(currentUrl) : {}
+  const isExternalLink = external && !isSubDomain
   /*
-  const local = isLocalHost(referrer)
+  // const local = isLocalHost(referrer)
   console.log('isExternal', external)
-  console.log('urlData', urlData)
+  console.log('refData', refData)
   console.log('params', params)
   /** */
   let result = {
-    type: (!referrer) ? DIRECT : (external) ? INBOUND : INTERNAL,
-    referrer: referrer,
-    isExternal: external,
-    ts: new Date().toISOString()
-  }
-  if (urlData.hostname) {
-    result.hostname = urlData.hostname
-  }
-  if (domain) {
-    result.domain =domain
+    type: (!referrer) ? DIRECT : (isExternalLink) ? INBOUND : INTERNAL,
+    date: new Date().toISOString(),
+    entry: {
+      page: getUrl(currentUrl),
+      search,
+      hash
+    },
+    referrer: {
+      src: trimTrailingSlash(referrer),
+      hostname: refData.hostname,
+      domain: refDomain,
+      isExternal: isExternalLink,
+      isInternal,
+      isInternalSubDomain: isSubDomain,
+    },
   }
 
-  const { ref, utm_medium } = params
+  const { ref, utm_medium, utm_source } = params
 
   /* UTM parameters */
-  if (utm_medium) {
+  if (utm_medium || utm_source) {
     const campaign = checkGA(params)
     // console.log('campaign', campaign)
     result = {
       ...result,
-      ...campaign,
-      type: CAMPAIGN
+      type: CAMPAIGN,
+      data: campaign,
     }
   }
 
@@ -101,32 +120,36 @@ export function parseReferrer(referrer = '', currentUrl) {
     return {
       ...result,
       type: AFFILIATE,
-      value: ref
+      data: { 
+        name: ref 
+      }
     }
   }
 
-  if (!domain) {
+  if (!refDomain) {
     return result
   }
 
   /* Check search engines */
-  const name = (domain.indexOf(googleKey) > -1) ? googleKey : domain
+  const name = (refDomain.indexOf(googleKey) > -1) ? googleKey : refDomain
   const engineKey = searchEngines[name]
   if (engineKey) {
     const term = getSearch(referrer, engineKey)
     return {
       ...result,
       type: SEARCH,
-      term: term || NA,
-      value: trimTld(name),
+      data: {
+        term: term || NA,
+        engine: trimTld(name),
+      }
     }
   }
 
   /* Check socials */
-  const isSocial = socials.find((urls) => urls.some((url) => domain === url))
+  const isSocial = socials.find((urls) => urls.some((url) => refDomain === url))
   // console.log('isSocial', isSocial)
   if (isSocial) {
-    result.domain = isSocial[0]
+    result.data = { site: isSocial[0] }
     if (result.type !== AFFILIATE) {
       result.type = SOCIAL
     }

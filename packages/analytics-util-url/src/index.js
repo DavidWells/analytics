@@ -153,8 +153,7 @@ export function getHost(url) {
  */
 export function getUrl(url) {
   const { protocol, hostname, pathname, port } = getLocation(url)
-  const path = (pathname.charAt(pathname.length - 1) === '/') ? pathname.slice(0, -1) : pathname
-  return `${protocol}://${hostname}${(port) ? `:${port}` : '' }${path}`
+  return `${protocol}://${hostname}${(port) ? `:${port}` : '' }${trimTrailingSlash(pathname)}`
 }
 
 /**
@@ -183,6 +182,17 @@ export function getSubDomain(url) {
   const sections = getHost(url).split('.')
   if (sections.length < 2) return ''
   return sections.slice(0, -2).join('.')
+}
+
+/**
+ * Trim trailing slash
+ * @param {String} str - String to trim
+ * @example
+ *  trimTrailingSlash('google.com/')
+ *  > google.com
+ */
+export function trimTrailingSlash(str = '') {
+  return (str.charAt(str.length - 1) === '/') ? str.slice(0, -1) : str
 }
 
 /**
