@@ -140,7 +140,7 @@ export function parseReferrer(referrer = '', currentUrl) {
       type: SEARCH,
       data: {
         term: term || NA,
-        engine: trimTld(name),
+        name: trimTld(name),
       }
     }
   }
