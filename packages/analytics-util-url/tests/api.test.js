@@ -30,7 +30,7 @@ test('parseUrl', async () => {
     protocol: 'https',
     hostname: 'www.cool.com',
     port: '',
-    path: '',
+    pathname: '',
     search: '',
     hash: '',
     href: 'https://www.cool.com'
@@ -40,7 +40,7 @@ test('parseUrl', async () => {
     protocol: 'https',
     hostname: 'www.cool.com',
     port: '',
-    path: '/my-path',
+    pathname: '/my-path',
     search: '',
     hash: '',
     href: 'https://www.cool.com/my-path'
@@ -50,7 +50,7 @@ test('parseUrl', async () => {
     protocol: 'https',
     hostname: 'www.cool.com',
     port: '',
-    path: '/my-path/here',
+    pathname: '/my-path/here',
     search: '',
     hash: '',
     href: 'https://www.cool.com/my-path/here'
@@ -60,7 +60,7 @@ test('parseUrl', async () => {
     protocol: 'https',
     hostname: 'www.cool.com',
     port: '',
-    path: '/my-path/here',
+    pathname: '/my-path/here',
     search: 'hello=true',
     hash: '',
     href: 'https://www.cool.com/my-path/here?hello=true'
@@ -70,7 +70,7 @@ test('parseUrl', async () => {
     protocol: 'https',
     hostname: 'www.cool.com',
     port: '',
-    path: '/my-path/here',
+    pathname: '/my-path/here',
     search: 'hello=true',
     hash: 'my-hash=cool',
     href: 'https://www.cool.com/my-path/here?hello=true#my-hash=cool'
@@ -80,7 +80,7 @@ test('parseUrl', async () => {
     protocol: 'https',
     hostname: 'whatever.funky.cool.com',
     port: '',
-    path: '',
+    pathname: '',
     search: '',
     hash: '',
     href: 'https://whatever.funky.cool.com'
@@ -92,7 +92,7 @@ test('parseUrl', async () => {
 //     protocol: 'NA',
 //     hostname: 'NA',
 //     port: 'NA',
-//     path: 'NA',
+//     pathname: 'NA',
 //     search: 'NA',
 //     hash: 'NA',
 //     href: 'NA'

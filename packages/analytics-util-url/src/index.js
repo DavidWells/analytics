@@ -46,12 +46,11 @@ export function parseUrl(url = '') {
     protocol: match[1] || '',
     hostname: match[2] || '',
     port: match[3] || '',
-    path: match[4] || '',
+    pathname: match[4] || '',
     search: match[5] || '',
     hash: match[6] || '',
   }
 }
-
 
 /* export qss */
 export {
@@ -60,7 +59,6 @@ export {
   encodeUri,
   decodeUri
 }
-
 
 /******************************************************************************************
  * Type checkers utilities
@@ -154,8 +152,8 @@ export function getHost(url) {
  *  > https://subdomain.my-site.com/path-to/page/here
  */
 export function getUrl(url) {
-  const { protocol, hostname, path } = getLocation(url)
-  const page = `${protocol}://${hostname}${path}`
+  const { protocol, hostname, pathname } = getLocation(url)
+  const page = `${protocol}://${hostname}${pathname}`
   const last = page.charAt(page.length - 1)
   return (last === '/') ? page.slice(0, -1) : page
 }
