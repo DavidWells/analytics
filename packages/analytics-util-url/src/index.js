@@ -143,9 +143,26 @@ export function getHost(url) {
   return getLocation(url).hostname
 }
 
+
+/**
+ * Get clean URL from a URL string
+ * @param  {String} [url] - href of page, window.location.href will be used by default
+ * @return {String} URL of page with no search/hash
+ *
+ * @example
+ *  getUrl('https://subdomain.my-site.com/path-to/page/here/?param=true#hash=false')
+ *  > https://subdomain.my-site.com/path-to/page/here
+ */
+export function getUrl(url) {
+  const { protocol, hostname, path } = getLocation(url)
+  const page = `${protocol}://${hostname}${path}`
+  const last = page.charAt(page.length - 1)
+  return (last === '/') ? page.slice(0, -1) : page
+}
+
 /**
  * Get base domain of url
- * @param  {String} url - href of page
+ * @param  {String} [url] - href of page
  * @return {String} base domain of page
  *
  * @example
