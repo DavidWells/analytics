@@ -5,7 +5,7 @@ const markdownMagic = require('markdown-magic')
 const dox = require('dox')
 const outdent = require('outdent')
 const prettier = require('prettier')
-const parseSourceCode = require('./docs/parse').sync
+const parseSourceCode = require('./docs/parse')
 const getPluginDetails = require('./docs/get-plugin-details')
 const indentString = require('indent-string')
 const { getSizeInfo } = require('./getSize')
@@ -108,14 +108,15 @@ const config = {
         .filter(([pkg, json]) => {
           return json.private !== true
         })
+        .sort(sortPlugins)
         // alphabetize list
-        .sort((a, b) => {
-          const one = a[1]
-          const two = b[1]
-          var textA = one.name.toLowerCase()
-          var textB = two.name.toLowerCase()
-          return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
-        })
+        // .sort((a, b) => {
+        //   const one = a[1]
+        //   const two = b[1]
+        //   var textA = one.name.toLowerCase()
+        //   var textB = two.name.toLowerCase()
+        //   return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
+        // })
 
       let md =  '| Plugin | Stats | Version |\n'
        md += '|:---------------------------|:---------------:|:-----------:|\n'
@@ -169,14 +170,14 @@ const config = {
       })
       return md.replace(/^\s+|\s+$/g, '')
     },
-    PLUGIN_DOCS(content, options, instance) {
+    PLUGIN_DOCS: async (content, options, instance) => {
       let pluginDocs = ''
       let pluginData
       const { originalPath } = instance
       if (cache[originalPath]) {
         pluginData = cache[originalPath]
       } else {
-        pluginData = getPluginDetails(originalPath)
+        pluginData = await getPluginDetails(originalPath)
         cache[originalPath] = pluginData
       }
       if (pluginData && pluginData.length) {
@@ -190,7 +191,7 @@ const config = {
           return ''
         }
         // Chug through plugin data and print docs
-        pluginDocs = mainUsageBlock(mainExample, pluginData)
+        pluginDocs = await mainUsageBlock(mainExample, pluginData)
       }
       return `${pluginDocs}`
     },
@@ -224,7 +225,21 @@ const config = {
   }
 }
 
-function mainUsageBlock(primaryExample, allData) {
+
+const SORT_REGEX = /(?:(?:^|-)analytics-plugin(?:-|$))|(?:(?:^|-)analytics(?:-|$))/
+/* Utils functions */
+function sortPlugins(one, two) {
+  // console.log('a', a)
+  const [ , a] = one
+  const [ , b] = two
+  const aName = a.name.toLowerCase()
+  const aNameClean = aName.replace(SORT_REGEX, '')
+  const bName = b.name.toLowerCase()
+  const bNameClean = bName.replace(SORT_REGEX, '')
+  return aNameClean.localeCompare(bNameClean) || aName.localeCompare(bName)
+}
+
+async function mainUsageBlock(primaryExample, allData) {
   const { data, pkg } = primaryExample
   const platforms = getPlatforms(allData)
   const main = data.jsdoc.find((doc) => Boolean(doc.examples))
@@ -250,11 +265,13 @@ ${renderRelevantMethods(data)}
 
   const API_METHODS = ['page', 'track', 'identify', 'reset']
 
+  const infos = await Promise.all(allData.map((d) => {
+    return getUsageExamples(d, data)
+  }))
+
+  // console.log('infos', infos)
   /* Get additional Usage examples */
-  const additionalExamples = allData.reduce((acc, d) => {
-    acc = acc.concat(getUsageExamples(d, data))
-    return acc
-  }, [])
+  const additionalExamples = infos.flat()
     .sort(sortUsageExamples)
     .map((ex) => ex.text)
     .join('\n')
@@ -345,7 +362,7 @@ function sortUsageExamples(a, b) {
   return 0
 }
 
-function getUsageExamples(d) {
+async function getUsageExamples(d) {
   const { data, pkg, platform, dir } = d
   if (platform === 'node') {
     return [{
@@ -360,7 +377,7 @@ function getUsageExamples(d) {
     }]
   } else {
     const esmHtml = browserESMUsage(data, pkg)
-    const vanillaHtml = browserStandaloneUsage(data, pkg, dir)
+    const vanillaHtml = await browserStandaloneUsage(data, pkg, dir)
 
     return [{
       name: 'esHtml',
@@ -627,12 +644,13 @@ ${indentString(formatCode(code), 2)}
 `
 }
 
-function browserStandaloneUsage(data, pkg, dir) {
+async function browserStandaloneUsage(data, pkg, dir) {
   const browserFile = path.join(dir, 'dist', `${pkg.name}.js`)
 
-  const xx = parseSourceCode(browserFile)
+  const xx = await parseSourceCode(browserFile, 'browserfile')
 
   let initSet = false
+  // console.log('xx', xx)
   const exportData = xx.ast.foundExports.filter((x) => {
     return x.isDefault
   }).reduce((acc, curr) => {

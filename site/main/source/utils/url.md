@@ -4,7 +4,7 @@ pageTitle: URL Utils
 description: Utility library for working with URLs
 ---
 
-A tiny utility library for working with URLs in <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`391 bytes`<!-- AUTO-GENERATED-CONTENT:END -->.
+A tiny utility library for working with URLs in <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`2.53kb`<!-- AUTO-GENERATED-CONTENT:END -->.
 
 This library will work with [analytics](https://getanalytics.io) or as a standalone package.
 

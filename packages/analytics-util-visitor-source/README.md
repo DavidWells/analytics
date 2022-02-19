@@ -6,7 +6,7 @@ description: Utility library for getting visitor source
 
 # Visitor Source Utilities
 
-A tiny utility library for getting visitor source in <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`146 bytes`<!-- AUTO-GENERATED-CONTENT:END -->.
+A tiny utility library for getting visitor source in <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`1.16kb`<!-- AUTO-GENERATED-CONTENT:END -->.
 
 [Demo](https://utils-visitor-source.netlify.app)
 
