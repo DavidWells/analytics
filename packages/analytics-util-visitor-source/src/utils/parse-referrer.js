@@ -88,12 +88,12 @@ export function parseReferrer(referrer = '', currentUrl) {
     type: (!referrer) ? DIRECT : (isExternalLink) ? INBOUND : INTERNAL,
     date: new Date().toISOString(),
     entry: {
-      page: getUrl(currentUrl),
+      url: getUrl(currentUrl),
       search,
       hash
     },
     referrer: {
-      src: trimTrailingSlash(referrer),
+      url: trimTrailingSlash(referrer),
       hostname: refData.hostname,
       domain: refDomain,
       isExternal: isExternalLink,
@@ -117,11 +117,11 @@ export function parseReferrer(referrer = '', currentUrl) {
 
   /* Affiliate Link */
   if (ref) {
-    return {
+    result = {
       ...result,
       type: AFFILIATE,
       data: { 
-        name: ref 
+        id: ref 
       }
     }
   }
@@ -149,9 +149,12 @@ export function parseReferrer(referrer = '', currentUrl) {
   const isSocial = socials.find((urls) => urls.some((url) => refDomain === url))
   // console.log('isSocial', isSocial)
   if (isSocial) {
-    result.data = { site: isSocial[0] }
     if (result.type !== AFFILIATE) {
       result.type = SOCIAL
+    }
+    result.data = {
+      ...result.data,
+      site: isSocial[0],
     }
   }
   return result
