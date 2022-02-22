@@ -1,6 +1,6 @@
 {
   "name": "@analytics/visitor-source",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Get visitor source",
   "author": "David Wells",
   "license": "MIT",
