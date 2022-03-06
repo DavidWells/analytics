@@ -306,7 +306,7 @@ export function isPrimitive(x) {
 * isMethod(obj, 'otherThing' ) // returns false
 */
 export function isMethod(value, prop) {
-	return isObject(value) && isFunction(value[prop])
+  return isObject(value) && isFunction(value[prop])
 }
 
 /**
@@ -511,7 +511,7 @@ export function isTruthy(v) {
  * isFalsy([]) // returns false
  */
 export function isFalsy(x) {
-	return x ? false : true
+  return x ? false : true
 }
 
 // ^ future updates https://github.com/thenativeweb/boolean
