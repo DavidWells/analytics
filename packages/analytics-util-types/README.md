@@ -327,3 +327,11 @@ const formElement = document.querySelector('.my-form')
 console.log(isForm(formElement))
 // true
 ```
+
+## Alternative libs
+
+- [Native node types utils](https://nodejs.org/dist/latest-v17.x/docs/api/util.html#utiltypes)
+- https://github.com/jonschlinkert/kind-of
+- https://github.com/enricomarino/is
+- https://github.com/mesqueeb/is-what
+- https://github.com/stdlib-js/assert
