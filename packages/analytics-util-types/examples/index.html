@@ -64,7 +64,8 @@
     </div>
   
     <script type="text/javascript">
-      console.log('Type utils API', utilTypes)
+      console.log('Type utils API "utilTypes"')
+      console.log(utilTypes)
       const { isString, isBoolean, isArray, isObject, isFunction, isUndefined, isNull } = utilTypes
 
       const xyz = 'hi'
@@ -94,6 +95,16 @@
       let value
       console.log('isUndefined', isUndefined(value))
       // true
+
+      /* Errors */
+      console.log('isError true', utilTypes.isError(new Error('funky')))
+      console.log('isError TypeError true', utilTypes.isError(new TypeError('funky')))
+
+      console.log('isTypeError', utilTypes.isTypeError(new TypeError('funky')))
+      console.log('isTypeError Error', utilTypes.isTypeError(new Error('funky')))
+
+      console.log('isSyntaxError', utilTypes.isSyntaxError(new SyntaxError('funky')))
+      console.log('isSyntaxError Error', utilTypes.isSyntaxError(new Error('funky')))
     ;</script>
   </body>
 </html>

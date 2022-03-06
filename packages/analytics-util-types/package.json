@@ -13,7 +13,6 @@
     "events",
     "types"
   ],
-  "netlifySiteId": "ac2aee7b-fd8f-45da-9458-3c903c81b2da",
   "amdName": "utilTypes",
   "source": "src/index.js",
   "main": "dist/analytics-util-types.js",
@@ -34,7 +33,7 @@
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
-    "deploy": "npm run build:dev && npm run sync && netlify deploy --prod --dir dist --site $npm_config_netlifySiteId"
+    "deploy": "npm run build:dev && npm run sync && netlify deploy --prod --dir dist --site ac2aee7b-fd8f-45da-9458-3c903c81b2da"
   },
   "files": [
     "lib",
