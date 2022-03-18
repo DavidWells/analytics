@@ -2,7 +2,7 @@
 import { test } from 'uvu'
 import * as assert from 'uvu/assert'
 import { spy } from 'nanospy'
-import { eventEmitter } from '../src'
+import { eventEmitter, getWildCards } from '../src'
 
 test.after(() => console.log('tests done'))
 
@@ -17,6 +17,56 @@ test('Basic', async () => {
   events.on('trigger', fn)
   events.emit('trigger')
   assert.equal(fn.callCount, 1, 'Ran emitter')
+})
+
+test('getWildCards', async () => {
+
+  assertArray(getWildCards('chill'), ['*', 'chill', 'chill*'], `getWildCards('chill')`)
+
+  assertArray(getWildCards('chill*'), ['*', 'chill', 'chill*'], `getWildCards('chill*')`)
+
+  assertArray(getWildCards('chill.*'), [ '*', 'chill.*' ], `getWildCards('chill.*')`)
+
+  assertArray(getWildCards('chill.cool'), ['*', 'chill.*', 'chill*', 'chill.cool', 'chill.cool*'], `getWildCards('chill.cool')`)
+
+  assertArray(
+    getWildCards('chill.cool.awesome'),
+    [
+      '*',
+      'chill*',
+      'chill.*',
+      'chill.cool*',
+      'chill.cool.*',
+      'chill.cool.awesome',
+      'chill.cool.awesome*'
+    ], 
+    `getWildCards('chill.cool.awesome')`
+  )
+
+  assertArray(
+    getWildCards('chill.cool.awesome*'),
+    [
+      '*',
+      'chill.cool.awesome*',
+      'chill.cool.awesome',
+      'chill.*',
+      'chill*',
+      'chill.cool.*',
+      'chill.cool*'
+    ], 
+    `getWildCards('chill.cool.awesome*')`
+  )
+
+  assertArray(
+    getWildCards('chill.cool.awesome.*'),
+    [ 
+      '*', 
+      'chill.*',
+      'chill.cool.*', 
+      'chill.cool.awesome.*' 
+    ], 
+    `getWildCards('chill.cool.awesome.*')`
+  )
 })
 
 test('Return types', async () => {
@@ -306,5 +356,9 @@ test('tiny', async () => {
   events.emit('two.*')
   assert.equal(data, [ 'two.a', 'two.b' ], `Verify events.emit('two.*') fires corrects`)
 })
+
+function assertArray(arr1, arr2, name = '') {
+  assert.equal(arr1.sort(), arr2.sort(), true, name)
+}
 
 test.run()

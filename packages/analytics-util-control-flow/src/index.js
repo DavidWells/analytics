@@ -1,4 +1,5 @@
 
+const noOp = () => true
 
 /**
  * Run function once
@@ -78,6 +79,31 @@ export function heartBeat(fn, tick = 3e3) {
 }
 
 /**
+ * waitFor predicate to resolve to true
+ * @param {*} param0 
+ */
+export function waitFor({
+  predicate = noOp,
+  onSuccess = noOp,
+  onFailure = noOp,
+  timeout = 10e3, // 10 sec
+  interval = 50,
+  elapsed = 0,
+}) {
+  setTimeout(async () => {
+    try {
+      const done = await predicate()
+      if (done) return onSuccess(done, elapsed)
+    } catch (err) {
+      return onFailure(err)
+    }
+    if (elapsed >= timeout) return onFailure('timeout')
+    waitFor({ predicate, onSuccess, onFailure, timeout, elapsed: elapsed + interval })
+  }, interval)
+}
+
+
+/**
  * Fast loop over array of items
  * @param {Array[*]} arr 
  * @param {fn} logic 
@@ -86,8 +112,43 @@ function loop(arr = [], logic) {
   for (let i = 0; i < arr.length; i++) logic(arr[i], i)
 }
 
+function has(arr, item) {
+  return arr.indexOf(item) > -1
+}
+
 const DOT = '.'
 const STAR = '*'
+
+/**
+ * Get all possible path matches from key
+ * @param {*} key 
+ * @param {*} _cache 
+ * @returns {Array<string>}
+ */
+export function getWildCards(key, _cache = {}) {
+  let paths = ''
+  if (_cache[key]) return _cache[key]
+  const parts = key.split(DOT)
+  const hasStar = key.indexOf(STAR) > -1
+  const hasDotStar = hasStar && key.charAt(key.length - 2) === DOT
+  const wildCards = [STAR, key] // Match * and key by default
+  /* Add prefix */
+  if (hasStar && !hasDotStar) {
+    wildCards.push(key.slice(0, key.length -1))
+  }
+  for (let x = 0; x < parts.length; x++) {
+    const notLast = parts.length !== x + 1
+    const ending = (hasStar && !notLast) ? '' : STAR
+    paths = paths + (x ? DOT : '') + parts[x]
+    /* If not last item, compose wildcards from path */
+    const one = paths + DOT + ending
+    if (notLast && !has(wildCards, one)) wildCards.push(one)
+    /* Has star & ends with dot .* */
+    const two = paths + ending
+    if (!hasDotStar && !has(wildCards, two)) wildCards.push(two)
+  }
+  return _cache[key] = wildCards
+}
 
 /**
  * Tiny lil event mitter with wildcard support
@@ -111,36 +172,13 @@ const STAR = '*'
  */
 export function eventEmitter() {
   let all = {}
-  let map = {}
+  let cache = {}
   
   function on(name, handler) {
     all[name] = all[name] || []
     all[name].push(handler)
-    map[name] = map[name] || {}
-    map[name].wildcards = getWildcards(name)
-    // map[name].fns = map[name].fns || []
-    // map[name].fns.push(handler)
+    cache[name] = getWildCards(name, cache)
     return () => off(name, handler)
-  }
-
-  function getWildcards(key, hasStar, fromCache) {
-    if (fromCache && map[key]) {
-      return map[key].wildcards
-    }
-    let paths = ''
-    const parts = key.split(DOT)
-    const wildCards = [STAR, key] // Match * and key by default
-    const hasDotStar = hasStar && key.charAt(key.length - 2) === DOT
-    for (let x = 0; x < parts.length; x++) {
-      const notLast = parts.length !== x + 1
-      const ending = (hasStar && !notLast) ? '' : STAR
-      paths = paths + (x ? DOT : '') + parts[x]
-      /* If not last item, compose wildcards from path */
-      if (notLast) wildCards.push(paths + DOT + ending)
-      /* Has star & ends with dot .* */
-      if (!hasDotStar) wildCards.push(paths + ending)
-    }
-    return wildCards
   }
 
   function off(name, handler) {
@@ -159,13 +197,15 @@ export function eventEmitter() {
     if (!hasStar && !isEmit) {
       return [ key ]
     }
-    return Object.keys(all)
-      .filter((k) => hasStar && k.startsWith(key.slice(0, index)))
-      .concat(isEmit ? getWildcards(key, hasStar, true) : [])
-      // Only unique keys
-      .filter(function(value, index, self) {
-        return self.indexOf(value) === index
-      })
+    const events = isEmit ? getWildCards(key, cache) : []
+    /* Always loop over existing functions because they may have changed */
+    const keys = Object.keys(all)
+    for (let i = 0; i < keys.length; i++) {
+      if (hasStar && keys[i].startsWith(key.slice(0, index))) {
+        !has(events, keys[i]) && events.push(keys[i])
+      }
+    }
+    return events
   }
 
   return {
