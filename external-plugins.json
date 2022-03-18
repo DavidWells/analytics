@@ -15,6 +15,12 @@
     "description": "Integration with the browser's fetch API for analytics"
   },
   {
+    "name": "LinkedIn Pixel",
+    "url": "https://www.npmjs.com/package/analytics-plugin-linkedin",
+    "repo": "https://github.com/deevus/analytics-plugin-linkedin",
+    "description": "Adds Analytics support for Linkedin tracking pixel"
+  },
+  {
     "name": "Logrocket",
     "url": "https://www.npmjs.com/package/analytics-plugin-logrocket",
     "description": "Adds Analytics support for LogRocket"
@@ -53,5 +59,10 @@
     "name": "Tapfiliate",
     "url": "https://github.com/deevus/analytics-plugin-tapfiliate",
     "description": "Adds Analytics support for Tapfiliate"
+  },
+  {
+    "name": "RudderStack",
+    "url": "https://www.npmjs.com/package/begrowth-analytics-rudderstack",
+    "description": "Adds Analytics support for RudderStack"
   }
 ]

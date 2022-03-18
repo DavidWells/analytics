@@ -1,0 +1,27 @@
+{
+  "name": "@analytics/core",
+  "private": true,
+  "license": "MIT",
+  "amdName": "_analytics",
+  "source": "../src/index.js",
+  "main": "dist/client/analytics-core.js",
+  "module": "dist/client/analytics-core.module.js",
+  "unpkg": "dist/client/analytics-core.umd.js",
+  "types": "../dist/types.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "clean": "rimraf dist ../dist/client ../dist/cdn",
+    "prebuild": "npm run clean",
+    "build": "npm run build:lib && npm run build:standalone",
+    "build:lib": "microbundle --define NODE_ENV=production,BROWSER=true,SERVER=false,VERSION=$(cat ../package.json | jq '.version') --generateTypes false",
+    "build:standalone": "microbundle build -o ./dist/cdn --define NODE_ENV=production,BROWSER=true,SERVER=false,VERSION=$(cat ../package.json | jq '.version') --external none -f iife,umd --generateTypes false",
+    "gen-esm": "gen-esm-wrapper ./dist/client/analytics-core.js ./dist/client/index.mjs",
+    "copy": "mkdirp ../dist && cp -rf dist/. ../dist",
+    "postbuild": "npm run gen-esm && npm run copy"
+  },
+  "dependencies": {
+    "@analytics/global-storage-utils": "^0.1.4",
+    "@analytics/type-utils": "^0.5.4",
+    "analytics-utils": "^1.0.9"
+  }
+}

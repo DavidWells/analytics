@@ -50,13 +50,9 @@ const analytics = Analytics({
     // Minimal recommended configuration
     snowplowPlugin({
       name: 'snowplow',
-      scriptSrc: '//*.cloudfront.net/2.17.0/sp.js',
       collectorUrl: 'collector.mysite.com',
       trackerSettings: {
-        appId: 'myApp',
-        contexts: {
-          webPage: true
-        }
+        appId: 'myApp'
       }
     })
   ]
@@ -173,13 +169,9 @@ const analytics = Analytics({
     // Minimal recommended configuration
     snowplowPlugin({
       name: 'snowplow',
-      scriptSrc: '//*.cloudfront.net/2.17.0/sp.js',
       collectorUrl: 'collector.mysite.com',
       trackerSettings: {
-        appId: 'myApp',
-        contexts: {
-          webPage: true
-        }
+        appId: 'myApp'
       }
     })
   ]
@@ -191,7 +183,6 @@ const analytics = Analytics({
 
 | Option | description |
 |:---------------------------|:-----------|
-| `scriptSrc` <br/>**required** - string| Self-hosted Snowplow sp.js file location |
 | `collectorUrl` <br/>**required** - string| The URL to a Snowplow collector |
 | `name` <br/>_optional_ - string| The name to identify this instance of the tracker, use if using multiple tracker instances ('snowplow' default) |
 | `trackerSettings` <br/>_optional_ - Object| The arg map to pass to the Snowplow Tracker |
@@ -204,8 +195,6 @@ const analytics = Analytics({
 | `trackerSettings.cookieSecure` <br/>_optional_ - boolean| Secure cookie setting (true default) |
 | `trackerSettings.encodeBase64` <br/>_optional_ - boolean| Encode JSON objects as Base64 (true default) |
 | `trackerSettings.respectDoNotTrack` <br/>_optional_ - bolean| Respect do not track (consider analytics-plugin-do-not-track) (false default) |
-| `trackerSettings.pageUnloadTimer` <br/>_optional_ - number| Timeout in ms to block page navigation until buffer is empty (500 default) |
-| `trackerSettings.forceSecureTracker` <br/>_optional_ - boolean| Forces requests to be sent https (false default) |
 | `trackerSettings.eventMethod` <br/>_optional_ - string| Method to send events, GET, POST, Beacon (POST default) |
 | `trackerSettings.bufferSize` <br/>_optional_ - number| Amount of events to buffer before sending (1 default) |
 | `trackerSettings.maxPostBytes` <br/>_optional_ - number| Maximum size of POST or Beacon before sending (40000 default) |
@@ -215,7 +204,6 @@ const analytics = Analytics({
 | `trackerSettings.maxLocalStorageQueueSize` <br/>_optional_ - number| Maximum numbers of events to buffer in localstorage to prevent filling local storage (1000 default) |
 | `trackerSettings.resetActivityTrackingOnPageView` <br/>_optional_ - boolean| Flag to decide whether to reset page ping timers on virtual page view (true default) |
 | `trackerSettings.connectionTimeout` <br/>_optional_ - boolean| The timeout, in milliseconds, before GET and POST requests will timeout (5000 default) (Snowplow JS 2.15.0+) |
-| `trackerSettings.skippedBrowserFeatures` <br/>_optional_ - Array.<string>| Array to skip browser feature collection ([] default) (Snowplow JS 2.15.0+) |
 | `trackerSettings.anonymousTracking` <br/>_optional_ - Object| Flag to enable anonymous tracking functionality (false default) |
 | `trackerSettings.anonymousTracking.withSessionTracking` <br/>_optional_ - boolean| Flag to enable whether to continue tracking sessions in anonymous tracking mode (false default) |
 | `trackerSettings.anonymousTracking.withServerAnonymisation` <br/>_optional_ - boolean| Flag which prevents collector from returning and capturing cookies and capturing ip address (false default) |
@@ -227,6 +215,7 @@ const analytics = Analytics({
 | `trackerSettings.contexts.gaCookies` <br/>_optional_ - boolean| Add gaCookie information |
 | `trackerSettings.contexts.geolocation` <br/>_optional_ - boolean| Add browser geolocation information |
 | `trackerSettings.contexts.optimizelyXSummary` <br/>_optional_ - boolean| Add browser geolocation information |
+| `trackerSettings.plugins` <br/>_optional_ - Array| Additional plugins to include at tracker initialisation. See https://docs.snowplowanalytics.com/docs/collecting-data/collecting-from-own-applications/javascript-trackers/browser-tracker/browser-tracker-v3-reference/plugins/ |
 
 ## Server-side usage
 
@@ -308,7 +297,7 @@ Below are additional implementation examples.
 
   // or Track page view with additional entities
   analytics.page({
-    context: [
+    contexts: [
       {
         schema: 'iglu:com.acme/blog_post/jsonschema/1-0-0',
         data: {
@@ -348,7 +337,7 @@ Below are additional implementation examples.
       title: 'Fall Campaign',
       videoTimestampInMs: 1104
     },
-    context: [
+    contexts: [
       {
         schema: 'iglu:com.acme/product/jsonschema/1-0-0',
         data: {
@@ -365,7 +354,7 @@ Below are additional implementation examples.
   analytics.track('ScreenView', {
     name: 'Product Page',
     id: 'p-123',
-    context: [
+    contexts: [
       {
         schema: 'iglu:com.acme/product/jsonschema/1-0-0',
         data: {
@@ -414,7 +403,7 @@ Below are additional implementation examples.
 
   // or Track page view with additional entities
   analytics.page({
-    context: [
+    contexts: [
       {
         schema: 'iglu:com.acme/blog_post/jsonschema/1-0-0',
         data: {
@@ -454,7 +443,7 @@ Below are additional implementation examples.
       title: 'Fall Campaign',
       videoTimestampInMs: 1104
     },
-    context: [
+    contexts: [
       {
         schema: 'iglu:com.acme/product/jsonschema/1-0-0',
         data: {
@@ -471,7 +460,7 @@ Below are additional implementation examples.
   analytics.track('ScreenView', {
     name: 'Product Page',
     id: 'p-123',
-    context: [
+    contexts: [
       {
         schema: 'iglu:com.acme/product/jsonschema/1-0-0',
         data: {
@@ -514,13 +503,9 @@ Below are additional implementation examples.
             // Minimal recommended configuration
             analyticsSnowplow({
               name: 'snowplow',
-              scriptSrc: '//*.cloudfront.net/2.17.0/sp.js',
               collectorUrl: 'collector.mysite.com',
               trackerSettings: {
-                appId: 'myApp',
-                contexts: {
-                  webPage: true
-                }
+                appId: 'myApp'
               }
             })
           ]
@@ -642,13 +627,9 @@ Below are additional implementation examples.
             // Minimal recommended configuration
             analyticsSnowplow({
               name: 'snowplow',
-              scriptSrc: '//*.cloudfront.net/2.17.0/sp.js',
               collectorUrl: 'collector.mysite.com',
               trackerSettings: {
-                appId: 'myApp',
-                contexts: {
-                  webPage: true
-                }
+                appId: 'myApp'
               }
             })
             // ... add any other third party analytics plugins

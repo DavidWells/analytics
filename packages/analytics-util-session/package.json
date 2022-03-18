@@ -1,6 +1,6 @@
 {
   "name": "@analytics/session-utils",
-  "version": "0.1.15",
+  "version": "0.1.17",
   "description": "Tiny session utility library",
   "author": "David Wells",
   "license": "MIT",
@@ -50,9 +50,9 @@
     "watchlist": "^0.2.3"
   },
   "dependencies": {
-    "@analytics/cookie-utils": "^0.2.8",
-    "@analytics/global-storage-utils": "^0.1.3",
-    "@analytics/session-storage-utils": "^0.0.3",
-    "analytics-utils": "^1.0.8"
+    "@analytics/cookie-utils": "^0.2.10",
+    "@analytics/global-storage-utils": "^0.1.5",
+    "@analytics/session-storage-utils": "^0.0.5",
+    "analytics-utils": "^1.0.10"
   }
 }

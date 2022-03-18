@@ -15,12 +15,13 @@ import queue from './modules/queue'
 import page, { getPageData } from './modules/page'
 import context, { makeContext } from './modules/context'
 import user, { getUserPropFunc, tempKey, getPersistedUserData } from './modules/user'
-// Utils
+/* Utils */
 import { watch } from './utils/handleNetworkEvents'
 import { Debug, composeWithDebug } from './utils/debug'
 import heartBeat from './utils/heartbeat'
 import ensureArray from './utils/ensureArray'
 import enrichMeta from './utils/enrichMeta'
+import './pluginTypeDef'
 
 /**
  * Analytics library configuration
@@ -54,6 +55,13 @@ function analytics(config = {}) {
   const initialUser = config.initialUser || {}
   // @TODO add custom value reolvers for userId and anonId
   // const resolvers = config.resolvers || {}
+  // if (BROWSER) {
+  //   console.log('INIT browser')
+  // }
+
+  // if (SERVER) {
+  //   console.log('INIT SERVER')
+  // }
   
   /* Parse plugins array */
   const parsedOptions = (config.plugins || []).reduce((acc, plugin) => {
@@ -806,7 +814,6 @@ function analytics(config = {}) {
      * @type {Array}
      */
     events: {
-      all: allSystemEvents,
       core: coreEvents,
       plugins: allPluginEvents,
       // byType: (type) => {} @Todo grab logic from engine and give inspectable events
@@ -958,7 +965,7 @@ function analytics(config = {}) {
     }
   })
 
-  if (process.browser) {
+  if (BROWSER) {
     /* Watch for network events */
     watch((offline) => {
       store.dispatch({

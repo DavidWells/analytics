@@ -8,7 +8,13 @@ import KitchenSink from './pages/KitchenSink'
 import Privacy from './pages/Privacy'
 import PageViewTracking from './components/PageViews'
 import { Router } from "@reach/router"
+import tester from "@analytics/core/client"
+import main from "@analytics/core"
+
 import './index.css'
+
+console.log('tester', tester)
+console.log('main', main)
 
 const App = (
   <>

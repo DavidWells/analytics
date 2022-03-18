@@ -1,0 +1,57 @@
+{
+  "name": "@analytics/url-utils",
+  "version": "0.2.1",
+  "description": "Url utils",
+  "author": "David Wells",
+  "license": "MIT",
+  "homepage": "https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-url#readme",
+  "repository": "https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-url",
+  "keywords": [
+    "analytics",
+    "analytics-project",
+    "analytics-util"
+  ],
+  "netlifySiteId": "418b86ce-6faa-41cd-997f-5d5616f34e2c",
+  "amdName": "utilUrl",
+  "source": "src/index.js",
+  "main": "dist/analytics-util-url.js",
+  "module": "dist/analytics-util-url.module.js",
+  "unpkg": "dist/analytics-util-url.umd.js",
+  "types": "./types/index.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "test": "uvu tests -r esm",
+    "types": "tsc --noEmit false --emitDeclarationOnly true",
+    "start": "npm run sync && concurrently 'npm:watch:*' 'npm:copy' 'npm:serve'",
+    "serve": "servor dist index.html 8081 --reload --browse",
+    "copy": "watchlist examples -- npm run sync",
+    "sync": "cp examples/index.html dist",
+    "watch:dev": "microbundle watch --external none -f iife,umd -o dist/browser --no-compress",
+    "watch:test": "watchlist src tests examples -- npm t",
+    "build": "microbundle --define NODE_ENV=production && npm run build:dev",
+    "build:dev": "microbundle build --external none -f iife,umd -o dist/browser",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish",
+    "deploy": "npm run build:dev && npm run sync && netlify deploy --prod --dir dist --site 418b86ce-6faa-41cd-997f-5d5616f34e2c"
+  },
+  "files": [
+    "lib",
+    "dist",
+    "types",
+    "package.json",
+    "package-lock.json",
+    "README.md"
+  ],
+  "devDependencies": {
+    "concurrently": "^6.1.0",
+    "esm": "^3.2.25",
+    "microbundle": "^0.14.2",
+    "servor": "^4.0.2",
+    "uvu": "^0.5.1",
+    "watchlist": "^0.2.3"
+  },
+  "dependencies": {
+    "@analytics/type-utils": "^0.6.0"
+  }
+}

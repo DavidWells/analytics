@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.10](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-cookie/compare/@analytics/cookie-utils@0.2.9...@analytics/cookie-utils@0.2.10) (2022-03-18)
+
+**Note:** Version bump only for package @analytics/cookie-utils
+
+
+
+
+
+## [0.2.9](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-cookie/compare/@analytics/cookie-utils@0.2.8...@analytics/cookie-utils@0.2.9) (2022-02-05)
+
+**Note:** Version bump only for package @analytics/cookie-utils
+
+
+
+
+
 ## [0.2.8](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-cookie/compare/@analytics/cookie-utils@0.2.7...@analytics/cookie-utils@0.2.8) (2021-12-12)
 
 **Note:** Version bump only for package @analytics/cookie-utils

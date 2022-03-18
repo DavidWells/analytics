@@ -1,6 +1,7 @@
 const path = require('path')
-const fs = require('fs-extra')
+const { promises, constants } = require('fs')
 const globby = require('markdown-magic').globby
+const fs = promises
 
 const PACKAGE_PATH = path.join(__dirname, '../packages')
 const DOC_PATH = path.join(__dirname, 'main/source')
@@ -14,6 +15,7 @@ function resolve(name) {
 const CUSTOM_MAPPING = {
   '@analytics/crazy-egg': resolve('crazyegg.md'),
   'use-analytics': path.resolve(UTILS_DOC_PATH, 'react-hooks.md'),
+  '@analytics/redact-utils': path.resolve(UTILS_DOC_PATH, 'redaction.md'),
   '@analytics/listener-utils': path.resolve(UTILS_DOC_PATH, 'listeners.md'),
   '@analytics/activity-utils': path.resolve(UTILS_DOC_PATH, 'activity.md'),
   '@analytics/scroll-utils': path.resolve(UTILS_DOC_PATH, 'scroll.md'),
@@ -26,8 +28,11 @@ const CUSTOM_MAPPING = {
   '@analytics/global-storage-utils': path.resolve(UTILS_DOC_PATH, 'global-storage.md'),
   '@analytics/queue-utils': path.resolve(UTILS_DOC_PATH, 'queue.md'),
   '@analytics/type-utils': path.resolve(UTILS_DOC_PATH, 'types.md'),
+  '@analytics/url-utils': path.resolve(UTILS_DOC_PATH, 'url.md'),
   '@analytics/session-storage-utils': path.resolve(UTILS_DOC_PATH, 'session-storage.md'),
 }
+
+const fileExists = (s) => fs.access(s, constants.F_OK).then(() => true).catch(() => false)
 
 async function getFiles() {
   const topLevelPackages = [`${PACKAGE_PATH}/*/package.json`]
@@ -59,6 +64,7 @@ async function updateContents(file, docsPath) {
   // Only sync content with frontmatter
   if (content.startsWith('<!--')) {
     const newContent = formatContent(content)
+    // console.log('newContent', newContent)
     await fs.writeFile(docsPath, newContent)
     console.log(`Docs synced to ${docsPath}`)
   }
@@ -96,18 +102,6 @@ function formatContent(content) {
 function removeGithubSpecificContent(content) {
   const docLinkRegex = /<!--.*stripFromDocsSTART((.|\n)*?END.*-->)/g
   return content.replace(docLinkRegex, '')
-}
-
-function fileExists(filePath) {
-  return new Promise((resolve, reject) => {
-    fs.access(filePath, fs.F_OK, (err) => {
-      if (err) {
-        // console.log(`${consolePrefix} No ${filePath} found. Proceeding`)
-        return resolve(false) // eslint-disable-line
-      }
-      return resolve(true)
-    })
-  })
 }
 
 syncDocs()

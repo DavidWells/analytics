@@ -1,33 +1,19 @@
-import { get, set, remove, undef } from '@analytics/global-storage-utils'
+import { get, set, remove, hasSupport, wrap } from '@analytics/global-storage-utils'
 
 const SESSION_STORAGE = 'sessionStorage'
 
-let isSupported = hasSessionStorage()
-
 /**
- * Check if browser has access to LocalStorage
+ * Check if browser has access to sessionStorage
  * @returns {Boolean}
  */
-function hasSessionStorage() {
-  if (typeof isSupported !== undef) return isSupported
-  isSupported = true
-  try {
-    sessionStorage.setItem(undef, undef)
-    sessionStorage.removeItem(undef)
-  } catch (e) {
-    isSupported = false
-  }
-  return isSupported
-}
+const hasSessionStorage = hasSupport.bind(null, SESSION_STORAGE)
 
 /**
  * Get value from sessionStorage or fallback to global window
  * @param {string} key - Key of value to get
  * @returns {*} value
  */
-function getSessionItem(key) {
-  return isSupported ? sessionStorage.getItem(key) || undefined : get(key)
-}
+const getSessionItem = wrap(SESSION_STORAGE, 'getItem', get)
 
 /**
  * Set value to sessionStorage or fallback to global window
@@ -35,13 +21,13 @@ function getSessionItem(key) {
  * @param {*} value 
  * @returns value
  */
-function setSessionItem(key, value) {
-  return isSupported ? sessionStorage.setItem(key, value) : set(key, value)
-}
+const setSessionItem = wrap(SESSION_STORAGE, 'setItem', set)
 
-function removeSessionItem(key) {
-  return isSupported ? sessionStorage.removeItem(key) : remove(key)
-}
+/**
+ * Remove value from sessionStorage or fallback to global window
+ * @param {string} key - Key of value to remove
+ */
+const removeSessionItem = wrap(SESSION_STORAGE, 'removeItem', remove)
 
 export {
   SESSION_STORAGE,

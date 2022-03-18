@@ -1,6 +1,6 @@
 {
   "name": "@analytics/snowplow",
-  "version": "0.2.5",
+  "version": "0.3.3",
   "description": "Snowplow integration for 'analytics' module for browser & node",
   "projectMeta": {
     "provider": {
@@ -55,6 +55,21 @@
     "@babel/preset-env": "^7.3.1"
   },
   "dependencies": {
-    "snowplow-tracker": "^0.4.0"
+    "@snowplow/browser-plugin-ad-tracking": "^3.1.5",
+    "@snowplow/browser-plugin-client-hints": "^3.1.5",
+    "@snowplow/browser-plugin-consent": "^3.1.5",
+    "@snowplow/browser-plugin-ecommerce": "^3.1.5",
+    "@snowplow/browser-plugin-enhanced-ecommerce": "^3.1.5",
+    "@snowplow/browser-plugin-error-tracking": "^3.1.5",
+    "@snowplow/browser-plugin-form-tracking": "^3.1.5",
+    "@snowplow/browser-plugin-ga-cookies": "^3.1.5",
+    "@snowplow/browser-plugin-geolocation": "^3.1.5",
+    "@snowplow/browser-plugin-link-click-tracking": "^3.1.5",
+    "@snowplow/browser-plugin-optimizely-x": "^3.1.5",
+    "@snowplow/browser-plugin-performance-timing": "^3.1.5",
+    "@snowplow/browser-plugin-site-tracking": "^3.1.5",
+    "@snowplow/browser-plugin-timezone": "^3.1.5",
+    "@snowplow/browser-tracker": "^3.1.5",
+    "@snowplow/node-tracker": "^3.1.5"
   }
 }

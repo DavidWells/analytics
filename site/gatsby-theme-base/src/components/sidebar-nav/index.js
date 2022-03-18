@@ -8,6 +8,8 @@ import { MdUnfoldLess, MdUnfoldMore } from 'react-icons/md'
 import { colors } from '../../utils/colors'
 import { smallCaps } from '../../utils/typography'
 
+const SITE_PATTERN = /^https:\/\/getanalytics.io/
+
 const StyledList = styled.ul({
   marginLeft: 0,
   listStyle: 'none'
@@ -153,17 +155,18 @@ export default class SidebarNav extends Component {
         )
       } else {
         // external link
-        if (page.path.match(/^https/)) {
+        if (page.path.match(/^https/) && !page.path.match(SITE_PATTERN)) {
           link = (
             <a href={page.path} target='_blank' rel='noopener noreferrer'>
               {page.title}
             </a>
           )
         } else {
+          const path = (page.path.match(SITE_PATTERN)) ? page.path.replace(SITE_PATTERN, '') : page.path
           link = (
             <Link
               className={this.isPageSelected(page) ? 'active' : null}
-              to={page.path}
+              to={path}
             >
               {page.title}
             </Link>

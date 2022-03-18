@@ -1,7 +1,6 @@
 import { get } from '@analytics/global-storage-utils'
-import { isObject } from '@analytics/type-utils'
+import { isObject, PREFIX } from '@analytics/type-utils'
 import { ANON_ID, USER_ID, USER_TRAITS } from '../constants'
-import { PREFIX } from '../utils/internalConstants'
 import EVENTS from '../events'
 
 /* user reducer */
