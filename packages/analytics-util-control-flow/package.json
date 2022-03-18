@@ -1,6 +1,6 @@
 {
   "name": "@analytics/control-flow-utils",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "private": true,
   "description": "WIP Control flow utils",
   "author": "David Wells",
@@ -54,7 +54,7 @@
     "watchlist": "^0.2.3"
   },
   "dependencies": {
-    "@analytics/type-utils": "^0.5.4",
-    "@analytics/url-utils": "^0.2.0"
+    "@analytics/type-utils": "^0.6.0",
+    "@analytics/url-utils": "^0.2.1"
   }
 }
