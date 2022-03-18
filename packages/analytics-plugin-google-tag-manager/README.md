@@ -111,6 +111,7 @@ const analytics = Analytics({
 | `customScriptSrc` <br/>_optional_ - string| Load Google Tag Manager script from a custom source |
 | `preview` <br/>_optional_ - string| The preview-mode environment |
 | `auth` <br/>_optional_ - string| The preview-mode authentication credentials |
+| `execution` <br/>_optional_ - string| The script execution mode |
 
 
 ## Additional examples

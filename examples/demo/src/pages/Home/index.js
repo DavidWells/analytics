@@ -23,28 +23,27 @@ function sortByTimeStamp(a, b) {
   return 0
 }
 
-if (typeof window.__analytics__ === 'undefined') {
-  window.__analytics__ = []
+if (typeof window.__global__.analytics === 'undefined') {
+  window.__global__.analytics = []
 }
-
 
 export default class App extends Component {
   constructor (props, context) {
     super(props, context)
     this.state = {
-      history: window.__analytics__
+      history: window.__global__.analytics
     }
   }
   componentDidMount() {
     this.listener = analytics.on('*', ({ payload }) => {
       console.log('payload', payload)
       this.setState({
-        history: window.__analytics__.concat(payload) // .sort(sortByTimeStamp)
+        history: window.__global__.analytics.concat(payload) // .sort(sortByTimeStamp)
       })
     })
     setInterval(() => {
       this.setState({
-        history: window.__analytics__ // .sort(sortByTimeStamp)
+        history:  window.__global__.analytics // .sort(sortByTimeStamp)
       })
     }, 1000);
 
@@ -81,7 +80,7 @@ export default class App extends Component {
   // Clear logs for demo buttons
   clearLogs() {
     if (!hasCleared) {
-      window.__analytics__ = []
+       window.__global__.analytics = []
       hasCleared = true
     }
   }

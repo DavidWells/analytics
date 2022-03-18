@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.11.1](https://github.com/DavidWells/analytics/compare/@analytics/core@0.11.0...@analytics/core@0.11.1) (2022-03-18)
+
+**Note:** Version bump only for package @analytics/core
+
+
+
+
+
+# [0.11.0](https://github.com/DavidWells/analytics/compare/@analytics/core@0.10.23...@analytics/core@0.11.0) (2022-02-07)
+
+
+### Features
+
+* shrink bundle ([61bb45f](https://github.com/DavidWells/analytics/commit/61bb45fa336e044c8a1d40b8f9fe69d5d865de7e))
+
+
+
+
+
+## [0.10.23](https://github.com/DavidWells/analytics/compare/@analytics/core@0.10.22...@analytics/core@0.10.23) (2022-02-06)
+
+**Note:** Version bump only for package @analytics/core
+
+
+
+
+
+## [0.10.22](https://github.com/DavidWells/analytics/compare/@analytics/core@0.10.21...@analytics/core@0.10.22) (2022-02-05)
+
+**Note:** Version bump only for package @analytics/core
+
+
+
+
+
+## [0.10.21](https://github.com/DavidWells/analytics/compare/@analytics/core@0.10.20...@analytics/core@0.10.21) (2022-01-03)
+
+**Note:** Version bump only for package @analytics/core
+
+
+
+
+
+## [0.10.20](https://github.com/DavidWells/analytics/compare/@analytics/core@0.10.19...@analytics/core@0.10.20) (2022-01-02)
+
+**Note:** Version bump only for package @analytics/core
+
+
+
+
+
 ## [0.10.19](https://github.com/DavidWells/analytics/compare/@analytics/core@0.10.18...@analytics/core@0.10.19) (2021-12-12)
 
 **Note:** Version bump only for package @analytics/core

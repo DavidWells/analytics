@@ -158,6 +158,7 @@ function segmentPlugin(pluginConfig = {}) {
     },
     /* Remove segment cookies on analytics.reset */
     reset: () => {
+      if (typeof analytics === 'undefined') return
       analytics.reset();
     },
     /* Sync id when ready */

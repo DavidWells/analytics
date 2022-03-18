@@ -1,6 +1,6 @@
 {
   "name": "@analytics/listener-utils",
-  "version": "0.2.7",
+  "version": "0.3.0",
   "description": "Backward compatible event listener library for attaching & detaching event handlers",
   "author": "David Wells",
   "license": "MIT",
@@ -48,12 +48,12 @@
   "devDependencies": {
     "concurrently": "^6.1.0",
     "esm": "^3.2.25",
-    "microbundle": "^0.13.0",
+    "microbundle": "^0.14.2",
     "servor": "^4.0.2",
     "uvu": "^0.5.1",
     "watchlist": "^0.2.3"
   },
   "dependencies": {
-    "@analytics/type-utils": "^0.5.1"
+    "@analytics/type-utils": "^0.6.0"
   }
 }

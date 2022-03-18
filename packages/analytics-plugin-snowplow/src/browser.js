@@ -1,21 +1,73 @@
 /* global snowplow */
+import {
+  clearGlobalContexts,
+  clearUserData,
+  enableActivityTracking,
+  newTracker,
+  setCustomUrl,
+  setReferrerUrl,
+  setUserId,
+  trackPageView,
+  addGlobalContexts,
+  removeGlobalContexts,
+  disableAnonymousTracking,
+  enableAnonymousTracking,
+  trackSelfDescribingEvent,
+  trackStructEvent,
+  addPlugin,
+} from '@snowplow/browser-tracker';
+import {
+  AdTrackingPlugin,
+  trackAdClick,
+  trackAdConversion,
+  trackAdImpression,
+} from '@snowplow/browser-plugin-ad-tracking';
+import { ClientHintsPlugin } from '@snowplow/browser-plugin-client-hints';
+import {
+  ConsentPlugin,
+  enableGdprContext,
+  trackConsentGranted,
+  trackConsentWithdrawn,
+} from '@snowplow/browser-plugin-consent';
+import { EcommercePlugin, trackAddToCart, trackRemoveFromCart } from '@snowplow/browser-plugin-ecommerce';
+import {
+  addEnhancedEcommerceActionContext,
+  addEnhancedEcommerceImpressionContext,
+  addEnhancedEcommerceProductContext,
+  addEnhancedEcommercePromoContext,
+  EnhancedEcommercePlugin,
+} from '@snowplow/browser-plugin-enhanced-ecommerce';
+import { enableErrorTracking, ErrorTrackingPlugin, trackError } from '@snowplow/browser-plugin-error-tracking';
+import { enableFormTracking, FormTrackingPlugin } from '@snowplow/browser-plugin-form-tracking';
+import { GaCookiesPlugin } from '@snowplow/browser-plugin-ga-cookies';
+import { GeolocationPlugin } from '@snowplow/browser-plugin-geolocation';
+import {
+  enableLinkClickTracking,
+  LinkClickTrackingPlugin,
+  refreshLinkClickTracking,
+  trackLinkClick,
+} from '@snowplow/browser-plugin-link-click-tracking';
+import { OptimizelyXPlugin } from '@snowplow/browser-plugin-optimizely-x';
+import { PerformanceTimingPlugin } from '@snowplow/browser-plugin-performance-timing';
+import {
+  SiteTrackingPlugin,
+  trackSiteSearch,
+  trackSocialInteraction,
+  trackTiming,
+} from '@snowplow/browser-plugin-site-tracking';
+import { TimezonePlugin } from '@snowplow/browser-plugin-timezone';
 
 const defaultConfig = {
   /* See description below */
   name: 'snowplow',
-  trackerSettings: {
-    contexts: {
-      webPage: true
-    }
-  }
-}
+  trackerSettings: {  },
+};
 
 /**
  * Snowplow analytics integration
  * @link https://getanalytics.io/plugins/snowplow/
- * @link https://docs.snowplowanalytics.com/docs/collecting-data/collecting-from-own-applications/javascript-tracker/
+ * @link https://docs.snowplowanalytics.com/docs/collecting-data/collecting-from-own-applications/javascript-trackers/browser-tracker/
  * @param {Object} pluginConfig - Plugin settings
- * @param {string} pluginConfig.scriptSrc - Self-hosted Snowplow sp.js file location
  * @param {string} pluginConfig.collectorUrl - The URL to a Snowplow collector
  * @param {string} [pluginConfig.name] - The name to identify this instance of the tracker, use if using multiple tracker instances ('snowplow' default)
  * @param {Object} [pluginConfig.trackerSettings] - The arg map to pass to the Snowplow Tracker
@@ -28,8 +80,6 @@ const defaultConfig = {
  * @param {boolean} [pluginConfig.trackerSettings.cookieSecure] - Secure cookie setting (true default)
  * @param {boolean} [pluginConfig.trackerSettings.encodeBase64] - Encode JSON objects as Base64 (true default)
  * @param {bolean} [pluginConfig.trackerSettings.respectDoNotTrack] - Respect do not track (consider analytics-plugin-do-not-track) (false default)
- * @param {number} [pluginConfig.trackerSettings.pageUnloadTimer] - Timeout in ms to block page navigation until buffer is empty (500 default)
- * @param {boolean} [pluginConfig.trackerSettings.forceSecureTracker] - Forces requests to be sent https (false default)
  * @param {string} [pluginConfig.trackerSettings.eventMethod] - Method to send events, GET, POST, Beacon (POST default)
  * @param {number} [pluginConfig.trackerSettings.bufferSize] - Amount of events to buffer before sending (1 default)
  * @param {number} [pluginConfig.trackerSettings.maxPostBytes] - Maximum size of POST or Beacon before sending (40000 default)
@@ -39,7 +89,6 @@ const defaultConfig = {
  * @param {number} [pluginConfig.trackerSettings.maxLocalStorageQueueSize] - Maximum numbers of events to buffer in localstorage to prevent filling local storage (1000 default)
  * @param {boolean} [pluginConfig.trackerSettings.resetActivityTrackingOnPageView] - Flag to decide whether to reset page ping timers on virtual page view (true default)
  * @param {boolean} [pluginConfig.trackerSettings.connectionTimeout] - The timeout, in milliseconds, before GET and POST requests will timeout (5000 default) (Snowplow JS 2.15.0+)
- * @param {string[]} [pluginConfig.trackerSettings.skippedBrowserFeatures] - Array to skip browser feature collection ([] default) (Snowplow JS 2.15.0+)
  * @param {(Object|boolean)} [pluginConfig.trackerSettings.anonymousTracking] - Flag to enable anonymous tracking functionality (false default)
  * @param {boolean} [pluginConfig.trackerSettings.anonymousTracking.withSessionTracking] - Flag to enable whether to continue tracking sessions in anonymous tracking mode (false default)
  * @param {boolean} [pluginConfig.trackerSettings.anonymousTracking.withServerAnonymisation] - Flag which prevents collector from returning and capturing cookies and capturing ip address (false default)
@@ -51,20 +100,16 @@ const defaultConfig = {
  * @param {boolean} [pluginConfig.trackerSettings.contexts.gaCookies] - Add gaCookie information
  * @param {boolean} [pluginConfig.trackerSettings.contexts.geolocation] - Add browser geolocation information
  * @param {boolean} [pluginConfig.trackerSettings.contexts.optimizelyXSummary] - Add browser geolocation information
+ * @param {Array} [pluginConfig.trackerSettings.plugins] - Additional plugins to include at tracker initialisation. See https://docs.snowplowanalytics.com/docs/collecting-data/collecting-from-own-applications/javascript-trackers/browser-tracker/browser-tracker-v3-reference/plugins/
  * @return {Object} Analytics plugin
  *
  * @example
- *
  * // Minimal recommended configuration
  * snowplowPlugin({
  *   name: 'snowplow',
- *   scriptSrc: '//*.cloudfront.net/2.17.0/sp.js',
  *   collectorUrl: 'collector.mysite.com',
  *   trackerSettings: {
- *     appId: 'myApp',
- *     contexts: {
- *       webPage: true
- *     }
+ *     appId: 'myApp'
  *   }
  * })
  */
@@ -73,32 +118,62 @@ function snowplowPlugin(pluginConfig = {}) {
     ...defaultConfig,
     ...pluginConfig,
   };
+  let loaded = false;
+
   return {
     name: config.name,
+    config: config,
     initialize: () => {
-      const { scriptSrc, collectorUrl, name, trackerSettings } = config;
-      if (!scriptSrc) {
-        throw new Error('No Snowplow sp.js location defined');
-      }
+      const { collectorUrl, name, trackerSettings } = config;
       if (!collectorUrl) {
         throw new Error('No collector url defined');
       }
-      /* eslint-disable */
-      (function(p,l,o,w,i,n,g){if(!p[i]){p.GlobalSnowplowNamespace=p.GlobalSnowplowNamespace||[];
-        p.GlobalSnowplowNamespace.push(i);p[i]=function(){(p[i].q=p[i].q||[]).push(arguments)
-        };p[i].q=p[i].q||[];n=l.createElement(o);g=l.getElementsByTagName(o)[0];n.async=1;
-        n.src=w;g.parentNode.insertBefore(n,g)}}(window,document,'script',scriptSrc,'snowplow'));
-      /* eslint-enable */
 
-      snowplow(
-        'newTracker',
-        name,
-        collectorUrl,
-        trackerSettings
-      );
+      if (!trackerSettings.contexts) {
+        trackerSettings.contexts = {};
+      }
+
+      trackerSettings.plugins = [
+        ...trackerSettings.plugins || [],
+        AdTrackingPlugin(),
+        ConsentPlugin(),
+        EcommercePlugin(),
+        EnhancedEcommercePlugin(),
+        ErrorTrackingPlugin(),
+        FormTrackingPlugin(),
+        LinkClickTrackingPlugin(),
+        SiteTrackingPlugin(),
+        TimezonePlugin(),
+      ];
+
+      if (trackerSettings.contexts.performanceTiming) {
+        trackerSettings.plugins.push(PerformanceTimingPlugin());
+      }
+      if (trackerSettings.contexts.clientHints) {
+        trackerSettings.plugins.push(
+          ClientHintsPlugin(
+            trackerSettings.contexts.clientHints === true
+              ? false
+              : trackerSettings.contexts.clientHints.includeHighEntropy
+          )
+        );
+      }
+      if (trackerSettings.contexts.gaCookies) {
+        trackerSettings.plugins.push(GaCookiesPlugin());
+      }
+      if (trackerSettings.contexts.geolocation) {
+        trackerSettings.plugins.push(GeolocationPlugin());
+      }
+      if (trackerSettings.contexts.optimizelyXSummary) {
+        trackerSettings.plugins.push(OptimizelyXPlugin());
+      }
+
+      newTracker(name, collectorUrl, trackerSettings);
+
+      loaded = true;
     },
     /**
-     * Snowplow page view event https://bit.ly/36Qvz7t
+     * Snowplow page view event https://docs.snowplowanalytics.com/docs/collecting-data/collecting-from-own-applications/javascript-trackers/browser-tracker/browser-tracker-v3-reference/tracking-events/
      * @example
      *
      * // Enable some automatic tracking before page event
@@ -126,24 +201,20 @@ function snowplowPlugin(pluginConfig = {}) {
     page: ({ payload }) => {
       const { properties } = payload;
       const { name } = config;
-      if (snowplowNotLoaded()) return;
+      if (!loaded) return;
 
       // Use url and referrer values from Analaytics
-      snowplow(
-        `setCustomUrl:${name}`,
-        properties.url
-      );
-      snowplow(
-        `setReferrerUrl:${name}`,
-        properties.referrer
-      );
+      setCustomUrl(properties.url, [name]);
+      setReferrerUrl(properties.referrer, [name]);
 
       // Track Page View event
-      snowplow(
-        `trackPageView:${name}`,
-        properties.title,
-        properties.contexts,
-        properties.dynamicContexts
+      trackPageView(
+        {
+          title: properties.title,
+          context: properties.contexts,
+          dynamicContexts: properties.dynamicContexts,
+        },
+        [name]
       );
     },
     /**
@@ -153,23 +224,14 @@ function snowplowPlugin(pluginConfig = {}) {
      */
     reset: () => {
       const { name } = config;
-      if (snowplowNotLoaded()) return;
+      if (!loaded) return;
 
-      snowplow(
-        `clearUserData:${name}`
-      );
-
-      snowplow(
-        `setUserId:${name}`,
-        undefined
-      );
-
-      snowplow(
-        `clearGlobalContexts:${name}`
-      );
+      clearUserData({}, [name]);
+      setUserId(undefined, [name]);
+      clearGlobalContexts([name]);
     },
     /**
-     * Snowplow track event https://bit.ly/2yRKH8c
+     * Snowplow track event https://docs.snowplowanalytics.com/docs/collecting-data/collecting-from-own-applications/javascript-trackers/browser-tracker/browser-tracker-v3-reference/tracking-events/
      * All Snowplow 'track' and 'add' functions are available, remove 'track' or 'add' when calling analytics.track
      * i.e. analytics.track('adImpression', ..., ..., ...);
      * @example
@@ -226,7 +288,7 @@ function snowplowPlugin(pluginConfig = {}) {
     track: ({ payload }) => {
       const { event, properties } = payload;
       const { name } = config;
-      if (snowplowNotLoaded()) return;
+      if (!loaded) return;
 
       track(name, event, properties);
     },
@@ -239,21 +301,18 @@ function snowplowPlugin(pluginConfig = {}) {
     identify: ({ payload }) => {
       const { userId } = payload;
       const { name } = config;
-      if (snowplowNotLoaded()) return;
+      if (!loaded) return;
 
       if (userId) {
-        snowplow(
-          `setUserId:${name}`,
-          userId
-        );
+        setUserId(userId, [name]);
       }
     },
     loaded: () => {
-      return !snowplowNotLoaded();
+      return loaded;
     },
     methods: {
       /**
-       * Enables Activity Tracking https://bit.ly/3hBM6QK
+       * Enables Activity Tracking
        * Generates page ping events based on user activity on page
        * Should be called before first page view event
        * @param {number} [minimumVisitLength] - Minimum visit length before first page ping event fires
@@ -261,23 +320,17 @@ function snowplowPlugin(pluginConfig = {}) {
        */
       enableActivityTracking(minimumVisitLength, heartbeat) {
         const { name } = config;
-        snowplow(
-          `enableActivityTracking:${name}`,
-          minimumVisitLength,
-          heartbeat
-        );
+        enableActivityTracking({ minimumVisitLength: minimumVisitLength, heartbeatDelay: heartbeat }, [name]);
       },
       /**
-       * Refresh Link Click Tracking https://bit.ly/2D7MgjQ
+       * Refresh Link Click Tracking
        */
       refreshLinkClickTracking() {
         const { name } = config;
-        snowplow(
-          `refreshLinkClickTracking:${name}`
-        );
+        refreshLinkClickTracking([name]);
       },
       /**
-       * Allows for refreshing of form tracking https://bit.ly/2D7MgjQ
+       * Allows for refreshing of form tracking
        * Use when forms are added to page
        * @param {Object} [formTrackingConfig] - Optional form tracking configuration
        * @param {string[]} [formTrackingConfig.blacklist] - An array of CSS classes which should be ignored by form tracking
@@ -289,14 +342,10 @@ function snowplowPlugin(pluginConfig = {}) {
        */
       enableFormTracking(formTrackingConfig, contexts) {
         const { name } = config;
-        snowplow(
-          `enableFormTracking:${name}`,
-          formTrackingConfig || {},
-          contexts || null
-        );
+        enableFormTracking({ context: contexts, options: formTrackingConfig }, [name]);
       },
       /**
-       * Adds the GDPR Context to all events https://bit.ly/3jHM0sE
+       * Adds the GDPR Context to all events
        * @param {string} [basisForProcessing] - Required. GDPR basis for data collection & processing
        * @param {string} [documentId] - ID for document detailing basis for processing
        * @param {string} [documentVersion] - Version of document detailing basis for processing
@@ -304,16 +353,10 @@ function snowplowPlugin(pluginConfig = {}) {
        */
       enableGdprContext(basisForProcessing, documentId, documentVersion, documentDescription) {
         const { name } = config;
-        snowplow(
-          `enableGdprContext:${name}`,
-          basisForProcessing,
-          documentId || null,
-          documentVersion || null,
-          documentDescription || null
-        );
+        enableGdprContext({ basisForProcessing, documentId, documentVersion, documentDescription }, [name]);
       },
       /**
-       * Enables automatic link click tracking https://bit.ly/300GXM4
+       * Enables automatic link click tracking
        * @param {Object} [filter] - An object to specify which links to include in tracking
        * @param {linkClickFilter} [filter.filter] - A function which determines which links should be tracked
        * @param {string[]} [filter.blacklist] - An array of CSS classes which should be ignored by link click tracking
@@ -324,44 +367,24 @@ function snowplowPlugin(pluginConfig = {}) {
        */
       enableLinkClickTracking(filter, pseudoClicks, content, contexts) {
         const { name } = config;
-        snowplow(
-          `enableLinkClickTracking:${name}`,
-          filter || {},
-          pseudoClicks || true,
-          content || false,
-          contexts || null
-        );
+        enableLinkClickTracking({ options: filter, pseudoClicks, trackContent: content, context: contexts }, [name]);
       },
       /**
-       * Enables automatic error tracking https://bit.ly/3g2hEyP
+       * Enables automatic error tracking
        * @param {errorFilter} [filter] - A function which determines which ErrorEvents should be tracked.
        * @param {errorContexts} [contextAdder] - A function to build custom contexts
        */
       enableErrorTracking(filter, contextAdder) {
         const { name } = config;
-        snowplow(
-          `enableErrorTracking:${name}`,
-          filter || null,
-          contextAdder || null
-        );
+        enableErrorTracking({ filter, contextAdder }, [name]);
       },
       /**
        * Allows contexts to be sent with every event, or a subset of events as defined in the ruleset
-       * https://bit.ly/3fj34Ca
        * @param {GlobalContexts} globalContexts - Array of global contexts to be added to every event
        */
       addGlobalContexts(globalContexts) {
         const { name } = config;
-
-        let parameter = globalContexts.contexts;
-        if (globalContexts.filterConditions) {
-          parameter = [globalContexts.filterConditions, parameter];
-        }
-
-        snowplow(
-          `addGlobalContexts:${name}`,
-          parameter
-        );
+        addGlobalContexts(globalContexts, [name]);
       },
       /**
        * Removes global contexts by matching on the schema name
@@ -369,285 +392,126 @@ function snowplowPlugin(pluginConfig = {}) {
        */
       removeGlobalContexts(globalContexts) {
         const { name } = config;
-
-        snowplow(
-          `removeGlobalContexts:${name}`,
-          globalContexts
-        );
+        removeGlobalContexts(globalContexts, [name]);
       },
       /**
        * Clears all Global Contexts
        */
       clearGlobalContexts() {
         const { name } = config;
-
-        snowplow(
-          `clearGlobalContexts:${name}`
-        );
+        clearGlobalContexts([name]);
       },
       /**
        * Disables Anonymous Tracking
-       * https://bit.ly/3gjZfNy
+       * https://docs.snowplowanalytics.com/docs/collecting-data/collecting-from-own-applications/javascript-trackers/browser-tracker/browser-tracker-v3-reference/tracker-setup/additional-options/
        * @param {string} stateStorageStrategy - Use to switch storage strategy, or don't use to leave the same
        */
       disableAnonymousTracking(stateStorageStrategy) {
         const { name } = config;
-
-        snowplow(
-          `disableAnonymousTracking:${name}`,
-          stateStorageStrategy
-        )
+        disableAnonymousTracking({ stateStorageStrategy: stateStorageStrategy }, [name]);
       },
       /**
        * Enables Anonymous Tracking
-       * https://bit.ly/3gjZfNy
+       * https://docs.snowplowanalytics.com/docs/collecting-data/collecting-from-own-applications/javascript-trackers/browser-tracker/browser-tracker-v3-reference/tracker-setup/additional-options/
        * @param {Object} anonymousTrackingArgs - Configures anonymous tracking features
        * @param {boolean} anonymousTrackingArgs.withSessionTracking - Enables session tracking when enabling Anonymous Tracking
        * @param {boolean} anonymousTrackingArgs.withServerAnonymisation - Prevents collector from returning cookies and capturing ip address
+       * @param {string} stateStorageStrategy - Use to switch storage strategy, or don't use to leave the same
        */
-      enableAnonymousTracking(anonymousTrackingArgs) {
+      enableAnonymousTracking(anonymousTrackingArgs, stateStorageStrategy) {
         const { name } = config;
+        enableAnonymousTracking({ options: anonymousTrackingArgs, stateStorageStrategy: stateStorageStrategy }, [name]);
+      },
+      /**
+       * Adds a plugin to the available plugins
+       * https://docs.snowplowanalytics.com/docs/collecting-data/collecting-from-own-applications/javascript-trackers/javascript-tracker/javascript-tracker-v3/plugins/
+       * @param {Object} plugin - The Plugin to include
+       */
 
-        snowplow(
-          `enableAnonymousTracking:${name}`,
-          anonymousTrackingArgs
-        )
+      addPlugin(plugin) {
+        const { name } = config;
+        addPlugin(plugin, [name]);
       }
     },
   };
 }
 
-export default snowplowPlugin
-
-function snowplowNotLoaded() {
-  return !window.snowplow;
-}
+export default snowplowPlugin;
 
 function track(name, event, properties) {
   if (event && properties) {
+    // Map V2 naming into V3 naming
+    if (properties.contexts && !properties.context) {
+      properties.context = properties.contexts;
+    }
+
     switch (event.toLowerCase()) {
       case 'selfdescribingevent':
       case 'unstructevent':
-        snowplow(
-          `trackSelfDescribingEvent:${name}`,
-          {
-            schema: properties.schema,
-            data: properties.data
-          },
-          properties.contexts
-        );
+        trackSelfDescribingEvent({ event: properties, context: properties.context }, [name]);
         break;
       case 'socialinteraction':
-        snowplow(
-          `trackSocialInteraction:${name}`,
-          properties.action,
-          properties.network,
-          properties.target,
-          properties.contexts
-        );
+        trackSocialInteraction(properties, [name]);
         break;
       case 'adimpression':
-        snowplow(
-          `trackAdImpression:${name}`,
-          properties.impressionId,
-          properties.costModel, // 'cpa', 'cpc', or 'cpm'
-          properties.cost,
-          properties.targetUrl,
-          properties.bannerId,
-          properties.zoneId,
-          properties.advertiserId,
-          properties.campaignId,
-          properties.contexts
-        );
+        trackAdImpression(properties, [name]);
         break;
       case 'adclick':
-        snowplow(
-          `trackAdClick:${name}`,
-          properties.targetUrl,
-          properties.clickId,
-          properties.costModel,
-          properties.cost,
-          properties.bannerId,
-          properties.zoneId,
-          properties.impressionId, // the same as in trackAdImpression
-          properties.advertiserId,
-          properties.campaignId,
-          properties.contexts
-        );
+        trackAdClick(properties, [name]);
         break;
       case 'adconversion':
-        snowplow(
-          `trackAdConversion:${name}`,
-          properties.conversionId,
-          properties.costModel,
-          properties.cost,
-          properties.category,
-          properties.action,
-          properties.property,
-          properties.initialValue, // how much the conversion is initially worth
-          properties.advertiserId,
-          properties.campaignId,
-          properties.contexts
-        );
+        trackAdConversion(properties, [name]);
         break;
       case 'linkclick':
-        snowplow(
-          `trackLinkClick:${name}`,
-          properties.targetUrl,
-          properties.elementId,
-          properties.elementClasses,
-          properties.elementTarget,
-          properties.elementContent,
-          properties.contexts
-        );
+        trackLinkClick(properties, [name]);
         break;
       case 'addtocart':
-        snowplow(
-          `trackAddToCart:${name}`,
-          properties.sku,
-          properties.name,
-          properties.category,
-          properties.unitPrice,
-          properties.quantity,
-          properties.currency,
-          properties.contexts
-        );
+        trackAddToCart(properties, [name]);
         break;
       case 'removefromcart':
-        snowplow(
-          `trackRemoveFromCart:${name}`,
-          properties.sku,
-          properties.name,
-          properties.category,
-          properties.unitPrice,
-          properties.quantity,
-          properties.currency,
-          properties.contexts
-        );
+        trackRemoveFromCart(properties, [name]);
         break;
       case 'sitesearch':
-        snowplow(
-          `trackSiteSearch:${name}`,
-          properties.searchTerms,
-          properties.filters,
-          properties.resultsFound,
-          properties.resultsDisplayed,
-          properties.contexts
-        );
+        trackSiteSearch(properties, [name]);
         break;
       case 'consentgranted':
-        snowplow(
-          `trackConsentGranted:${name}`,
-          properties.id,
-          properties.version,
-          properties.name,
-          properties.description,
-          properties.expiry,
-          properties.contexts
-        );
+        trackConsentGranted(properties, [name]);
         break;
       case 'consentwithdrawn':
-        snowplow(
-          `trackConsentWithdrawn:${name}`,
-          properties.all,
-          properties.id,
-          properties.version,
-          properties.name,
-          properties.description,
-          properties.contexts
-        );
+        trackConsentWithdrawn(properties, [name]);
         break;
       case 'error':
-        snowplow(
-          `trackError:${name}`,
-          properties.message,
-          properties.filename,
-          properties.lineno,
-          properties.colno,
-          properties.error,
-          properties.contexts
-        );
+        trackError(properties, [name]);
         break;
       case 'enhancedecommerceactioncontext':
-        snowplow(
-          `addEnhancedEcommerceActionContext:${name}`,
-          properties.id,
-          properties.affiliation,
-          properties.revenue,
-          properties.tax,
-          properties.shipping,
-          properties.coupon,
-          properties.list,
-          properties.step,
-          properties.option,
-          properties.currency
-        );
+        addEnhancedEcommerceActionContext(properties, [name]);
         break;
       case 'enhancedecommerceimpressioncontext':
-        snowplow(
-          `addEnhancedEcommerceImpressionContext:${name}`,
-          properties.id,
-          properties.name,
-          properties.list,
-          properties.brand,
-          properties.category,
-          properties.variant,
-          properties.position,
-          properties.price,
-          properties.currency
-        );
+        addEnhancedEcommerceImpressionContext(properties, [name]);
         break;
       case 'enhancedecommerceproductcontext':
-        snowplow(
-          `addEnhancedEcommerceProductContext:${name}`,
-          properties.id,
-          properties.name,
-          properties.list,
-          properties.brand,
-          properties.category,
-          properties.variant,
-          properties.price,
-          properties.quantity,
-          properties.coupon,
-          properties.position,
-          properties.currency
-        );
+        addEnhancedEcommerceProductContext(properties, [name]);
         break;
       case 'enhancedecommercepromocontext':
-        snowplow(
-          `addEnhancedEcommercePromoContext:${name}`,
-          properties.id,
-          properties.name,
-          properties.creative,
-          properties.position,
-          properties.currency
-        );
+        addEnhancedEcommercePromoContext(properties, [name]);
         break;
       case 'enhancedecommerceaction':
-        snowplow(
-          `trackEnhancedEcommerceAction:${name}`,
-          properties.action
-        );
+        snowplow(`trackEnhancedEcommerceAction:${name}`, properties.action);
         break;
       case 'timing':
-        snowplow(
-          `trackTiming:${name}`,
-          properties.category,
-          properties.variable,
-          properties.timing,
-          properties.label,
-          properties.contexts
-        );
+        trackTiming(properties, [name]);
       case 'structevent':
       default:
-        snowplow(
-          `trackStructEvent:${name}`,
-          properties.category || 'All',
-          event || properties.action,
-          properties.label,
-          properties.property,
-          properties.value,
-          properties.contexts
+        trackStructEvent(
+          {
+            category: properties.category || 'All',
+            action: event || properties.actions,
+            label: properties.label,
+            property: properties.property,
+            value: properties.value,
+            context: properties.context,
+          },
+          [name]
         );
         break;
     }
@@ -678,7 +542,7 @@ function track(name, event, properties) {
  * A function which determines which ErrorEvents should be tracked
  * @callback errorContexts
  * @param {Object} errorEvent
- * @return {Context[]} Array of contexts to be included with the error tracking event
+ * @return {Context[]} Array of context to be included with the error tracking event
  */
 
 /**

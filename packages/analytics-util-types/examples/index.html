@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Type utils</title>
-    <script type="text/javascript" src="./browser/types-utils.js" charset="utf-8"></script>
+    <script type="text/javascript" src="./browser/type-utils.js" charset="utf-8"></script>
     <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVQI12P4//8/AAX+Av7czFnnAAAAAElFTkSuQmCC">
     <style media="screen">
       html {
@@ -64,8 +64,9 @@
     </div>
   
     <script type="text/javascript">
-      console.log('Type utils API', utilTypes)
-      const { isString, isBoolean, isArray, isObject, isUndefined } = utilTypes
+      console.log('Type utils API "utilTypes"')
+      console.log(utilTypes)
+      const { isString, isBoolean, isArray, isObject, isFunction, isUndefined, isNull } = utilTypes
 
       const xyz = 'hi'
       console.log('isString', isString(xyz))
@@ -83,9 +84,27 @@
       console.log('isObject', isObject(myObj))
       // true
 
+      function myFunc() {}
+      console.log('isFunction', isFunction(myFunc))
+      // true
+      
+      var nullThing = null
+      console.log('isNull', isNull(nullThing))
+      // true
+
       let value
       console.log('isUndefined', isUndefined(value))
       // true
+
+      /* Errors */
+      console.log('isError true', utilTypes.isError(new Error('funky')))
+      console.log('isError TypeError true', utilTypes.isError(new TypeError('funky')))
+
+      console.log('isTypeError', utilTypes.isTypeError(new TypeError('funky')))
+      console.log('isTypeError Error', utilTypes.isTypeError(new Error('funky')))
+
+      console.log('isSyntaxError', utilTypes.isSyntaxError(new SyntaxError('funky')))
+      console.log('isSyntaxError Error', utilTypes.isSyntaxError(new Error('funky')))
     ;</script>
   </body>
 </html>

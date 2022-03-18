@@ -1,8 +1,7 @@
 {
   "name": "@analytics/redact-utils",
-  "version": "0.0.4",
-  "private": true,
-  "description": "library for redacting event data",
+  "version": "0.1.1",
+  "description": "Utility library for redacting event data",
   "author": "David Wells",
   "license": "MIT",
   "homepage": "https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-redact#readme",
@@ -23,7 +22,6 @@
   "scripts": {
     "test": "ava --verbose",
     "watch": "ava --watch --verbose",
-    "sync": "cp examples/index.html dist",
     "example": "npm run sync && serve ./dist -l 5000",
     "open": "open-cli http://localhost:5000",
     "serve": "concurrently \"npm:example\" \"npm:open\"",
@@ -31,8 +29,7 @@
     "dev": "microbundle watch",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
-    "release:major": "npm version major && npm publish",
-    "deploy": "npm run sync && netlify deploy --prod --dir dist --site 804da5e7-8aa8-4da8-a983-8593754cacb9"
+    "release:major": "npm version major && npm publish"
   },
   "files": [
     "lib",
@@ -58,6 +55,6 @@
     "failFast": true
   },
   "dependencies": {
-    "@analytics/type-utils": "^0.5.1"
+    "@analytics/type-utils": "^0.6.0"
   }
 }

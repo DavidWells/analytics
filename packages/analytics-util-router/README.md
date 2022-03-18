@@ -6,7 +6,7 @@ description: Utility library for single page app routing
 
 # Single Page Router utils
 
-A tiny (<!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`584 bytes`<!-- AUTO-GENERATED-CONTENT:END -->) routing utility for listening to route changes in single page applications.
+A tiny (<!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`238 bytes`<!-- AUTO-GENERATED-CONTENT:END -->) routing utility for listening to route changes in single page applications.
 
 ## Install
 

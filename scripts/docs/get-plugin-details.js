@@ -1,7 +1,7 @@
 const path = require('path')
-const parseSourceCode = require('./parse').sync
+const getPluginInfo = require('./parse')
 
-module.exports = function grabPluginData(originalPath) {
+module.exports = async function grabPluginData(originalPath) {
   const dir = path.dirname(originalPath)
   // const SRC_DIR = path.resolve(dir, 'src')
   const PKG_DIR = path.join(dir, 'package.json')
@@ -9,15 +9,25 @@ module.exports = function grabPluginData(originalPath) {
   if (!pkg || !pkg.projectMeta || !pkg.projectMeta.platforms) {
     return []
   }
+  const platforms = Object.keys(pkg.projectMeta.platforms)
+  const infos = await Promise.all(
+    platforms.filter((platform) =>{
+      return pkg.projectMeta.platforms[platform]
+    }).map((platform) => {
+      const entryPath = pkg.projectMeta.platforms[platform]
+      const resolvedEntryPath = path.resolve(dir, entryPath)
+      return getPluginInfo(resolvedEntryPath, platform)
+    })
+  )
 
-  return Object.keys(pkg.projectMeta.platforms).map((platform) => {
+  return platforms.map((platform, i) => {
     const entryPath = pkg.projectMeta.platforms[platform]
     const resolvedEntryPath = path.resolve(dir, entryPath)
     return {
       path: resolvedEntryPath,
       dir: dir,
       platform: platform,
-      data: parseSourceCode(resolvedEntryPath),
+      data: infos[i],
       pkg: pkg
     }
   })

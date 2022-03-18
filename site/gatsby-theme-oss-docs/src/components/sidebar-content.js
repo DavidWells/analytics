@@ -42,6 +42,13 @@ const customSideBarTitles = {
 
 export default function SidebarContent(props) {
   const sideBarContents = props.contents.reduce((acc, curr) => {
+    const currentSection = curr.title
+    // ADD custom links
+    const addPluginLink = (currentSection !== 'Plugins') ? [] : [
+      { title: 'About plugins', path: '/plugins'},
+      // { title: 'Creating custom plugins', path: '/plugins/writing-plugins/'}
+    ]
+    // console.log('curr', curr)
     const newPages = curr.pages.map((x) => {
       // console.log('x', x)
       const theTitle = x.menuTitle || x.pageTitle || x.title
@@ -56,7 +63,7 @@ export default function SidebarContent(props) {
     })
     acc = acc.concat({
       ...curr,
-      ...{ pages: newPages }
+      ...{ pages: addPluginLink.concat(newPages) }
     })
     return acc
   }, [])
