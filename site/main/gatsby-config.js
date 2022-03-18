@@ -74,6 +74,7 @@ module.exports = {
             'tutorials/sending-provider-specific-events',
             'tutorials/enriching-data',
             'tutorials/using-reset',
+            'tutorials/using-with-react-router',
           ],
           Resources: [
             'resources/faq',
