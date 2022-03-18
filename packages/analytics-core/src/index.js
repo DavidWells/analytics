@@ -53,6 +53,7 @@ import './pluginTypeDef'
 function analytics(config = {}) {
   const customReducers = config.reducers || {}
   const initialUser = config.initialUser || {}
+
   // if (BROWSER) {
   //   console.log('INIT browser')
   // }
@@ -60,7 +61,6 @@ function analytics(config = {}) {
   // if (SERVER) {
   //   console.log('INIT SERVER')
   // }
-  
   /* Parse plugins array */
   const parsedOptions = (config.plugins || []).reduce((acc, plugin) => {
     if (isFunction(plugin)) {
