@@ -489,6 +489,29 @@ importers:
       servor: 4.0.2
       watchlist: 0.2.3
 
+  packages/analytics-util-control-flow:
+    specifiers:
+      '@analytics/type-utils': ^0.5.4
+      '@analytics/url-utils': ^0.2.0
+      concurrently: ^6.1.0
+      esm: ^3.2.25
+      microbundle: ^0.14.2
+      nanospy: ^0.5.0
+      servor: ^4.0.2
+      uvu: ^0.5.1
+      watchlist: ^0.2.3
+    dependencies:
+      '@analytics/type-utils': link:../analytics-util-types
+      '@analytics/url-utils': link:../analytics-util-url
+    devDependencies:
+      concurrently: 6.3.0
+      esm: 3.2.25
+      microbundle: 0.14.2_acorn@8.7.0
+      nanospy: 0.5.0
+      servor: 4.0.2
+      uvu: 0.5.2
+      watchlist: 0.2.3
+
   packages/analytics-util-forms:
     specifiers:
       '@analytics/type-utils': ^0.5.4
@@ -748,13 +771,17 @@ importers:
   packages/analytics-util-types:
     specifiers:
       concurrently: ^6.1.0
-      microbundle: ^0.13.0
+      esm: ^3.2.25
+      microbundle: ^0.14.2
       servor: ^4.0.2
+      uvu: ^0.5.1
       watchlist: ^0.2.3
     devDependencies:
       concurrently: 6.3.0
-      microbundle: 0.13.3_acorn@8.7.0
+      esm: 3.2.25
+      microbundle: 0.14.2_acorn@8.7.0
       servor: 4.0.2
+      uvu: 0.5.2
       watchlist: 0.2.3
 
   packages/analytics-util-url:
@@ -14077,6 +14104,11 @@ packages:
       regex-not: 1.0.2
       snapdragon: 0.8.2
       to-regex: 3.0.2
+    dev: true
+
+  /nanospy/0.5.0:
+    resolution: {integrity: sha512-QxH93ntkjRiSP+gJrBLcgOO3neU6pGhUKjPAJ7rAFag/+tJ+/0lw6dXic+iXUQ/3Cxk4Dp/FwLnf57xnQsjecQ==}
+    engines: {node: ^8.0.0 || ^10.0.0 || ^12.0.0 || ^14.0.0 || >=16.0.0}
     dev: true
 
   /napi-build-utils/1.0.2:
