@@ -145,6 +145,17 @@
       <span id='span-four'>
         Span four
       </span>
+      <div>
+        <h3>Throw error</h3>
+        <button id="fire-error">
+          Fire test error
+        </button>
+      </div>
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
     </div>
   
     <script type="text/javascript">
@@ -180,9 +191,9 @@
         console.log('onerror three', msg)
       })
 
-      setTimeout(function() {
+      addListener('#fire-error', ['click'], (e) => {
         throw new Error('test')
-      }, 3000);
+      })
 
       addListener('#heading', ['mouseover', 'click'], (e) => {
         console.log('Change heading color!')
