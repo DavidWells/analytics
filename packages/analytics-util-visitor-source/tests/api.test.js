@@ -30,51 +30,71 @@ test('parseReferrer search', async () => {
   // console.log('search', search)
   assert.equal(clean(search), {
     type: SEARCH,
-    domain: 'google.com',
-    hostname: 'www.google.com',
-    referrer: url,
-    term: NA,
-    value: 'google',
-    isExternal: true
+    // date: '2022-03-18T02:55:41.871Z',
+    // entry: { url: '://', search: '', hash: '' },
+    referrer: {
+      url: 'http://www.google.com',
+      hostname: 'www.google.com',
+      domain: 'google.com',
+      isExternal: true,
+      isInternal: false,
+      isInternalSubDomain: false
+    },
+    data: { term: 'na', name: 'google' }
   })
   
   const googleUrl = 'http://www.google.com/search?q=gateway+oracle+cards+denise+linn&hl=en&client=safari'
   const googleSearch = parseReferrer(googleUrl)
   // console.log('googleSearch', googleSearch)
   assert.equal(clean(googleSearch), {
-    type: SEARCH,
-    domain: 'google.com',
-    hostname: 'www.google.com',
-    referrer: googleUrl,
-    term: 'gateway+oracle+cards+denise+linn',
-    value: 'google',
-    isExternal: true
+    type: 'search',
+    // date: '2022-03-18T02:56:12.615Z',
+    // entry: { url: '://', search: '', hash: '' },
+    referrer: {
+      url: 'http://www.google.com/search?q=gateway+oracle+cards+denise+linn&hl=en&client=safari',
+      hostname: 'www.google.com',
+      domain: 'google.com',
+      isExternal: true,
+      isInternal: false,
+      isInternalSubDomain: false
+    },
+    data: { term: 'gateway+oracle+cards+denise+linn', name: 'google' }
   })
 
   const bingUrl = 'http://www.bing.com/search?q=gateway+oracle+cards+denise+linn&hl=en&client=safari'
   const bingSearch = parseReferrer(bingUrl)
   // console.log('bingSearch', bingSearch)
   assert.equal(clean(bingSearch), {
-    type: SEARCH,
-    domain: 'bing.com',
-    hostname: 'www.bing.com',
-    referrer: bingUrl,
-    term: 'gateway+oracle+cards+denise+linn',
-    value: 'bing',
-    isExternal: true
+    type: 'search',
+    // date: '2022-03-18T02:56:36.452Z',
+    // entry: { url: '://', search: '', hash: '' },
+    referrer: {
+      url: 'http://www.bing.com/search?q=gateway+oracle+cards+denise+linn&hl=en&client=safari',
+      hostname: 'www.bing.com',
+      domain: 'bing.com',
+      isExternal: true,
+      isInternal: false,
+      isInternalSubDomain: false
+    },
+    data: { term: 'gateway+oracle+cards+denise+linn', name: 'bing' }
   })
 
   const duckduckUrl = 'https://duckduckgo.com/?q=tester&t=h_&ia=web'
   const duckduckSearch = parseReferrer(duckduckUrl)
   // console.log('duckduckSearch', duckduckSearch)
   assert.equal(clean(duckduckSearch), {
-    type: SEARCH,
-    domain: 'duckduckgo.com',
-    hostname: 'duckduckgo.com',
-    referrer: duckduckUrl,
-    term: 'tester',
-    value: 'duckduckgo',
-    isExternal: true
+    type: 'search',
+    // date: '2022-03-18T02:56:54.655Z',
+    // entry: { url: '://', search: '', hash: '' },
+    referrer: {
+      url: 'https://duckduckgo.com/?q=tester&t=h_&ia=web',
+      hostname: 'duckduckgo.com',
+      domain: 'duckduckgo.com',
+      isExternal: true,
+      isInternal: false,
+      isInternalSubDomain: false
+    },
+    data: { term: 'tester', name: 'duckduckgo' }
   })
 })
 
@@ -84,10 +104,16 @@ test('parseReferrer inbound link', async () => {
   // console.log('direct one', one)
   assert.equal(clean(one), {
     type: INBOUND,
-    domain: 'github.com',
-    hostname: 'github.com',
-    referrer: urlOne,
-    isExternal: true
+    // date: '2022-03-18T02:53:29.982Z',
+    // entry: { url: '://', search: '', hash: '' },
+    referrer: {
+      url: 'https://github.com',
+      hostname: 'github.com',
+      domain: 'github.com',
+      isExternal: true,
+      isInternal: false,
+      isInternalSubDomain: false
+    }
   })
 
   const urlTwo = 'https://lololol.coool.com/path/to/thing-xyz'
@@ -95,57 +121,88 @@ test('parseReferrer inbound link', async () => {
   // console.log('direct two', two)
   assert.equal(clean(two), {
     type: INBOUND,
-    domain: 'coool.com',
-    hostname: 'lololol.coool.com',
-    referrer: urlTwo,
-    isExternal: true
+    // date: '2022-03-18T02:54:20.863Z',
+    // entry: { url: '://', search: '', hash: '' },
+    referrer: {
+      url: 'https://lololol.coool.com/path/to/thing-xyz',
+      hostname: 'lololol.coool.com',
+      domain: 'coool.com',
+      isExternal: true,
+      isInternal: false,
+      isInternalSubDomain: false
+    }
   })
 
   const inbound = parseReferrer('http://hahaa.site-xyz.com/lol', 'http://glocal.com/')
   // console.log('inbound', inbound)
   assert.equal(clean(inbound), {
     type: INBOUND,
-    domain: 'site-xyz.com',
-    hostname: 'hahaa.site-xyz.com',
-    referrer: "http://hahaa.site-xyz.com/lol",
-    isExternal: true
+    // date: '2022-03-18T02:54:49.513Z',
+    // entry: { url: 'http://glocal.com', search: '', hash: '' },
+    referrer: {
+      url: 'http://hahaa.site-xyz.com/lol',
+      hostname: 'hahaa.site-xyz.com',
+      domain: 'site-xyz.com',
+      isExternal: true,
+      isInternal: false,
+      isInternalSubDomain: false
+    }
   })
 })
 
 test('parseReferrer social', async () => {
   const twitterUrl = 'https://twitter.com'
   const twitterSocial = parseReferrer(twitterUrl)
-  console.log('twitterSocial', twitterSocial)
+  // console.log('twitterSocial', twitterSocial)
   assert.equal(clean(twitterSocial), {
     type: SOCIAL,
-    value: 'twitter.com',
-    hostname: 'twitter.com',
-    referrer: twitterUrl,
-    isExternal: true
-  })
+    // date: '2022-03-18T02:51:38.993Z',
+    // entry: { url: '://', search: '', hash: '' },
+    referrer: {
+      url: 'https://twitter.com',
+      hostname: 'twitter.com',
+      domain: 'twitter.com',
+      isExternal: true,
+      isInternal: false,
+      isInternalSubDomain: false
+    },
+    data: { site: 'twitter.com' }
+})
 
   const fbUrl = 'https://facebook.com'
   const fbSocial = parseReferrer(fbUrl)
-  console.log('fbSocial', fbSocial)
+  // console.log('fbSocial', fbSocial)
   assert.equal(clean(fbSocial), {
     type: SOCIAL,
-    value: 'facebook.com',
-    hostname: 'facebook.com',
-    referrer: fbUrl,
-    isExternal: true
+    // date: '2022-03-18T02:52:11.628Z',
+    // entry: { url: '://', search: '', hash: '' },
+    referrer: {
+      url: 'https://facebook.com',
+      hostname: 'facebook.com',
+      domain: 'facebook.com',
+      isExternal: true,
+      isInternal: false,
+      isInternalSubDomain: false
+    },
+    data: { site: 'facebook.com' }
   })
 })
 
 test('parseReferrer affiliate', async () => {
   const affiliate = parseReferrer('http://hahaa.site-xyz.com/lol', 'http://glocal.com/?ref=davidwells')
-  // console.log('affiliate', affiliate)
   assert.equal(clean(affiliate), {
     type: AFFILIATE,
-    domain: 'site-xyz.com',
-    hostname: 'hahaa.site-xyz.com',
-    referrer: "http://hahaa.site-xyz.com/lol",
-    value: "davidwells",
-    isExternal: true
+    // date: '2022-03-18T02:32:01.689Z',
+    // entry: { url: 'http://glocal.com', search: 'ref=davidwells', hash: '' },
+    referrer: {
+      url: 'http://hahaa.site-xyz.com/lol',
+      hostname: 'hahaa.site-xyz.com',
+      domain: 'site-xyz.com',
+      isExternal: true,
+      isInternal: false,
+      isInternalSubDomain: false
+    },
+    data: { id: 'davidwells' }
   })
 })
 
