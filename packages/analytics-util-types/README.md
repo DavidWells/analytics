@@ -8,7 +8,7 @@ description: Utility library for runtime type checking
 
 A tiny tree shakable utility library for runtime type checking.
 
-The entire package weighs in at <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`1.07kb`<!-- AUTO-GENERATED-CONTENT:END -->.
+The entire package weighs in at <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`3.02kb`<!-- AUTO-GENERATED-CONTENT:END -->.
 
 [See live demo](https://utils-types.netlify.app/).
 
@@ -216,6 +216,24 @@ console.log(isPromise(myPromise))
 // true
 ```
 
+## `isErrorLike`
+
+Check if value is javascript `isErrorLike`
+
+```ts
+import { isErrorLike } from '@analytics/type-utils'
+
+isErrorLike(new Error()) // True
+isErrorLike({ name: "Error!", message: "This is an error", other: 0 }) // True
+isErrorLike({}) // False
+isErrorLike({ name: "Error", message: null }) // False
+// Works as a typguard
+const something = {name: "Error", message: "This is an error"} as unknown
+if (isErrorLike(something)) {
+  console.log(something.name) // No Typescript error
+}
+```
+
 ## `isRegex`
 
 Check if value is regular expression.
@@ -309,3 +327,11 @@ const formElement = document.querySelector('.my-form')
 console.log(isForm(formElement))
 // true
 ```
+
+## Alternative libs
+
+- [Native node types utils](https://nodejs.org/dist/latest-v17.x/docs/api/util.html#utiltypes)
+- https://github.com/jonschlinkert/kind-of
+- https://github.com/enricomarino/is
+- https://github.com/mesqueeb/is-what
+- https://github.com/stdlib-js/assert

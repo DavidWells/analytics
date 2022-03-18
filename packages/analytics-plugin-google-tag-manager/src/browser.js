@@ -5,6 +5,7 @@ export const config = {
   dataLayer: undefined,
   preview: undefined,
   auth: undefined,
+  execution: 'async'
   // assumesPageview: true,
 }
 
@@ -20,6 +21,7 @@ let initializedDataLayerName;
  * @param {string} [pluginConfig.customScriptSrc] - Load Google Tag Manager script from a custom source
  * @param {string} [pluginConfig.preview] - The preview-mode environment
  * @param {string} [pluginConfig.auth] - The preview-mode authentication credentials
+ * @param {string} [pluginConfig.execution] - The script execution mode
  * @return {object} Analytics plugin
  * @example
  *
@@ -36,7 +38,7 @@ function googleTagManager(pluginConfig = {}) {
       ...pluginConfig
     },
     initialize: ({ config }) => {
-      const { containerId, dataLayerName, customScriptSrc, preview, auth } = config
+      const { containerId, dataLayerName, customScriptSrc, preview, auth, execution } = config
       if (!containerId) {
         throw new Error('No google tag manager containerId defined')
       }
@@ -54,7 +56,9 @@ function googleTagManager(pluginConfig = {}) {
             j = d.createElement(s),
             dl = l != 'dataLayer' ? '&l=' + l : '',
             p = preview ? '&gtm_preview=' + preview + '&gtm_auth=' + auth + '&gtm_cookies_win=x' : '';
-          j.async = true;
+          if (execution) {
+            j[execution] = true;
+          }
           j.src = `${scriptSrc}?id=` + i + dl + p;
           f.parentNode.insertBefore(j, f);
         })(window, document, 'script', dataLayerName, containerId);

@@ -1,4 +1,4 @@
-import { isElement, isString, isArray } from '@analytics/type-utils'
+import { isElement, isString, isArray, isNodeType, FORM, INPUT } from '@analytics/type-utils'
 import toArray from './toArray'
 
 export function getForms(forms, opts) {
@@ -31,9 +31,9 @@ function getSelectors(array, debug) {
       if (debug) console.log(`${selector} not found`)
       return acc
     }
-    const formNodes = elements.filter((n) => {
-      if (!n || (n.nodeName !== 'FORM' && n.nodeName !== 'INPUT')) {
-        console.log('Selector passed in not a valid Form')
+    const formNodes = elements.filter((node) => {
+      if (!node || (!isNodeType(node, FORM) && !isNodeType(node, INPUT))) {
+        console.log('Selector passed in not a valid ' + FORM)
         return false
       }
       return true

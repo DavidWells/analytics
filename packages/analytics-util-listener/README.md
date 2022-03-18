@@ -71,26 +71,34 @@ Below is an example of automatically disabling a click handler while an api requ
 ```js
 import { addListener } from '@analytics/listener-utils'
 
-const disableFetchListener = addListener('#api', 'click', () => {
-  // Fetch in progress disable click handler to avoid duplicate calls
-  const renableAPIClickHandler = disableFetchListener()
+const disableListener = addListener('#button-selector', 'click', (event) => {
+  /* Fetch in progress.. Call disableListener to avoid duplicate calls */
+  const renable = disableListener()
 
   fetch(`https://swapi.dev/api/people/?search=l`)
     .then((response) => {
       return response.json()
     })
     .then((json) => {
-      console.log("data", json.results)
+      console.log('data', json.results)
       // Success! Reattach event handler
-      renableAPIClickHandler()
+      renable()
     })
     .catch((err) => {
       console.log('API error', err)
-        // Error! Reattach event handler
-      renableAPIClickHandler()
+      // Error! Reattach event handler
+      renable()
     })
 })
 // call disableFetchListener wherever you wish to disable this click handler
+
+/*
+HTML:
+
+<button id="button-selector">
+  Click Me
+</button>
+*/
 ```
 
 See [addEventListener docs](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener) for options 

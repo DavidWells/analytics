@@ -1,5 +1,6 @@
 const isServer = typeof window === 'undefined'
-const HIDDEN = 'hidden'
+
+export const HIDDEN = 'hidden'
 
 /**
  * Expose Tab visbility events to analtyics

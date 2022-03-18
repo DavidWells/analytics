@@ -1,6 +1,6 @@
 {
   "name": "@analytics/type-utils",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "Tiny runtime type checking utils",
   "author": "David Wells",
   "license": "MIT",
@@ -13,7 +13,6 @@
     "events",
     "types"
   ],
-  "netlifySiteId": "ac2aee7b-fd8f-45da-9458-3c903c81b2da",
   "amdName": "utilTypes",
   "source": "src/index.js",
   "main": "dist/analytics-util-types.js",
@@ -21,18 +20,20 @@
   "unpkg": "dist/analytics-util-types.umd.js",
   "sideEffects": false,
   "scripts": {
-    "start": "npm run sync && concurrently 'npm:watch:dev' 'npm:copy' 'npm:serve'",
+    "test": "uvu tests -r esm -i setup",
+    "types": "tsc --noEmit false --emitDeclarationOnly true",
+    "start": "npm run sync && concurrently 'npm:watch:*' 'npm:copy' 'npm:serve'",
     "serve": "servor dist index.html 8081 --reload --browse",
     "copy": "watchlist examples -- npm run sync",
     "sync": "cp examples/index.html dist",
-    "watch": "microbundle watch",
     "watch:dev": "microbundle watch --external none -f iife,umd -o dist/browser --no-compress",
+    "watch:test": "watchlist src tests examples -- npm t",
     "build": "microbundle && npm run build:dev",
     "build:dev": "microbundle build --external none -f iife,umd -o dist/browser",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
-    "deploy": "npm run build:dev && npm run sync && netlify deploy --prod --dir dist --site $npm_config_netlifySiteId"
+    "deploy": "npm run build:dev && npm run sync && netlify deploy --prod --dir dist --site ac2aee7b-fd8f-45da-9458-3c903c81b2da"
   },
   "files": [
     "lib",
@@ -43,8 +44,10 @@
   ],
   "devDependencies": {
     "concurrently": "^6.1.0",
-    "microbundle": "^0.13.0",
+    "esm": "^3.2.25",
+    "microbundle": "^0.14.2",
     "servor": "^4.0.2",
+    "uvu": "^0.5.1",
     "watchlist": "^0.2.3"
   }
 }

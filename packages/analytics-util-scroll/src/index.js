@@ -1,65 +1,23 @@
 import { throttle } from 'analytics-utils'
-import { isBrowser, noOp } from '@analytics/type-utils'
-
+import { isBrowser, noOp, isFunction } from '@analytics/type-utils'
+// import devtools from './detect-devtools'
+// console.log(devtools)
 const UP = 'up'
 const DOWN = 'down'
 
-function log(args) {
-  // console.log(args)
-}
-
-function calculateThresholds(docHeight, percentages) {
-  return percentages.map((percent) => {
-    if (percent === 100) {
-      // 1px cushion to trigger 100% event in iOS
-      return docHeight - 5
-    }
-    return docHeight * (percent / 100)
-  })
-}
-
-export function getScrollTop() {
-  if (!isBrowser) return 0
-  const body = document.body
-  const html = document.documentElement
-  return body.scrollTop || html.scrollTop
-}
-
-export function getWindowHeight() {
-  if (!isBrowser) return 0
-  return window.innerHeight || document.documentElement.clientHeight
-}
-
-export function getScrollDistance() {
-  return Math.round(getScrollTop() + getWindowHeight())
-}
-
-export function getDocHeight() {
-  if (!isBrowser) return 0
-  const body = document.body
-  const html = document.documentElement
-  return Math.max(
-    body.scrollHeight,
-    body.offsetHeight,
-    html.clientHeight,
-    html.scrollHeight,
-    html.offsetHeight
-  )
-}
-
-export function getScrollPercent(scrollDistance, docHeight) {
-  return Math.round((scrollDistance / docHeight) * 100)
+function log(...args) {
+ // console.log(args)
 }
 
 export function onScrollChange(handlers = {}) {
   if (!isBrowser) return noOp
+  let hasMoved = false
   const docHeightStart = getDocHeight()
   const scrollTopStart = getScrollTop()
   const scrollDistanceStart = getScrollDistance()
   const scrollBottomPercentStart = getScrollPercent(scrollDistanceStart, docHeightStart)
   const scrollTopPercentStart = getScrollPercent(scrollTopStart, docHeightStart)
-  let hasMoved = false
-  //*
+  /*
   log('docHeightStart', docHeightStart)
   log('scrollTopStart', scrollTopStart)
   log('scrollDistanceStart', previous)
@@ -76,7 +34,6 @@ export function onScrollChange(handlers = {}) {
   log('Starting scrollDistanceMax', scrollDistanceMax)
   log('Starting scrollDistanceMin', scrollDistanceMin)
   /**/
-
   const percentKeys = Object.keys(handlers)
   if (!percentKeys.length) {
     return noOp
@@ -104,9 +61,9 @@ export function onScrollChange(handlers = {}) {
     log('current scrollDistanceMin', scrollDistanceMin)
     /**/
 
-    // if we've fired off all percentages, then return
+    /* if we've fired off all percentages, then return */
     if (callbackCache.length >= percentages.length) {
-      log('all fired. Remove listerner')
+      // log('all fired. Remove listerner')
       return
     }
 
@@ -154,29 +111,29 @@ export function onScrollChange(handlers = {}) {
         movedCallbacks = movedCallbacks.filter((p) => p !== percent)
         acc.singleFunction = percent
       }
-
       if (
         direction === DOWN
         && !callbackCache.includes(percent)
         && scrollDistanceCurrent >= height
         && percent > scrollTopPercentStart
       ) {
+        // console.log('percent', percent)
+        // console.log('xxxscrollTopPercentStart', scrollTopPercentStart)
         seenCallbacks.push(percent)
         acc.callbacks = acc.callbacks.concat(percent)
         return acc
       }
-
-      log('Queue up last function only', percent)
-      log('scrollBottomPercent', scrollBottomPercent)
-      log('scrollTopPercentStart', scrollTopPercentStart)
+      // log('Queue up last function only', percent)
+      // log('scrollBottomPercent', scrollBottomPercent)
+      // log('scrollTopPercentStart', scrollTopPercentStart)
       if (
         direction === UP
         && !callbackCache.includes(percent)
         && scrollDistanceCurrent <= height
         && percent <= scrollBottomPercent
       ) {
-        log('>Queue up last function only', percent)
-        log('>scrollBottomPercent', scrollBottomPercent)
+        // log('>Queue up last function only', percent)
+        // log('>scrollBottomPercent', scrollBottomPercent)
 
         /* Add first only */
         // if (acc.texter.length === 1) {
@@ -185,7 +142,6 @@ export function onScrollChange(handlers = {}) {
 
         /* Add last only */
         acc.foundFunc = [percent]
-
         /* Add all */
         // acc.texter = acc.texter.concat(percent)
 
@@ -196,7 +152,7 @@ export function onScrollChange(handlers = {}) {
         // if (acc.foundFunc.length === 1) {
         //   return acc
         // }
-        log(`FOUND ${percent}`)
+        // log(`FOUND ${percent}`)
         if (acc.foundFunc.length === 0) {
           acc.foundFunc = [percent]
         }
@@ -206,10 +162,10 @@ export function onScrollChange(handlers = {}) {
         seenCallbacks.push(percent)
         // If closest singleFunction alredy found, shift to scroll up
         if (!acc.singleFunction) {
-          log(`fire ${percent}`)
+          // log(`fire ${percent}`)
           acc.singleFunction = percent
         } else {
-          log(`movedCallbacks ${percent}`)
+          // log(`movedCallbacks ${percent}`)
           movedCallbacks.push(percent)
         }
       }
@@ -220,16 +176,15 @@ export function onScrollChange(handlers = {}) {
       callbacks: [],
       direction: direction,
     })
-
-    log('triggers', triggers)
+    // log('triggers', triggers)
 
     // Set previous scroll for direction
     previous = scrollDistanceCurrent
 
     if (direction === DOWN && triggers.callbacks) {
       triggers.callbacks.forEach((match) => {
-        log('Call functions')
-        if (typeof handlers[match] === 'function') {
+        // log('Call functions', triggers.callbacks)
+        if (isFunction(handlers[match])) {
           handlers[match]({
             trigger: match,
             direction: direction,
@@ -243,9 +198,9 @@ export function onScrollChange(handlers = {}) {
     }
 
     if (triggers.singleFunction) {
-      log('>> Fire singleFunction')
       const { singleFunction, direction } = triggers
-      if (typeof handlers[singleFunction] === 'function') {
+      if (isFunction(handlers[singleFunction])) {
+        // log('>> Fire singleFunction', triggers.callbacks)
         handlers[singleFunction]({
           trigger: singleFunction,
           direction: direction,
@@ -260,6 +215,47 @@ export function onScrollChange(handlers = {}) {
 
   window.addEventListener('scroll', handler)
   return () => window.removeEventListener('scroll', handler)
+}
+
+function calculateThresholds(docHeight, percentages) {
+  return percentages.map((percent) => {
+    if (percent === 100) {
+      // 1px cushion to trigger 100% event in iOS
+      return docHeight - 5
+    }
+    return docHeight * (percent / 100)
+  })
+}
+
+export function getScrollTop() {
+  if (!isBrowser) return 0
+  return document.body.scrollTop || document.documentElement.scrollTop
+}
+
+export function getWindowHeight() {
+  if (!isBrowser) return 0
+  return window.innerHeight || document.documentElement.clientHeight
+}
+
+export function getScrollDistance() {
+  return Math.round(getScrollTop() + getWindowHeight())
+}
+
+export function getDocHeight() {
+  if (!isBrowser) return 0
+  const body = document.body
+  const html = document.documentElement
+  return Math.max(
+    body.scrollHeight,
+    body.offsetHeight,
+    html.clientHeight,
+    html.scrollHeight,
+    html.offsetHeight
+  )
+}
+
+export function getScrollPercent(scrollDistance, docHeight) {
+  return Math.round((scrollDistance / docHeight) * 100)
 }
 
 export function getPercentages() {

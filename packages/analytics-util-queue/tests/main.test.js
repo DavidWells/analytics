@@ -155,7 +155,7 @@ test('opts.interval', async () => {
 	const queue = smartQueue(arr => {
 		let del = Date.now() - now
 		t.ok(Array.isArray(arr), 'caller receives Array of items')
-		t.ok(del > 3e3, '~> ran after 3s interval')
+		t.ok(del > 2990, '~> ran after 3s interval')
 		t.is(arr.length, 5, '~> received 5 items')
 		t.is(queue.size(), 0, '~> instance fully drained')
 	}, {

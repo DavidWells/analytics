@@ -1,6 +1,6 @@
 {
   "name": "@analytics/router-utils",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Route change utilities for single page apps",
   "author": "David Wells",
   "license": "MIT",

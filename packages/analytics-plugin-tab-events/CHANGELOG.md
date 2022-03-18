@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.1](https://github.com/DavidWells/analytics/compare/analytics-plugin-tab-events@0.2.0...analytics-plugin-tab-events@0.2.1) (2022-01-02)
+
+**Note:** Version bump only for package analytics-plugin-tab-events
+
+
+
+
+
 # [0.2.0](https://github.com/DavidWells/analytics/compare/analytics-plugin-tab-events@0.1.1...analytics-plugin-tab-events@0.2.0) (2021-05-27)
 
 
