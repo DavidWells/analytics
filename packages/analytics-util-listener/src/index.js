@@ -1,4 +1,4 @@
-import { isBrowser, isArray, isString, noOp } from '@analytics/type-utils'
+import { isBrowser, isString, isFunction, ensureArray, noOp } from '@analytics/type-utils'
 
 const EVENT = 'Event'
 const EventListener = EVENT + 'Listener'
@@ -60,7 +60,8 @@ function toArray(obj, isSelector) {
     return array
   }
   // Is Array, return it OR Convert single element to Array
-  return isArray(obj) ? obj : [ obj ]
+  // return isArray(obj) ? obj : [ obj ]
+  return ensureArray(obj)
 }
 
 function oncify(handler, opts) {
@@ -74,7 +75,7 @@ function oncify(handler, opts) {
  * @param {*} [context] - Extend function context
  * @returns 
  */
-function once(fn, context) {
+export function once(fn, context) {
   var result
   return function() {
     if (fn) {
@@ -119,7 +120,7 @@ function once(fn, context) {
  */
 
 /** @type {AddEventListener} */
-const addListener = createListener(EVENT)
+export const addListener = createListener(EVENT)
 
 /**
  * Remove an event listener
@@ -133,13 +134,24 @@ const addListener = createListener(EVENT)
  */
 
 /** @type {RemoveEventListener} */
-const removeListener = createListener()
+export const removeListener = createListener()
 
-export {
-  /* Fire function only once */
-  once,
-  /* Listen to onSubmit events on 1 or more elements */
-  addListener,
-  /* Listen to onChange events on 1 or more elements */
-  removeListener,
+
+function wrap(existing, newFunction, context = null) {
+  if (!isFunction(existing)) return newFunction
+  return function () {
+    existing.apply(context, arguments)
+    newFunction.apply(context, arguments)
+  }
 }
+
+// https://gist.github.com/DavidWells/18ff6633ce356237ef91c764812ee08a
+export function addWindowEvent(event, fn) {
+  if (!isBrowser || !isFunction(window[event])) {
+    return window[event] = fn
+  }
+  return wrap(window[event], fn, window)
+}
+
+export const onError = addWindowEvent.bind(null, 'onerror')
+export const onLoad = addWindowEvent.bind(null, 'onload')
