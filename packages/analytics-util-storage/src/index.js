@@ -193,6 +193,7 @@ function format(location, current, previous) {
 //   GLOBAL,
 //   COOKIE,
 //   LOCAL_STORAGE,
+//   SESSION_STORAGE,   
 // }
 
 export {
@@ -201,10 +202,12 @@ export {
   GLOBAL,
   COOKIE,
   LOCAL_STORAGE,
+  SESSION_STORAGE,
   getCookie,
   setCookie,
   removeCookie,
   globalContext,
+  hasSessionStorage,
   hasLocalStorage,
   hasCookies
 }
