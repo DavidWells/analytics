@@ -2,7 +2,6 @@
 node_modules
 _temp-types
 temp-types
-package-lock.json
 
 node-test.js
 
