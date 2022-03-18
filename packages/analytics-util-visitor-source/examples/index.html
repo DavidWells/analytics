@@ -61,12 +61,11 @@
     <div>
       <h2>Visitor Source Demo</h2>
       <p>Open up console to see logs.</p>
+      <a href="/">Self link.</a>
       <pre id="val"></pre>
     </div>
   
     <script type="text/javascript">
-      const valueDiv = document.querySelector('#val')
-
       const customCampaignMap = {
         org_social: 'Organic Social',
         paid_social: 'Paid Social',
@@ -89,12 +88,13 @@
         referrer: document.referrer 
       }))
 
+      console.log('document.referrer', document.referrer)
       const d = getVisitorSource({
         referrer: document.referrer,
         mapper: customMapper
       })
       console.log('getVisitorSource with mapper', d)
-
+      const valueDiv = document.querySelector('#val')
       valueDiv.innerHTML = JSON.stringify(d, null, 2)
 
 
