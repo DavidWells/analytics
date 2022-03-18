@@ -147,10 +147,10 @@ function snowplowPlugin(pluginConfig = {}) {
       ];
 
       if (trackerSettings.contexts.performanceTiming) {
-        plugins.push(PerformanceTimingPlugin());
+        trackerSettings.plugins.push(PerformanceTimingPlugin());
       }
       if (trackerSettings.contexts.clientHints) {
-        plugins.push(
+        trackerSettings.plugins.push(
           ClientHintsPlugin(
             trackerSettings.contexts.clientHints === true
               ? false
@@ -159,13 +159,13 @@ function snowplowPlugin(pluginConfig = {}) {
         );
       }
       if (trackerSettings.contexts.gaCookies) {
-        plugins.push(GaCookiesPlugin());
+        trackerSettings.plugins.push(GaCookiesPlugin());
       }
       if (trackerSettings.contexts.geolocation) {
-        plugins.push(GeolocationPlugin());
+        trackerSettings.plugins.push(GeolocationPlugin());
       }
       if (trackerSettings.contexts.optimizelyXSummary) {
-        plugins.push(OptimizelyXPlugin());
+        trackerSettings.plugins.push(OptimizelyXPlugin());
       }
 
       newTracker(name, collectorUrl, trackerSettings);
