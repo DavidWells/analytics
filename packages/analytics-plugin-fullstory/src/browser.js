@@ -54,7 +54,7 @@ function fullStoryPlugin(pluginConfig = {}) {
       }
 
       window._fs_debug = config.debug
-      window._fs_host = 'www.fullstory.com'
+      window._fs_host = 'fullstory.com'
       window._fs_org = config.org
       window._fs_namespace = 'FS'
 
