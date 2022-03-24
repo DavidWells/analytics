@@ -4,7 +4,7 @@ pageTitle: Storage Utils
 description: Utility library for persisting data
 ---
 
-A tiny storage utility library with fallback mechanism in <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`999 bytes`<!-- AUTO-GENERATED-CONTENT:END -->.
+A tiny storage utility library with fallback mechanism in <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`1017 bytes`<!-- AUTO-GENERATED-CONTENT:END -->.
 
 By default, `@analytics/storage-utils` will persist values in browser in this order:
 

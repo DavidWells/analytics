@@ -8,7 +8,7 @@ description: Utility library for runtime type checking
 
 A tiny tree shakable utility library for runtime type checking.
 
-The entire package weighs in at <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`3.02kb`<!-- AUTO-GENERATED-CONTENT:END -->.
+The entire package weighs in at <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`2.22kb`<!-- AUTO-GENERATED-CONTENT:END -->.
 
 [See live demo](https://utils-types.netlify.app/).
 
