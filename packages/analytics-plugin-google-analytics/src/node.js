@@ -38,12 +38,24 @@ if (!process.browser) {
 /**
  * Serverside Google Analytics plugin
  * @param {object} pluginConfig - Plugin settings
- * @param {string} pluginConfig.trackingId - Google Analytics site tracking Id
+ * @param {string} pluginConfig.trackingId - Google Analytics site tracking Id. Same as tid (se below), only one needed
+ * @param {string} pluginConfig.tid - Google Analytics site tracking Id. Same as trackingId (se above), only one needed
+ * @param {string} [pluginConfig.cid] - Google Analytics client Id. It generates a random UUID if none is set
+ * @param {boolean} [pluginConfig.strictCidFormat] - Set it to false to set a custom client Id (not UUID). Only used if cid is set
+ * @param {string} [pluginConfig.uid] - Google Analytics user Id
  * @return {*}
  * @example
  *
  * googleAnalytics({
- *   trackingId: '123-xyz'
+ *   trackingId: '123-xyz',
+ *   cid: '123456789.987654321',
+ *   strictCidFormat: false
+ * })
+ *
+ * googleAnalytics({
+ *   tid: '123-xyz',
+ *   cid: '123456789.987654321',
+ *   strictCidFormat: false
  * })
  */
 function googleAnalytics(pluginConfig = {}) {
@@ -80,8 +92,9 @@ function googleAnalytics(pluginConfig = {}) {
 export default googleAnalytics
 
 export function initialize(config) {
-  if (!config.trackingId) throw new Error('No google analytics trackingId defined')
-  return universalAnalytics(config.trackingId)
+  if (!config.trackingId && !config.tid) throw new Error('No google analytics trackingId defined')
+  if (!config.tid) config.tid = config.trackingId
+  return universalAnalytics(config)
 }
 
 export function pageView({ path, href, title }, client) {
