@@ -177,7 +177,7 @@ function awsPinpointPlugin(pluginConfig = {}) {
             userId: instance.user('userId'),
             hash: window.location.hash,
             path: window.location.pathname,
-            referrer: document.referrer,
+            referrer: document.referrer || null,
             search: window.location.search,
             title: document.title,
             host: window.location.hostname,
