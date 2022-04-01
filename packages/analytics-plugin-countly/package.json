@@ -1,0 +1,54 @@
+{
+  "name": "@analytics/countly",
+  "version": "0.21.11",
+  "description": "Countly plugin for 'analytics' module",
+  "projectMeta": {
+    "provider": {
+      "name": "Countly",
+      "url": "https://count.ly/"
+    },
+    "platforms": {
+      "browser": "./src/browser.js",
+      "node": "./src/node.js"
+    }
+  },
+  "keywords": [
+    "analytics",
+    "analytics-project",
+    "analytics-plugin",
+    "countly"
+  ],
+  "author": "Furkan Başaran <fb@count.ly>",
+  "license": "MIT",
+  "scripts": {
+    "docs": "node ../analytics-cli/bin/run docs",
+    "build": "node ../../scripts/build/index.js",
+    "watch": "node ../../scripts/build/_watch.js",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish",
+    "es": "../../node_modules/.bin/babel-node ./testBabel.js"
+  },
+  "main": "lib/analytics-plugin-countly.cjs.js",
+  "globalName": "analyticsCountly",
+  "jsnext:main": "lib/analytics-plugin-countly.es.js",
+  "module": "lib/analytics-plugin-countly.es.js",
+  "browser": {
+    "./lib/analytics-plugin-countly.cjs.js": "./lib/analytics-plugin-countly.browser.cjs.js",
+    "./lib/analytics-plugin-countly.es.js": "./lib/analytics-plugin-countly.browser.es.js"
+  },
+  "files": [
+    "dist",
+    "lib",
+    "README.md"
+  ],
+  "homepage": "https://github.com/DavidWells/analytics#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidWells/analytics.git"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1"
+  }
+}
