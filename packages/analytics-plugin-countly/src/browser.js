@@ -9,7 +9,7 @@
  * @return {object} Analytics plugin
  * @example
  *
- * countly({
+ * countlyPlugin({
     app_key: 'YOUR_APP_KEY',
     server_url: 'https://YOUR_COUNTLY_SERVER_URL',
     remote_config: true,
