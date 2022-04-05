@@ -26,11 +26,11 @@ function countlyPlugin(pluginConfig = {}) {
     initialize: ({ config }) => {
       const { app_key, server_url, debug } = config;
       if (!app_key) {
-        throw new Error("No app_key provided");
+        throw new Error("Countly: No app_key provided");
       }
 
       if (!server_url) {
-        throw new Error("No server_url provided");
+        throw new Error("Countly: No server_url provided");
       }
 
       Countly.init({
@@ -46,11 +46,11 @@ function countlyPlugin(pluginConfig = {}) {
       Countly.track_view(path);
     },
     // track event
-    track: ({ eventName, payload }) => {
+    track: ({ payload }) => {
       Countly.add_event({
-        "key": eventName,
+        "key": payload.event,
         "count": 1,
-        "segmentation": payload
+        "segmentation": payload.properties
       });
     },
     /* identify user */
@@ -63,9 +63,9 @@ function countlyPlugin(pluginConfig = {}) {
         Countly.change_id(userId);
       }
       if (traits) {
-        for (trait in traits) {
-          if (allowedProps[trait]) {
-            userObject[allowedProps[trait]] = traits[trait];
+        for (let trait in traits) {
+          if (allowedProps.indexOf(trait) > -1) {
+            userObject[trait] = traits[trait];
           }
           else {
             userObject.custom[trait] = traits[trait];
@@ -73,31 +73,6 @@ function countlyPlugin(pluginConfig = {}) {
         }
       }
       Countly.user_details(userObject);
-    },
-    methods: {
-      /* https://support.count.ly/hc/en-us/articles/360037442892-NodeJS-SDK#crash-reporting */
-      enableErrorTracking() {
-        Countly.track_errors();
-      },
-      /* https://support.count.ly/hc/en-us/articles/360037442892-NodeJS-SDK#session */
-      enableSessionTracking() {
-        Countly.track_sessions();
-      },
-      /* https://support.count.ly/hc/en-us/articles/360037442892-NodeJS-SDK#application-performance-monitoring */
-      /**
-       * Report application performance monitoring data
-       * @param {object} payload 
-       * @param {string} payload.type - Type of the performance data
-       * @param {string} payload.name - Name of the performance data
-       * @param {number} payload.stz - start timestamp in miliseconds
-       * @param {number} payload.etz - end timestamp in miliseconds
-       * @param {object} payload.app_metrics - custom metrics to be sent
-       */
-      reportTrace(payload) {
-        const { type, name, stz, etz, app_metrics } = payload;
-        //report network trace
-        Countly.report_trace({type, name, stz, etz, app_metrics});
-      }
     }
   }
 }
