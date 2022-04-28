@@ -1,4 +1,4 @@
-import { beacon } from "quala";
+const { beacon } = require("quala");
 
 function qualaPlugin(writeKey) {
   let loaded = false;
@@ -41,4 +41,4 @@ function qualaPlugin(writeKey) {
   };
 }
 
-export default qualaPlugin;
+module.exports = qualaPlugin;
