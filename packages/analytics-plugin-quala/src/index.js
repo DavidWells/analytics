@@ -30,10 +30,6 @@ function qualaPlugin(writeKey) {
     identify: ({ payload }) => {
       if (!loaded) return;
       const { userId, traits } = payload;
-      console.log("====================================");
-      console.log(traits);
-      console.log("traits");
-      console.log("====================================");
       beacon.identify({
         // Adding this as companyId is mandatory but might not be provided
         companyId: traits.companyId || "company-id-not-provided",
