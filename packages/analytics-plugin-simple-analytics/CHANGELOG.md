@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.4](https://github.com/DavidWells/analytics/compare/@analytics/simple-analytics@0.3.3...@analytics/simple-analytics@0.3.4) (2022-06-10)
+
+
+### Bug Fixes
+
+* missing config value [#276](https://github.com/DavidWells/analytics/issues/276) ([202ffa4](https://github.com/DavidWells/analytics/commit/202ffa47654f46706209d59492bd3e94d720dcf5))
+
+
+
+
+
 ## [0.3.3](https://github.com/DavidWells/analytics/compare/@analytics/simple-analytics@0.3.2...@analytics/simple-analytics@0.3.3) (2021-12-12)
 
 **Note:** Version bump only for package @analytics/simple-analytics
