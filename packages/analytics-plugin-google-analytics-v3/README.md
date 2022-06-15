@@ -1,7 +1,7 @@
 <!--
-title: Adding Google Analytics to your app using open source analytics
-description: Connect Google Analytics to the analytics library
-pageTitle: Google Analytics
+title: Adding Google Analytics v3 to your app using open source analytics
+description: Connect Google Analytics v3 to the analytics library
+pageTitle: Google Analytics v3
 -->
 
 # Google Analytics
@@ -10,7 +10,7 @@ This library exports the `google-analytics` plugin for the [`analytics`](https:/
 
 This analytics plugin will load google analytics into your application.
 
-For more information [see the docs](https://getanalytics.io/plugins/google-analytics/).
+For more information [see the docs](https://getanalytics.io/plugins/google-analytics-v3/).
 
 <!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
 <details>
@@ -43,20 +43,20 @@ For more information [see the docs](https://getanalytics.io/plugins/google-analy
 
 ```bash
 npm install analytics
-npm install @analytics/google-analytics
+npm install @analytics/google-analytics-v3
 ```
 
 <!-- AUTO-GENERATED-CONTENT:START (PLUGIN_DOCS) -->
 
 ## How to use
 
-The `@analytics/google-analytics` package works in [the browser](#browser-usage) and [server-side in Node.js](#server-side-usage). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
+The `@analytics/google-analytics-v3` package works in [the browser](#browser-usage) and [server-side in Node.js](#server-side-usage). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
 
 Below is an example of how to use the browser plugin.
 
 ```js
 import Analytics from 'analytics'
-import googleAnalytics from '@analytics/google-analytics'
+import googleAnalytics from '@analytics/google-analytics-v3'
 
 const analytics = Analytics({
   app: 'awesome-app',
@@ -91,7 +91,7 @@ See [additional implementation examples](#additional-examples) for more details 
 
 ## Platforms Supported
 
-The `@analytics/google-analytics` package works in [the browser](#browser-usage) and [server-side in Node.js](#server-side-usage)
+The `@analytics/google-analytics-v3` package works in [the browser](#browser-usage) and [server-side in Node.js](#server-side-usage)
 
 ## Browser usage
 
@@ -105,7 +105,7 @@ The Google Analytics client side browser plugin works with these analytic api me
 
 ```js
 import Analytics from 'analytics'
-import googleAnalytics from '@analytics/google-analytics'
+import googleAnalytics from '@analytics/google-analytics-v3'
 
 const analytics = Analytics({
   app: 'awesome-app',
@@ -145,7 +145,7 @@ The Google Analytics server-side node.js plugin works with these analytic api me
 
 ```js
 import Analytics from 'analytics'
-import googleAnalytics from '@analytics/google-analytics'
+import googleAnalytics from '@analytics/google-analytics-v3'
 
 const analytics = Analytics({
   app: 'awesome-app',
@@ -174,7 +174,7 @@ Below are additional implementation examples.
 
   ```js
   import Analytics from 'analytics'
-  import googleAnalytics from '@analytics/google-analytics'
+  import googleAnalytics from '@analytics/google-analytics-v3'
 
   const analytics = Analytics({
     app: 'awesome-app',
@@ -212,7 +212,7 @@ Below are additional implementation examples.
 
   ```js
   const analyticsLib = require('analytics').default
-  const googleAnalytics = require('@analytics/google-analytics').default
+  const googleAnalytics = require('@analytics/google-analytics-v3').default
 
   const analytics = analyticsLib({
     app: 'my-app-name',
@@ -251,9 +251,9 @@ Below are additional implementation examples.
   <!DOCTYPE html>
   <html>
     <head>
-      <title>Using @analytics/google-analytics in HTML</title>
+      <title>Using @analytics/google-analytics-v3 in HTML</title>
       <script src="https://unpkg.com/analytics/dist/analytics.min.js"></script>
-      <script src="https://unpkg.com/@analytics/google-analytics/dist/@analytics/google-analytics.min.js"></script>
+      <script src="https://unpkg.com/@analytics/google-analytics-v3/dist/@analytics/google-analytics-v3.min.js"></script>
       <script type="text/javascript">
         /* Initialize analytics */
         var Analytics = _analytics.init({
@@ -294,13 +294,13 @@ Below are additional implementation examples.
 <details>
   <summary>Using in HTML via ES Modules</summary>
 
-  Using `@analytics/google-analytics` in ESM modules.
+  Using `@analytics/google-analytics-v3` in ESM modules.
 
   ```html
   <!DOCTYPE html>
   <html>
     <head>
-      <title>Using @analytics/google-analytics in HTML via ESModules</title>
+      <title>Using @analytics/google-analytics-v3 in HTML via ESModules</title>
       <script>
         // Polyfill process.
         // **Note**: Because `import`s are hoisted, we need a separate, prior <script> block.
@@ -308,7 +308,7 @@ Below are additional implementation examples.
       </script>
       <script type="module">
         import analytics from 'https://unpkg.com/analytics/lib/analytics.browser.es.js?module'
-        import analyticsGa from 'https://unpkg.com/@analytics/google-analytics/lib/analytics-plugin-ga.browser.es.js?module'
+        import analyticsGa from 'https://unpkg.com/@analytics/google-analytics-v3/lib/analytics-plugin-ga.browser.es.js?module'
         /* Initialize analytics */
         const Analytics = analytics({
           app: 'analytics-html-demo',
@@ -359,7 +359,7 @@ To anonymize the IP addresses of your visitors set the `anonymizeIp` configurati
 
 ```js
 import Analytics from 'analytics'
-import googleAnalytics from '@analytics/google-analytics'
+import googleAnalytics from '@analytics/google-analytics-v3'
 
 /* initialize analytics */
 const analytics = Analytics({
@@ -396,7 +396,7 @@ When initializing `analytics`, make sure you set `customDimensions` and map your
 
 ```js
 import Analytics from 'analytics'
-import googleAnalytics from '@analytics/google-analytics'
+import googleAnalytics from '@analytics/google-analytics-v3'
 
 /* initialize analytics */
 const analytics = Analytics({
@@ -454,7 +454,7 @@ Here is an example of using 2 Google Analytics instances in an app.
 
 ```js
 import Analytics from 'analytics'
-import googleAnalytics from '@analytics/google-analytics'
+import googleAnalytics from '@analytics/google-analytics-v3'
 
 // Normal google analytics instance
 const instanceOne = googleAnalytics({
@@ -504,7 +504,7 @@ To do this, you can add the `customScriptSrc` option pointing to your custom Goo
 
 ```js
 import Analytics from 'analytics'
-import googleAnalytics from '@analytics/google-analytics'
+import googleAnalytics from '@analytics/google-analytics-v3'
 
 const analytics = Analytics({
   app: 'awesome-app',
@@ -531,7 +531,7 @@ Here is an example:
 
 ```js
 import Analytics from 'analytics'
-import googleAnalytics from '@analytics/google-analytics'
+import googleAnalytics from '@analytics/google-analytics-v3'
 
 /* initialize analytics and load plugins */
 const analytics = Analytics({
@@ -573,7 +573,7 @@ The tasks that can be hooked into are listed below & in the [GA task docs](https
 
 ```js
 import Analytics from 'analytics'
-import googleAnalytics from '@analytics/google-analytics'
+import googleAnalytics from '@analytics/google-analytics-v3'
 
 /* initialize analytics and load plugins */
 const analytics = Analytics({
@@ -633,7 +633,7 @@ You can add these properties in the `cookieConfig` on the plugin config.
 
 ```js
 import Analytics from 'analytics'
-import googleAnalytics from '@analytics/google-analytics'
+import googleAnalytics from '@analytics/google-analytics-v3'
 
 const analytics = Analytics({
   app: 'awesome-app',
