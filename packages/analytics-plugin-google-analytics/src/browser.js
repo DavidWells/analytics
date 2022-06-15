@@ -1,299 +1,261 @@
-/* global ga */
-
+/* global, window */
 const defaultConfig = {
-  /* See description below */
-  trackingId: null,
-  /* See description below */
-  debug: false,
-  /* See description below */
-  anonymizeIp: false,
-  /* See description below */
+  sendPageView: true,
   customDimensions: {},
-  /* See description below */
-  resetCustomDimensionsOnPage: [],
-  /* See description below */
-  setCustomDimensionsToPage: true,
-  /* Custom metrics https://bit.ly/3c5de88 */
-  // TODO customMetrics: { key: 'metric1' }
-  /* Content groupings https://bit.ly/39Zt3Me */
-  // TODO contentGroupings: { key: 'contentGroup1' }
+  anonymizeIp: false,
+  allowGoogleSignals: true,
+  allowAdPersonalizationSignals: true,
 }
 
 let loadedInstances = {}
 
-/**
- * Google analytics plugin
- * @link https://getanalytics.io/plugins/google-analytics/
- * @link https://analytics.google.com/analytics/web/
- * @link https://developers.google.com/analytics/devguides/collection/analyticsjs
- * @param {object}  pluginConfig - Plugin settings
- * @param {string}  pluginConfig.trackingId - Google Analytics site tracking Id
- * @param {boolean} [pluginConfig.debug] - Enable Google Analytics debug mode
- * @param {boolean} [pluginConfig.anonymizeIp] - Enable [Anonymizing IP addresses](https://bit.ly/3c660Rd) sent to Google Analytics. [See details below](#anonymize-visitor-ips)
- * @param {object}  [pluginConfig.customDimensions] - Map [Custom dimensions](https://bit.ly/3c5de88) to send extra information to Google Analytics. [See details below](#using-ga-custom-dimensions)
- * @param {object}  [pluginConfig.resetCustomDimensionsOnPage] - Reset custom dimensions by key on analytics.page() calls. Useful for single page apps.
- * @param {boolean} [pluginConfig.setCustomDimensionsToPage] - Mapped dimensions will be set to the page & sent as properties of all subsequent events on that page. If false, analytics will only pass custom dimensions as part of individual events
- * @param {string}  [pluginConfig.instanceName] - Custom tracker name for google analytics. Use this if you need multiple googleAnalytics scripts loaded
- * @param {string}  [pluginConfig.customScriptSrc] - Custom URL for google analytics script, if proxying calls
- * @param {object}  [pluginConfig.cookieConfig] - Additional cookie properties for configuring the [ga cookie](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#configuring_cookie_field_settings)
- * @param {object}  [pluginConfig.tasks] - [Set custom google analytic tasks](https://developers.google.com/analytics/devguides/collection/analyticsjs/tasks)
- * @return {*}
- * @example
- *
- * googleAnalytics({
- *   trackingId: 'UA-1234567'
- * })
- */
-function googleAnalytics(pluginConfig = {}) {
+function googleGtagAnalytics(pluginConfig = {}) {
   let pageCalledOnce = false
   // Allow for multiple google analytics instances
-  const { instanceName, instancePrefix } = getInstanceDetails(pluginConfig)
+  const instanceName = pluginConfig.instanceName ? pluginConfig.instanceName : ''
+  const trackingId = pluginConfig.trackingId
   return {
-    name: 'google-analytics',
-    config: {
-      ...defaultConfig,
-      ...pluginConfig
-    },
-    // Load google analytics
+    name: 'google-gtag-analytics',
+    config: Object.assign(defaultConfig, pluginConfig),
+    // Load gtag.js and define gtag
+    // Set custom dimensions (ua properties) and parameters (ga4 properties)
     initialize: (pluginApi) => {
       const { config, instance } = pluginApi
-      if (!config.trackingId) throw new Error('No GA trackingId defined')
-      const { customDimensions, customScriptSrc } = config
-      // var to hoist
-      const scriptSrc = customScriptSrc || 'https://www.google-analytics.com/analytics.js'
-      // Load google analytics script to page
-      if (gaNotLoaded(scriptSrc)) {
-        /* eslint-disable */
-        (function(i, s, o, g, r, a, m) {
-          i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function() {
-            (i[r].q = i[r].q || []).push(arguments)
-          }, i[r].l = 1 * new Date(); a = s.createElement(o),
-          m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
-        })(window, document, 'script', scriptSrc, 'ga')
-        /* eslint-enable */
+      if (!trackingId) throw new Error('No GA trackingId defined')
+      const gtagScriptSource = 'https://www.googletagmanager.com/gtag/js'
+      const scriptSrc = config.customScriptSrc || `${gtagScriptSource}?id=${trackingId}`
+      if (!gtagLoaded(config.customScriptSrc || gtagScriptSource)) {
+        injectScript(scriptSrc)
       }
-
+      if (!window.gtag) {
+        setUpWindowGtag()
+      }
+      /**
+       * Covert custom dimensions to:
+       * { dimension1: traitOne, dimension2: traitTwo }
+       */
+      const customDimensions = formatCustomDimensionsIntoCustomMap(config)
+      /**
+       * Convert `cookieConfig`'s keys from camel case to snake cases
+       */
+      let newCookieConfig = {}
+      if (config.cookieConfig !== undefined) {
+        Object.entries(config.cookieConfig).forEach(([key, value]) => {
+          newCookieConfig[camelToSnakeCase(key)] = value
+        })
+      }
       // Initialize tracker instance on page
       if (!loadedInstances[instanceName]) {
-        const gaConfig = {
-          cookieDomain: config.domain || 'auto',
-          siteSpeedSampleRate: config.siteSpeedSampleRate || 1,
-          sampleRate: config.sampleRate || 100,
-          allowLinker: true,
-          ...config.cookieConfig,
-          // useAmpClientId: config.useAmpClientId
-        }
-        if (instanceName) {
-          gaConfig.name = instanceName
-        }
-
-        ga('create', config.trackingId, gaConfig)
-
-        if (config.debug) {
-          // Disable sends to GA http://bit.ly/2Ro0vTR
-          ga(`${instancePrefix}set`, 'sendHitTask', null)
-          window.ga_debug = { trace: true }
-        }
-
-        if (config.anonymizeIp) {
-          ga(`${instancePrefix}set`, 'anonymizeIp', true)
-        }
-
-        if (config.tasks) {
-          const taskList = [
-            'customTask',
-            'previewTask',
-            'checkProtocolTask',
-            'validationTask',
-            'checkStorageTask',
-            'historyImportTask',
-            'samplerTask',
-            'buildHitTask',
-            'sendHitTask',
-            'timingTask',
-            'displayFeaturesTask'
-          ]
-          taskList.forEach((taskName) => {
-            if (config.tasks.hasOwnProperty(taskName)) {
-              const task = config.tasks[taskName]
-              if (typeof task === 'function') {
-                ga(config.tasks[taskName])
-              } else if (task === null) {
-                ga(`${instancePrefix}set`, taskName, task)
-              }
-            }
-          })
+        let gtagConfig = Object.assign(
+          {
+            cookie_domain: config.domain || 'auto',
+            send_page_view: config.sendPageView ? config.sendPageView : true,
+            allow_google_signals: config.allowGoogleSignals,
+            allow_ad_personalization_signals: config.allowAdPersonalizationSignals,
+            custom_map: customDimensions,
+            anonymize_ip: config.anonymizeIp,
+          },
+          newCookieConfig
+        )
+        if (config.linker) {
+          gtagConfig.linker = config.linker
         }
         /* set custom dimensions from user traits */
         const user = instance.user() || {}
         const traits = user.traits || {}
-        if (Object.keys(traits).length && customDimensions && Object.keys(customDimensions).length) {
-          const dimensions = formatObjectIntoDimensions(traits, config)
-          ga(`${instancePrefix}set`, dimensions)
+        if (Object.keys(traits).length) {
+          window.gtag('set', traits)
         }
+        window.gtag('config', trackingId, gtagConfig)
         loadedInstances[instanceName] = true
       }
     },
-    // Google Analytics page view
+    // Set parameter scope at user level with 'set' method
+    identify: (props) => {
+      const { payload, config } = props
+      identifyVisitor(payload.userId, payload.traits, config)
+    },
+    // Set parameter scope at page level with 'config' method
     page: ({ payload, config, instance }) => {
+      if (!window.gtag || !config.trackingId) return
       const { properties } = payload
       const { resetCustomDimensionsOnPage, customDimensions } = config
       const campaign = instance.getState('context.campaign')
-      if (gaNotLoaded()) return
-
-      /* If dimensions are specifiied to reset, clear them before page view */
-      if (resetCustomDimensionsOnPage && resetCustomDimensionsOnPage.length) {
+      /* If dimensions are specified to reset, clear them before page view */
+      if (resetCustomDimensionsOnPage && resetCustomDimensionsOnPage.length && customDimensions) {
         const resetDimensions = resetCustomDimensionsOnPage.reduce((acc, key) => {
           if (customDimensions[key]) {
-            acc[customDimensions[key]] = null // { dimension1: null } etc
+            acc[key] = null // { 'dimension_name': null } etc
           }
           return acc
         }, {})
         if (Object.keys(resetDimensions).length) {
           // Reset custom dimensions
-          ga(`${instancePrefix}set`, resetDimensions)
+          window.gtag('set', resetDimensions)
         }
       }
-
+      /**
+       * Create pageview-related properties
+       */
       const path = properties.path || document.location.pathname
-
       const pageView = {
-        page: path,
-        title: properties.title,
-        location: properties.url
+        page_path: path,
+        page_title: properties.title,
+        page_location: properties.url,
       }
-
-      let pageData = {
-        page: path,
-        title: properties.title
-      }
-      // allow referrer override if referrer was manually set
-      if (properties.referrer !== document.referrer) {
-        pageData.referrer = properties.referrer
-      }
-
       const campaignData = addCampaignData(campaign)
-
-      const dimensions = setCustomDimensions(properties, config, instancePrefix)
-
+      /**
+       * Creates property dimensions for global scope
+       */
+      const globalProperties = getProperties(properties, config.globalProperties)
+      const pageData = Object.assign(
+        {
+          page: path,
+          title: properties.title,
+          // allow referrer override if referrer was manually set
+          referrer: properties.referrer !== document.referrer ? properties.referrer : undefined,
+        },
+        globalProperties
+      )
+      window.gtag('set', pageData)
+      /* Set dimensions or return them for `config` if config.setCustomDimensionsToPage is false */
+      const customDimensionValues = setCustomDimensions(properties, config)
+      /**
+       * Creates property dimensions for user scope
+       */
+      const userProperties = getProperties(properties, config.userProperties)
+      const convertedCustomDimensions = formatCustomDimensionsIntoCustomMap(config)
       /* Dimensions will only be included in the event if config.setCustomDimensionsToPage is false */
-      const finalPayload = {
-        ...pageView,
-        ...campaignData,
-        ...dimensions
-      }
-
-      ga(`${instancePrefix}set`, pageData)
-
+      window.gtag(
+        'config',
+        config.trackingId,
+        Object.assign(
+          {
+            // Every time a `pageview` is sent, we need to pass custom_map again into the configuration
+            custom_map: convertedCustomDimensions,
+            send_page_view: config.sendPageView || true,
+          },
+          userProperties
+        )
+      )
+      /**
+       * Create user properties for `config` method that are not part of custom dimensions
+       */
+      const pageRelatedProperties = ['title', 'url', 'path', 'sendPageView', 'referrer']
+      const customDimensionKeys = (customDimensions && Object.keys(customDimensions)) || []
+      const selfDefinedPageProperties = Object.keys(properties).reduce((acc, key) => {
+        if (
+          !pageRelatedProperties.includes(key) &&
+          !customDimensionKeys.includes(key) &&
+          !(config.globalProperties && config.globalProperties.includes(key)) &&
+          !(config.userProperties && config.userProperties.includes(key))
+        ) {
+          acc[key] = properties[key]
+        }
+        return acc
+      }, {})
+      /* Dimensions will only be included in the event if config.setCustomDimensionsToPage is false */
+      const finalPayload = Object.assign(
+        Object.assign(
+          Object.assign(
+            Object.assign(Object.assign({ send_to: config.trackingId }, pageView), campaignData),
+            customDimensionValues
+          ),
+          pageRelatedProperties
+        ),
+        selfDefinedPageProperties
+      )
       // Remove location for SPA tracking after initial page view
       if (pageCalledOnce) {
-        delete finalPayload.location
+        delete finalPayload.page_location
       }
-
-      /* send page view to GA */
-      ga(`${instancePrefix}send`, 'pageview', finalPayload)
-
+      window.gtag('event', 'page_view', finalPayload)
       // Set after initial page view
       pageCalledOnce = true
     },
-    /**
-     * Google Analytics track event
-     * @example
-     *
-     * analytics.track('playedVideo', {
-     *   category: 'Videos',
-     *   label: 'Fall Campaign',
-     *   value: 42
-     * })
-     */
+    loaded: () => {
+      return Boolean(window.gtag)
+    },
+    // Set parameter scope at event level with 'event' method
     track: ({ payload, config, instance }) => {
       const { properties, event } = payload
       const { label, value, category, nonInteraction } = properties
       const campaign = instance.getState('context.campaign')
-      // TODO inline this trackEvent
-      trackEvent({
-        hitType: 'event',
-        event: event,
-        label: label,
-        category: category || 'All',
-        value: value,
-        nonInteraction,
-        campaign: campaign
-      }, config, payload)
+      trackEvent(
+        {
+          event,
+          label,
+          category: category || 'All',
+          value,
+          nonInteraction,
+          campaign,
+        },
+        config,
+        payload
+      )
     },
-    identify: ({ payload, config }) => {
-      identifyVisitor(payload.userId, payload.traits, config)
-    },
-    loaded: () => {
-      return !!window.gaplugins
-    }
   }
 }
-
-export default googleAnalytics
-
-function gaNotLoaded(scriptSrc) {
-  if (scriptSrc) {
-    return !scriptLoaded(scriptSrc)
-  }
-  return typeof ga === 'undefined'
-}
-
-function getInstanceDetails(pluginConfig) {
-  const { instanceName } = pluginConfig
-  return {
-    instancePrefix: (instanceName) ? `${instanceName}.` : '',
-    instanceName: instanceName
-  }
-}
-
-/**
- * Send event tracking to Google Analytics
- * @param  {object} eventData - GA event payload
- * @param  {string} [eventData.hitType = 'event'] - hitType https://bit.ly/2Jab9L1 one of 'pageview', 'screenview', 'event', 'transaction', 'item', 'social', 'exception', 'timing'
- * @param  {string} [eventData.event] - event Action https://bit.ly/2CUzeoz
- * @param  {string} [eventData.label] - event Label http://bit.ly/2oo8eb3
- * @param  {string} [eventData.category] - event Category http://bit.ly/2EAy9UP
- * @param  {string} [eventData.nonInteraction = false] - nonInteraction https://bit.ly/2CUzeoz
- * @return {object} sent data
- */
-export function trackEvent(eventData, opts = {}, payload) {
-  if (gaNotLoaded()) return
-  const { instancePrefix } = getInstanceDetails(opts)
+const trackEvent = (eventData, config = {}, payload) => {
+  if (!window.gtag || !config.trackingId) return
+  /* Set Dimensions or return them for payload if config.setCustomDimensionsToPage is false */
+  const customDimensionValues = setCustomDimensions(payload.properties, config)
+  const convertedCustomDimensions = formatCustomDimensionsIntoCustomMap(config)
+  /**
+   * You have to re`config` custom_map for events if new values are `set` for a user
+   */
+  window.gtag('config', config.trackingId, {
+    send_page_view: config.sendPageView || true,
+    custom_map: convertedCustomDimensions,
+  })
+  /**
+   * Create event-related properties
+   */
+  // Limits https://support.google.com/analytics/answer/9267744
   const data = {
-    // hitType https://bit.ly/2Jab9L1 one of 'pageview', 'screenview', 'event', 'transaction', 'item', 'social', 'exception', 'timing'
-    hitType: eventData.hitType || 'event',
-    // eventAction https://bit.ly/2CUzeoz
-    eventAction: eventData.event,
-    // eventLabel http://bit.ly/2oo8eb3
-    eventLabel: eventData.label,
-    // eventCategory http://bit.ly/2EAy9UP
-    eventCategory: eventData.category || 'All',
-    // nonInteraction https://bit.ly/2CUzeoz
-    nonInteraction: (eventData.nonInteraction !== undefined) ? !!eventData.nonInteraction : false
+    event_label: eventData.label,
+    event_category: eventData.category || 'All',
+    non_interaction: eventData.nonInteraction !== undefined ? Boolean(eventData.nonInteraction) : false,
   }
-
   if (eventData.value) {
-    // how much is this action worth?
-    data.eventValue = format(eventData.value)
+    /* set value of the action */
+    data.value = eventData.value >= 0 ? eventData.value : 0
   }
-
   /* Attach campaign data */
-  const campaignData = addCampaignData(eventData)
-  /* Set Dimensions or return them for payload is config.setCustomDimensionsToPage is false */
-  const dimensions = setCustomDimensions(payload.properties, opts, instancePrefix)
-
-  const finalPayload = {
-    ...data,
-    /* Attach campaign data, if exists */
-    ...campaignData,
-    /* Dimensions will only be included in the event if config.setCustomDimensionsToPage is false */
-    ...dimensions
-  }
-
+  const campaignData = addCampaignData(eventData.campaign)
+  /**
+   * Creates self-defined event property values
+   */
+  const gaEventProperties = ['label', 'category', 'nonInteraction', 'value']
+  const selfDefinedEventProperties = Object.keys(payload.properties).reduce((acc, key) => {
+    if (!gaEventProperties.includes(key)) {
+      acc[key] = payload.properties[key]
+    }
+    return acc
+  }, {})
+  const finalPayload = Object.assign(
+    Object.assign(Object.assign(Object.assign({}, data), campaignData), customDimensionValues),
+    selfDefinedEventProperties
+  )
   /* Send data to Google Analytics */
-  ga(`${instancePrefix}send`, 'event', finalPayload)
+  /* Signature
+    gtag('event', '<event_name>', {
+      <event_params>
+    })
+  */
+  window.gtag('event', eventData.event, finalPayload)
   return finalPayload
+}
+
+const camelToSnakeCase = (key) => key.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`)
+
+const get = (obj, key) => {
+  const keys = key.split ? key.split('.') : key
+  let object = undefined
+  for (let p = 0; p < keys.length; p++) {
+    object = obj ? obj[keys[p]] : undefined
+  }
+  return object
 }
 
 /**
@@ -315,80 +277,100 @@ function addCampaignData(campaignData = {}) {
   if (keyword) campaign.campaignKeyword = keyword
   return campaign
 }
-
-/* Todo add includeSearch options ¯\_(ツ)_/¯
-function getPagePath(props, opts = {}) {
-  if (!props) return
-  if (opts.includeSearch && props.search) {
-    return `${props.path}${props.search}`
-  }
-  return props.path
-}
-*/
-
-// properties, data=opts
-function formatObjectIntoDimensions(properties, opts = {}) {
-  const { customDimensions } = opts
-  // TODO map opts.customMetrics; Object.keys(customMetrics) { key: 'metric1' }
-  // TODO map opts.contentGroupings; Object.keys(contentGroupings) { key: 'contentGroup1' }
-
-  /* Map values from payload to any defined custom dimensions */
-  return Object.keys(customDimensions).reduce((acc, key) => {
-    const dimensionKey = customDimensions[key]
-    var value = get(properties, key) || properties[key]
-    if (typeof value === 'boolean') {
-      value = value.toString()
-    }
-    if (value || value === 0) {
-      acc[dimensionKey] = value
+/**
+ * Changes format of custom dimensions from:
+ * { traitOne: 'dimension1', traitTwo: 'dimension2' }
+ * to:
+ * { dimension1: traitOne, dimension2: traitTwo }
+ */
+function formatCustomDimensionsIntoCustomMap(plugin) {
+  const { customDimensions } = plugin
+  return (
+    customDimensions &&
+    Object.entries(customDimensions).reduce((acc, entry) => {
+      const [key, value] = entry
+      acc[value] = key
       return acc
+    }, {})
+  )
+}
+/**
+ * Create parameter value object based on given key values.
+ * */
+function getProperties(properties = {}, propertyKeys = []) {
+  return propertyKeys.reduce((acc, key) => {
+    if (properties[key]) {
+      acc[key] = properties[key]
     }
     return acc
   }, {})
 }
-
-function get(obj, key, def, p, undef) {
-  key = key.split ? key.split('.') : key
-  for (p = 0; p < key.length; p++) {
-    obj = obj ? obj[key[p]] : undef
+/**
+ * Create custom dimension value object with keys that exist in
+ * config.customDimensions. If `config.setCustomDimensionsToPage`
+ * is true, set custom dimension values with the `set` command.
+ * Otherwise, return object for `config`.
+ * */
+function setCustomDimensions(properties = {}, config) {
+  const { customDimensions } = config
+  if (!customDimensions) return {}
+  const customDimensionsValue = Object.keys(customDimensions).reduce((acc, key) => {
+    let value = get(properties, key) || properties[key]
+    if (typeof value === 'boolean') {
+      value = value.toString()
+    }
+    if (value || value === 0) {
+      acc[key] = value
+      return acc
+    }
+    return acc
+  }, {})
+  if (!Object.keys(customDimensionsValue).length) return {}
+  if (!config.setCustomDimensionsToPage) {
+    return customDimensionsValue
   }
-  return obj === undef ? def : obj
-}
-
-function setCustomDimensions(props = {}, opts, instancePrefix) {
-  const customDimensions = formatObjectIntoDimensions(props, opts)
-  if (!Object.keys(customDimensions).length) {
-    return {}
-  }
-  // If setCustomDimensionsToPage false, don't save custom dimensions from event to page
-  if (!opts.setCustomDimensionsToPage) {
-    return customDimensions
-  }
-  // Set custom dimensions
-  ga(`${instancePrefix}set`, customDimensions)
+  window.gtag('set', customDimensionsValue)
   return {}
 }
 
-/**
- * Identify a visitor by Id
- * @param  {string} id - unique visitor ID
- */
-export function identifyVisitor(id, traits = {}, conf = {}) {
-  if (gaNotLoaded()) return
-  const { instancePrefix } = getInstanceDetails(conf)
-  if (id) ga(`${instancePrefix}set`, 'userId', id)
-  if (Object.keys(traits).length) {
-    const custom = formatObjectIntoDimensions(traits, conf)
-    ga(`${instancePrefix}set`, custom)
+export function identifyVisitor (id, traits = {}, config = {}) {
+  const trackingId = config.trackingId
+  if (!window.gtag || !trackingId) return
+  if (id) {
+    window.gtag('set', { user_id: id })
   }
+  if (Object.keys(traits).length) {
+    window.gtag('set', traits)
+  }
+}
+
+function gtagLoaded(scriptSrc) {
+  return scriptLoaded(scriptSrc)
 }
 
 function scriptLoaded(scriptSrc) {
   const scripts = document.querySelectorAll('script[src]')
-  return !!Object.keys(scripts).filter((key) => (scripts[key].src || '') === scriptSrc).length
+  const regex = new RegExp(`^${scriptSrc}`)
+  return Boolean(Object.values(scripts).filter((value) => regex.test(value.src)).length)
 }
 
-function format(value) {
-  if (!value || value < 0) return 0
-  return Math.round(value)
+function injectScript(scriptSrc) {
+  const script = document.createElement('script')
+  script.async = true
+  script.src = scriptSrc
+  document.body.appendChild(script)
+  return script
 }
+
+function setUpWindowGtag() {
+  window.dataLayer = window.dataLayer || []
+  function gtagHelper() {
+    // eslint-disable-next-line prefer-rest-params
+    window.dataLayer.push(arguments)
+  }
+  gtagHelper('js', new Date())
+  window.gtag = gtagHelper
+  return gtagHelper
+}
+
+export default googleGtagAnalytics

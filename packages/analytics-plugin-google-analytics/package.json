@@ -1,7 +1,7 @@
 {
   "name": "@analytics/google-analytics",
-  "version": "0.5.3",
-  "description": "Google analytics plugin for 'analytics' module",
+  "version": "1.0.0",
+  "description": "Google analytics v4 plugin for 'analytics' module",
   "projectMeta": {
     "provider": {
       "name": "Google Analytics",
@@ -21,7 +21,7 @@
     "google-analytics",
     "Google Analytics"
   ],
-  "author": "David Wells",
+  "author": "Bing Wang, David Wells",
   "license": "MIT",
   "scripts": {
     "types": "../../node_modules/.bin/jsdoc -t ../../node_modules/tsd-jsdoc/dist -r ./src/ -d temp-types",
@@ -53,8 +53,5 @@
   "devDependencies": {
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.3.1"
-  },
-  "dependencies": {
-    "universal-analytics": "^0.4.20"
   }
 }
