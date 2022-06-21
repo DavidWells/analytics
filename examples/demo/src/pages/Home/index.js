@@ -87,7 +87,7 @@ export default class App extends Component {
   doPage = async () => {
     this.clearLogs()
     analytics.page(() => {
-      console.log('page callback')
+      console.log('page callback doPage')
     })
     console.log('Page async fire this after')
   }
