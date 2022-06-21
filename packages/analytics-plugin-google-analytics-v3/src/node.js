@@ -50,7 +50,7 @@ function googleAnalytics(pluginConfig = {}) {
   const client = initialize(pluginConfig)
   var customDimensions = pluginConfig.customDimensions || {};
   return {
-    name: 'google-analytics',
+    name: 'google-analytics-v3',
     config: pluginConfig,
     // page view
     page: ({ payload, config }) => {

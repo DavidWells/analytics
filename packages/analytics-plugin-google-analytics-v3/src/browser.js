@@ -49,7 +49,7 @@ function googleAnalytics(pluginConfig = {}) {
   // Allow for multiple google analytics instances
   const { instanceName, instancePrefix } = getInstanceDetails(pluginConfig)
   return {
-    name: 'google-analytics',
+    name: 'google-analytics-v3',
     config: {
       ...defaultConfig,
       ...pluginConfig
