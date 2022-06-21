@@ -1,5 +1,6 @@
 /* global, window */
 const defaultConfig = {
+  gtagName: 'gtag',
   dataLayerName: 'ga4DataLayer',
   measurementIds: [],
   sendPageView: true,
@@ -23,6 +24,14 @@ const defaultConfig = {
      */
     allow_ad_personalization_signals: true,
     /**
+     * https://developers.google.com/analytics/devguides/collection/gtagjs/cookies-user-id#configure_cookie_field_settings
+     */
+    // cookie_domain
+    // cookie_expires
+    // cookie_prefix
+    // cookie_update
+    // cookie_flags
+    /**
      * Cookie Flags
      * https://developers.google.com/analytics/devguides/collection/ga4/cookies-user-id#cookie_flags
      */
@@ -40,6 +49,7 @@ let loadedInstances = {}
  * @param {object}  pluginConfig - Plugin settings
  * @param {array|string} pluginConfig.measurementIds - Google Analytics MEASUREMENT IDs
  * @param {string} [pluginConfig.dataLayerName=ga4DataLayer] - The optional name for dataLayer object. Defaults to ga4DataLayer.
+ * @param {string}  [pluginConfig.gtagName=gtag] - The optional name for dataLayer object. Defaults to ga4DataLayer.
  * @param {boolean} [pluginConfig.debug] - Enable Google Analytics debug mode
  * @param {boolean} [pluginConfig.anonymizeIp] - Enable [Anonymizing IP addresses](https://bit.ly/3c660Rd) sent to Google Analytics. [See details below](#anonymize-visitor-ips)
  * @param {object}  [pluginConfig.customDimensions] - Map [Custom dimensions](https://bit.ly/3c5de88) to send extra information to Google Analytics. [See details below](#using-ga-custom-dimensions)
@@ -47,7 +57,6 @@ let loadedInstances = {}
  * @param {boolean} [pluginConfig.setCustomDimensionsToPage] - Mapped dimensions will be set to the page & sent as properties of all subsequent events on that page. If false, analytics will only pass custom dimensions as part of individual events
  * @param {string}  [pluginConfig.customScriptSrc] - Custom URL for google analytics script, if proxying calls
  * @param {object}  [pluginConfig.cookieConfig] - Additional cookie properties for configuring the [ga cookie](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#configuring_cookie_field_settings)
- * @param {object}  [pluginConfig.tasks] - [Set custom google analytic tasks](https://developers.google.com/analytics/devguides/collection/analyticsjs/tasks)
  * @return {*}
  * @example
  *
@@ -69,7 +78,7 @@ function googleAnalytics(pluginConfig = {}) {
     config: initConfig,
     // Load gtag.js and define gtag
     initialize: ({ config, instance }) => {
-      const { dataLayerName } = config
+      const { dataLayerName, gtagName, debug } = config
       if (!measurementIds[0]) {
         throw new Error('No GA Measurement ID defined')
       }
@@ -84,10 +93,10 @@ function googleAnalytics(pluginConfig = {}) {
       /* Set gtag and datalayer */
       if (!window[dataLayerName]) {
         window[dataLayerName] = window[dataLayerName] || []
-        window.gtag = function() {
+        window[gtagName] = function() {
           window[dataLayerName].push(arguments)
         }
-        window.gtag('js', new Date())
+        window[gtagName]('js', new Date())
       }
 
       /**
@@ -113,6 +122,7 @@ function googleAnalytics(pluginConfig = {}) {
         allow_ad_personalization_signals: config.allowAdPersonalizationSignals,
         custom_map: customDimensions,
         anonymize_ip: config.anonymizeIp,
+        ...(debug) ? { 'debug_mode': true } : {},
         ...newCookieConfig,
       }
       if (config.linker) {
@@ -122,13 +132,13 @@ function googleAnalytics(pluginConfig = {}) {
       const user = instance.user() || {}
       const traits = user.traits || {}
       if (Object.keys(traits).length) {
-        window.gtag('set', traits)
+        window[gtagName]('set', traits)
       }
       
       /* Initialize all measurementIds */
       for (var i = 0; i < measurementIds.length; i++) {
         if (!loadedInstances[measurementIds[i]]) {
-          window.gtag('config', measurementIds[i], gtagConfig)
+          window[gtagName]('config', measurementIds[i], gtagConfig)
           loadedInstances[measurementIds[i]] = true
         }
       }
@@ -139,7 +149,8 @@ function googleAnalytics(pluginConfig = {}) {
     },
     // Set parameter scope at page level with 'config' method
     page: ({ payload, config, instance }) => {
-      if (!window.gtag || !config.measurementIds) return
+      const { gtagName } = config
+      if (!window[gtagName] || !config.measurementIds) return
       const { properties } = payload
       const { resetCustomDimensionsOnPage, customDimensions } = config
       const campaign = instance.getState('context.campaign')
@@ -153,7 +164,7 @@ function googleAnalytics(pluginConfig = {}) {
         }, {})
         if (Object.keys(resetDimensions).length) {
           // Reset custom dimensions
-          window.gtag('set', resetDimensions)
+          window[gtagName]('set', resetDimensions)
         }
       }
       /**
@@ -177,7 +188,7 @@ function googleAnalytics(pluginConfig = {}) {
         referrer: properties.referrer !== document.referrer ? properties.referrer : undefined,
         ...globalProperties,
       }
-      window.gtag('set', pageData)
+      window[gtagName]('set', pageData)
       /* Set dimensions or return them for `config` if config.setCustomDimensionsToPage is false */
       const customDimensionValues = setCustomDimensions(properties, config)
       /**
@@ -186,7 +197,7 @@ function googleAnalytics(pluginConfig = {}) {
       const userProperties = getProperties(properties, config.userProperties)
       const convertedCustomDimensions = formatCustomDimensionsIntoCustomMap(config)
       /* Dimensions will only be included in the event if config.setCustomDimensionsToPage is false */
-      window.gtag('config', config.measurementIds[0], {
+      window[gtagName]('config', config.measurementIds[0], {
         // Every time a `pageview` is sent, we need to pass custom_map again into the configuration
         custom_map: convertedCustomDimensions,
         send_page_view: config.sendPageView || true,
@@ -210,7 +221,7 @@ function googleAnalytics(pluginConfig = {}) {
       }, {})
       /* Dimensions will only be included in the event if config.setCustomDimensionsToPage is false */
       const finalPayload = {
-        send_to: config.measurementIds[0],
+        send_to: properties.send_to || config.measurementIds[0],
         ...pageView,
         ...campaignData,
         ...customDimensionValues,
@@ -221,7 +232,7 @@ function googleAnalytics(pluginConfig = {}) {
       if (pageCalledOnce) {
         delete finalPayload.page_location
       }
-      window.gtag('event', 'page_view', finalPayload)
+      window[gtagName]('event', 'page_view', finalPayload)
       // Set after initial page view
       pageCalledOnce = true
     },
@@ -268,14 +279,15 @@ function googleAnalytics(pluginConfig = {}) {
 }
 
 function trackEvent(eventData, config = {}, payload) {
-  if (!window.gtag || !config.measurementIds) return
+  const { gtagName } = config
+  if (!window[gtagName] || !config.measurementIds) return
   /* Set Dimensions or return them for payload if config.setCustomDimensionsToPage is false */
   const customDimensionValues = setCustomDimensions(payload.properties, config)
   const convertedCustomDimensions = formatCustomDimensionsIntoCustomMap(config)
   /**
    * You have to re`config` custom_map for events if new values are `set` for a user
    */
-  window.gtag('config', config.measurementIds[0], {
+  window[gtagName]('config', config.measurementIds[0], {
     send_page_view: config.sendPageView || true,
     custom_map: convertedCustomDimensions,
   })
@@ -320,8 +332,7 @@ function trackEvent(eventData, config = {}, payload) {
       k: v
     })
   */
-  window.gtag('event', eventData.event, finalPayload)
-  console.log('sent GA tracking call', eventData.event)
+  window[gtagName]('event', eventData.event, finalPayload)
   return finalPayload
 }
 
@@ -411,21 +422,21 @@ function setCustomDimensions(properties = {}, config) {
   if (!config.setCustomDimensionsToPage) {
     return customDimensionsValue
   }
-  window.gtag('set', customDimensionsValue)
+  window[config.gtagName]('set', customDimensionsValue)
   return {}
 }
 
 export function identifyVisitor(id, traits = {}, config = {}) {
-  const measurementIds = config.measurementIds
-  if (!window.gtag || !measurementIds) return
+  const { measurementIds, gtagName } = config
+  if (!window[gtagName] || !measurementIds) return
   if (id) {
     // https://developers.google.com/analytics/devguides/collection/ga4/user-id?platform=websites#send_user_ids
-    window.gtag('set', { user_id: id })
+    window[gtagName]('set', { user_id: id })
   }
   // TODO verify this 
   // https://developers.google.com/analytics/devguides/collection/ga4/user-properties?technology=websites
   if (Object.keys(traits).length) {
-    window.gtag('set', traits)
+    window[gtagName]('set', traits)
   }
 }
 
