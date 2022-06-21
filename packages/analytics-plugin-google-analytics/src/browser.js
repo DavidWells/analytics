@@ -5,18 +5,65 @@ const defaultConfig = {
   anonymizeIp: false,
   allowGoogleSignals: true,
   allowAdPersonalizationSignals: true,
+  gtagConfig: {
+    // https://developers.google.com/analytics/devguides/collection/gtagjs
+    send_page_view: true,
+    // https://developers.google.com/analytics/devguides/collection/gtagjs/ip-anonymization
+    anonymize_ip: false,
+    /**
+     * Disable All Advertising
+     * https://developers.google.com/analytics/devguides/collection/ga4/display-features#disable_all_advertising_features
+     */
+    allow_google_signals: true,
+    /**
+     * Disable Advertising Personalization
+     * https://developers.google.com/analytics/devguides/collection/ga4/display-features#disable_advertising_personalization
+     */
+    allow_ad_personalization_signals: true,
+    /**
+     * Cookie Flags
+     * https://developers.google.com/analytics/devguides/collection/ga4/cookies-user-id#cookie_flags
+     */
+    cookie_flags: opts.cookieFlags
+  },
 }
 
 let loadedInstances = {}
 
+/**
+ * Google analytics plugin
+ * @link https://getanalytics.io/plugins/google-analytics/
+ * @link https://analytics.google.com/analytics/web/
+ * @link https://developers.google.com/analytics/devguides/collection/analyticsjs
+ * @param {object}  pluginConfig - Plugin settings
+ * @param {string}  pluginConfig.trackingId - Google Analytics site tracking Id
+ * @param {boolean} [pluginConfig.debug] - Enable Google Analytics debug mode
+ * @param {boolean} [pluginConfig.anonymizeIp] - Enable [Anonymizing IP addresses](https://bit.ly/3c660Rd) sent to Google Analytics. [See details below](#anonymize-visitor-ips)
+ * @param {object}  [pluginConfig.customDimensions] - Map [Custom dimensions](https://bit.ly/3c5de88) to send extra information to Google Analytics. [See details below](#using-ga-custom-dimensions)
+ * @param {object}  [pluginConfig.resetCustomDimensionsOnPage] - Reset custom dimensions by key on analytics.page() calls. Useful for single page apps.
+ * @param {boolean} [pluginConfig.setCustomDimensionsToPage] - Mapped dimensions will be set to the page & sent as properties of all subsequent events on that page. If false, analytics will only pass custom dimensions as part of individual events
+ * @param {string}  [pluginConfig.instanceName] - Custom tracker name for google analytics. Use this if you need multiple googleAnalytics scripts loaded
+ * @param {string}  [pluginConfig.customScriptSrc] - Custom URL for google analytics script, if proxying calls
+ * @param {object}  [pluginConfig.cookieConfig] - Additional cookie properties for configuring the [ga cookie](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#configuring_cookie_field_settings)
+ * @param {object}  [pluginConfig.tasks] - [Set custom google analytic tasks](https://developers.google.com/analytics/devguides/collection/analyticsjs/tasks)
+ * @return {*}
+ * @example
+ *
+ * googleAnalytics({
+ *   trackingId: 'UA-1234567'
+ * })
+ */
 function googleGtagAnalytics(pluginConfig = {}) {
   let pageCalledOnce = false
   // Allow for multiple google analytics instances
   const instanceName = pluginConfig.instanceName ? pluginConfig.instanceName : ''
   const trackingId = pluginConfig.trackingId
   return {
-    name: 'google-gtag-analytics',
-    config: Object.assign(defaultConfig, pluginConfig),
+    name: 'google-analytics',
+    config: {
+      ...defaultConfig,
+      ...pluginConfig
+    },
     // Load gtag.js and define gtag
     // Set custom dimensions (ua properties) and parameters (ga4 properties)
     initialize: (pluginApi) => {
@@ -46,17 +93,15 @@ function googleGtagAnalytics(pluginConfig = {}) {
       }
       // Initialize tracker instance on page
       if (!loadedInstances[instanceName]) {
-        let gtagConfig = Object.assign(
-          {
-            cookie_domain: config.domain || 'auto',
-            send_page_view: config.sendPageView ? config.sendPageView : true,
-            allow_google_signals: config.allowGoogleSignals,
-            allow_ad_personalization_signals: config.allowAdPersonalizationSignals,
-            custom_map: customDimensions,
-            anonymize_ip: config.anonymizeIp,
-          },
-          newCookieConfig
-        )
+        let gtagConfig = {
+          cookie_domain: config.domain || 'auto',
+          send_page_view: config.sendPageView ? config.sendPageView : true,
+          allow_google_signals: config.allowGoogleSignals,
+          allow_ad_personalization_signals: config.allowAdPersonalizationSignals,
+          custom_map: customDimensions,
+          anonymize_ip: config.anonymizeIp,
+          ...newCookieConfig,
+        }
         if (config.linker) {
           gtagConfig.linker = config.linker
         }
@@ -108,15 +153,13 @@ function googleGtagAnalytics(pluginConfig = {}) {
        * Creates property dimensions for global scope
        */
       const globalProperties = getProperties(properties, config.globalProperties)
-      const pageData = Object.assign(
-        {
-          page: path,
-          title: properties.title,
-          // allow referrer override if referrer was manually set
-          referrer: properties.referrer !== document.referrer ? properties.referrer : undefined,
-        },
-        globalProperties
-      )
+      const pageData = {
+        page: path,
+        title: properties.title,
+        // allow referrer override if referrer was manually set
+        referrer: properties.referrer !== document.referrer ? properties.referrer : undefined,
+        ...globalProperties,
+      }
       window.gtag('set', pageData)
       /* Set dimensions or return them for `config` if config.setCustomDimensionsToPage is false */
       const customDimensionValues = setCustomDimensions(properties, config)
@@ -126,18 +169,12 @@ function googleGtagAnalytics(pluginConfig = {}) {
       const userProperties = getProperties(properties, config.userProperties)
       const convertedCustomDimensions = formatCustomDimensionsIntoCustomMap(config)
       /* Dimensions will only be included in the event if config.setCustomDimensionsToPage is false */
-      window.gtag(
-        'config',
-        config.trackingId,
-        Object.assign(
-          {
-            // Every time a `pageview` is sent, we need to pass custom_map again into the configuration
-            custom_map: convertedCustomDimensions,
-            send_page_view: config.sendPageView || true,
-          },
-          userProperties
-        )
-      )
+      window.gtag('config', config.trackingId,{
+        // Every time a `pageview` is sent, we need to pass custom_map again into the configuration
+        custom_map: convertedCustomDimensions,
+        send_page_view: config.sendPageView || true,
+        ...userProperties,
+      })
       /**
        * Create user properties for `config` method that are not part of custom dimensions
        */
@@ -155,16 +192,14 @@ function googleGtagAnalytics(pluginConfig = {}) {
         return acc
       }, {})
       /* Dimensions will only be included in the event if config.setCustomDimensionsToPage is false */
-      const finalPayload = Object.assign(
-        Object.assign(
-          Object.assign(
-            Object.assign(Object.assign({ send_to: config.trackingId }, pageView), campaignData),
-            customDimensionValues
-          ),
-          pageRelatedProperties
-        ),
-        selfDefinedPageProperties
-      )
+      const finalPayload = {
+        send_to: config.trackingId,
+        ...pageView,
+        ...campaignData,
+        ...customDimensionValues,
+        ...pageRelatedProperties,
+        ...selfDefinedPageProperties,
+      }
       // Remove location for SPA tracking after initial page view
       if (pageCalledOnce) {
         delete finalPayload.page_location
@@ -173,9 +208,7 @@ function googleGtagAnalytics(pluginConfig = {}) {
       // Set after initial page view
       pageCalledOnce = true
     },
-    loaded: () => {
-      return Boolean(window.gtag)
-    },
+
     // Set parameter scope at event level with 'event' method
     track: ({ payload, config, instance }) => {
       const { properties, event } = payload
@@ -194,9 +227,25 @@ function googleGtagAnalytics(pluginConfig = {}) {
         payload
       )
     },
+    methods: {
+      /* Disable gtag for user */
+      disable: ({ config }) => {
+        // https://developers.google.com/analytics/devguides/collection/gtagjs/user-opt-out
+        window[`ga-disable-${config.trackingId}`] = true
+      },
+      /* Enable gtag for user */
+      enable: ({ config }) => {
+        // https://developers.google.com/analytics/devguides/collection/gtagjs/user-opt-out
+        window[`ga-disable-${config.trackingId}`] = false
+      }
+    },
+    loaded: () => {
+      return Boolean(window.gtag)
+    },
   }
 }
-const trackEvent = (eventData, config = {}, payload) => {
+
+function trackEvent(eventData, config = {}, payload) {
   if (!window.gtag || !config.trackingId) return
   /* Set Dimensions or return them for payload if config.setCustomDimensionsToPage is false */
   const customDimensionValues = setCustomDimensions(payload.properties, config)
@@ -233,14 +282,20 @@ const trackEvent = (eventData, config = {}, payload) => {
     }
     return acc
   }, {})
-  const finalPayload = Object.assign(
-    Object.assign(Object.assign(Object.assign({}, data), campaignData), customDimensionValues),
-    selfDefinedEventProperties
-  )
+
+  const finalPayload = {
+    ...data,
+    /* Attach campaign data, if exists */
+    ...campaignData,
+    /* Dimensions will only be included in the event if config.setCustomDimensionsToPage is false */
+    ...customDimensionValues,
+    ...selfDefinedEventProperties,
+  };
   /* Send data to Google Analytics */
   /* Signature
     gtag('event', '<event_name>', {
-      <event_params>
+      <event_params>,
+      k: v
     })
   */
   window.gtag('event', eventData.event, finalPayload)
@@ -277,6 +332,7 @@ function addCampaignData(campaignData = {}) {
   if (keyword) campaign.campaignKeyword = keyword
   return campaign
 }
+
 /**
  * Changes format of custom dimensions from:
  * { traitOne: 'dimension1', traitTwo: 'dimension2' }
@@ -294,6 +350,7 @@ function formatCustomDimensionsIntoCustomMap(plugin) {
     }, {})
   )
 }
+
 /**
  * Create parameter value object based on given key values.
  * */
@@ -305,11 +362,13 @@ function getProperties(properties = {}, propertyKeys = []) {
     return acc
   }, {})
 }
+
 /**
  * Create custom dimension value object with keys that exist in
  * config.customDimensions. If `config.setCustomDimensionsToPage`
  * is true, set custom dimension values with the `set` command.
  * Otherwise, return object for `config`.
+ * https://developers.google.com/analytics/devguides/collection/gtagjs/custom-dims-mets
  * */
 function setCustomDimensions(properties = {}, config) {
   const { customDimensions } = config
@@ -337,8 +396,11 @@ export function identifyVisitor (id, traits = {}, config = {}) {
   const trackingId = config.trackingId
   if (!window.gtag || !trackingId) return
   if (id) {
+    // https://developers.google.com/analytics/devguides/collection/ga4/user-id?platform=websites#send_user_ids
     window.gtag('set', { user_id: id })
   }
+  // TODO verify this 
+  // https://developers.google.com/analytics/devguides/collection/ga4/user-properties?technology=websites
   if (Object.keys(traits).length) {
     window.gtag('set', traits)
   }

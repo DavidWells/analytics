@@ -22,8 +22,8 @@ const defaultConfig = {
 let loadedInstances = {}
 
 /**
- * Google analytics plugin
- * @link https://getanalytics.io/plugins/google-analytics/
+ * Google analytics v3 plugin
+ * @link https://getanalytics.io/plugins/google-analytics-v3/
  * @link https://analytics.google.com/analytics/web/
  * @link https://developers.google.com/analytics/devguides/collection/analyticsjs
  * @param {object}  pluginConfig - Plugin settings
