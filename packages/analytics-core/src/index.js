@@ -76,13 +76,15 @@ function analytics(config = {}) {
       /* Plugins must supply a "name" property. See error url for more details */
       throw new Error(ERROR_URL + '1')
     }
+    // Set config if empty
+    if (!plugin.config) plugin.config = {}
     // if plugin exposes EVENTS capture available events
     const definedEvents = (plugin.EVENTS) ? Object.keys(plugin.EVENTS).map((k) => {
       return plugin.EVENTS[k]
     }) : []
 
     const enabledFromMerge = !(plugin.enabled === false)
-    const enabledFromPluginConfig = !(plugin.config && plugin.config.enabled === false)
+    const enabledFromPluginConfig = !(plugin.config.enabled === false)
     // top level { enabled: false } takes presidence over { config: enabled: false }
     acc.pluginEnabled[plugin.name] = enabledFromMerge && enabledFromPluginConfig
     delete plugin.enabled
@@ -874,8 +876,8 @@ function analytics(config = {}) {
       enabled: isEnabled,
       // If plugin enabled & has no initialize method, set initialized to true, else false
       initialized: (isEnabled) ? Boolean(!plugin.initialize) : false,
-      loaded: Boolean(loaded()),
-      config: config || {}
+      loaded: Boolean(loaded({ config })),
+      config
     }
     return acc
   }, {})
