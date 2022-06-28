@@ -106,6 +106,7 @@ function intercomPlugin(pluginConfig = {}) {
         horizontalPadding,
         verticalPadding,
         customLauncherSelector,
+        userHash,
       } = config;
       if (!appId) {
         throw new Error("No intercom appId");
@@ -156,6 +157,7 @@ function intercomPlugin(pluginConfig = {}) {
         horizontal_padding: horizontalPadding,
         vertical_padding: verticalPadding,
         custom_launcher_selector: customLauncherSelector,
+        user_hash: userHash,
       };
     },
     /* Trigger intercom page view */
