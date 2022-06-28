@@ -1,31 +1,33 @@
 /* global analytics */
 
+/**
+  * @typedef {Object} IntercomPluginConfig
+  * @property {string} appId Your intercom app id
+  * @property {boolean=} disableAnonymousTraffic Disable loading intercom for anonymous visitors
+  * @property {string=} alignment Customize left or right position of messenger 
+  * @property {string=} horizontalPadding Customize horizontal padding
+  * @property {string=} verticalPadding Customize vertical padding
+  * @property {string=} customLauncherSelector Css selector of the custom launcher see https://www.intercom.com/help/en/articles/2894-customize-the-intercom-messenger-technical for additional info
+  * @property {string=} userHash User hash used for identity verification
+  */
+
+/** @type IntercomPluginConfig */
 const config = {
-  /* Your intercom app id */
   appId: null,
   disableAnonymousTraffic: false,
-  /* Customize left or right position of messenger */
   alignment: undefined,
-  /* Customize horizontal padding */
   horizontalPadding: undefined,
-  /* Customize vertical padding */
   verticalPadding: undefined,
-  /* Css selector of the custom launcher */
   customLauncherSelector: undefined,
+  userHash: undefined,
 }
 
 /**
  * intercom analytics plugin
  * @link https://getanalytics.io/plugins/intercom/
  * @link https://developers.intercom.com/installing-intercom/docs/intercom-javascript
- * @param {object}  pluginConfig - Plugin settings
- * @param {string}  pluginConfig.appId - Your intercom app id
- * @param {boolean} [pluginConfig.disableAnonymousTraffic] - Disable loading intercom for anonymous visitors
- * @param {string}  [pluginConfig.alignment] - Customize left or right position of messenger
- * @param {number}  [pluginConfig.horizontalPadding] - Customize horizontal padding
- * @param {number}  [pluginConfig.verticalPadding] - Customize vertical padding
- * @param {string}  [pluginConfig.customLauncherSelector] - Css selector of the custom launcher see https://www.intercom.com/help/en/articles/2894-customize-the-intercom-messenger-technical for additional info
- * @return {object} Analytics plugin
+ * @param {IntercomPluginConfig}  pluginConfig - Plugin settings
+ * @return {Object} Analytics plugin
  * @example
  *
  * intercomPlugin({
