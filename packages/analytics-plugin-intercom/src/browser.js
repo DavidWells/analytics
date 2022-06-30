@@ -210,7 +210,7 @@ function intercomPlugin(pluginConfig = {}) {
     },
     /* Check if intercom loaded */
     loaded: () => {
-      return window.Intercom;
+      return window.Intercom && window.Intercom.booted;
     },
   };
 }
