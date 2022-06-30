@@ -83,6 +83,11 @@ function intercomPlugin(pluginConfig = {}) {
         if (typeof intercom === "undefined") return;
         intercom("onUnreadCountChange", callback);
       },
+      update(config) {
+        const intercom = window.Intercom;
+        if (typeof intercom === "undefined") return;
+        intercom("update", config);
+      },
     },
     bootstrap: ({ config, instance }) => {
       /* Load intercom script after userId exists */
