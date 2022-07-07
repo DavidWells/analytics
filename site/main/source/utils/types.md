@@ -6,7 +6,7 @@ description: Utility library for runtime type checking
 
 A tiny tree shakable utility library for runtime type checking.
 
-The entire package weighs in at <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`1.49kb`<!-- AUTO-GENERATED-CONTENT:END -->.
+The entire package weighs in at <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`2.22kb`<!-- AUTO-GENERATED-CONTENT:END -->.
 
 [See live demo](https://utils-types.netlify.app/).
 
@@ -324,3 +324,11 @@ const formElement = document.querySelector('.my-form')
 console.log(isForm(formElement))
 // true
 ```
+
+## Alternative libs
+
+- [Native node types utils](https://nodejs.org/dist/latest-v17.x/docs/api/util.html#utiltypes)
+- https://github.com/jonschlinkert/kind-of
+- https://github.com/enricomarino/is
+- https://github.com/mesqueeb/is-what
+- https://github.com/stdlib-js/assert

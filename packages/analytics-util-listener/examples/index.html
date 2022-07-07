@@ -145,11 +145,55 @@
       <span id='span-four'>
         Span four
       </span>
+      <div>
+        <h3>Throw error</h3>
+        <button id="fire-error">
+          Fire test error
+        </button>
+      </div>
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
     </div>
   
     <script type="text/javascript">
       console.log('utilListener API', utilListener)
-      const { addListener, removeListener, once } = utilListener
+      const { addListener, removeListener, addWindowEvent, once, onError, onLoad } = utilListener
+
+      addWindowEvent('onload', () => {
+        console.log('load zero')
+      })
+      addWindowEvent('onerror', (msg) => {
+        console.log('error zero', msg)
+      })
+
+      // Attach multiple onLoad listeners
+      window.onload = onLoad(() => {
+        console.log('onload one')
+      })
+      window.onload = onLoad(() => {
+        console.log('onload two')
+      })
+      window.onload = onLoad(() => {
+        console.log('onload three')
+      })
+
+      // Attach multiple error listeners
+      window.onerror = onError((msg) => {
+        console.log('onerror one', msg)
+      })
+      window.onerror = onError((msg) => {
+        console.log('onerror two', msg)
+      })
+      window.onerror = onError((msg) => {
+        console.log('onerror three', msg)
+      })
+
+      addListener('#fire-error', ['click'], (e) => {
+        throw new Error('test')
+      })
 
       addListener('#heading', ['mouseover', 'click'], (e) => {
         console.log('Change heading color!')

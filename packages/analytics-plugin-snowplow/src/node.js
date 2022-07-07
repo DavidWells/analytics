@@ -10,9 +10,9 @@ if (!process.browser) {
 }
 
 /**
- * Snowplow analytics server side integration. Uses https://github.com/snowplow/snowplow-nodejs-tracker
+ * Snowplow analytics server side integration
  * @link https://getanalytics.io/plugins/snowplow/
- * @link https://docs.snowplowanalytics.com/docs/collecting-data/collecting-from-own-applications/node-js-tracker/
+ * @link https://docs.snowplowanalytics.com/docs/collecting-data/collecting-from-own-applications/javascript-trackers/node-js-tracker/
  * @param {object} pluginConfig - Plugin settings
  * @param {string} pluginConfig.collectorUrl - The URL to a Snowplow collector
  * @param {string} pluginConfig.appId - The appId to identify this application
@@ -48,8 +48,8 @@ function snowplowPlugin(pluginConfig = {}) {
     throw new Error('snowplow collector url missing');
   }
   const name = pluginConfig.name || 'snowplow';
-  const protocol = (pluginConfig.protocol) ? pluginConfig.protocol.toLowerCase() : 'https'
-  const method = (pluginConfig.method) ?  pluginConfig.method.toLowerCase() : 'post'
+  const protocol = pluginConfig.protocol ? pluginConfig.protocol.toLowerCase() : 'https';
+  const method = pluginConfig.method ? pluginConfig.method.toLowerCase() : 'post';
   const e = gotEmitter(
     pluginConfig.collectorUrl,
     protocol,
@@ -58,9 +58,9 @@ function snowplowPlugin(pluginConfig = {}) {
     pluginConfig.bufferSize,
     pluginConfig.retries || 5,
     null,
-    { 
+    {
       http: new http.Agent({ maxSockets: pluginConfig.maxSockets || 6 }),
-      https: new https.Agent({ maxSockets: pluginConfig.maxSockets || 6 })
+      https: new https.Agent({ maxSockets: pluginConfig.maxSockets || 6 }),
     }
   );
   const t = tracker([e], name, pluginConfig.appId, false);
@@ -68,7 +68,7 @@ function snowplowPlugin(pluginConfig = {}) {
     name: name,
     config: pluginConfig,
     /**
-     * Snowplow page view event https://bit.ly/39wIcFX
+     * Snowplow page view event
      * @example
      *
      * // Track page
@@ -76,7 +76,7 @@ function snowplowPlugin(pluginConfig = {}) {
      *
      * // or Track page view with additional entities
      * analytics.page({
-     *   context: [{
+     *   contexts: [{
      *     schema: 'iglu:com.acme/blog_post/jsonschema/1-0-0',
      *     data: {
      *       title: 'Re-thinking the structure of event data',
@@ -90,10 +90,10 @@ function snowplowPlugin(pluginConfig = {}) {
      */
     page: ({ payload }) => {
       const { properties } = payload;
-      t.trackPageView(properties.url, properties.title, properties.referrer, properties.context || []);
+      t.track(snowplow.buildPageView({pageUrl: properties.url, pageTitle: properties.title, referrer: properties.referrer}), properties.contexts);
     },
     /**
-     * Snowplow track event https://bit.ly/2X01Y7M
+     * Snowplow track event
      * All Snowplow 'track' and 'add' functions are available, remove 'track' or 'add' when calling analytics.track
      * i.e. analytics.track('adImpression', ..., ..., ...);
      * @example
@@ -122,7 +122,7 @@ function snowplowPlugin(pluginConfig = {}) {
      *     title: 'Fall Campaign',
      *     videoTimestampInMs: 1104
      *   },
-     *   context: [{
+     *   contexts: [{
      *     schema: 'iglu:com.acme/product/jsonschema/1-0-0',
      *     data: {
      *       id: 'f9cb6cb6-5ca8-47a6-9035-d9c6ac13029e',
@@ -137,7 +137,7 @@ function snowplowPlugin(pluginConfig = {}) {
      * analytics.track('ScreenView', {
      *   name: 'Product Page',
      *   id: 'p-123',
-     *   context: [{
+     *   contexts: [{
      *     schema: 'iglu:com.acme/product/jsonschema/1-0-0',
      *     data: {
      *       id: 'f9cb6cb6-5ca8-47a6-9035-d9c6ac13029e',
@@ -152,138 +152,57 @@ function snowplowPlugin(pluginConfig = {}) {
     track: ({ payload }) => {
       const { event, properties } = payload;
       if (properties) {
+        if (properties.contexts && !properties.context) {
+          properties.context = properties.contexts;
+        }
         switch (event.toLowerCase()) {
           case 'selfdescribingevent':
           case 'unstructevent':
-            t.trackUnstructEvent(
-              {
-                schema: properties.schema,
-                data: properties.data,
-              },
+            t.track(
+              snowplow.buildSelfDescribingEvent({
+                event: properties,
+              }),
               properties.context,
               properties.tstamp
             );
             break;
           case 'screenview':
-            t.trackScreenView(
-              properties.name,
-              properties.id,
-              properties.context,
-              properties.tstamp
-            );
+            t.track(snowplow.buildScreenView(properties), properties.context, properties.tstamp);
             break;
           case 'ecommercetransaction':
-            t.trackEcommerceTransaction(
-              properties.orderId,
-              properties.affiliation,
-              properties.totalValue,
-              properties.taxValue,
-              properties.shipping,
-              properties.city,
-              properties.state,
-              properties.country,
-              properties.currency,
-              properties.context,
-              properties.tstamp
-            );
+            t.track(snowplow.buildEcommerceTransaction(properties), properties.context, properties.tstamp);
             break;
           case 'ecommercetransaction':
-            t.trackEcommerceTransactionItem(
-              properties.orderId,
-              properties.sku,
-              properties.name,
-              properties.category,
-              properties.price,
-              properties.quantity,
-              properties.currency,
-              properties.context,
-              properties.tstamp
-            );
+            t.track(snowplow.buildEcommerceTransactionItem(properties), properties.context, properties.tstamp);
             break;
           case 'linkclick':
-            t.trackLinkClick(
-              properties.targetUrl,
-              properties.elementId,
-              properties.elementClasses,
-              properties.elementTarget,
-              properties.context,
-              properties.tstamp
-            );
+            t.track(snowplow.buildLinkClick(properties), properties.context, properties.tstamp);
             break;
           case 'adimpression':
-            t.trackAdImpression(
-              properties.impressionId,
-              properties.costModel,
-              properties.cost,
-              properties.targetUrl,
-              properties.bannerId,
-              properties.zoneId,
-              properties.advertisingId,
-              properties.campaignId,
-              properties.context,
-              properties.tstamp
-            );
+            t.track(snowplow.buildAdImpression(properties), properties.context, properties.tstamp);
             break;
           case 'adclick':
-            t.trackAdClick(
-              properties.targetUrl,
-              properties.clickId,
-              properties.costModel,
-              properties.cost,
-              properties.bannerId,
-              properties.zoneId,
-              properties.advertisingId,
-              properties.campaignId,
-              properties.context,
-              properties.tstamp
-            );
+            t.track(snowplow.buildAdClick(properties), properties.context, properties.tstamp);
             break;
           case 'adconversion':
-            t.trackAdConversion(
-              properties.conversionId,
-              properties.costModel,
-              properties.cost,
-              properties.category,
-              properties.action,
-              properties.property,
-              properties.initialValue,
-              properties.advertisingId,
-              properties.campaignId,
-              properties.campaignId,
-              properties.context,
-              properties.tstamp
-            );
+            t.track(snowplow.buildAdConversion(properties), properties.context, properties.tstamp);
             break;
           case 'consentgranted':
-            t.trackConsentGranted(
-              properties.id,
-              properties.version,
-              properties.name,
-              properties.description,
-              properties.expiry,
-              properties.context,
-              properties.tstamp
-            );
+            t.track(snowplow.buildConsentGranted(properties), properties.context, properties.tstamp);
             break;
           case 'consentwithdrawn':
-            t.trackConsentWithdrawn(
-              properties.id,
-              properties.version,
-              properties.name,
-              properties.description,
-              properties.all,
-              properties.context,
-              properties.tstamp
-            );
+            t.track(snowplow.buildConsentWithdrawn(properties), properties.context, properties.tstamp);
             break;
           case 'structevent':
           default:
-            t.trackStructEvent(
-              properties.category || 'All',
-              event || properties.action,
-              properties.label,
-              properties.property,
-              properties.value,
+            t.track(
+              snowplow.buildStructEvent({
+                category: properties.category || 'All',
+                action: event || properties.action,
+                label: properties.label,
+                property: properties.property,
+                value: properties.value,
+              }),
               properties.context
             );
             break;

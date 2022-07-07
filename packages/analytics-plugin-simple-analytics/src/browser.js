@@ -80,7 +80,7 @@ function simpleAnalyticsPlugin(pluginConfig = {}) {
       })
     },
     /* https://docs.simpleanalytics.com/events */
-    track: ({ payload }) => {
+    track: ({ payload, config }) => {
       var saEventFunction = window[config.saGlobal] || window.sa_event || window.sa
       if (!saEventFunction) return false
       saEventFunction(payload.event)

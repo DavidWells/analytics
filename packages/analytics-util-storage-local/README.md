@@ -6,7 +6,7 @@ description: Utility library for managing HTML LocalStorage
 
 # LocalStorage Utilities
 
-A tiny localStorage utility library with fallbacks in <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`312 bytes`<!-- AUTO-GENERATED-CONTENT:END -->.
+A tiny localStorage utility library with fallbacks in <!-- AUTO-GENERATED-CONTENT:START (pkgSize) -->`231 bytes`<!-- AUTO-GENERATED-CONTENT:END -->.
 
 This module will automatically fail back to global window storage if `localStorage` is not available.
 

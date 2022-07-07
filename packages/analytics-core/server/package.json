@@ -1,0 +1,25 @@
+{
+  "name": "@analytics/core",
+  "private": true,
+  "license": "MIT",
+  "amdName": "_analytics",
+  "source": "../src/index.js",
+  "main": "./dist/server/analytics-core.js",
+  "module": "./dist/server/analytics-core.module.js",
+  "unpkg": "./dist/server/analytics-core.umd.js",
+  "types": "../dist/types.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "clean": "rimraf dist ../dist/server",
+    "prebuild": "npm run clean",
+    "build": "microbundle --define NODE_ENV=production,BROWSER=false,SERVER=true,VERSION=$(cat ../package.json | jq '.version') --generateTypes false",
+    "gen-esm": "gen-esm-wrapper ./dist/server/analytics-core.js ./dist/server/index.mjs",
+    "copy": "mkdirp ../dist && cp -rf dist/. ../dist",
+    "postbuild": "npm run gen-esm && npm run copy"
+  },
+  "dependencies": {
+    "@analytics/global-storage-utils": "^0.1.4",
+    "@analytics/type-utils": "^0.5.4",
+    "analytics-utils": "^1.0.9"
+  }
+}

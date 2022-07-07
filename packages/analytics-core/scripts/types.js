@@ -4,8 +4,8 @@ const path = require('path')
 const indentString = require('indent-string')
 const mkdirp = require('mkdirp')
 
-const TYPES_PATH = path.resolve(__dirname, '../temp-types/types.d.ts')
-const OUTPUT_PATH = path.resolve(__dirname, '../lib/types.d.ts')
+const TYPES_PATH = path.resolve(__dirname, '../_temp-types/types.d.ts')
+const OUTPUT_PATH = path.resolve(__dirname, '../dist/types.d.ts')
 const content = fs.readFileSync(TYPES_PATH, 'utf-8')
 
 // const PAGE_REGEX = /type PageData = {(?:.*?|\n)*?}/gm

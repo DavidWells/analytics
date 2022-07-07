@@ -19,7 +19,7 @@ class PageViews extends React.Component {
     if (prevProps.href !== this.props.href) {
       // register page view on route changes
       analytics.page(() => {
-        console.log('page callback')
+        console.log('page callback componentDidUpdate')
       })
     }
   }

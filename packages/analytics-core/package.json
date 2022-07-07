@@ -1,6 +1,6 @@
 {
   "name": "@analytics/core",
-  "version": "0.10.21",
+  "version": "0.11.1",
   "description": "Lightweight analytics library for tracking events, page views, & identifying users. Works with any third party analytics provider via an extendable plugin system.",
   "keywords": [
     "analytics",
@@ -17,27 +17,27 @@
   ],
   "author": "David Wells <hello@davidwells.io>",
   "license": "MIT",
-  "main": "lib/analytics.cjs.js",
-  "globalName": {
-    "name": "_analytics"
-  },
-  "jsnext:main": "lib/analytics.es.js",
-  "module": "lib/analytics.es.js",
+  "amdName": "_analytics",
+  "source": "src/index.js",
+  "main": "dist/server/analytics-core.js",
+  "module": "dist/server/analytics-core.module.js",
+  "unpkg": "dist/server/analytics-core.umd.js",
+  "types": "dist/types.d.ts",
   "browser": {
-    "./lib/analytics.cjs.js": "./lib/analytics.browser.cjs.js",
-    "./lib/analytics.es.js": "./lib/analytics.browser.es.js"
+    "./dist/server/analytics-core.js": "./dist/client/analytics-core.js",
+    "./dist/server/analytics-core.umd.js": "./dist/client/analytics-core.umd.js",
+    "./dist/server/analytics-core.module.js": "./dist/client/analytics-core.module.js"
   },
   "sideEffects": false,
   "scripts": {
     "test": "ava -v",
     "test:watch": "ava -v --watch",
-    "clean": "rimraf lib dist && mkdirp lib dist",
-    "prebuild": "npm run clean && npm run types",
-    "types": "../../node_modules/.bin/jsdoc -t ../../node_modules/tsd-jsdoc/dist -r ./src/ -d temp-types && node scripts/types.js",
-    "build": "node ../../scripts/build/index.js",
-    "postbuild": "npm run minify-dist && node ./scripts/postbuild.js",
-    "watch": "node ../../scripts/build/_watch.js",
-    "minify-dist": "uglifyjs -mc < dist/@analytics/core.js > dist/@analytics/core.min.js",
+    "prebuild": "rimraf dist _temp-types",
+    "build": "npm run build-client && npm run build-server",
+    "build-client": "cd client && npm run build",
+    "build-server": "cd server && npm run build",
+    "types": "../../node_modules/.bin/jsdoc -t ../../node_modules/tsd-jsdoc/dist -r ./src/ -d _temp-types && node scripts/types.js",
+    "postbuild": "npm run types",
     "publish": "git push origin && git push origin --tags",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
@@ -48,15 +48,24 @@
     "url": "https://github.com/DavidWells/analytics"
   },
   "files": [
-    "dist",
-    "lib",
+    "dist/**/*.js",
+    "dist/**/*.js.map",
+    "dist/**/*.d.ts",
+    "dist/**/package.json",
+    "client/**/*.js",
+    "client/**/*.js.map",
+    "client/**/*.d.ts",
+    "client/**/package.json",
+    "server/**/*.js",
+    "server/**/*.js.map",
+    "server/**/*.d.ts",
+    "server/**/package.json",
     "README.md"
   ],
-  "typings": "lib/types.d.ts",
   "dependencies": {
-    "@analytics/global-storage-utils": "^0.1.3",
-    "@analytics/type-utils": "^0.5.3",
-    "analytics-utils": "^1.0.8"
+    "@analytics/global-storage-utils": "^0.1.5",
+    "@analytics/type-utils": "^0.6.0",
+    "analytics-utils": "^1.0.10"
   },
   "ava": {
     "files": [
@@ -64,7 +73,8 @@
     ],
     "require": [
       "esm",
-      "@babel/register"
+      "@babel/register",
+      "./tests/_setup.js"
     ],
     "verbose": true,
     "failFast": true,
@@ -73,17 +83,18 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "7.5.5",
-    "@babel/plugin-proposal-class-properties": "7.5.5",
-    "@babel/plugin-transform-runtime": "7.5.5",
-    "@babel/preset-env": "7.5.5",
-    "@babel/register": "7.5.5",
-    "@babel/runtime": "7.5.5",
+    "@babel/core": "7.17.0",
+    "@babel/plugin-proposal-class-properties": "7.16.7",
+    "@babel/plugin-transform-runtime": "7.17.0",
+    "@babel/preset-env": "7.16.11",
+    "@babel/register": "7.17.0",
+    "@babel/runtime": "7.17.0",
     "ava": "^2.2.0",
+    "gen-esm-wrapper": "^1.1.3",
+    "microbundle": "^0.14.2",
     "mkdirp": "^0.5.1",
     "npm-run-all": "^4.1.5",
     "rimraf": "^2.6.3",
-    "sinon": "7.2.3",
-    "uglify-js": "^3.4.9"
+    "sinon": "7.2.3"
   }
 }
