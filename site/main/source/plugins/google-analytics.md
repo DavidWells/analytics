@@ -234,4 +234,4 @@ Google analytics 4 sometimes automatically sends a page view for single page app
 
 ## Legacy Google analytics v3
 
-For the older version of google analytics please see the `@analytics/google-analytics-v3` package
+For the older version of google analytics please see the `@analytics/google-analytics-v3` package at https://www.npmjs.com/package/@analytics/google-analytics-v3
