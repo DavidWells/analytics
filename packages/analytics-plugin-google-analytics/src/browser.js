@@ -199,8 +199,8 @@ function googleAnalytics(pluginConfig = {}) {
       window[gtagName]('event', event, finalPayload)
     },
     /* Verify gtag loaded and ready to use */
-    loaded: ({ config }) => {
-      const { dataLayerName, customScriptSrc } = config
+    loaded: () => {
+      const { dataLayerName, customScriptSrc } = initConfig
       const hasDataLayer = dataLayerName && (window[dataLayerName] && Array.prototype.push === window[dataLayerName].push)
       return scriptLoaded(customScriptSrc || gtagScriptSource) && hasDataLayer
     },
