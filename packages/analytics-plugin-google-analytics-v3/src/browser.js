@@ -40,11 +40,11 @@ let loadedInstances = {}
  * @return {*}
  * @example
  *
- * googleAnalytics({
+ * googleAnalyticsV3({
  *   trackingId: 'UA-1234567'
  * })
  */
-function googleAnalytics(pluginConfig = {}) {
+function googleAnalyticsV3(pluginConfig = {}) {
   let pageCalledOnce = false
   // Allow for multiple google analytics instances
   const { instanceName, instancePrefix } = getInstanceDetails(pluginConfig)
@@ -230,7 +230,7 @@ function googleAnalytics(pluginConfig = {}) {
   }
 }
 
-export default googleAnalytics
+export default googleAnalyticsV3
 
 function gaNotLoaded(scriptSrc) {
   if (scriptSrc) {

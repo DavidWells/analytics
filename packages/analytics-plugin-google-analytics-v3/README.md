@@ -56,12 +56,12 @@ Below is an example of how to use the browser plugin.
 
 ```js
 import Analytics from 'analytics'
-import googleAnalytics from '@analytics/google-analytics-v3'
+import googleAnalyticsV3 from '@analytics/google-analytics-v3'
 
 const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
-    googleAnalytics({
+    googleAnalyticsV3({
       trackingId: 'UA-1234567'
     })
   ]
@@ -85,7 +85,7 @@ analytics.identify('user-id-xyz', {
 
 ```
 
-After initializing `analytics` with the `googleAnalytics` plugin, data will be sent into Google Analytics whenever [analytics.page](https://getanalytics.io/api/#analyticspage), [analytics.track](https://getanalytics.io/api/#analyticstrack), or [analytics.identify](https://getanalytics.io/api/#analyticsidentify) are called.
+After initializing `analytics` with the `googleAnalyticsV3` plugin, data will be sent into Google Analytics whenever [analytics.page](https://getanalytics.io/api/#analyticspage), [analytics.track](https://getanalytics.io/api/#analyticstrack), or [analytics.identify](https://getanalytics.io/api/#analyticsidentify) are called.
 
 See [additional implementation examples](#additional-examples) for more details on using in your project.
 
@@ -105,12 +105,12 @@ The Google Analytics client side browser plugin works with these analytic api me
 
 ```js
 import Analytics from 'analytics'
-import googleAnalytics from '@analytics/google-analytics-v3'
+import googleAnalyticsV3 from '@analytics/google-analytics-v3'
 
 const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
-    googleAnalytics({
+    googleAnalyticsV3({
       trackingId: 'UA-1234567'
     })
   ]

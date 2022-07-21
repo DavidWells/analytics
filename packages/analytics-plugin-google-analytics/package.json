@@ -9,8 +9,7 @@
     },
     "windowGlobal": "analyticsGa",
     "platforms": {
-      "browser": "./src/browser.js",
-      "node": "./src/node.js"
+      "browser": "./src/browser.js"
     }
   },
   "keywords": [

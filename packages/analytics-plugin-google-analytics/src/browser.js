@@ -61,8 +61,8 @@ const defaultConfig = {
  * @param {object}  [pluginConfig.gtagConfig.cookie_prefix] - Additional cookie properties for configuring the [ga cookie](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#configuring_cookie_field_settings)
  * @param {object}  [pluginConfig.gtagConfig.cookie_update] - Additional cookie properties for configuring the [ga cookie](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#configuring_cookie_field_settings)
  * @param {object}  [pluginConfig.gtagConfig.cookie_flags] - Additional cookie properties for configuring the [ga cookie](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#configuring_cookie_field_settings)
- * @param {string}  [pluginConfig.customScriptSrc] - Custom URL for google analytics script, if proxying calls 
-* @return {*}
+ * @param {string}  [pluginConfig.customScriptSrc] - Custom URL for google analytics script, if proxying calls
+ * @return {*}
  * @example
  *
  * googleAnalytics({
