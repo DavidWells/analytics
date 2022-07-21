@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.12.2](https://github.com/DavidWells/analytics/compare/@analytics/core@0.12.1...@analytics/core@0.12.2) (2022-07-21)
+
+**Note:** Version bump only for package @analytics/core
+
+
+
+
+
 ## [0.12.1](https://github.com/DavidWells/analytics/compare/@analytics/core@0.12.0...@analytics/core@0.12.1) (2022-07-21)
 
 **Note:** Version bump only for package @analytics/core
