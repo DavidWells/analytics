@@ -7,7 +7,7 @@
       "name": "Google Analytics",
       "url": "https://analytics.google.com/analytics/web/"
     },
-    "windowGlobal": "analyticsGa",
+    "windowGlobal": "analyticsGa3",
     "platforms": {
       "browser": "./src/browser.js",
       "node": "./src/node.js"
