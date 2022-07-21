@@ -276,6 +276,7 @@ function analytics(config = {}) {
     ...parsedOptions.methods
   }
   
+  let readyCalled = false
   /**
    * Analytic instance returned from initialization
    * @typedef {Object} AnalyticsInstance
@@ -546,7 +547,12 @@ function analytics(config = {}) {
      * })
      */
     ready: (callback) => {
-      return instance.on(EVENTS.ready, callback)
+      // If ready already fired. Call callback immediately
+      if (readyCalled) callback({ plugins, instance })
+      return instance.on(EVENTS.ready, (x) => {
+        callback(x)
+        readyCalled = true
+      })
     },
     /**
      * Attach an event handler function for analytics lifecycle events.
