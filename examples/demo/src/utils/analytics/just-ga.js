@@ -8,7 +8,11 @@ const analytics = Analytics({
   version: '1.2.0',
   plugins: [
     googleAnalytics({
-      measurementIds: ['G-RL2P3ZC6B2']
+      measurementIds: ['G-RL2P3ZC6B2'],
+      // gtagConfig: {
+      //   send_page_view: true,
+      // }
+      // debug: true
     }),
   ]
 })

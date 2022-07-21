@@ -1,12 +1,12 @@
 <!--
-title: Adding Google Analytics v3 to your app using open source analytics
+title: Adding Google Analytics v3 (Universal analytics) to your app using open source analytics
 description: Connect Google Analytics v3 to the analytics library
 pageTitle: Google Analytics v3
 -->
 
-# Google Analytics
+# Google Analytics v3 (Universal analytics)
 
-This library exports the `google-analytics` plugin for the [`analytics`](https://www.npmjs.com/package/analytics) package & standalone methods for any project to use to make it easier to interact with [Google Analytics](https://analytics.google.com/analytics/web/).
+This library exports the `@analytics/google-analytics-v3` plugin for the [`analytics`](https://www.npmjs.com/package/analytics) package & standalone methods for any project to use to make it easier to interact with [Google Analytics](https://analytics.google.com/analytics/web/).
 
 This analytics plugin will load google analytics into your application.
 

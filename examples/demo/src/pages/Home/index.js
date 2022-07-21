@@ -8,6 +8,11 @@ import './Home.css'
 
 let hasCleared = false
 
+// analytics.ready((info) => {
+//   console.log('info', info)
+//   analytics.plugins['google-analytics'].addTag('foobar')
+// })
+
 function sortByTimeStamp(a, b) {
   if (!a.meta || !b.meta) {
     return 0

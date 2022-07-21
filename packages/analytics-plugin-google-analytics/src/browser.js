@@ -1,47 +1,49 @@
 /* global, window */
+let loadedInstances = {}
+/* Location of gtag script */
 const gtagScriptSource = 'https://www.googletagmanager.com/gtag/js'
+// See https://developers.google.com/analytics/devguides/collection/ga4/reference/config
+const defaultGtagConf = {
+  // https://support.google.com/analytics/answer/7201382?hl=en#zippy=%2Cglobal-site-tag-websites
+  debug_mode: false,
+  /**
+   * Disable automatic sending of page views, instead let analytics.page() do this
+   * https://developers.google.com/analytics/devguides/collection/gtagjs
+   */
+  send_page_view: false,
+  // https://developers.google.com/analytics/devguides/collection/gtagjs/ip-anonymization
+  anonymize_ip: false,
+  /**
+   * Disable All Advertising
+   * https://developers.google.com/analytics/devguides/collection/ga4/display-features#disable_all_advertising_features
+   */
+  allow_google_signals: true,
+  /**
+   * Disable Advertising Personalization
+   * https://developers.google.com/analytics/devguides/collection/ga4/display-features#disable_advertising_personalization
+   */
+  allow_ad_personalization_signals: true,
+  /**
+   * https://developers.google.com/analytics/devguides/collection/gtagjs/cookies-user-id#configure_cookie_field_settings
+   */
+  // cookie_domain: 'auto',
+  // cookie_expires
+  // cookie_prefix
+  // cookie_update
+  // cookie_flags
+  /**
+   * Cookie Flags
+   * https://developers.google.com/analytics/devguides/collection/ga4/cookies-user-id#cookie_flags
+   */
+  cookie_flags: ''
+}
+
 const defaultConfig = {
   gtagName: 'gtag',
   dataLayerName: 'ga4DataLayer',
   measurementIds: [],
-  // See https://developers.google.com/analytics/devguides/collection/ga4/reference/config
-  gtagConfig: {
-    // https://support.google.com/analytics/answer/7201382?hl=en#zippy=%2Cglobal-site-tag-websites
-    debug_mode: false,
-    /**
-     * Disable automatic sending of page views, instead let analytics.page() do this
-     * https://developers.google.com/analytics/devguides/collection/gtagjs
-     */
-    send_page_view: false,
-    // https://developers.google.com/analytics/devguides/collection/gtagjs/ip-anonymization
-    anonymize_ip: false,
-    /**
-     * Disable All Advertising
-     * https://developers.google.com/analytics/devguides/collection/ga4/display-features#disable_all_advertising_features
-     */
-    allow_google_signals: true,
-    /**
-     * Disable Advertising Personalization
-     * https://developers.google.com/analytics/devguides/collection/ga4/display-features#disable_advertising_personalization
-     */
-    allow_ad_personalization_signals: true,
-    /**
-     * https://developers.google.com/analytics/devguides/collection/gtagjs/cookies-user-id#configure_cookie_field_settings
-     */
-    // cookie_domain: 'auto',
-    // cookie_expires
-    // cookie_prefix
-    // cookie_update
-    // cookie_flags
-    /**
-     * Cookie Flags
-     * https://developers.google.com/analytics/devguides/collection/ga4/cookies-user-id#cookie_flags
-     */
-    cookie_flags: ''
-  },
+  gtagConfig: defaultGtagConf,
 }
-
-let loadedInstances = {}
 
 /**
  * Google analytics plugin
@@ -68,7 +70,7 @@ let loadedInstances = {}
  * })
  */
 function googleAnalytics(pluginConfig = {}) {
-  let pageCalledOnce = false
+  let pageCallCount = 0
   let measurementIds = getIds(pluginConfig.measurementIds)
   const initConfig = {
     ...defaultConfig,
@@ -98,17 +100,16 @@ function googleAnalytics(pluginConfig = {}) {
       }
       // Initialize tracker instances on page
       let gtagConf = {
-        ...gtagConfig,
+        ...defaultGtagConf,
+        ...(gtagConfig) ? gtagConfig : {},
         ...(debug) ? { debug_mode: true } : {},
       }
-      // console.log('gtagConf', gtagConf)
       /* set custom dimensions from user traits */
       const user = instance.user() || {}
       const traits = user.traits || {}
       if (Object.keys(traits).length) {
         window[gtagName]('set', 'user_properties', traits)
       }
-      
       /* Initialize all measurementIds */
       for (var i = 0; i < measurementIds.length; i++) {
         if (!loadedInstances[measurementIds[i]]) {
@@ -120,7 +121,7 @@ function googleAnalytics(pluginConfig = {}) {
     // Set parameter scope at user level with 'set' method
     identify: ({ payload, config }) => {
       const { gtagName } = config
-      if (!window[gtagName] || !measurementIds) return
+      if (!window[gtagName] || !measurementIds.length) return
       if (payload.userId) {
         // https://developers.google.com/analytics/devguides/collection/ga4/user-id?platform=websites#send_user_ids
         window[gtagName]('set', { user_id: payload.userId })
@@ -140,54 +141,44 @@ function googleAnalytics(pluginConfig = {}) {
     },
     // Set parameter scope at page level with 'config' method
     page: ({ payload, config, instance }) => {
-      const { gtagName } = config
+      const { gtagName, gtagConfig } = config
       if (!window[gtagName] || !measurementIds.length) return
       const { properties } = payload
+      const { send_to } = properties
       const campaign = instance.getState('context.campaign')
+      // console.log('ga page properties', properties)
       /* Create pageview-related properties */
-      const path = properties.path || document.location.pathname
       const pageView = {
-        page_path: path,
         page_title: properties.title,
         page_location: properties.url,
+        page_path: properties.path || document.location.pathname,
+        page_hash: properties.hash,
+        page_search: properties.page_search,
+        page_referrer: properties.referrer,
       }
       const campaignData = addCampaignData(campaign)
-      /**
-       * Create user properties for `config` method that are not part of custom dimensions
-       */
-      const pageRelatedProperties = ['title', 'url', 'path', 'sendPageView', 'referrer']
-      const selfDefinedPageProperties = Object.keys(properties).reduce((acc, key) => {
-        if (
-          !pageRelatedProperties.includes(key) &&
-          !(config.userProperties && config.userProperties.includes(key))
-        ) {
-          acc[key] = properties[key]
-        }
-        return acc
-      }, {})
-
       const finalPayload = {
-        send_to: properties.send_to || measurementIds[0],
+        ...(send_to) ? { send_to } : {},
         ...pageView,
         ...campaignData,
-        ...pageRelatedProperties,
-        ...selfDefinedPageProperties,
       }
-      // Remove location for SPA tracking after initial page view
-      if (pageCalledOnce) {
-        delete finalPayload.page_location
+      /* If send_page_view true, ignore first analytics.page call */
+      if (gtagConfig && gtagConfig.send_page_view && pageCallCount === 0) {
+        pageCallCount++
+        // console.log('ignore first pageCallCount', pageCallCount)
+        return 
       }
+      // console.log('Send page_view payload', finalPayload)
       window[gtagName]('event', 'page_view', finalPayload)
       // Set after initial page view
-      pageCalledOnce = true
+      pageCallCount++
     },
     // Set parameter scope at event level with 'event' method
     track: ({ payload, config, instance }) => {
       const { properties, event } = payload
       const campaign = instance.getState('context.campaign')
       const { gtagName } = config
-      if (!window[gtagName] || !measurementIds) return
-
+      if (!window[gtagName] || !measurementIds.length) return
       /* Attach campaign data */
       const campaignData = addCampaignData(campaign)
       // Limits https://support.google.com/analytics/answer/9267744
@@ -207,6 +198,7 @@ function googleAnalytics(pluginConfig = {}) {
       */
       window[gtagName]('event', event, finalPayload)
     },
+    /* Verify gtag loaded and ready to use */
     loaded: ({ config }) => {
       const { dataLayerName, customScriptSrc } = config
       const hasDataLayer = dataLayerName && (window[dataLayerName] && Array.prototype.push === window[dataLayerName].push)
@@ -227,10 +219,10 @@ function googleAnalytics(pluginConfig = {}) {
       /* Disable gtag for user */
       disable: (ids) => {
         const gaIds = (ids) ? getIds(ids) : measurementIds
-        // https://developers.google.com/analytics/devguides/collection/gtagjs/user-opt-out
         for (var i = 0; i < measurementIds.length; i++) {
           const gaId = measurementIds[i]
           if (gaIds.includes(gaId)) {
+            // https://developers.google.com/analytics/devguides/collection/gtagjs/user-opt-out
             window[`ga-disable-${gaId}`] = true
           }
         }
@@ -241,6 +233,7 @@ function googleAnalytics(pluginConfig = {}) {
         for (var i = 0; i < measurementIds.length; i++) {
           const gaId = measurementIds[i]
           if (gaIds.includes(gaId)) {
+            // https://developers.google.com/analytics/devguides/collection/gtagjs/user-opt-out
             window[`ga-disable-${gaId}`] = false
           }
         }
@@ -279,18 +272,6 @@ function addCampaignData(campaignData = {}) {
   if (content) campaign.campaignContent = content
   if (keyword) campaign.campaignKeyword = keyword
   return campaign
-}
-
-/**
- * Create parameter value object based on given key values.
- * */
-function getProperties(properties = {}, propertyKeys = []) {
-  return propertyKeys.reduce((acc, key) => {
-    if (properties[key]) {
-      acc[key] = properties[key]
-    }
-    return acc
-  }, {})
 }
 
 function scriptLoaded(scriptSrc) {
