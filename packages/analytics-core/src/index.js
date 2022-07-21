@@ -160,7 +160,6 @@ function analytics(config = {}) {
     // throw new Error(`${ERROR_URL}3`)
     throw new Error('Abort disabled inListener')
   }
-
   // Parse URL parameters
   const params = paramsParse()
   // Initialize visitor information
