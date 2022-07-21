@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.12.0](https://github.com/DavidWells/analytics/compare/@analytics/core@0.11.1...@analytics/core@0.12.0) (2022-07-21)
+
+
+### Features
+
+* automatically call ready callback if instance ready ([3f14922](https://github.com/DavidWells/analytics/commit/3f1492263d5ec6f4c861b0ae5d4fa53d82d4b032))
+
+
+
+
+
 ## [0.11.1](https://github.com/DavidWells/analytics/compare/@analytics/core@0.11.0...@analytics/core@0.11.1) (2022-03-18)
 
 **Note:** Version bump only for package @analytics/core

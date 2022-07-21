@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.1](https://github.com/DavidWells/analytics/compare/@analytics/google-analytics@0.5.3...@analytics/google-analytics@1.0.1) (2022-07-21)
+
+**Note:** Version bump only for package @analytics/google-analytics
+
+
+
+
+
 ## [1.0.0] (2022-06-15)
 
 BREAKING CHANGE. The package has swapped from using google analytics v.3 to the newer product of google analytics v4.
