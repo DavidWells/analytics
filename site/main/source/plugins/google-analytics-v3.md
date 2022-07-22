@@ -8,10 +8,17 @@ This library exports the `@analytics/google-analytics-v3` plugin for the [`analy
 
 This analytics plugin will load google analytics into your application.
 
+## Upgrading to google analytics v4
+
+**Note:** GA3 will be deprecated starting in July of 2023. You may probably want to change to Google Analytics 4. 
+
+For the newer version of google analytics please see the [`@analytics/google-analytics` package](https://www.npmjs.com/package/@analytics/google-analytics) or the [GA4 plugin docs](https://getanalytics.io/plugins/google-analytics/)
+
 <!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
 <details>
 <summary>Click to expand</summary>
 
+- [Upgrading to google analytics v4](#upgrading-to-google-analytics-v4)
 - [Installation](#installation)
 - [How to use](#how-to-use)
 - [Platforms Supported](#platforms-supported)

@@ -19,6 +19,7 @@ This analytics plugin will load google analytics v.4 into your application.
 - [Additional examples](#additional-examples)
 - [Fix "double page views"](#fix-double-page-views)
 - [Legacy Google analytics v3](#legacy-google-analytics-v3)
+- [Using GA3 and GA4 together](#using-ga3-and-ga4-together)
 
 </details>
 <!-- AUTO-GENERATED-CONTENT:END -->
@@ -234,4 +235,31 @@ Google analytics 4 sometimes automatically sends a page view for single page app
 
 ## Legacy Google analytics v3
 
-For the older version of google analytics please see the `@analytics/google-analytics-v3` package at https://www.npmjs.com/package/@analytics/google-analytics-v3
+For the older version of google analytics please see the [`@analytics/google-analytics-v3` package](https://www.npmjs.com/package/@analytics/google-analytics-v3) or the [GA3 plugin docs](https://getanalytics.io/plugins/google-analytics-v3/)
+
+## Using GA3 and GA4 together
+
+It is possible to use both GA3 and GA4 together shown below. Just remember GA3 will be deprecated starting in July of 2023
+
+```js
+import Analytics from 'analytics'
+import googleAnalyticsPlugin from '@analytics/google-analytics'
+import googleAnalyticsV3Plugin from '@analytics/google-analytics-v3'
+
+/* Initialize analytics instance */
+const analytics = Analytics({
+  app: 'my-app',
+  plugins: [
+    /* Load Google Analytics v4 */
+    googleAnalyticsPlugin({
+      measurementIds: ['G-abc123'],
+    }),
+    /* Load Google Analytics v3 */
+    googleAnalyticsPlugin({
+      trackingId: 'UA-11111111-2',
+    }),
+  ],
+})
+
+analytics.page()
+```
