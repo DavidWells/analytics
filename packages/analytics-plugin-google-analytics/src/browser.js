@@ -76,6 +76,7 @@ function googleAnalytics(pluginConfig = {}) {
     ...defaultConfig,
     ...pluginConfig,
   }
+  
   return {
     name: 'google-analytics',
     config: initConfig,

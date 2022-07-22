@@ -156,7 +156,6 @@ function googleAnalyticsV3(pluginConfig = {}) {
       }
 
       const path = properties.path || document.location.pathname
-
       const pageView = {
         page: path,
         title: properties.title,
