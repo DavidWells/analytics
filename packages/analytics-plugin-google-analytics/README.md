@@ -112,8 +112,8 @@ const analytics = Analytics({
 |:---------------------------|:-----------|
 | `measurementIds` <br/>**required** - string| Google Analytics MEASUREMENT IDs |
 | `debug` <br/>_optional_ - boolean| Enable Google Analytics debug mode |
-| `dataLayerName` <br/>_optional_ - string| The optional name for dataLayer object. Defaults to ga4DataLayer. |
-| `gtagName` <br/>_optional_ - string| The optional name for dataLayer object. Defaults to ga4DataLayer. |
+| `dataLayerName` <br/>_optional_ - string| The optional name for dataLayer object. Defaults to `ga4DataLayer`. |
+| `gtagName` <br/>_optional_ - string| The optional name for dataLayer object. Defaults to `gtag`. |
 | `gtagConfig.anonymize_ip` <br/>_optional_ - boolean| Enable [Anonymizing IP addresses](https://bit.ly/3c660Rd) sent to Google Analytics. |
 | `gtagConfig.cookie_domain` <br/>_optional_ - object| Additional cookie properties for configuring the [ga cookie](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#configuring_cookie_field_settings) |
 | `gtagConfig.cookie_expires` <br/>_optional_ - object| Additional cookie properties for configuring the [ga cookie](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#configuring_cookie_field_settings) |
