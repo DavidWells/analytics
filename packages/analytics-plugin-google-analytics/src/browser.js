@@ -84,11 +84,13 @@ function googleAnalytics(pluginConfig = {}) {
     initialize: ({ config, instance }) => {
       const { dataLayerName, customScriptSrc, gtagName, gtagConfig, debug } = config
       /* Inject google gtag.js script if not found */
-      if (!scriptLoaded(customScriptSrc || gtagScriptSource)) {
-        const customLayerName = dataLayerName ? `&l=${dataLayerName}` : ''
+      /* If other gtags are loaded already, add ours anyway */
+      const customLayerName = dataLayerName ? `&l=${dataLayerName}` : "";
+      const src = customScriptSrc || `${gtagScriptSource}?id=${measurementIds[0]}${customLayerName}`;
+      if (!scriptLoaded(src)) {
         const script = document.createElement('script')
         script.async = true
-        script.src = customScriptSrc || `${gtagScriptSource}?id=${measurementIds[0]}${customLayerName}`
+        script.src = src
         document.body.appendChild(script)
       }
       /* Set gtag and datalayer */

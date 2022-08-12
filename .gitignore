@@ -17,3 +17,6 @@ queues
 TODO.md
 types/
 misc.js
+
+### VisualStudioCode ###
+.vscode/*
