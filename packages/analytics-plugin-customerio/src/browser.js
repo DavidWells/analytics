@@ -6,6 +6,7 @@
  * @link https://customer.io/docs/javascript-quick-start
  * @param {object} pluginConfig - Plugin settings
  * @param {string} pluginConfig.siteId - Customer.io site Id for client side tracking
+ * @param {string} pluginConfig.customScriptSrc - Custom URL for customer.io script, if proxying calls
  * @param {boolean} [pluginConfig.disableAnonymousTraffic] -  Disable anonymous events from firing
  * @return {object} Analytics plugin
  * @example
@@ -22,7 +23,7 @@ function customerIOPlugin(pluginConfig = {}) {
     name: 'customerio',
     config: pluginConfig,
     initialize: ({ config }) => {
-      const { siteId } = config
+      const { siteId, customScriptSrc } = config
       if (!siteId) {
         throw new Error('No customer.io siteId defined')
       }
@@ -42,7 +43,7 @@ function customerIOPlugin(pluginConfig = {}) {
           t.async = true
           t.id = 'cio-tracker'
           t.setAttribute('data-site-id', siteId)
-          t.src = 'https://assets.customer.io/assets/track.js'
+          t.src = customScriptSrc || 'https://assets.customer.io/assets/track.js'
           s.parentNode.insertBefore(t, s)
         })()
       }
