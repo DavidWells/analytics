@@ -3,38 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [1.0.3](https://github.com/DavidWells/analytics/compare/@analytics/google-analytics@1.0.2...@analytics/google-analytics@1.0.3) (2022-07-22)
+## [0.6.1](https://github.com/DavidWells/analytics/compare/@analytics/google-analytics-v3@0.6.0...@analytics/google-analytics-v3@0.6.1) (2022-07-22)
 
-**Note:** Version bump only for package @analytics/google-analytics
-
-
-
-
-
-## [1.0.2](https://github.com/DavidWells/analytics/compare/@analytics/google-analytics@1.0.1...@analytics/google-analytics@1.0.2) (2022-07-21)
-
-
-### Bug Fixes
-
-* config ref ([b05c971](https://github.com/DavidWells/analytics/commit/b05c971f0e49c7760383cfc342e8b4a103e01783))
+**Note:** Version bump only for package @analytics/google-analytics-v3
 
 
 
 
 
-## [1.0.1](https://github.com/DavidWells/analytics/compare/@analytics/google-analytics@0.5.3...@analytics/google-analytics@1.0.1) (2022-07-21)
-
-**Note:** Version bump only for package @analytics/google-analytics
+# 0.6.0 (2022-07-21)
 
 
+### Features
+
+* add legacy google analytics v3 package ([83f0be2](https://github.com/DavidWells/analytics/commit/83f0be2428594c4eef7f46e261707d8baf619d00))
 
 
 
-## [1.0.0] (2022-06-15)
-
-BREAKING CHANGE. The package has swapped from using google analytics v.3 to the newer product of google analytics v4.
-
-To continue using google analytics v3, use the `@analytics/google-analytics-v3` package. All future updates here will be for the completely different product from google called "google analytics v4".
 
 
 ## [0.5.3](https://github.com/DavidWells/analytics/compare/@analytics/google-analytics@0.5.2...@analytics/google-analytics@0.5.3) (2021-05-30)

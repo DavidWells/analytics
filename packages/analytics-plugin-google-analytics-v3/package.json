@@ -1,15 +1,16 @@
 {
-  "name": "@analytics/google-analytics",
-  "version": "1.0.3",
-  "description": "Google analytics v4 plugin for 'analytics' module",
+  "name": "@analytics/google-analytics-v3",
+  "version": "0.6.1",
+  "description": "Google analytics v3 plugin for 'analytics' module",
   "projectMeta": {
     "provider": {
       "name": "Google Analytics",
       "url": "https://analytics.google.com/analytics/web/"
     },
-    "windowGlobal": "analyticsGa",
+    "windowGlobal": "analyticsGa3",
     "platforms": {
-      "browser": "./src/browser.js"
+      "browser": "./src/browser.js",
+      "node": "./src/node.js"
     }
   },
   "keywords": [
@@ -20,7 +21,7 @@
     "google-analytics",
     "Google Analytics"
   ],
-  "author": "Bing Wang, David Wells",
+  "author": "David Wells",
   "license": "MIT",
   "scripts": {
     "types": "../../node_modules/.bin/jsdoc -t ../../node_modules/tsd-jsdoc/dist -r ./src/ -d temp-types",
@@ -52,5 +53,8 @@
   "devDependencies": {
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.3.1"
+  },
+  "dependencies": {
+    "universal-analytics": "^0.4.20"
   }
 }

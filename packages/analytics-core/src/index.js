@@ -74,13 +74,15 @@ function analytics(config = {}) {
       /* Plugins must supply a "name" property. See error url for more details */
       throw new Error(ERROR_URL + '1')
     }
+    // Set config if empty
+    if (!plugin.config) plugin.config = {}
     // if plugin exposes EVENTS capture available events
     const definedEvents = (plugin.EVENTS) ? Object.keys(plugin.EVENTS).map((k) => {
       return plugin.EVENTS[k]
     }) : []
 
     const enabledFromMerge = !(plugin.enabled === false)
-    const enabledFromPluginConfig = !(plugin.config && plugin.config.enabled === false)
+    const enabledFromPluginConfig = !(plugin.config.enabled === false)
     // top level { enabled: false } takes presidence over { config: enabled: false }
     acc.pluginEnabled[plugin.name] = enabledFromMerge && enabledFromPluginConfig
     delete plugin.enabled
@@ -161,7 +163,7 @@ function analytics(config = {}) {
     // throw new Error(`${ERROR_URL}3`)
     throw new Error('Abort disabled inListener')
   }
-
+  
   // Parse URL parameters
   const params = paramsParse()
   // Initialize visitor information
@@ -276,7 +278,8 @@ function analytics(config = {}) {
     // Merge in custom plugin methods
     ...parsedOptions.methods
   }
-
+  
+  let readyCalled = false
   /**
    * Analytic instance returned from initialization
    * @typedef {Object} AnalyticsInstance
@@ -545,7 +548,12 @@ function analytics(config = {}) {
      * })
      */
     ready: (callback) => {
-      return instance.on(EVENTS.ready, callback)
+      // If ready already fired. Call callback immediately
+      if (readyCalled) callback({ plugins, instance })
+      return instance.on(EVENTS.ready, (x) => {
+        callback(x)
+        readyCalled = true
+      })
     },
     /**
      * Attach an event handler function for analytics lifecycle events.
@@ -875,8 +883,8 @@ function analytics(config = {}) {
       enabled: isEnabled,
       // If plugin enabled & has no initialize method, set initialized to true, else false
       initialized: (isEnabled) ? Boolean(!plugin.initialize) : false,
-      loaded: Boolean(loaded()),
-      config: config || {}
+      loaded: Boolean(loaded({ config })),
+      config
     }
     return acc
   }, {})

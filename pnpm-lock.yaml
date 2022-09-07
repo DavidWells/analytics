@@ -1,4 +1,4 @@
-lockfileVersion: 5.3
+lockfileVersion: 5.4
 
 importers:
 
@@ -58,7 +58,7 @@ importers:
       '@babel/core': 7.17.0
       '@babel/plugin-transform-runtime': 7.17.0_@babel+core@7.17.0
       '@babel/preset-env': 7.16.11_@babel+core@7.17.0
-      '@rollup/plugin-babel': 5.3.0_@babel+core@7.17.0+rollup@2.67.0
+      '@rollup/plugin-babel': 5.3.0_46quc4n4uxgu2zjyu2qradeljq
       '@rollup/plugin-commonjs': 21.0.1_rollup@2.67.0
       '@rollup/plugin-json': 4.1.0_rollup@2.67.0
       '@rollup/plugin-node-resolve': 13.1.3_rollup@2.67.0
@@ -73,7 +73,7 @@ importers:
       jsdom: 16.7.0
       lerna: 3.22.1
       markdown-magic: 2.6.0
-      microbundle: 0.14.2_acorn@8.7.0
+      microbundle: 0.14.2
       mkdirp: 0.5.5
       npm-run-all: 4.1.5
       outdent: 0.7.1
@@ -83,20 +83,20 @@ importers:
       rollup-plugin-node-builtins: 2.1.2
       rollup-plugin-size-snapshot: 0.12.0_rollup@2.67.0
       rollup-plugin-strip-banner: 2.0.0_rollup@2.67.0
-      rollup-plugin-terser: 7.0.2_acorn@8.7.0+rollup@2.67.0
+      rollup-plugin-terser: 7.0.2_rollup@2.67.0
       rollup-plugin-uglify: 6.0.4_rollup@2.67.0
       safe-chalk: 1.0.0
       sane: 4.1.0
       sync-rpc: 1.3.6
-      terser: 5.10.0_acorn@8.7.0
+      terser: 5.10.0
       tsd-jsdoc: 2.5.0_jsdoc@3.6.7
       typescript: 4.4.4
       uglify-js: 3.15.0
 
   packages/analytics:
     specifiers:
-      '@analytics/core': ^0.11.0
-      '@analytics/storage-utils': ^0.3.0
+      '@analytics/core': ^0.11.1
+      '@analytics/storage-utils': ^0.4.0
       '@babel/core': 7.17.0
       '@babel/plugin-proposal-class-properties': 7.16.7
       '@babel/plugin-transform-runtime': 7.17.0
@@ -147,15 +147,15 @@ importers:
 
   packages/analytics-core:
     specifiers:
-      '@analytics/global-storage-utils': ^0.1.4
-      '@analytics/type-utils': ^0.5.4
+      '@analytics/global-storage-utils': ^0.1.5
+      '@analytics/type-utils': ^0.6.0
       '@babel/core': 7.17.0
       '@babel/plugin-proposal-class-properties': 7.16.7
       '@babel/plugin-transform-runtime': 7.17.0
       '@babel/preset-env': 7.16.11
       '@babel/register': 7.17.0
       '@babel/runtime': 7.17.0
-      analytics-utils: ^1.0.9
+      analytics-utils: ^1.0.10
       ava: ^2.2.0
       gen-esm-wrapper: ^1.1.3
       microbundle: ^0.14.2
@@ -176,7 +176,7 @@ importers:
       '@babel/runtime': 7.17.0
       ava: 2.4.0
       gen-esm-wrapper: 1.1.3
-      microbundle: 0.14.2_acorn@8.7.0
+      microbundle: 0.14.2
       mkdirp: 0.5.5
       npm-run-all: 4.1.5
       rimraf: 2.7.1
@@ -189,7 +189,7 @@ importers:
       analytics-utils: ^1.0.9
     dependencies:
       '@analytics/global-storage-utils': link:../../analytics-util-storage-global
-      '@analytics/type-utils': link:../../analytics-util-types
+      '@analytics/type-utils': 0.5.4
       analytics-utils: link:../../analytics-utils
 
   packages/analytics-core/server:
@@ -199,7 +199,7 @@ importers:
       analytics-utils: ^1.0.9
     dependencies:
       '@analytics/global-storage-utils': link:../../analytics-util-storage-global
-      '@analytics/type-utils': link:../../analytics-util-types
+      '@analytics/type-utils': 0.5.4
       analytics-utils: link:../../analytics-utils
 
   packages/analytics-plugin-amplitude:
@@ -212,10 +212,10 @@ importers:
 
   packages/analytics-plugin-aws-pinpoint:
     specifiers:
-      '@analytics/activity-utils': ^0.1.12
-      '@analytics/localstorage-utils': ^0.1.7
+      '@analytics/activity-utils': ^0.1.13
+      '@analytics/localstorage-utils': ^0.1.8
       '@analytics/queue-utils': ^0.1.2
-      '@analytics/session-utils': ^0.1.16
+      '@analytics/session-utils': ^0.1.17
       '@analytics/type-utils': ^0.3.1
       '@aws-sdk/client-pinpoint': ^3.31.0
       '@babel/core': ^7.2.2
@@ -223,7 +223,7 @@ importers:
       '@babel/preset-env': ^7.3.1
       '@babel/register': ^7.15.3
       analytics-plugin-tab-events: ^0.2.1
-      analytics-utils: ^1.0.9
+      analytics-utils: ^1.0.10
       aws-sdk-client-mock: ^0.5.5
       aws4fetch: ^1.0.13
       c8: ^7.10.0
@@ -361,9 +361,9 @@ importers:
 
   packages/analytics-plugin-original-source:
     specifiers:
-      '@analytics/storage-utils': ^0.3.0
-      '@analytics/type-utils': ^0.5.4
-      analytics-utils: ^1.0.9
+      '@analytics/storage-utils': ^0.4.0
+      '@analytics/type-utils': ^0.6.0
+      analytics-utils: ^1.0.10
       concurrently: ^6.1.0
       esm: ^3.2.25
       microbundle: ^0.13.0
@@ -376,7 +376,7 @@ importers:
     devDependencies:
       concurrently: 6.3.0
       esm: 3.2.25
-      microbundle: 0.13.3_acorn@8.7.0
+      microbundle: 0.13.3
       servor: 4.0.2
       uvu: 0.5.2
 
@@ -436,20 +436,20 @@ importers:
       '@snowplow/browser-tracker': ^3.1.5
       '@snowplow/node-tracker': ^3.1.5
     dependencies:
-      '@snowplow/browser-plugin-ad-tracking': 3.3.0_@snowplow+browser-tracker@3.3.0
-      '@snowplow/browser-plugin-client-hints': 3.3.0_@snowplow+browser-tracker@3.3.0
-      '@snowplow/browser-plugin-consent': 3.3.0_@snowplow+browser-tracker@3.3.0
-      '@snowplow/browser-plugin-ecommerce': 3.3.0_@snowplow+browser-tracker@3.3.0
-      '@snowplow/browser-plugin-enhanced-ecommerce': 3.3.0_@snowplow+browser-tracker@3.3.0
-      '@snowplow/browser-plugin-error-tracking': 3.3.0_@snowplow+browser-tracker@3.3.0
-      '@snowplow/browser-plugin-form-tracking': 3.3.0_@snowplow+browser-tracker@3.3.0
-      '@snowplow/browser-plugin-ga-cookies': 3.3.0_@snowplow+browser-tracker@3.3.0
-      '@snowplow/browser-plugin-geolocation': 3.3.0_@snowplow+browser-tracker@3.3.0
-      '@snowplow/browser-plugin-link-click-tracking': 3.3.0_@snowplow+browser-tracker@3.3.0
-      '@snowplow/browser-plugin-optimizely-x': 3.3.0_@snowplow+browser-tracker@3.3.0
-      '@snowplow/browser-plugin-performance-timing': 3.3.0_@snowplow+browser-tracker@3.3.0
-      '@snowplow/browser-plugin-site-tracking': 3.3.0_@snowplow+browser-tracker@3.3.0
-      '@snowplow/browser-plugin-timezone': 3.3.0_@snowplow+browser-tracker@3.3.0
+      '@snowplow/browser-plugin-ad-tracking': 3.3.0_stszsl3w4zihgb76wbwlxi3bam
+      '@snowplow/browser-plugin-client-hints': 3.3.0_stszsl3w4zihgb76wbwlxi3bam
+      '@snowplow/browser-plugin-consent': 3.3.0_stszsl3w4zihgb76wbwlxi3bam
+      '@snowplow/browser-plugin-ecommerce': 3.3.0_stszsl3w4zihgb76wbwlxi3bam
+      '@snowplow/browser-plugin-enhanced-ecommerce': 3.3.0_stszsl3w4zihgb76wbwlxi3bam
+      '@snowplow/browser-plugin-error-tracking': 3.3.0_stszsl3w4zihgb76wbwlxi3bam
+      '@snowplow/browser-plugin-form-tracking': 3.3.0_stszsl3w4zihgb76wbwlxi3bam
+      '@snowplow/browser-plugin-ga-cookies': 3.3.0_stszsl3w4zihgb76wbwlxi3bam
+      '@snowplow/browser-plugin-geolocation': 3.3.0_stszsl3w4zihgb76wbwlxi3bam
+      '@snowplow/browser-plugin-link-click-tracking': 3.3.0_stszsl3w4zihgb76wbwlxi3bam
+      '@snowplow/browser-plugin-optimizely-x': 3.3.0_stszsl3w4zihgb76wbwlxi3bam
+      '@snowplow/browser-plugin-performance-timing': 3.3.0_stszsl3w4zihgb76wbwlxi3bam
+      '@snowplow/browser-plugin-site-tracking': 3.3.0_stszsl3w4zihgb76wbwlxi3bam
+      '@snowplow/browser-plugin-timezone': 3.3.0_stszsl3w4zihgb76wbwlxi3bam
       '@snowplow/browser-tracker': 3.3.0
       '@snowplow/node-tracker': 3.3.0
     devDependencies:
@@ -474,7 +474,7 @@ importers:
 
   packages/analytics-util-activity:
     specifiers:
-      '@analytics/listener-utils': ^0.2.10
+      '@analytics/listener-utils': ^0.3.0
       analytics-plugin-tab-events: ^0.2.1
       concurrently: ^6.1.0
       microbundle: ^0.13.0
@@ -485,14 +485,14 @@ importers:
       analytics-plugin-tab-events: link:../analytics-plugin-tab-events
     devDependencies:
       concurrently: 6.3.0
-      microbundle: 0.13.3_acorn@8.7.0
+      microbundle: 0.13.3
       servor: 4.0.2
       watchlist: 0.2.3
 
   packages/analytics-util-control-flow:
     specifiers:
-      '@analytics/type-utils': ^0.5.4
-      '@analytics/url-utils': ^0.2.0
+      '@analytics/type-utils': ^0.6.0
+      '@analytics/url-utils': ^0.2.1
       concurrently: ^6.1.0
       esm: ^3.2.25
       microbundle: ^0.14.2
@@ -506,7 +506,7 @@ importers:
     devDependencies:
       concurrently: 6.3.0
       esm: 3.2.25
-      microbundle: 0.14.2_acorn@8.7.0
+      microbundle: 0.14.2
       nanospy: 0.5.0
       servor: 4.0.2
       uvu: 0.5.2
@@ -514,7 +514,7 @@ importers:
 
   packages/analytics-util-forms:
     specifiers:
-      '@analytics/type-utils': ^0.5.4
+      '@analytics/type-utils': ^0.6.0
       concurrently: ^6.1.0
       microbundle: ^0.13.0
       servor: ^4.0.2
@@ -523,13 +523,13 @@ importers:
       '@analytics/type-utils': link:../analytics-util-types
     devDependencies:
       concurrently: 6.3.0
-      microbundle: 0.13.3_acorn@8.7.0
+      microbundle: 0.13.3
       servor: 4.0.2
       watchlist: 0.2.3
 
   packages/analytics-util-listener:
     specifiers:
-      '@analytics/type-utils': ^0.5.4
+      '@analytics/type-utils': ^0.6.0
       concurrently: ^6.1.0
       esm: ^3.2.25
       microbundle: ^0.14.2
@@ -541,7 +541,7 @@ importers:
     devDependencies:
       concurrently: 6.3.0
       esm: 3.2.25
-      microbundle: 0.14.2_acorn@8.7.0
+      microbundle: 0.14.2
       servor: 4.0.2
       uvu: 0.5.2
       watchlist: 0.2.3
@@ -595,7 +595,7 @@ importers:
       concurrently: 6.3.0
       esm: 3.2.25
       license-checker: 25.0.1
-      microbundle: 0.13.3_acorn@8.7.0
+      microbundle: 0.13.3
       npm-check-updates: 11.8.5
       npm-run-all: 4.1.5
       uvu: 0.5.2
@@ -603,7 +603,7 @@ importers:
 
   packages/analytics-util-redact:
     specifiers:
-      '@analytics/type-utils': ^0.5.4
+      '@analytics/type-utils': ^0.6.0
       '@babel/register': 7.5.5
       ava: ^3.15.0
       concurrently: ^6.0.1
@@ -613,10 +613,10 @@ importers:
     dependencies:
       '@analytics/type-utils': link:../analytics-util-types
     devDependencies:
-      '@babel/register': 7.5.5_@babel+core@7.17.0
+      '@babel/register': 7.5.5
       ava: 3.15.0
       concurrently: 6.3.0
-      microbundle: 0.13.3_acorn@8.7.0
+      microbundle: 0.13.3
       open-cli: 6.0.1
       serve: 11.3.2
 
@@ -630,8 +630,8 @@ importers:
 
   packages/analytics-util-scroll:
     specifiers:
-      '@analytics/type-utils': ^0.5.4
-      analytics-utils: ^1.0.9
+      '@analytics/type-utils': ^0.6.0
+      analytics-utils: ^1.0.10
       concurrently: ^6.1.0
       microbundle: ^0.13.0
       servor: ^4.0.2
@@ -641,16 +641,16 @@ importers:
       analytics-utils: link:../analytics-utils
     devDependencies:
       concurrently: 6.3.0
-      microbundle: 0.13.3_acorn@8.7.0
+      microbundle: 0.13.3
       servor: 4.0.2
       watchlist: 0.2.3
 
   packages/analytics-util-session:
     specifiers:
-      '@analytics/cookie-utils': ^0.2.9
-      '@analytics/global-storage-utils': ^0.1.4
-      '@analytics/session-storage-utils': ^0.0.4
-      analytics-utils: ^1.0.9
+      '@analytics/cookie-utils': ^0.2.10
+      '@analytics/global-storage-utils': ^0.1.5
+      '@analytics/session-storage-utils': ^0.0.5
+      analytics-utils: ^1.0.10
       concurrently: ^6.1.0
       microbundle: ^0.13.0
       servor: ^4.0.2
@@ -662,17 +662,17 @@ importers:
       analytics-utils: link:../analytics-utils
     devDependencies:
       concurrently: 6.3.0
-      microbundle: 0.13.3_acorn@8.7.0
+      microbundle: 0.13.3
       servor: 4.0.2
       watchlist: 0.2.3
 
   packages/analytics-util-storage:
     specifiers:
-      '@analytics/cookie-utils': ^0.2.9
-      '@analytics/global-storage-utils': ^0.1.4
-      '@analytics/localstorage-utils': ^0.1.7
-      '@analytics/session-storage-utils': ^0.0.4
-      '@analytics/type-utils': ^0.5.4
+      '@analytics/cookie-utils': ^0.2.10
+      '@analytics/global-storage-utils': ^0.1.5
+      '@analytics/localstorage-utils': ^0.1.8
+      '@analytics/session-storage-utils': ^0.0.5
+      '@analytics/type-utils': ^0.6.0
       concurrently: ^6.1.0
       esm: ^3.2.25
       microbundle: ^0.13.0
@@ -688,14 +688,14 @@ importers:
     devDependencies:
       concurrently: 6.3.0
       esm: 3.2.25
-      microbundle: 0.13.3_acorn@8.7.0
+      microbundle: 0.13.3
       servor: 4.0.2
       uvu: 0.5.2
       watchlist: 0.2.3
 
   packages/analytics-util-storage-cookie:
     specifiers:
-      '@analytics/global-storage-utils': ^0.1.4
+      '@analytics/global-storage-utils': ^0.1.5
       concurrently: ^6.1.0
       microbundle: ^0.13.0
       servor: ^4.0.2
@@ -704,13 +704,13 @@ importers:
       '@analytics/global-storage-utils': link:../analytics-util-storage-global
     devDependencies:
       concurrently: 6.3.0
-      microbundle: 0.13.3_acorn@8.7.0
+      microbundle: 0.13.3
       servor: 4.0.2
       watchlist: 0.2.3
 
   packages/analytics-util-storage-global:
     specifiers:
-      '@analytics/type-utils': ^0.5.4
+      '@analytics/type-utils': ^0.6.0
       concurrently: ^6.1.0
       microbundle: ^0.13.0
       servor: ^4.0.2
@@ -719,13 +719,13 @@ importers:
       '@analytics/type-utils': link:../analytics-util-types
     devDependencies:
       concurrently: 6.3.0
-      microbundle: 0.13.3_acorn@8.7.0
+      microbundle: 0.13.3
       servor: 4.0.2
       watchlist: 0.2.3
 
   packages/analytics-util-storage-local:
     specifiers:
-      '@analytics/global-storage-utils': ^0.1.4
+      '@analytics/global-storage-utils': ^0.1.5
       concurrently: ^6.1.0
       microbundle: ^0.13.0
       servor: ^4.0.2
@@ -734,16 +734,16 @@ importers:
       '@analytics/global-storage-utils': link:../analytics-util-storage-global
     devDependencies:
       concurrently: 6.3.0
-      microbundle: 0.13.3_acorn@8.7.0
+      microbundle: 0.13.3
       servor: 4.0.2
       watchlist: 0.2.3
 
   packages/analytics-util-storage-remote:
     specifiers:
-      '@analytics/type-utils': ^0.5.4
+      '@analytics/type-utils': ^0.6.0
       '@babel/core': ^7.4.5
       '@babel/preset-env': ^7.4.5
-      analytics-utils: ^1.0.9
+      analytics-utils: ^1.0.10
       cross-storage: ^1.0.0
     dependencies:
       '@analytics/type-utils': link:../analytics-util-types
@@ -755,7 +755,7 @@ importers:
 
   packages/analytics-util-storage-session:
     specifiers:
-      '@analytics/global-storage-utils': ^0.1.4
+      '@analytics/global-storage-utils': ^0.1.5
       concurrently: ^6.1.0
       microbundle: ^0.13.0
       servor: ^4.0.2
@@ -764,7 +764,7 @@ importers:
       '@analytics/global-storage-utils': link:../analytics-util-storage-global
     devDependencies:
       concurrently: 6.3.0
-      microbundle: 0.13.3_acorn@8.7.0
+      microbundle: 0.13.3
       servor: 4.0.2
       watchlist: 0.2.3
 
@@ -779,14 +779,14 @@ importers:
     devDependencies:
       concurrently: 6.3.0
       esm: 3.2.25
-      microbundle: 0.14.2_acorn@8.7.0
+      microbundle: 0.14.2
       servor: 4.0.2
       uvu: 0.5.2
       watchlist: 0.2.3
 
   packages/analytics-util-url:
     specifiers:
-      '@analytics/type-utils': ^0.5.4
+      '@analytics/type-utils': ^0.6.0
       concurrently: ^6.1.0
       esm: ^3.2.25
       microbundle: ^0.14.2
@@ -798,15 +798,15 @@ importers:
     devDependencies:
       concurrently: 6.3.0
       esm: 3.2.25
-      microbundle: 0.14.2_acorn@8.7.0
+      microbundle: 0.14.2
       servor: 4.0.2
       uvu: 0.5.2
       watchlist: 0.2.3
 
   packages/analytics-util-visitor-source:
     specifiers:
-      '@analytics/type-utils': ^0.5.4
-      '@analytics/url-utils': ^0.2.0
+      '@analytics/type-utils': ^0.6.0
+      '@analytics/url-utils': ^0.2.1
       concurrently: ^6.1.0
       esm: ^3.2.25
       microbundle: ^0.14.2
@@ -819,14 +819,14 @@ importers:
     devDependencies:
       concurrently: 6.3.0
       esm: 3.2.25
-      microbundle: 0.14.2_acorn@8.7.0
+      microbundle: 0.14.2
       servor: 4.0.2
       uvu: 0.5.2
       watchlist: 0.2.3
 
   packages/analytics-utils:
     specifiers:
-      '@analytics/type-utils': ^0.5.4
+      '@analytics/type-utils': ^0.6.0
       concurrently: ^6.1.0
       dlv: ^1.1.3
       microbundle: ^0.13.0
@@ -838,7 +838,7 @@ importers:
       dlv: 1.1.3
     devDependencies:
       concurrently: 6.3.0
-      microbundle: 0.13.3_acorn@8.7.0
+      microbundle: 0.13.3
       servor: 4.0.2
       typescript: 4.4.4
       watchlist: 0.2.3
@@ -866,7 +866,7 @@ importers:
       mini-create-react-context: 0.4.1
       tiny-invariant: 1.1.0
     devDependencies:
-      '@babel/plugin-proposal-decorators': 7.15.8_@babel+core@7.17.0
+      '@babel/plugin-proposal-decorators': 7.15.8
       babel-eslint: 10.1.0
 
 packages:
@@ -907,20 +907,24 @@ packages:
     resolution: {integrity: sha512-9Ej6c9ulj5DNE29eFk3s49/1b89M8mbQ7BoJEQAQg/k86HOVrAEWQUScr359WVSOyGNBsSYE1qILC3XFTTtgtw==}
     dev: false
 
+  /@analytics/type-utils/0.5.4:
+    resolution: {integrity: sha512-2CT5YTsvif3gYPYp5hPIhh66mUo/Cu+k5OiHbX3k5p+YsZ5Bggcp/wLEFnrdKG4tKgGn5SOKkEtL63VYhGXX7g==}
+    dev: false
+
   /@ava/babel-plugin-throws-helper/4.0.0:
     resolution: {integrity: sha512-3diBLIVBPPh3j4+hb5lo0I1D+S/O/VDJPI4Y502apBxmwEqjyXG4gTSPFUlm41sSZeZzMarT/Gzovw9kV7An0w==}
     engines: {node: '>=8.9.4 <9 || >=10.0.0 <11 || >=12.0.0'}
     dev: true
 
-  /@ava/babel-preset-stage-4/4.0.0_d2fbe318f1a81f036e9b85fb78f820f1:
+  /@ava/babel-preset-stage-4/4.0.0_2l56gghrvapqg3u3qx5xr6ba6e:
     resolution: {integrity: sha512-lZEV1ZANzfzSYBU6WHSErsy7jLPbD1iIgAboASPMcKo7woVni5/5IKWeT0RxC8rY802MFktur3OKEw2JY1Tv2w==}
     engines: {node: '>=8.9.4 <9 || >=10.0.0 <11 || >=12.0.0'}
     dependencies:
-      '@babel/plugin-proposal-async-generator-functions': 7.15.8_d2fbe318f1a81f036e9b85fb78f820f1
+      '@babel/plugin-proposal-async-generator-functions': 7.15.8_2l56gghrvapqg3u3qx5xr6ba6e
       '@babel/plugin-proposal-dynamic-import': 7.14.5_@babel+core@7.15.8
       '@babel/plugin-proposal-optional-catch-binding': 7.14.5_@babel+core@7.15.8
       '@babel/plugin-transform-dotall-regex': 7.14.5_@babel+core@7.15.8
-      '@babel/plugin-transform-modules-commonjs': 7.15.4_d2fbe318f1a81f036e9b85fb78f820f1
+      '@babel/plugin-transform-modules-commonjs': 7.15.4_2l56gghrvapqg3u3qx5xr6ba6e
     transitivePeerDependencies:
       - '@babel/core'
       - supports-color
@@ -1698,6 +1702,22 @@ packages:
       semver: 6.3.0
     dev: true
 
+  /@babel/helper-create-class-features-plugin/7.15.4:
+    resolution: {integrity: sha512-7ZmzFi+DwJx6A7mHRwbuucEYpyBwmh2Ca0RvI6z2+WLZYCqV0JOaLb+u0zbtmDicebgKBZgqbYfLaKNqSgv5Pw==}
+    engines: {node: '>=6.9.0'}
+    peerDependencies:
+      '@babel/core': ^7.0.0
+    dependencies:
+      '@babel/helper-annotate-as-pure': 7.15.4
+      '@babel/helper-function-name': 7.15.4
+      '@babel/helper-member-expression-to-functions': 7.15.4
+      '@babel/helper-optimise-call-expression': 7.15.4
+      '@babel/helper-replace-supers': 7.15.4
+      '@babel/helper-split-export-declaration': 7.15.4
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
   /@babel/helper-create-class-features-plugin/7.15.4_@babel+core@7.15.8:
     resolution: {integrity: sha512-7ZmzFi+DwJx6A7mHRwbuucEYpyBwmh2Ca0RvI6z2+WLZYCqV0JOaLb+u0zbtmDicebgKBZgqbYfLaKNqSgv5Pw==}
     engines: {node: '>=6.9.0'}
@@ -1841,7 +1861,7 @@ packages:
     resolution: {integrity: sha512-J14f/vq8+hdC2KoWLIQSsGrC9EFBKE4NFts8pfMpymfApds+fPqR30AOUWc4tyr56h9l/GA1Sxv2q3dLZWbQ/g==}
     engines: {node: '>=6.9.0'}
     dependencies:
-      '@babel/types': 7.15.6
+      '@babel/types': 7.17.0
     dev: true
 
   /@babel/helper-explode-assignable-expression/7.16.7:
@@ -2221,12 +2241,16 @@ packages:
     resolution: {integrity: sha512-BRYa3wcQnjS/nqI8Ac94pYYpJfojHVvVXJ97+IDCImX4Jc8W8Xv1+47enbruk+q1etOpsQNwnfFcNGw+gtPGxA==}
     engines: {node: '>=6.0.0'}
     hasBin: true
+    dependencies:
+      '@babel/types': 7.17.0
     dev: true
 
   /@babel/parser/7.17.0:
     resolution: {integrity: sha512-VKXSCQx5D8S04ej+Dqsr1CzYvvWgf20jIw2D+YhQCrIlr2UZGaDds23Y0xg75/skOxpLCRpUZvk/1EAVkGoDOw==}
     engines: {node: '>=6.0.0'}
     hasBin: true
+    dependencies:
+      '@babel/types': 7.17.0
     dev: true
 
   /@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression/7.16.7_@babel+core@7.17.0:
@@ -2263,6 +2287,20 @@ packages:
       '@babel/plugin-proposal-optional-chaining': 7.16.7_@babel+core@7.17.0
     dev: true
 
+  /@babel/plugin-proposal-async-generator-functions/7.15.8_2l56gghrvapqg3u3qx5xr6ba6e:
+    resolution: {integrity: sha512-2Z5F2R2ibINTc63mY7FLqGfEbmofrHU9FitJW1Q7aPaKFhiPvSq6QEt/BoWN5oME3GVyjcRuNNSRbb9LC0CSWA==}
+    engines: {node: '>=6.9.0'}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+    dependencies:
+      '@babel/core': 7.15.8_supports-color@7.2.0
+      '@babel/helper-plugin-utils': 7.14.5
+      '@babel/helper-remap-async-to-generator': 7.15.4_supports-color@7.2.0
+      '@babel/plugin-syntax-async-generators': 7.8.4_@babel+core@7.15.8
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
   /@babel/plugin-proposal-async-generator-functions/7.15.8_@babel+core@7.15.8:
     resolution: {integrity: sha512-2Z5F2R2ibINTc63mY7FLqGfEbmofrHU9FitJW1Q7aPaKFhiPvSq6QEt/BoWN5oME3GVyjcRuNNSRbb9LC0CSWA==}
     engines: {node: '>=6.9.0'}
@@ -2287,20 +2325,6 @@ packages:
       '@babel/helper-plugin-utils': 7.14.5
       '@babel/helper-remap-async-to-generator': 7.15.4
       '@babel/plugin-syntax-async-generators': 7.8.4_@babel+core@7.5.5
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
-  /@babel/plugin-proposal-async-generator-functions/7.15.8_d2fbe318f1a81f036e9b85fb78f820f1:
-    resolution: {integrity: sha512-2Z5F2R2ibINTc63mY7FLqGfEbmofrHU9FitJW1Q7aPaKFhiPvSq6QEt/BoWN5oME3GVyjcRuNNSRbb9LC0CSWA==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-    dependencies:
-      '@babel/core': 7.15.8_supports-color@7.2.0
-      '@babel/helper-plugin-utils': 7.14.5
-      '@babel/helper-remap-async-to-generator': 7.15.4_supports-color@7.2.0
-      '@babel/plugin-syntax-async-generators': 7.8.4_@babel+core@7.15.8
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -2397,16 +2421,15 @@ packages:
       - supports-color
     dev: true
 
-  /@babel/plugin-proposal-decorators/7.15.8_@babel+core@7.17.0:
+  /@babel/plugin-proposal-decorators/7.15.8:
     resolution: {integrity: sha512-5n8+xGK7YDrXF+WAORg3P7LlCCdiaAyKLZi22eP2BwTy4kJ0kFUMMDCj4nQ8YrKyNZgjhU/9eRVqONnjB3us8g==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
     dependencies:
-      '@babel/core': 7.17.0
-      '@babel/helper-create-class-features-plugin': 7.15.4_@babel+core@7.17.0
+      '@babel/helper-create-class-features-plugin': 7.15.4
       '@babel/helper-plugin-utils': 7.14.5
-      '@babel/plugin-syntax-decorators': 7.14.5_@babel+core@7.17.0
+      '@babel/plugin-syntax-decorators': 7.14.5
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -2829,13 +2852,12 @@ packages:
       '@babel/helper-plugin-utils': 7.16.7
     dev: true
 
-  /@babel/plugin-syntax-decorators/7.14.5_@babel+core@7.17.0:
+  /@babel/plugin-syntax-decorators/7.14.5:
     resolution: {integrity: sha512-c4sZMRWL4GSvP1EXy0woIP7m4jkVcEuG8R1TOZxPBPtp4FSM/kiPZub9UIs/Jrb5ZAOzvTUSGYrWsrSu1JvoPw==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
     dependencies:
-      '@babel/core': 7.17.0
       '@babel/helper-plugin-utils': 7.14.5
     dev: true
 
@@ -3677,6 +3699,21 @@ packages:
       - supports-color
     dev: true
 
+  /@babel/plugin-transform-modules-commonjs/7.15.4_2l56gghrvapqg3u3qx5xr6ba6e:
+    resolution: {integrity: sha512-qg4DPhwG8hKp4BbVDvX1s8cohM8a6Bvptu4l6Iingq5rW+yRUAhe/YRup/YcW2zCOlrysEWVhftIcKzrEZv3sA==}
+    engines: {node: '>=6.9.0'}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+    dependencies:
+      '@babel/core': 7.15.8_supports-color@7.2.0
+      '@babel/helper-module-transforms': 7.15.8_supports-color@7.2.0
+      '@babel/helper-plugin-utils': 7.14.5
+      '@babel/helper-simple-access': 7.15.4
+      babel-plugin-dynamic-import-node: 2.3.3
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
   /@babel/plugin-transform-modules-commonjs/7.15.4_@babel+core@7.15.8:
     resolution: {integrity: sha512-qg4DPhwG8hKp4BbVDvX1s8cohM8a6Bvptu4l6Iingq5rW+yRUAhe/YRup/YcW2zCOlrysEWVhftIcKzrEZv3sA==}
     engines: {node: '>=6.9.0'}
@@ -3700,21 +3737,6 @@ packages:
     dependencies:
       '@babel/core': 7.5.5
       '@babel/helper-module-transforms': 7.15.8
-      '@babel/helper-plugin-utils': 7.14.5
-      '@babel/helper-simple-access': 7.15.4
-      babel-plugin-dynamic-import-node: 2.3.3
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
-  /@babel/plugin-transform-modules-commonjs/7.15.4_d2fbe318f1a81f036e9b85fb78f820f1:
-    resolution: {integrity: sha512-qg4DPhwG8hKp4BbVDvX1s8cohM8a6Bvptu4l6Iingq5rW+yRUAhe/YRup/YcW2zCOlrysEWVhftIcKzrEZv3sA==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-    dependencies:
-      '@babel/core': 7.15.8_supports-color@7.2.0
-      '@babel/helper-module-transforms': 7.15.8_supports-color@7.2.0
       '@babel/helper-plugin-utils': 7.14.5
       '@babel/helper-simple-access': 7.15.4
       babel-plugin-dynamic-import-node: 2.3.3
@@ -4719,12 +4741,11 @@ packages:
       source-map-support: 0.5.20
     dev: true
 
-  /@babel/register/7.5.5_@babel+core@7.17.0:
+  /@babel/register/7.5.5:
     resolution: {integrity: sha512-pdd5nNR+g2qDkXZlW1yRCWFlNrAn2PPdnZUB72zjX4l1Vv4fMRRLwyf+n/idFCLI1UgVGboUU8oVziwTBiyNKQ==}
     peerDependencies:
       '@babel/core': ^7.0.0-0
     dependencies:
-      '@babel/core': 7.17.0
       core-js: 3.18.3
       find-cache-dir: 2.1.0
       lodash: 4.17.21
@@ -4894,6 +4915,8 @@ packages:
       figgy-pudding: 3.5.2
       get-stream: 4.1.0
       npm-package-arg: 6.1.1
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@evocateur/libnpmpublish/1.2.2:
@@ -4908,6 +4931,8 @@ packages:
       npm-package-arg: 6.1.1
       semver: 5.7.1
       ssri: 6.0.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@evocateur/npm-registry-fetch/4.0.0:
@@ -4920,6 +4945,8 @@ packages:
       make-fetch-happen: 5.0.2
       npm-package-arg: 6.1.1
       safe-buffer: 5.2.1
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@evocateur/pacote/9.6.5:
@@ -4954,6 +4981,8 @@ packages:
       tar: 4.4.19
       unique-filename: 1.1.1
       which: 1.3.1
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@gar/promisify/1.1.2:
@@ -5011,6 +5040,8 @@ packages:
       npm-package-arg: 6.1.1
       p-map: 2.1.0
       semver: 6.3.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@lerna/bootstrap/3.21.0:
@@ -5040,6 +5071,8 @@ packages:
       p-waterfall: 1.0.0
       read-package-tree: 5.3.1
       semver: 6.3.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@lerna/changed/3.21.0:
@@ -5050,6 +5083,8 @@ packages:
       '@lerna/command': 3.21.0
       '@lerna/listable': 3.18.5
       '@lerna/output': 3.13.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@lerna/check-working-tree/3.16.5:
@@ -5082,6 +5117,8 @@ packages:
       p-map: 2.1.0
       p-map-series: 1.0.0
       p-waterfall: 1.0.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@lerna/cli/3.18.5:
@@ -5129,6 +5166,8 @@ packages:
       execa: 1.0.0
       is-ci: 2.0.0
       npmlog: 4.1.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@lerna/conventional-commits/3.22.0:
@@ -5179,6 +5218,8 @@ packages:
       validate-npm-package-license: 3.0.4
       validate-npm-package-name: 3.0.0
       whatwg-url: 7.1.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@lerna/describe-ref/3.16.5:
@@ -5197,6 +5238,8 @@ packages:
       '@lerna/command': 3.21.0
       '@lerna/validation-error': 3.13.0
       npmlog: 4.1.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@lerna/exec/3.21.0:
@@ -5210,6 +5253,8 @@ packages:
       '@lerna/run-topologically': 3.18.5
       '@lerna/validation-error': 3.13.0
       p-map: 2.1.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@lerna/filter-options/3.20.0:
@@ -5294,6 +5339,8 @@ packages:
       dedent: 0.7.0
       fs-extra: 8.1.0
       p-map-series: 1.0.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@lerna/info/3.21.0:
@@ -5303,6 +5350,8 @@ packages:
       '@lerna/command': 3.21.0
       '@lerna/output': 3.13.0
       envinfo: 7.8.1
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@lerna/init/3.21.0:
@@ -5314,6 +5363,8 @@ packages:
       fs-extra: 8.1.0
       p-map: 2.1.0
       write-json-file: 3.2.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@lerna/link/3.21.0:
@@ -5325,6 +5376,8 @@ packages:
       '@lerna/symlink-dependencies': 3.17.0
       p-map: 2.1.0
       slash: 2.0.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@lerna/list/3.21.0:
@@ -5335,6 +5388,8 @@ packages:
       '@lerna/filter-options': 3.20.0
       '@lerna/listable': 3.18.5
       '@lerna/output': 3.13.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@lerna/listable/3.18.5:
@@ -5373,6 +5428,8 @@ packages:
       figgy-pudding: 3.5.2
       npm-package-arg: 6.1.1
       npmlog: 4.1.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@lerna/npm-install/3.16.5:
@@ -5401,6 +5458,8 @@ packages:
       npmlog: 4.1.2
       pify: 4.0.1
       read-package-json: 2.1.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@lerna/npm-run-script/3.16.5:
@@ -5493,6 +5552,8 @@ packages:
       p-map: 2.1.0
       resolve-from: 4.0.0
       write-json-file: 3.2.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@lerna/prompt/3.18.5:
@@ -5539,6 +5600,7 @@ packages:
       semver: 6.3.0
     transitivePeerDependencies:
       - '@octokit/core'
+      - supports-color
     dev: true
 
   /@lerna/pulse-till-done/3.13.0:
@@ -5607,6 +5669,8 @@ packages:
       '@lerna/timer': 3.13.0
       '@lerna/validation-error': 3.13.0
       p-map: 2.1.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@lerna/symlink-binary/3.17.0:
@@ -5676,6 +5740,7 @@ packages:
       write-json-file: 3.2.0
     transitivePeerDependencies:
       - '@octokit/core'
+      - supports-color
     dev: true
 
   /@lerna/write-log-file/3.13.0:
@@ -5735,6 +5800,8 @@ packages:
       promise-retry: 2.0.1
       semver: 7.3.5
       which: 2.0.2
+    transitivePeerDependencies:
+      - bluebird
     dev: true
 
   /@npmcli/installed-package-contents/1.0.7:
@@ -6050,24 +6117,7 @@ packages:
       slash: 3.0.0
     dev: true
 
-  /@rollup/plugin-babel/5.3.0_@babel+core@7.15.8+rollup@2.58.0:
-    resolution: {integrity: sha512-9uIC8HZOnVLrLHxayq/PTzw+uS25E14KPUBh5ktF+18Mjo5yK0ToMMx6epY0uEgkjwJw0aBW4x2horYXh8juWw==}
-    engines: {node: '>= 10.0.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0
-      '@types/babel__core': ^7.1.9
-      rollup: ^1.20.0||^2.0.0
-    peerDependenciesMeta:
-      '@types/babel__core':
-        optional: true
-    dependencies:
-      '@babel/core': 7.15.8
-      '@babel/helper-module-imports': 7.16.7
-      '@rollup/pluginutils': 3.1.0_rollup@2.58.0
-      rollup: 2.58.0
-    dev: true
-
-  /@rollup/plugin-babel/5.3.0_@babel+core@7.17.0+rollup@2.67.0:
+  /@rollup/plugin-babel/5.3.0_46quc4n4uxgu2zjyu2qradeljq:
     resolution: {integrity: sha512-9uIC8HZOnVLrLHxayq/PTzw+uS25E14KPUBh5ktF+18Mjo5yK0ToMMx6epY0uEgkjwJw0aBW4x2horYXh8juWw==}
     engines: {node: '>= 10.0.0'}
     peerDependencies:
@@ -6082,6 +6132,23 @@ packages:
       '@babel/helper-module-imports': 7.16.7
       '@rollup/pluginutils': 3.1.0_rollup@2.67.0
       rollup: 2.67.0
+    dev: true
+
+  /@rollup/plugin-babel/5.3.0_orvpyu4spw2evuo5zm2bjor3bm:
+    resolution: {integrity: sha512-9uIC8HZOnVLrLHxayq/PTzw+uS25E14KPUBh5ktF+18Mjo5yK0ToMMx6epY0uEgkjwJw0aBW4x2horYXh8juWw==}
+    engines: {node: '>= 10.0.0'}
+    peerDependencies:
+      '@babel/core': ^7.0.0
+      '@types/babel__core': ^7.1.9
+      rollup: ^1.20.0||^2.0.0
+    peerDependenciesMeta:
+      '@types/babel__core':
+        optional: true
+    dependencies:
+      '@babel/core': 7.15.8
+      '@babel/helper-module-imports': 7.16.7
+      '@rollup/pluginutils': 3.1.0_rollup@2.58.0
+      rollup: 2.58.0
     dev: true
 
   /@rollup/plugin-commonjs/17.1.0_rollup@2.58.0:
@@ -6295,7 +6362,7 @@ packages:
     resolution: {integrity: sha512-+iTbntw2IZPb/anVDbypzfQa+ay64MW0Zo8aJ8gZPWMMK6/OubMVb6lUPMagqjOPnmtauXnFCACVl3O7ogjeqQ==}
     dev: true
 
-  /@snowplow/browser-plugin-ad-tracking/3.3.0_@snowplow+browser-tracker@3.3.0:
+  /@snowplow/browser-plugin-ad-tracking/3.3.0_stszsl3w4zihgb76wbwlxi3bam:
     resolution: {integrity: sha512-v83ZltVNRAFsXkZyY2n3k1K0qZWXHbswveZmEx/IfMwr8I9Rmx3USuoujDrIwuQ7VsdX3QvreaWQzv+J8JS+Qw==}
     peerDependencies:
       '@snowplow/browser-tracker': ~3.3.0
@@ -6306,7 +6373,7 @@ packages:
       tslib: 2.3.1
     dev: false
 
-  /@snowplow/browser-plugin-client-hints/3.3.0_@snowplow+browser-tracker@3.3.0:
+  /@snowplow/browser-plugin-client-hints/3.3.0_stszsl3w4zihgb76wbwlxi3bam:
     resolution: {integrity: sha512-Lw744u318ZuvBE/Kq32way1NcqJVBzpB6Dka2ZWTMVx1FrF7KodUH7G7i7m5VMTs7TkmnfZRsfqJ8C2fJCVkKw==}
     peerDependencies:
       '@snowplow/browser-tracker': ~3.3.0
@@ -6316,7 +6383,7 @@ packages:
       tslib: 2.3.1
     dev: false
 
-  /@snowplow/browser-plugin-consent/3.3.0_@snowplow+browser-tracker@3.3.0:
+  /@snowplow/browser-plugin-consent/3.3.0_stszsl3w4zihgb76wbwlxi3bam:
     resolution: {integrity: sha512-AWM/s6RevkFK5rJacfwuf7twe+DvZzpHSrxOIeWM2L/PKKEaB5bYtLQiK+EtejJLC+6jgtr1COloTspJpQccDw==}
     peerDependencies:
       '@snowplow/browser-tracker': ~3.3.0
@@ -6327,7 +6394,7 @@ packages:
       tslib: 2.3.1
     dev: false
 
-  /@snowplow/browser-plugin-ecommerce/3.3.0_@snowplow+browser-tracker@3.3.0:
+  /@snowplow/browser-plugin-ecommerce/3.3.0_stszsl3w4zihgb76wbwlxi3bam:
     resolution: {integrity: sha512-9yNzQ9BqUUydxzY78yLMFjjyGsqS94YAyBGv9Vj1Uo2Ljh4JMLP5qJeHNwRbrPZNjxAw6LPpV5do2MAYho276A==}
     peerDependencies:
       '@snowplow/browser-tracker': ~3.3.0
@@ -6338,7 +6405,7 @@ packages:
       tslib: 2.3.1
     dev: false
 
-  /@snowplow/browser-plugin-enhanced-ecommerce/3.3.0_@snowplow+browser-tracker@3.3.0:
+  /@snowplow/browser-plugin-enhanced-ecommerce/3.3.0_stszsl3w4zihgb76wbwlxi3bam:
     resolution: {integrity: sha512-eZrtIyQEI00KYau2ajd4yIUcg30D9VdJvuD/jvqDiseRuf36ynWGai0HHTkK+KoYBlTSAD6zPjZr67WgKJTUTQ==}
     peerDependencies:
       '@snowplow/browser-tracker': ~3.3.0
@@ -6349,7 +6416,7 @@ packages:
       tslib: 2.3.1
     dev: false
 
-  /@snowplow/browser-plugin-error-tracking/3.3.0_@snowplow+browser-tracker@3.3.0:
+  /@snowplow/browser-plugin-error-tracking/3.3.0_stszsl3w4zihgb76wbwlxi3bam:
     resolution: {integrity: sha512-HZMLjSzHi5v9PoWOULpHoeXVG/3Odc3pQJ/svHQALUzSfN6bibMQ2l3REQSuonCG0NMLwD5yGwVCKvpdfcLRFw==}
     peerDependencies:
       '@snowplow/browser-tracker': ~3.3.0
@@ -6360,7 +6427,7 @@ packages:
       tslib: 2.3.1
     dev: false
 
-  /@snowplow/browser-plugin-form-tracking/3.3.0_@snowplow+browser-tracker@3.3.0:
+  /@snowplow/browser-plugin-form-tracking/3.3.0_stszsl3w4zihgb76wbwlxi3bam:
     resolution: {integrity: sha512-YfuRNbr2xNvdUYErPI19TfQMFO9G/dBwYEmrGxdNiX4fe08Yru+4C9tMaPTyzwh9OpNqYuEFvi10T9t/JGVPTA==}
     peerDependencies:
       '@snowplow/browser-tracker': ~3.3.0
@@ -6371,7 +6438,7 @@ packages:
       tslib: 2.3.1
     dev: false
 
-  /@snowplow/browser-plugin-ga-cookies/3.3.0_@snowplow+browser-tracker@3.3.0:
+  /@snowplow/browser-plugin-ga-cookies/3.3.0_stszsl3w4zihgb76wbwlxi3bam:
     resolution: {integrity: sha512-BvFbEpmP8McPcQBd5L/x2SKWG53M6rw+4Y4P50AVmecZEfXAM9hqvgHa1Q3ihlZrsZyGwm9yDQc1GfVv4NNyDw==}
     peerDependencies:
       '@snowplow/browser-tracker': ~3.3.0
@@ -6382,7 +6449,7 @@ packages:
       tslib: 2.3.1
     dev: false
 
-  /@snowplow/browser-plugin-geolocation/3.3.0_@snowplow+browser-tracker@3.3.0:
+  /@snowplow/browser-plugin-geolocation/3.3.0_stszsl3w4zihgb76wbwlxi3bam:
     resolution: {integrity: sha512-kHq5rBhtiY1xhY1SwdOWlPyY7E/2vj7YEPgwYzUGlGxW1ceyDOGzi6v6CTXq43pioIQqSnA5qx5z8CX+fUFRuA==}
     peerDependencies:
       '@snowplow/browser-tracker': ~3.3.0
@@ -6393,7 +6460,7 @@ packages:
       tslib: 2.3.1
     dev: false
 
-  /@snowplow/browser-plugin-link-click-tracking/3.3.0_@snowplow+browser-tracker@3.3.0:
+  /@snowplow/browser-plugin-link-click-tracking/3.3.0_stszsl3w4zihgb76wbwlxi3bam:
     resolution: {integrity: sha512-xjO3IjqNhHGF//HJZjBBRfXot/OoE4Dmcgy+SkvRa8L/xVP4veLL4uc55BHdzW5wCrQMe3p7a6AKK20M/TYbnw==}
     peerDependencies:
       '@snowplow/browser-tracker': ~3.3.0
@@ -6404,7 +6471,7 @@ packages:
       tslib: 2.3.1
     dev: false
 
-  /@snowplow/browser-plugin-optimizely-x/3.3.0_@snowplow+browser-tracker@3.3.0:
+  /@snowplow/browser-plugin-optimizely-x/3.3.0_stszsl3w4zihgb76wbwlxi3bam:
     resolution: {integrity: sha512-zy1fbW97YpqNfwhnzhWcEyxfYZQDRvfbyQiOfsTxzwtnzHncMiVIL54Q8dV7j0UOBTz+/RmJUOhh6GwLVdSfKA==}
     peerDependencies:
       '@snowplow/browser-tracker': ~3.3.0
@@ -6415,7 +6482,7 @@ packages:
       tslib: 2.3.1
     dev: false
 
-  /@snowplow/browser-plugin-performance-timing/3.3.0_@snowplow+browser-tracker@3.3.0:
+  /@snowplow/browser-plugin-performance-timing/3.3.0_stszsl3w4zihgb76wbwlxi3bam:
     resolution: {integrity: sha512-bBIlK8vCfqCdjKX0muEos0blknuP380tnd6kT67Em5eOFIoweld0e/qCNViI3de7+BpOo/C/l7kXOxh0e5z69g==}
     peerDependencies:
       '@snowplow/browser-tracker': ~3.3.0
@@ -6426,7 +6493,7 @@ packages:
       tslib: 2.3.1
     dev: false
 
-  /@snowplow/browser-plugin-site-tracking/3.3.0_@snowplow+browser-tracker@3.3.0:
+  /@snowplow/browser-plugin-site-tracking/3.3.0_stszsl3w4zihgb76wbwlxi3bam:
     resolution: {integrity: sha512-Gxlrp4yNZA65mSc/pnR09WWAHTTs2FLYs3zkApG2rL/8DwCUgJOldFfFw/w7EPMFFUfGTE3KQYvpuIf6MMum1Q==}
     peerDependencies:
       '@snowplow/browser-tracker': ~3.3.0
@@ -6437,7 +6504,7 @@ packages:
       tslib: 2.3.1
     dev: false
 
-  /@snowplow/browser-plugin-timezone/3.3.0_@snowplow+browser-tracker@3.3.0:
+  /@snowplow/browser-plugin-timezone/3.3.0_stszsl3w4zihgb76wbwlxi3bam:
     resolution: {integrity: sha512-6pArbbq81uP8nwexeVUMiNP4t/f4B/m9fUxR8fWiy2OT+upFogCsCW7rFgVp5zUJHObkFF8JfXXOjyTE0JaxsQ==}
     peerDependencies:
       '@snowplow/browser-tracker': ~3.3.0
@@ -6618,7 +6685,6 @@ packages:
     resolution: {integrity: sha512-FXCJgyyN3ivVgRoml4h94G/p3kY+u/B86La+QptcqJaWtBWtmc6TtkNfS40n9bIvyLteHh7zXOtgbobORKPbDg==}
     dependencies:
       '@types/node': 16.11.4
-    dev: false
 
   /@types/mdast/3.0.10:
     resolution: {integrity: sha512-W864tg/Osz1+9f4lrGTZpCSO5/z4608eUp19tbozkq2HJK6i3z1kT0H9tlADXuYIb1YYOBByU4Jsqkk75q48qA==}
@@ -6667,7 +6733,6 @@ packages:
     resolution: {integrity: sha512-85Y2BjiufFzaMIlvJDvTTB8Fxl2xfLo4HgmHzVBz08w4wDePCTjYw66PdrolO0kzli3yam/YCgRufyo1DdQVTA==}
     dependencies:
       '@types/node': 16.11.4
-    dev: false
 
   /@types/sinon/10.0.2:
     resolution: {integrity: sha512-BHn8Bpkapj8Wdfxvh2jWIUoaYB/9/XhsL0oOvBfRagJtKlSl9NWPcFOz2lRukI9szwGxFtYZCTejJSqsGDbdmw==}
@@ -7114,6 +7179,8 @@ packages:
     dependencies:
       micromatch: 3.1.10
       normalize-path: 2.1.1
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /anymatch/3.1.2:
@@ -7351,7 +7418,7 @@ packages:
     engines: {node: '>=8.9.4 <9 || >=10.0.0 <11 || >=12.0.0'}
     hasBin: true
     dependencies:
-      '@ava/babel-preset-stage-4': 4.0.0_d2fbe318f1a81f036e9b85fb78f820f1
+      '@ava/babel-preset-stage-4': 4.0.0_2l56gghrvapqg3u3qx5xr6ba6e
       '@ava/babel-preset-transform-test-files': 6.0.0
       '@babel/core': 7.15.8_supports-color@7.2.0
       '@babel/generator': 7.15.8
@@ -7992,6 +8059,8 @@ packages:
       snapdragon-node: 2.1.1
       split-string: 3.1.0
       to-regex: 3.0.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /braces/3.0.2:
@@ -8210,7 +8279,7 @@ packages:
       mississippi: 3.0.0
       mkdirp: 0.5.5
       move-concurrently: 1.0.1
-      promise-inflight: 1.0.1
+      promise-inflight: 1.0.1_bluebird@3.7.2
       rimraf: 2.7.1
       ssri: 6.0.2
       unique-filename: 1.1.1
@@ -8239,6 +8308,8 @@ packages:
       ssri: 8.0.1
       tar: 6.1.11
       unique-filename: 1.1.1
+    transitivePeerDependencies:
+      - bluebird
     dev: true
 
   /cache-base/1.0.1:
@@ -8511,6 +8582,8 @@ packages:
       upath: 1.2.0
     optionalDependencies:
       fsevents: 1.2.13
+    transitivePeerDependencies:
+      - supports-color
     dev: true
     optional: true
 
@@ -8937,6 +9010,8 @@ packages:
       on-headers: 1.0.2
       safe-buffer: 5.1.2
       vary: 1.1.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /concat-map/0.0.1:
@@ -9513,18 +9588,33 @@ packages:
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
     dependencies:
       ms: 2.0.0
     dev: true
 
   /debug/3.1.0:
     resolution: {integrity: sha512-OX8XqP7/1a9cqkxYw2yXss15f26NKWBpDXQd0/uK/KPqdQhxbPa994hnzjcE2VqQpDslf55723cKPUOGSmMY3g==}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
     dependencies:
       ms: 2.0.0
     dev: true
 
   /debug/3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
     dependencies:
       ms: 2.1.3
     dev: true
@@ -10319,6 +10409,8 @@ packages:
       regex-not: 1.0.2
       snapdragon: 0.8.2
       to-regex: 3.0.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /expand-range/1.8.2:
@@ -10371,6 +10463,8 @@ packages:
       regex-not: 1.0.2
       snapdragon: 0.8.2
       to-regex: 3.0.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /extract-banner/0.1.2:
@@ -10411,6 +10505,8 @@ packages:
       is-glob: 4.0.3
       merge2: 1.4.1
       micromatch: 3.1.10
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /fast-glob/3.2.7:
@@ -11072,6 +11168,8 @@ packages:
       ignore: 3.3.10
       pify: 3.0.0
       slash: 1.0.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /globby/9.2.0:
@@ -11086,6 +11184,8 @@ packages:
       ignore: 4.0.6
       pify: 4.0.1
       slash: 2.0.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /globrex/0.1.2:
@@ -11159,6 +11259,8 @@ packages:
     dependencies:
       '@sindresorhus/is': 0.14.0
       '@szmarczak/http-timer': 1.1.2
+      '@types/keyv': 3.1.3
+      '@types/responselike': 1.0.0
       cacheable-request: 6.1.0
       decompress-response: 3.3.0
       duplexer3: 0.1.4
@@ -11440,6 +11542,8 @@ packages:
     dependencies:
       agent-base: 4.3.0
       debug: 3.1.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /http-proxy-agent/4.0.1:
@@ -11489,6 +11593,8 @@ packages:
     dependencies:
       agent-base: 4.3.0
       debug: 3.2.7
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /https-proxy-agent/5.0.0:
@@ -12703,6 +12809,7 @@ packages:
       npmlog: 4.1.2
     transitivePeerDependencies:
       - '@octokit/core'
+      - supports-color
     dev: true
 
   /level-blobs/0.1.7:
@@ -12811,6 +12918,8 @@ packages:
       spdx-expression-parse: 3.0.1
       spdx-satisfies: 4.0.1
       treeify: 1.1.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /lilconfig/2.0.3:
@@ -13137,6 +13246,8 @@ packages:
       promise-retry: 1.1.1
       socks-proxy-agent: 4.0.2
       ssri: 6.0.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /make-fetch-happen/9.1.0:
@@ -13160,6 +13271,7 @@ packages:
       socks-proxy-agent: 6.1.0
       ssri: 8.0.1
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -13586,7 +13698,7 @@ packages:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
     engines: {node: '>= 8'}
 
-  /microbundle/0.13.3_acorn@8.7.0:
+  /microbundle/0.13.3:
     resolution: {integrity: sha512-nlP20UmyqGGeh6jhk8VaVFEoRlF+JAvnwixPLQUwHEcAF59ROJCyh34eylJzUAVNvF3yrCaHxIBv8lYcphDM1g==}
     hasBin: true
     dependencies:
@@ -13601,7 +13713,7 @@ packages:
       '@babel/preset-flow': 7.14.5_@babel+core@7.15.8
       '@babel/preset-react': 7.14.5_@babel+core@7.15.8
       '@rollup/plugin-alias': 3.1.8_rollup@2.58.0
-      '@rollup/plugin-babel': 5.3.0_@babel+core@7.15.8+rollup@2.58.0
+      '@rollup/plugin-babel': 5.3.0_orvpyu4spw2evuo5zm2bjor3bm
       '@rollup/plugin-commonjs': 17.1.0_rollup@2.58.0
       '@rollup/plugin-json': 4.1.0_rollup@2.58.0
       '@rollup/plugin-node-resolve': 11.2.1_rollup@2.58.0
@@ -13623,8 +13735,8 @@ packages:
       rollup: 2.58.0
       rollup-plugin-bundle-size: 1.0.3
       rollup-plugin-postcss: 4.0.1_postcss@8.3.11
-      rollup-plugin-terser: 7.0.2_acorn@8.7.0+rollup@2.58.0
-      rollup-plugin-typescript2: 0.29.0_rollup@2.58.0+typescript@4.4.4
+      rollup-plugin-terser: 7.0.2_rollup@2.58.0
+      rollup-plugin-typescript2: 0.29.0_klnc7quwpgfutyz7jq4yq4zpjq
       sade: 1.7.4
       terser: 5.9.0
       tiny-glob: 0.2.9
@@ -13632,12 +13744,11 @@ packages:
       typescript: 4.4.4
     transitivePeerDependencies:
       - '@types/babel__core'
-      - acorn
       - supports-color
       - ts-node
     dev: true
 
-  /microbundle/0.14.2_acorn@8.7.0:
+  /microbundle/0.14.2:
     resolution: {integrity: sha512-jODALfU3w7jnJAqw7Tou9uU8e8zH0GRVWzOd/V7eAvD1fsfb9pyMbmzhFZqnX6SCb54eP1EF5oRyNlSxBAxoag==}
     hasBin: true
     dependencies:
@@ -13652,7 +13763,7 @@ packages:
       '@babel/preset-flow': 7.14.5_@babel+core@7.17.0
       '@babel/preset-react': 7.14.5_@babel+core@7.17.0
       '@rollup/plugin-alias': 3.1.8_rollup@2.67.0
-      '@rollup/plugin-babel': 5.3.0_@babel+core@7.17.0+rollup@2.67.0
+      '@rollup/plugin-babel': 5.3.0_46quc4n4uxgu2zjyu2qradeljq
       '@rollup/plugin-commonjs': 17.1.0_rollup@2.67.0
       '@rollup/plugin-json': 4.1.0_rollup@2.67.0
       '@rollup/plugin-node-resolve': 11.2.1_rollup@2.67.0
@@ -13675,16 +13786,15 @@ packages:
       rollup: 2.67.0
       rollup-plugin-bundle-size: 1.0.3
       rollup-plugin-postcss: 4.0.1_postcss@8.3.11
-      rollup-plugin-terser: 7.0.2_acorn@8.7.0+rollup@2.67.0
-      rollup-plugin-typescript2: 0.29.0_rollup@2.67.0+typescript@4.4.4
+      rollup-plugin-terser: 7.0.2_rollup@2.67.0
+      rollup-plugin-typescript2: 0.29.0_qvxrzzkru6l2shiadmh5rsyqka
       sade: 1.7.4
-      terser: 5.10.0_acorn@8.7.0
+      terser: 5.10.0
       tiny-glob: 0.2.9
       tslib: 2.3.1
       typescript: 4.4.4
     transitivePeerDependencies:
       - '@types/babel__core'
-      - acorn
       - supports-color
       - ts-node
     dev: true
@@ -13778,6 +13888,8 @@ packages:
       regex-not: 1.0.2
       snapdragon: 0.8.2
       to-regex: 3.0.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /micromatch/4.0.4:
@@ -14104,6 +14216,8 @@ packages:
       regex-not: 1.0.2
       snapdragon: 0.8.2
       to-regex: 3.0.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /nanospy/0.5.0:
@@ -14354,6 +14468,7 @@ packages:
       spawn-please: 1.0.0
       update-notifier: 5.1.0
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -14446,6 +14561,7 @@ packages:
       minizlib: 2.1.2
       npm-package-arg: 8.1.5
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -14903,6 +15019,7 @@ packages:
       ssri: 8.0.1
       tar: 6.1.11
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -15699,6 +15816,22 @@ packages:
 
   /promise-inflight/1.0.1:
     resolution: {integrity: sha1-mEcocL8igTL8vdhoEputEsPAKeM=}
+    peerDependencies:
+      bluebird: '*'
+    peerDependenciesMeta:
+      bluebird:
+        optional: true
+    dev: true
+
+  /promise-inflight/1.0.1_bluebird@3.7.2:
+    resolution: {integrity: sha1-mEcocL8igTL8vdhoEputEsPAKeM=}
+    peerDependencies:
+      bluebird: '*'
+    peerDependenciesMeta:
+      bluebird:
+        optional: true
+    dependencies:
+      bluebird: 3.7.2
     dev: true
 
   /promise-retry/1.1.1:
@@ -16135,6 +16268,8 @@ packages:
       graceful-fs: 4.2.8
       micromatch: 3.1.10
       readable-stream: 2.3.7
+    transitivePeerDependencies:
+      - supports-color
     dev: true
     optional: true
 
@@ -16646,6 +16781,7 @@ packages:
       terser: 4.8.0
       webpack: 4.46.0
     transitivePeerDependencies:
+      - supports-color
       - webpack-cli
       - webpack-command
     dev: true
@@ -16662,7 +16798,7 @@ packages:
       rollup-pluginutils: 2.8.2
     dev: true
 
-  /rollup-plugin-terser/7.0.2_acorn@8.7.0+rollup@2.58.0:
+  /rollup-plugin-terser/7.0.2_rollup@2.58.0:
     resolution: {integrity: sha512-w3iIaU4OxcF52UUXiZNsNeuXIMDvFrr+ZXK6bFZ0Q60qyVfq4uLptoS4bbq3paG3x216eQllFZX7zt6TIImguQ==}
     peerDependencies:
       rollup: ^2.0.0
@@ -16671,12 +16807,10 @@ packages:
       jest-worker: 26.6.2
       rollup: 2.58.0
       serialize-javascript: 4.0.0
-      terser: 5.10.0_acorn@8.7.0
-    transitivePeerDependencies:
-      - acorn
+      terser: 5.10.0
     dev: true
 
-  /rollup-plugin-terser/7.0.2_acorn@8.7.0+rollup@2.67.0:
+  /rollup-plugin-terser/7.0.2_rollup@2.67.0:
     resolution: {integrity: sha512-w3iIaU4OxcF52UUXiZNsNeuXIMDvFrr+ZXK6bFZ0Q60qyVfq4uLptoS4bbq3paG3x216eQllFZX7zt6TIImguQ==}
     peerDependencies:
       rollup: ^2.0.0
@@ -16685,12 +16819,10 @@ packages:
       jest-worker: 26.6.2
       rollup: 2.67.0
       serialize-javascript: 4.0.0
-      terser: 5.10.0_acorn@8.7.0
-    transitivePeerDependencies:
-      - acorn
+      terser: 5.10.0
     dev: true
 
-  /rollup-plugin-typescript2/0.29.0_rollup@2.58.0+typescript@4.4.4:
+  /rollup-plugin-typescript2/0.29.0_klnc7quwpgfutyz7jq4yq4zpjq:
     resolution: {integrity: sha512-YytahBSZCIjn/elFugEGQR5qTsVhxhUwGZIsA9TmrSsC88qroGo65O5HZP/TTArH2dm0vUmYWhKchhwi2wL9bw==}
     peerDependencies:
       rollup: '>=1.26.3'
@@ -16705,7 +16837,7 @@ packages:
       typescript: 4.4.4
     dev: true
 
-  /rollup-plugin-typescript2/0.29.0_rollup@2.67.0+typescript@4.4.4:
+  /rollup-plugin-typescript2/0.29.0_qvxrzzkru6l2shiadmh5rsyqka:
     resolution: {integrity: sha512-YytahBSZCIjn/elFugEGQR5qTsVhxhUwGZIsA9TmrSsC88qroGo65O5HZP/TTArH2dm0vUmYWhKchhwi2wL9bw==}
     peerDependencies:
       rollup: '>=1.26.3'
@@ -16829,6 +16961,8 @@ packages:
       micromatch: 3.1.10
       minimist: 1.2.5
       walker: 1.0.8
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /saxes/5.0.1:
@@ -16943,6 +17077,8 @@ packages:
       compression: 1.7.3
       serve-handler: 6.1.3
       update-check: 1.5.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /servor/4.0.2:
@@ -17133,6 +17269,8 @@ packages:
       source-map: 0.5.7
       source-map-resolve: 0.5.3
       use: 3.1.1
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /socks-proxy-agent/4.0.2:
@@ -17884,17 +18022,16 @@ packages:
     engines: {node: '>=6.0.0'}
     hasBin: true
     dependencies:
+      acorn: 8.7.0
       commander: 2.20.3
       source-map: 0.6.1
       source-map-support: 0.5.20
     dev: true
 
-  /terser/5.10.0_acorn@8.7.0:
+  /terser/5.10.0:
     resolution: {integrity: sha512-AMmF99DMfEDiRJfxfY5jj5wNH/bYO09cniSqhfoyxc8sFoYIgkJy86G04UoZU5VjlpnplVu0K6Tx6E9b5+DlHA==}
     engines: {node: '>=10'}
     hasBin: true
-    peerDependencies:
-      acorn: ^8.5.0
     peerDependenciesMeta:
       acorn:
         optional: true
@@ -17910,6 +18047,7 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
+      acorn: 8.7.0
       commander: 2.20.3
       source-map: 0.7.3
       source-map-support: 0.5.20
@@ -18746,6 +18884,8 @@ packages:
     requiresBuild: true
     dependencies:
       chokidar: 2.1.8
+    transitivePeerDependencies:
+      - supports-color
     dev: true
     optional: true
 
@@ -18757,6 +18897,8 @@ packages:
     optionalDependencies:
       chokidar: 3.5.2
       watchpack-chokidar2: 2.0.1
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /wcwidth/1.0.1:
@@ -18826,6 +18968,8 @@ packages:
       terser-webpack-plugin: 1.4.5_webpack@4.46.0
       watchpack: 1.7.5
       webpack-sources: 1.4.3
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /well-known-symbols/2.0.0:

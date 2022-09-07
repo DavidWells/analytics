@@ -1,4 +1,6 @@
-import analytics from './basic'
+// import analytics from './basic'
+import analytics from './just-ga'
+
 // import analytics from './example-multiple-gtm-instances'
 
 // Expose to window

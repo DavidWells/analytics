@@ -14,13 +14,14 @@ export default function createReducer(getPlugins) {
         return state
       }
       const isEnabled = action.enabled
+      const config = plugin.config
       newState[name] = {
         enabled: isEnabled,
         /* if no initialization method. Set initialized true */
         initialized: (isEnabled) ? Boolean(!plugin.initialize) : false,
         /* If plugin enabled === false, set loaded to false, else check plugin.loaded function */
-        loaded: (isEnabled) ? Boolean(plugin.loaded()) : false,
-        config: plugin.config || {}
+        loaded: (isEnabled) ? Boolean(plugin.loaded({ config })) : false,
+        config
       }
       return { ...state, ...newState }
     }
@@ -30,12 +31,13 @@ export default function createReducer(getPlugins) {
       if (!plugin || !name) {
         return state
       }
+      const config = plugin.config
       newState[name] = {
         ...state[name],
         ...{
           initialized: true,
           /* check plugin.loaded function */
-          loaded: Boolean(plugin.loaded())
+          loaded: Boolean(plugin.loaded({ config }))
         }
       }
       return { ...state, ...newState }

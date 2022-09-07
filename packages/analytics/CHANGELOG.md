@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.4](https://github.com/DavidWells/analytics/compare/analytics@0.8.3...analytics@0.8.4) (2022-07-21)
+
+**Note:** Version bump only for package analytics
+
+
+
+
+
+## [0.8.3](https://github.com/DavidWells/analytics/compare/analytics@0.8.2...analytics@0.8.3) (2022-07-21)
+
+**Note:** Version bump only for package analytics
+
+
+
+
+
+## [0.8.2](https://github.com/DavidWells/analytics/compare/analytics@0.8.1...analytics@0.8.2) (2022-07-21)
+
+**Note:** Version bump only for package analytics
+
+
+
+
+
 ## [0.8.1](https://github.com/DavidWells/analytics/compare/analytics@0.8.0...analytics@0.8.1) (2022-03-18)
 
 **Note:** Version bump only for package analytics

@@ -8,6 +8,11 @@ import './Home.css'
 
 let hasCleared = false
 
+// analytics.ready((info) => {
+//   console.log('info', info)
+//   analytics.plugins['google-analytics'].addTag('foobar')
+// })
+
 function sortByTimeStamp(a, b) {
   if (!a.meta || !b.meta) {
     return 0
@@ -87,7 +92,7 @@ export default class App extends Component {
   doPage = async () => {
     this.clearLogs()
     analytics.page(() => {
-      console.log('page callback')
+      console.log('page callback doPage')
     })
     console.log('Page async fire this after')
   }

@@ -191,6 +191,13 @@ export default class App extends Component {
             <button onClick={this.handleTrack} title='Fire analytics.track()'>
               Track
             </button>
+            <button onClick={() => {
+              analytics.track('eventTwo', {
+                nice: 'cool'
+              })
+            }} title='Fire analytics.track()'>
+              Track two
+            </button>
             <button onClick={this.handleDisabledTrack} title='Fire analytics.track() minus google plugin'>
               Track no google
             </button>

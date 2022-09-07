@@ -122,7 +122,7 @@ analytics.page()
 
 /* Track a custom event */
 analytics.track('userPurchase', {
-  price: 20
+  price: 20,
   item: 'pink socks'
 })
 
@@ -142,22 +142,37 @@ analytics.identify('user-id-xyz', {
   ```js
   const { Analytics } = require('analytics')
   // or const Analytics = require('analytics').default
+  const googleAnalytics = require('@analytics/google-analytics')
+  const customerIo = require('@analytics/customerio')
 
   const analytics = Analytics({
     app: 'my-app-name',
     version: 100,
     plugins: [
-      googleAnalyticsPlugin({
+      googleAnalytics({
         trackingId: 'UA-121991291',
       }),
-      customerIOPlugin({
+      customerIo({
         siteId: '123-xyz'
       })
     ]
   })
 
-  // Fire a page view
+  /* Track a page view */
   analytics.page()
+
+  /* Track a custom event */
+  analytics.track('userPurchase', {
+    price: 20,
+    item: 'pink socks'
+  })
+
+  /* Identify a visitor */
+  analytics.identify('user-id-xyz', {
+    firstName: 'bill',
+    lastName: 'murray',
+    email: 'da-coolest@aol.com'
+  })
   ```
 
 </details>
@@ -175,13 +190,24 @@ analytics.identify('user-id-xyz', {
     const Analytics = _analytics.init({
       app: 'my-app-name',
       version: 100,
-      ...plugins
+      plugins: []
     })
 
-    Analytics.track()
+    /* Track a page view */
+    Analytics.page()
 
-    // optionally expose to window
-    window.Analytics = Analytics
+    /* Track a custom event */
+    Analytics.track('userPurchase', {
+      price: 20,
+      item: 'pink socks'
+    })
+
+    /* Identify a visitor */
+    Analytics.identify('user-id-xyz', {
+      firstName: 'bill',
+      lastName: 'murray',
+      email: 'da-coolest@aol.com'
+    })
   </script>
   ```
 
@@ -687,41 +713,42 @@ The `analytics` has a robust plugin system. Here is a list of currently availabl
 <!-- AUTO-GENERATED-CONTENT:START (PLUGINS) -->
 | Plugin | Stats | Version |
 |:---------------------------|:---------------:|:-----------:|
-| **[@analytics/activity-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-activity)** <br/> User activity listener utilities | <a href="https://www.npmjs.com/package/@analytics/activity-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/activity-utils.svg"></a> |  **0.1.12** |
+| **[@analytics/activity-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-activity)** <br/> User activity listener utilities | <a href="https://www.npmjs.com/package/@analytics/activity-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/activity-utils.svg"></a> |  **0.1.13** |
 | **[@analytics/amplitude](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-amplitude)** <br/> Amplitude integration for 'analytics' module | <a href="https://www.npmjs.com/package/@analytics/amplitude"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/amplitude.svg"></a> |  **0.1.3** |
-| **[@analytics/aws-pinpoint](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-aws-pinpoint)** <br/> AWS Pinpoint integration for 'analytics' module | <a href="https://www.npmjs.com/package/@analytics/aws-pinpoint"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/aws-pinpoint.svg"></a> |  **0.7.6** |
-| **[@analytics/cookie-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-storage-cookie)** <br/> Tiny cookie utility library | <a href="https://www.npmjs.com/package/@analytics/cookie-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/cookie-utils.svg"></a> |  **0.2.9** |
-| **[@analytics/core](https://github.com/DavidWells/analytics/tree/master/packages/analytics-core)** <br/> Lightweight analytics library for tracking events, page views, & identifying users. Works with any third party analytics provider via an extendable plugin system. | <a href="https://www.npmjs.com/package/@analytics/core"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/core.svg"></a> |  **0.11.0** |
+| **[@analytics/aws-pinpoint](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-aws-pinpoint)** <br/> AWS Pinpoint integration for 'analytics' module | <a href="https://www.npmjs.com/package/@analytics/aws-pinpoint"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/aws-pinpoint.svg"></a> |  **0.7.7** |
+| **[@analytics/cookie-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-storage-cookie)** <br/> Tiny cookie utility library | <a href="https://www.npmjs.com/package/@analytics/cookie-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/cookie-utils.svg"></a> |  **0.2.10** |
+| **[@analytics/core](https://github.com/DavidWells/analytics/tree/master/packages/analytics-core)** <br/> Lightweight analytics library for tracking events, page views, & identifying users. Works with any third party analytics provider via an extendable plugin system. | <a href="https://www.npmjs.com/package/@analytics/core"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/core.svg"></a> |  **0.12.2** |
 | **[@analytics/crazy-egg](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-crazy-egg)** <br/> Crazy Egg integration for 'analytics' module | <a href="https://www.npmjs.com/package/@analytics/crazy-egg"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/crazy-egg.svg"></a> |  **0.1.2** |
 | **[@analytics/customerio](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-customerio)** <br/> Customer.io integration for 'analytics' module | <a href="https://www.npmjs.com/package/@analytics/customerio"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/customerio.svg"></a> |  **0.2.1** |
-| **[@analytics/form-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-forms)** <br/> Form utility library for managing HTML form submissions & values | <a href="https://www.npmjs.com/package/@analytics/form-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/form-utils.svg"></a> |  **0.3.10** |
+| **[@analytics/form-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-forms)** <br/> Form utility library for managing HTML form submissions & values | <a href="https://www.npmjs.com/package/@analytics/form-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/form-utils.svg"></a> |  **0.3.11** |
 | **[@analytics/fullstory](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-fullstory)** <br/> FullStory plugin for 'analytics' module | <a href="https://www.npmjs.com/package/@analytics/fullstory"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/fullstory.svg"></a> |  **0.2.4** |
-| **[@analytics/global-storage-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-storage-global)** <br/> Tiny global storage utility library | <a href="https://www.npmjs.com/package/@analytics/global-storage-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/global-storage-utils.svg"></a> |  **0.1.4** |
-| **[@analytics/google-analytics](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-google-analytics)** <br/> Google analytics plugin for 'analytics' module | <a href="https://www.npmjs.com/package/@analytics/google-analytics"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/google-analytics.svg"></a> |  **0.5.3** |
+| **[@analytics/global-storage-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-storage-global)** <br/> Tiny global storage utility library | <a href="https://www.npmjs.com/package/@analytics/global-storage-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/global-storage-utils.svg"></a> |  **0.1.5** |
+| **[@analytics/google-analytics](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-google-analytics)** <br/> Google analytics v4 plugin for 'analytics' module | <a href="https://www.npmjs.com/package/@analytics/google-analytics"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/google-analytics.svg"></a> |  **1.0.3** |
 | **[@analytics/google-tag-manager](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-google-tag-manager)** <br/> Google tag manager plugin for 'analytics' module | <a href="https://www.npmjs.com/package/@analytics/google-tag-manager"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/google-tag-manager.svg"></a> |  **0.5.2** |
+| **[@analytics/google-analytics-v3](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-google-analytics-v3)** <br/> Google analytics v3 plugin for 'analytics' module | <a href="https://www.npmjs.com/package/@analytics/google-analytics-v3"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/google-analytics-v3.svg"></a> |  **0.6.1** |
 | **[@analytics/gosquared](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-gosquared)** <br/> GoSquared integration for 'analytics' module | <a href="https://www.npmjs.com/package/@analytics/gosquared"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/gosquared.svg"></a> |  **0.1.3** |
 | **[@analytics/hubspot](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-hubspot)** <br/> HubSpot plugin for 'analytics' module | <a href="https://www.npmjs.com/package/@analytics/hubspot"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/hubspot.svg"></a> |  **0.5.1** |
 | **[@analytics/intercom](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-intercom)** <br/> Intercom integration for 'analytics' module for browser & node | <a href="https://www.npmjs.com/package/@analytics/intercom"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/intercom.svg"></a> |  **1.0.2** |
-| **[@analytics/listener-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-listener)** <br/> Backward compatible event listener library for attaching & detaching event handlers | <a href="https://www.npmjs.com/package/@analytics/listener-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/listener-utils.svg"></a> |  **0.2.10** |
-| **[@analytics/localstorage-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-storage-local)** <br/> Tiny LocalStorage utility library | <a href="https://www.npmjs.com/package/@analytics/localstorage-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/localstorage-utils.svg"></a> |  **0.1.7** |
+| **[@analytics/listener-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-listener)** <br/> Backward compatible event listener library for attaching & detaching event handlers | <a href="https://www.npmjs.com/package/@analytics/listener-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/listener-utils.svg"></a> |  **0.3.0** |
+| **[@analytics/localstorage-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-storage-local)** <br/> Tiny LocalStorage utility library | <a href="https://www.npmjs.com/package/@analytics/localstorage-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/localstorage-utils.svg"></a> |  **0.1.8** |
 | **[@analytics/mixpanel](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-mixpanel)** <br/> Mixpanel plugin for 'analytics' module | <a href="https://www.npmjs.com/package/@analytics/mixpanel"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/mixpanel.svg"></a> |  **0.4.0** |
-| **[@analytics/original-source-plugin](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-original-source)** <br/> Save original referral source of visitor plugin for 'analytics' pkg | <a href="https://www.npmjs.com/package/@analytics/original-source-plugin"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/original-source-plugin.svg"></a> |  **1.0.8** |
+| **[@analytics/original-source-plugin](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-original-source)** <br/> Save original referral source of visitor plugin for 'analytics' pkg | <a href="https://www.npmjs.com/package/@analytics/original-source-plugin"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/original-source-plugin.svg"></a> |  **1.0.9** |
 | **[@analytics/ownstats](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-ownstats)** <br/> Ownstats integration for 'analytics' module for browser & node | <a href="https://www.npmjs.com/package/@analytics/ownstats"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/ownstats.svg"></a> |  **0.1.2** |
 | **[@analytics/perfumejs](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-perfumejs)** <br/> Send browser performance metrics to third-party analytics providers | <a href="https://www.npmjs.com/package/@analytics/perfumejs"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/perfumejs.svg"></a> |  **0.2.1** |
 | **[@analytics/queue-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-queue)** <br/> Dependency free queue processor | <a href="https://www.npmjs.com/package/@analytics/queue-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/queue-utils.svg"></a> |  **0.1.2** |
-| **[@analytics/redact-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-redact)** <br/> Utility library for redacting event data | <a href="https://www.npmjs.com/package/@analytics/redact-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/redact-utils.svg"></a> |  **0.1.0** |
-| **[@analytics/remote-storage-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-storage-remote)** <br/> Storage utilities for cross domain localStorage access, with permissions | <a href="https://www.npmjs.com/package/@analytics/remote-storage-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/remote-storage-utils.svg"></a> |  **0.4.17** |
+| **[@analytics/redact-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-redact)** <br/> Utility library for redacting event data | <a href="https://www.npmjs.com/package/@analytics/redact-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/redact-utils.svg"></a> |  **0.1.1** |
+| **[@analytics/remote-storage-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-storage-remote)** <br/> Storage utilities for cross domain localStorage access, with permissions | <a href="https://www.npmjs.com/package/@analytics/remote-storage-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/remote-storage-utils.svg"></a> |  **0.4.18** |
 | **[@analytics/router-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-router)** <br/> Route change utilities for single page apps | <a href="https://www.npmjs.com/package/@analytics/router-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/router-utils.svg"></a> |  **0.1.1** |
-| **[@analytics/scroll-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-scroll)** <br/> Scroll utility library to fire events on scroll | <a href="https://www.npmjs.com/package/@analytics/scroll-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/scroll-utils.svg"></a> |  **0.1.19** |
+| **[@analytics/scroll-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-scroll)** <br/> Scroll utility library to fire events on scroll | <a href="https://www.npmjs.com/package/@analytics/scroll-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/scroll-utils.svg"></a> |  **0.1.20** |
 | **[@analytics/segment](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-segment)** <br/> Segment integration for 'analytics' module for browser & node | <a href="https://www.npmjs.com/package/@analytics/segment"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/segment.svg"></a> |  **1.1.3** |
-| **[@analytics/session-storage-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-storage-session)** <br/> Tiny SessionStorage utility library | <a href="https://www.npmjs.com/package/@analytics/session-storage-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/session-storage-utils.svg"></a> |  **0.0.4** |
-| **[@analytics/session-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-session)** <br/> Tiny session utility library | <a href="https://www.npmjs.com/package/@analytics/session-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/session-utils.svg"></a> |  **0.1.16** |
-| **[@analytics/simple-analytics](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-simple-analytics)** <br/> Simple analytics plugin for 'analytics' module for browser | <a href="https://www.npmjs.com/package/@analytics/simple-analytics"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/simple-analytics.svg"></a> |  **0.3.3** |
-| **[@analytics/snowplow](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-snowplow)** <br/> Snowplow integration for 'analytics' module for browser & node | <a href="https://www.npmjs.com/package/@analytics/snowplow"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/snowplow.svg"></a> |  **0.3.2** |
-| **[@analytics/storage-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-storage)** <br/> Storage utility with fallbacks | <a href="https://www.npmjs.com/package/@analytics/storage-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/storage-utils.svg"></a> |  **0.3.0** |
-| **[@analytics/type-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-types)** <br/> Tiny runtime type checking utils | <a href="https://www.npmjs.com/package/@analytics/type-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/type-utils.svg"></a> |  **0.5.4** |
-| **[@analytics/url-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-url)** <br/> Url utils | <a href="https://www.npmjs.com/package/@analytics/url-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/url-utils.svg"></a> |  **0.2.0** |
-| **[@analytics/visitor-source](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-visitor-source)** <br/> Get visitor source | <a href="https://www.npmjs.com/package/@analytics/visitor-source"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/visitor-source.svg"></a> |  **0.0.3** |
+| **[@analytics/session-storage-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-storage-session)** <br/> Tiny SessionStorage utility library | <a href="https://www.npmjs.com/package/@analytics/session-storage-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/session-storage-utils.svg"></a> |  **0.0.5** |
+| **[@analytics/session-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-session)** <br/> Tiny session utility library | <a href="https://www.npmjs.com/package/@analytics/session-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/session-utils.svg"></a> |  **0.1.17** |
+| **[@analytics/simple-analytics](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-simple-analytics)** <br/> Simple analytics plugin for 'analytics' module for browser | <a href="https://www.npmjs.com/package/@analytics/simple-analytics"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/simple-analytics.svg"></a> |  **0.3.4** |
+| **[@analytics/snowplow](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-snowplow)** <br/> Snowplow integration for 'analytics' module for browser & node | <a href="https://www.npmjs.com/package/@analytics/snowplow"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/snowplow.svg"></a> |  **0.3.3** |
+| **[@analytics/storage-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-storage)** <br/> Storage utility with fallbacks | <a href="https://www.npmjs.com/package/@analytics/storage-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/storage-utils.svg"></a> |  **0.4.0** |
+| **[@analytics/type-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-types)** <br/> Tiny runtime type checking utils | <a href="https://www.npmjs.com/package/@analytics/type-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/type-utils.svg"></a> |  **0.6.0** |
+| **[@analytics/url-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-url)** <br/> Url utils | <a href="https://www.npmjs.com/package/@analytics/url-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/url-utils.svg"></a> |  **0.2.1** |
+| **[@analytics/visitor-source](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-visitor-source)** <br/> Get visitor source | <a href="https://www.npmjs.com/package/@analytics/visitor-source"><img width="360" height="22" src="https://img.shields.io/npm/dm/@analytics/visitor-source.svg"></a> |  **0.0.5** |
 | **[analytics-cli](https://github.com/DavidWells/analytics/tree/master/packages/analytics-cli)** <br/> CLI for `analytics` pkg | <a href="https://www.npmjs.com/package/analytics-cli"><img width="360" height="22" src="https://img.shields.io/npm/dm/analytics-cli.svg"></a> |  **0.0.5** |
 | **[analytics-plugin-do-not-track](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-do-not-track)** <br/> Disable tracking for opted out visitors plugin for 'analytics' module | <a href="https://www.npmjs.com/package/analytics-plugin-do-not-track"><img width="360" height="22" src="https://img.shields.io/npm/dm/analytics-plugin-do-not-track.svg"></a> |  **0.1.5** |
 | **[analytics-plugin-event-validation](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-event-validation)** <br/> Event validation plugin for analytics | <a href="https://www.npmjs.com/package/analytics-plugin-event-validation"><img width="360" height="22" src="https://img.shields.io/npm/dm/analytics-plugin-event-validation.svg"></a> |  **0.1.2** |
@@ -730,7 +757,7 @@ The `analytics` has a robust plugin system. Here is a list of currently availabl
 | **[analytics-plugin-tab-events](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-tab-events)** <br/> Expose tab visibility events plugin for 'analytics' module | <a href="https://www.npmjs.com/package/analytics-plugin-tab-events"><img width="360" height="22" src="https://img.shields.io/npm/dm/analytics-plugin-tab-events.svg"></a> |  **0.2.1** |
 | **[use-analytics](https://github.com/DavidWells/analytics/tree/master/packages/use-analytics)** <br/> Analytics hooks for React | <a href="https://www.npmjs.com/package/use-analytics"><img width="360" height="22" src="https://img.shields.io/npm/dm/use-analytics.svg"></a> |  **0.0.5** |
 | **[analytics-util-params](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-params)** <br/> Url Parameter helper functions | <a href="https://www.npmjs.com/package/analytics-util-params"><img width="360" height="22" src="https://img.shields.io/npm/dm/analytics-util-params.svg"></a> |  **0.1.2** |
-| **[analytics-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-utils)** <br/> Analytics utility functions used by 'analytics' module | <a href="https://www.npmjs.com/package/analytics-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/analytics-utils.svg"></a> |  **1.0.9** |
+| **[analytics-utils](https://github.com/DavidWells/analytics/tree/master/packages/analytics-utils)** <br/> Analytics utility functions used by 'analytics' module | <a href="https://www.npmjs.com/package/analytics-utils"><img width="360" height="22" src="https://img.shields.io/npm/dm/analytics-utils.svg"></a> |  **1.0.10** |
 | **[analytics-plugin-window-events](https://github.com/DavidWells/analytics/tree/master/packages/analytics-plugin-window-events)** <br/> Expose window events plugin for 'analytics' module | <a href="https://www.npmjs.com/package/analytics-plugin-window-events"><img width="360" height="22" src="https://img.shields.io/npm/dm/analytics-plugin-window-events.svg"></a> |  **0.0.7** |
 <!-- AUTO-GENERATED-CONTENT:END -->
 
@@ -987,7 +1014,7 @@ Types for analytics and plugins are generated from [JSDoc blocks](https://jsdoc.
 
 We are always looking to improve type support & improve the DX of users. If you see something that can be improved let us know in an issue!
 
-# Contributing
+## Contributing
 
 Contributions are always welcome, no matter how large or small. Before contributing, please read the [code of conduct](CODE_OF_CONDUCT.md).
 

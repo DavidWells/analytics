@@ -63,9 +63,10 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
       let disabled = action.disabled
       // console.log('allRegisteredPlugins', allRegisteredPlugins)
       const waitForPluginsToLoad = allRegisteredPlugins.map((plugin) => {
-        const { loaded, name } = plugin
+        const { loaded, name, config } = plugin
+        const loadedFn = () => loaded({ config }) // @TODO add in more to api to match other funcs?
         /* Plugins will abort trying to load after 10 seconds. 1e4 === 10000 MS */
-        return waitForReady(plugin, loaded, 1e4).then((d) => {
+        return waitForReady(plugin, loadedFn, 1e4).then((d) => {
           if (!isReady[name]) {
             // only dispatch namespaced rdy once
             store.dispatch({

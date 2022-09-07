@@ -14,6 +14,7 @@ function resolve(name) {
 
 const CUSTOM_MAPPING = {
   '@analytics/crazy-egg': resolve('crazyegg.md'),
+  '@analytics/google-analytics-v3': resolve('google-analytics-v3.md'),
   'use-analytics': path.resolve(UTILS_DOC_PATH, 'react-hooks.md'),
   '@analytics/redact-utils': path.resolve(UTILS_DOC_PATH, 'redaction.md'),
   '@analytics/listener-utils': path.resolve(UTILS_DOC_PATH, 'listeners.md'),
