@@ -29,21 +29,21 @@ Install the plugins from npm.
 
 ```bash
 npm install analytics
-npm install analytics-plugin-original-source
+npm install @analytics/original-source-plugin
 ```
 
 Then include it in your `analytics` instance
 
 ```js
 import Analytics from 'analytics'
-import originalSrc from 'analytics-plugin-original-source'
+import originalSourcePlugin from '@analytics/original-source-plugin'
 
 const analytics = Analytics({
   app: 'my-app',
   version: 100,
   debug: true,
   plugins: [
-    originalSrc(),
+    originalSourcePlugin(),
   ]
 })
 ```
