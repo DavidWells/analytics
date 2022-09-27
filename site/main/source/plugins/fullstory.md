@@ -219,11 +219,11 @@ Below are additional implementation examples.
 
 ## Formatting payloads
 
-Full story requires [specific naming conventions](https://help.fullstory.com/hc/en-us/articles/360020623234) for tracking.
+FullStory requires [specific naming conventions](https://help.fullstory.com/hc/en-us/articles/360020623234) for tracking.
 
 We have taken the liberty of making this easier to use with this plugin. 🎉
 
-Values sent to Full Story will be automatically converted into a values their API will understand.
+Values sent to FullStory will be automatically converted into a values their API will understand.
 
 **Example**
 
@@ -245,4 +245,4 @@ FS.event('itemPurchased', {
 })
 ```
 
-This will ensure data flows into full story correctly.
+This will ensure data flows into FullStory correctly.

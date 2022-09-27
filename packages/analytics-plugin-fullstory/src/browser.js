@@ -53,6 +53,7 @@ function fullStoryPlugin(pluginConfig = {}) {
         }, 0)
       }
 
+      window._fs_debug = config.debug
       window._fs_host = 'fullstory.com';
       window._fs_script = 'edge.fullstory.com/s/fs.js';
       window._fs_org = config.org;
