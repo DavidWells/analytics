@@ -12,6 +12,8 @@ FullStory is a tool that tracks user behavior in your application. User sessions
 
 This analytics plugin will add the FullStory javascript library to your app & send custom events into FullStory.
 
+For more information on FullStory's official browser package, you can check out [the official FullStory Browser SDK on NPM](https://www.npmjs.com/package/@fullstory/browser).
+
 [View the docs](https://getanalytics.io/plugins/fullstory/)
 
 <!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
