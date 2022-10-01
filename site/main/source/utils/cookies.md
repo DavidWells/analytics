@@ -8,7 +8,7 @@ A tiny cookie utility library with fallbacks in <!-- AUTO-GENERATED-CONTENT:STAR
 
 This module will automatically fail back to global window storage if `cookies` are not available.
 
-Exposes `hasCookies`, `getCookie`, `setCookie`, & `removeCookie` functions.
+Exposes `hasCookies`, `getCookie`, `setCookie`, & `deleteCookie` functions.
 
 [See live demo](https://utils-cookies.netlify.app/).
 
