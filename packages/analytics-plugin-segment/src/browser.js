@@ -138,6 +138,15 @@ function segmentPlugin(pluginConfig = {}) {
         ...payload.options,
       })
     },
+    /* trackLink Segment event http://bit.ly/3RxZlDJ */
+    trackLink: ({payload, config}) => {
+      if (typeof analytics === 'undefined') return
+
+      analytics.trackLink(payload.element, payload.event, payload.properties, {
+        integrations: config.integrations,
+        ...payload.options,
+      })
+    },
     /* Identify Segment user http://bit.ly/2VL45xD */
     identify: ({ payload, config }) => {
       if (typeof analytics === 'undefined') return
