@@ -31,35 +31,31 @@ function custifyPlugin(pluginConfig = {}) {
       }
 
       // Create script & append to DOM
-      let script = document.createElement('script')
-      script.id = 'cs-script-loader'
-      script.type = 'text/javascript'
-      script.innerHTML = `
-        var _ctrack = _ctrack || [];
-        (function () {
-            for (var t = ["identify", "track", "setInstance", "setAccount", "trackTime", "stopTrackTime", "debug", "setOptions"], a = function (t) {
-                return function () {
-                    _ctrack.push([t].concat(Array.prototype.slice.call(arguments, 0)))
-                }
-            }, n = 0; n < t.length; n++) _ctrack[t[n]] = a(t[n])
-            var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
-            g.type = 'text/javascript';
-            g.async = true;
-            g.defer = true;
-            g.src = 'https://assets.custify.com/assets/track.min.js';
-            s.parentNode.insertBefore(g, s);
-        })();
+      const _ctrack =  window._ctrack || [];
 
-      _ctrack.setAccount("${accountId}");
+      (function () {
+          for (let methods = ["identify", "track", "setInstance", "setAccount", "trackTime", "stopTrackTime", "debug", "setOptions"], methodHandler = function (method) {
+              return function () {
+                  _ctrack.push([method].concat(Array.prototype.slice.call(arguments, 0)))
+              }
+          }, n = 0; n < methods.length; n++) _ctrack[methods[n]] = methodHandler(methods[n])
+
+          window._ctrack = _ctrack;
+
+          const script = document.createElement('script');
+          const firstScript = document.getElementsByTagName('script')[0];
+          script.type = 'text/javascript';
+          script.async = true;
+          script.defer = true;
+          script.src = 'https://assets.custify.com/assets/track.min.js';
+          firstScript.parentNode.insertBefore(script, firstScript);
+
+      })();
+
+      _ctrack.setAccount(accountId);
       _ctrack.setOptions({
-          createOrUpdateEntities: ${allowCreate}
+          createOrUpdateEntities: allowCreate
       });
-    `
-      // On next tick, inject the script
-      setTimeout(() => {
-        let firstScript = document.getElementsByTagName('script')[0]
-        firstScript.parentNode.insertBefore(script, firstScript)
-      }, 0)
     },
     /**
      * Identify a visitor in custify
