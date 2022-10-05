@@ -60,12 +60,12 @@ setCookie('test', 'a')
 setCookie('test', 'a', 60*60*24, '/api', '*.example.com', true)
 ```
 
-## `deleteCookie`
+## `removeCookie`
 
-Delete a cookie.
+Remove a cookie.
 
 ```js
-import { deleteCookie } from '@analytics/cookie-utils'
+import { removeCookie } from '@analytics/cookie-utils'
 
-deleteCookie('cookie-key')
+removeCookie('cookie-key')
 ```
