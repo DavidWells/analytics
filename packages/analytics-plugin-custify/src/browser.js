@@ -25,15 +25,15 @@ function custifyPlugin(pluginConfig = {}) {
       },
     },
     initialize: ({ config }) => {
-      const { accountId, skipScriptInclude, options } = config
+      const { accountId, scriptInclude, options } = config
       if (!accountId) {
         throw new Error('No custify accountId defined')
       }
 
-      if(skipScriptInclude) {
-        // Create script & append to DOM
-        const _ctrack = window._ctrack || [];
+      // Create script & append to DOM
+      const _ctrack = window._ctrack || [];
 
+      if(scriptInclude) {
         let methods = ["identify", "track", "setInstance", "setAccount", "trackTime", "stopTrackTime", "debug", "setOptions"];
         const methodHandler = (method) => () => _ctrack.push([method].concat(Array.prototype.slice.call(arguments, 0)));
         for (let n = 0; n < methods.length; n++) _ctrack[methods[n]] = methodHandler(methods[n]);
