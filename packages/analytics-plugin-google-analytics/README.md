@@ -261,7 +261,7 @@ const analytics = Analytics({
       measurementIds: ['G-abc123'],
     }),
     /* Load Google Analytics v3 */
-    googleAnalyticsPlugin({
+    googleAnalyticsV3Plugin({
       trackingId: 'UA-11111111-2',
     }),
   ],
