@@ -31,12 +31,16 @@ function custifyPlugin(pluginConfig = {}) {
       }
 
       // Create script & append to DOM
-      const _ctrack = window._ctrack || [];
+      let _ctrack = window._ctrack || [];
 
       if(scriptInclude) {
         let methods = ["identify", "track", "setInstance", "setAccount", "trackTime", "stopTrackTime", "debug", "setOptions"];
-        const methodHandler = (method) => () => _ctrack.push([method].concat(Array.prototype.slice.call(arguments, 0)));
-        for (let n = 0; n < methods.length; n++) _ctrack[methods[n]] = methodHandler(methods[n]);
+        _ctrack = methods.reduce((acc, method) => {
+          acc[method] = (...args) => {
+            _ctrack.push([method, ...args]);
+          };
+          return acc;
+        }, _ctrack);
 
         window._ctrack = _ctrack;
 
@@ -60,16 +64,52 @@ function custifyPlugin(pluginConfig = {}) {
       if (typeof _ctrack === 'undefined' || !traits.email) {
         return
       }
-
       const { company, ...user } = traits
 
       const properties = {
         userId,
         email: user.email,
-        company_id: company ? company.id : null,
       }
 
-      _ctrack.identify(properties, { user, company })
+      if(company) {
+        properties.company_id = company.id
+      }
+
+      const {id,...companyRest} = company
+
+      let {
+        user_id,
+        email,
+        phone,
+        signed_up_at,
+        name,
+        session_count,
+        companies,
+        custom_attributes,
+        unsubscribed_from_emails,
+        unsubscribed_from_calls,
+        ...userRest
+      } = user
+
+      custom_attributes = {
+        ...userRest,
+        ...custom_attributes,
+      }
+
+      const newUser = {
+        user_id,
+        email,
+        phone,
+        signed_up_at,
+        name,
+        session_count,
+        companies,
+        custom_attributes,
+        unsubscribed_from_emails,
+        unsubscribed_from_calls,
+      }
+
+      _ctrack.identify(properties, { user: newUser, company: companyRest })
     },
     page: ({ payload }) => {
       if (typeof _ctrack === 'undefined') return
