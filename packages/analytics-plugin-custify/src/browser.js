@@ -1,9 +1,33 @@
 /* global _ctrack */
 
+const defaultOpts = {
+  scriptInclude: true
+}
+
+/**
+ * Custify plugin
+ * @link https://getanalytics.io/plugins/custify
+ * @link https://docs.custify.com/
+ * @link https://app.custify.com/settings/developer/js-snippet
+ * @param {object} pluginConfig - Plugin settings
+ * @param {string} pluginConfig.accountId - custify account ID
+ * @param {boolean} [pluginConfig.scriptInclude = true] - Load custify script into page
+ * @param {object}  [pluginConfig.options] - Custify script options
+ * @return {AnalyticsPlugin}
+ * @example
+ *
+ * // This will load crazy egg on to the page
+ * custifyPlugin({
+ *   accountId: '1234578'
+ * })
+ */
 function custifyPlugin(pluginConfig = {}) {
   return {
     name: 'custify',
-    config: pluginConfig,
+    config: {
+      ...defaultOpts,
+      ...pluginConfig
+    },
     methods: {
       trackTime: (pageName, idleTimer) => {
         if (!_ctrack || typeof _ctrack.trackTime  === 'undefined') {
@@ -33,7 +57,7 @@ function custifyPlugin(pluginConfig = {}) {
       // Create script & append to DOM
       let _ctrack = window._ctrack || [];
 
-      if(scriptInclude) {
+      if (scriptInclude) {
         let methods = ["identify", "track", "setInstance", "setAccount", "trackTime", "stopTrackTime", "debug", "setOptions"];
         _ctrack = methods.reduce((acc, method) => {
           acc[method] = (...args) => {
@@ -55,7 +79,7 @@ function custifyPlugin(pluginConfig = {}) {
 
       _ctrack.setAccount(accountId);
 
-      if(options) {
+      if (options) {
         _ctrack.setOptions(options);
       }
     },

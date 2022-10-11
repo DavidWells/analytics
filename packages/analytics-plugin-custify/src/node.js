@@ -1,17 +1,19 @@
-function makeCustifyRequest(apiKey, endpoint, method, data) {
-  const custifyUrl = 'https://api.custify.com'
+import fetch from 'unfetch'
 
-  return fetch(`${custifyUrl}/${endpoint}`, {
-    method,
-    headers: {
-      "Content-Type": "application/json",
-      'Authorization': `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify(data),
-  });
-}
-
-function custifyPlugin(apiKey) {
+/**
+ * Custify server plugin
+ * @link https://getanalytics.io/plugins/custify
+ * @link https://docs.custify.com/
+ * @param {object} pluginConfig - Plugin settings
+ * @param {string} pluginConfig.apiKey - custify API key
+ * @return {AnalyticsPlugin}
+ * @example
+ *
+ * custifyPlugin({
+ *   apiKey: 'abc123'
+ * })
+ */
+function custifyPlugin({ apiKey }) {
   let loaded = false;
   return {
     name: "custify",
@@ -55,4 +57,17 @@ function custifyPlugin(apiKey) {
   };
 }
 
-export default custifyPlugin;
+function makeCustifyRequest(apiKey, endpoint, method, data) {
+  const custifyUrl = 'https://api.custify.com'
+
+  return fetch(`${custifyUrl}/${endpoint}`, {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+      'Authorization': `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify(data),
+  });
+}
+
+export default custifyPlugin
