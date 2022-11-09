@@ -51,10 +51,10 @@ const defaultConfig = {
  * @link https://analytics.google.com/analytics/web/
  * @link https://developers.google.com/analytics/devguides/collection/analyticsjs
  * @param {object}  pluginConfig - Plugin settings
- * @param {string|array} pluginConfig.measurementIds - Google Analytics MEASUREMENT IDs
+ * @param {string[]} pluginConfig.measurementIds - Google Analytics MEASUREMENT IDs
  * @param {boolean} [pluginConfig.debug] - Enable Google Analytics debug mode
  * @param {string}  [pluginConfig.dataLayerName=ga4DataLayer] - The optional name for dataLayer object. Defaults to ga4DataLayer.
- * @param {string}  [pluginConfig.gtagName=gtag] - The optional name for dataLayer object. Defaults to ga4DataLayer.
+ * @param {string}  [pluginConfig.gtagName=gtag] - The optional name for dataLayer object. Defaults to `gtag`.
  * @param {boolean} [pluginConfig.gtagConfig.anonymize_ip] - Enable [Anonymizing IP addresses](https://bit.ly/3c660Rd) sent to Google Analytics.
  * @param {object}  [pluginConfig.gtagConfig.cookie_domain] - Additional cookie properties for configuring the [ga cookie](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#configuring_cookie_field_settings)
  * @param {object}  [pluginConfig.gtagConfig.cookie_expires] - Additional cookie properties for configuring the [ga cookie](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#configuring_cookie_field_settings)
