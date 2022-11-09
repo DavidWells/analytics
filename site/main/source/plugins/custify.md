@@ -21,7 +21,6 @@ This analytics plugin will load Custify's client side tracking script into your 
   - [Server-side API](#server-side-api)
   - [Configuration options for server-side](#configuration-options-for-server-side)
 - [Additional examples](#additional-examples)
-- [Using identify](#using-identify)
 
 </details>
 <!-- AUTO-GENERATED-CONTENT:END (TOC) -->
@@ -330,20 +329,3 @@ Below are additional implementation examples.
 </details>
 
 <!-- AUTO-GENERATED-CONTENT:END (PLUGIN_DOCS) -->
-
-## Using identify
-
-**Important:** Custify requires an `email` field for making identify calls.
-
-If your identify call does not contain `email` Custify will not be notified of the new user.
-
-When sending properties with `identify` calls, all `camelCase` traits are automatically converted to `snake_case`. There is one exception to this for `firstName` & `lastName` which are sent as `firstname` & `lastname`.
-
-**Example:**
-
-```js
-analytics.identify('user-xzy-123', {
-  email: 'bill@murray.com',
-  accountLevel: 'pro' // trait will be `account_level`
-})
-```

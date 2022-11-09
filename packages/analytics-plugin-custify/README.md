@@ -24,7 +24,6 @@ This analytics plugin will load Custify's client side tracking script into your 
   - [Server-side API](#server-side-api)
   - [Configuration options for server-side](#configuration-options-for-server-side)
 - [Additional examples](#additional-examples)
-- [Using identify](#using-identify)
 
 </details>
 <!-- AUTO-GENERATED-CONTENT:END (TOC) -->
@@ -53,7 +52,7 @@ import custifyPlugin from '@analytics/custify'
 const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
-    // This will load custify on to the page
+    // This will load crazy egg on to the page
     custifyPlugin({
       accountId: '1234578'
     })
@@ -102,7 +101,7 @@ import custifyPlugin from '@analytics/custify'
 const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
-    // This will load custify on to the page
+    // This will load crazy egg on to the page
     custifyPlugin({
       accountId: '1234578'
     })
@@ -245,7 +244,7 @@ Below are additional implementation examples.
         var Analytics = _analytics.init({
           app: 'my-app-name',
           plugins: [
-            // This will load custify on to the page
+            // This will load crazy egg on to the page
             analyticsCustify({
               accountId: '1234578'
             })
@@ -300,7 +299,7 @@ Below are additional implementation examples.
           app: 'analytics-html-demo',
           debug: true,
           plugins: [
-            // This will load custify on to the page
+            // This will load crazy egg on to the page
             analyticsCustify({
               accountId: '1234578'
             })

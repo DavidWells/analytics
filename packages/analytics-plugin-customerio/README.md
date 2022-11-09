@@ -112,8 +112,8 @@ const analytics = Analytics({
 | Option | description |
 |:---------------------------|:-----------|
 | `siteId` <br/>**required** - string| Customer.io site Id for client side tracking |
-| `disableAnonymousTraffic` <br/>_optional_ - boolean| Disable anonymous events from firing |
 | `customScriptSrc` <br/>_optional_ - string| Load Customer.io script from custom source |
+| `disableAnonymousTraffic` <br/>_optional_ - boolean| Disable anonymous events from firing |
 
 ## Server-side usage
 
