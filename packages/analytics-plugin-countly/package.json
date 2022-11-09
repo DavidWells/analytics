@@ -1,6 +1,6 @@
 {
   "name": "@analytics/countly",
-  "version": "0.21.11",
+  "version": "0.21.12",
   "description": "Countly plugin for 'analytics' module",
   "projectMeta": {
     "provider": {
