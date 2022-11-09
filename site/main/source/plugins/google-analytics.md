@@ -56,7 +56,7 @@ const analytics = Analytics({
 analytics.page()
 
 /* Track a custom event */
-analytics.track('cartCheckout', {
+analytics.track('begin_checkout', {
   item: 'pink socks',
   price: 20
 })
@@ -149,7 +149,7 @@ Below are additional implementation examples.
         analytics.page()
 
         /* Track a custom event */
-        analytics.track('cartCheckout', {
+        analytics.track('begin_checkout', {
           item: 'pink socks',
           price: 20
         })
@@ -203,10 +203,14 @@ Below are additional implementation examples.
         /* Track a page view */
         analytics.page()
 
-        /* Track a custom event */
+        /* Track an event; see https://developers.google.com/analytics/devguides/collection/ga4/reference/events?client_type=gtag#begin_checkout */
         analytics.track('cartCheckout', {
           item: 'pink socks',
-          price: 20
+          value: 20,
+          currency: 'USD',
+          items: [{
+           item_id: "PSCKS",
+           item_name: "Pink Socks",
         })
 
         /* Identify a visitor */
@@ -227,6 +231,66 @@ Below are additional implementation examples.
 
 <!-- AUTO-GENERATED-CONTENT:END (PLUGIN_DOCS) -->
 
+## Important note about event names and GA4
+  
+Google Analytics prior to GA4 (called Universal Analytics or Google Analytics V3) tracked events with fairly arbitrary names that were specified
+with capitalized words and spaces between.  In Google Analytics 4 they expect you to mainly send their pre-defined events, and send them with
+all the required fields provided.  This allows them to generate better reports, but it does mean that if you are using this library to send
+events to multiple analytics services you'll want to tailor your GA4 events to fit their model.
+  
+One way to do this is to provide a separate field in your track calls that is used for the GA4 events, and then pass that through to the GA4 plugin
+if available:
+  
+```js
+  const ga4Plugin = googleAnalyticsPlugin({
+    measurementIds: [ga4TrackingId],
+  });
+  const modifiedPlugin = {
+    ...ga4Plugin,
+    track: (arg) => {
+      const ga4Event = arg.payload.properties.ga4Event;
+      if (ga4Event) {
+        // Includes a GA4 specific event
+        const { event, ...properties } = ga4Event;
+        ga4Plugin.track({ ...arg, payload: { event, properties } });
+      } else {
+        // No GA4 specific data, relabel as a generic "app_event"
+        ga4Plugin.track({
+          ...arg,
+          payload: {
+            event: 'other_event',
+            properties: {
+              event: arg.payload.event,
+              ...arg.payload.properties,
+            },
+          },
+        });
+      }
+    },
+  };
+  plugins.push(modifiedPlugin);
+```
+
+Then modify your `analytics.track` calls to pass the events formatted according to GA4 requirements:
+  
+  
+```js
+  analytics.track('Started Checkout', {
+  price: 20,
+  gaEvent: {
+    event: 'begin_checkout',
+    items: [{
+      item_id: 'IT1',
+      item_name: 'Pink Socks',
+    }],
+    currency: 'GBP',
+    value: 20  
+  }
+```
+
+See the [Analytics Events Reference](https://developers.google.com/analytics/devguides/collection/ga4/reference/events) for
+details on the standard / recommended event names and properties for Google Analytics 4.
+  
 ## Fix "double page views"
 
 Google analytics 4 sometimes automatically sends a page view for single page applications. To disable this you will need to go into the settings of your stream and click into "enhanced measurement" section and uncheck the "Page changes based on browser history events" setting. This will make sure only `analytics.page()` calls will send page views to Google analytics v4.
