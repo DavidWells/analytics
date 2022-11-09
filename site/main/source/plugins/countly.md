@@ -1,14 +1,11 @@
-<!--
+---
 title: Countly
 description: Using the Countly analytics plugin
--->
-# Countly plugin for `analytics`
+---
 
 Integration with Countly for [analytics](https://www.npmjs.com/package/analytics)
 
 This analytics plugin will load Countly library and allow to send tracking sessions, views, clicks, custom events, user data, etc.
-
-[View the docs](https://getanalytics.io/plugins/countly/)
 
 ## Installation
 
@@ -164,7 +161,6 @@ const analytics = Analytics({
 | `app_key` <br/>**required** - string| Your app key from Countly |
 | `server_url` <br/>**required** - string| Url of the Countly server |
 | `debug` <br/>**required** - boolean| Set debug flag |
-
 
 ## Additional examples
 
@@ -355,6 +351,5 @@ Below are additional implementation examples.
   ```
 
 </details>
-
 
 <!-- AUTO-GENERATED-CONTENT:END (PLUGIN_DOCS) -->

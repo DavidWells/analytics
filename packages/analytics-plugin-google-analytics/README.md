@@ -110,7 +110,7 @@ const analytics = Analytics({
 
 | Option | description |
 |:---------------------------|:-----------|
-| `measurementIds` <br/>**required** - `Array.<string>`| Google Analytics MEASUREMENT IDs |
+| `measurementIds` <br/>**required** - Array.<string>| Google Analytics MEASUREMENT IDs |
 | `debug` <br/>_optional_ - boolean| Enable Google Analytics debug mode |
 | `dataLayerName` <br/>_optional_ - string| The optional name for dataLayer object. Defaults to ga4DataLayer. |
 | `gtagName` <br/>_optional_ - string| The optional name for dataLayer object. Defaults to `gtag`. |

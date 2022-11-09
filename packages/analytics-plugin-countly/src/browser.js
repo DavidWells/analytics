@@ -8,7 +8,6 @@
  * @param {boolean} pluginConfig.require_consent - Disable tracking until given consent (default: false)
  * @return {object} Analytics plugin
  * @example
- *
  * countlyPlugin({
     app_key: 'YOUR_APP_KEY',
     server_url: 'https://YOUR_COUNTLY_SERVER_URL',
