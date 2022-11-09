@@ -4,11 +4,13 @@ subTitle: Using the FullStory analytics plugin
 description: Integrate FullStory visitor tracking with the open source analytics module
 ---
 
-Integration with [FullStory](https://www.fullstory.com/) for [analytics](https://www.npmjs.com/package/analytics)
+Unofficial Integration with [FullStory](https://www.fullstory.com/) for [analytics](https://www.npmjs.com/package/analytics)
 
 FullStory is a tool that tracks user behavior in your application. User sessions are recorded and can be played back allowing developers and product owners to identify areas for improvement in their software.
 
 This analytics plugin will add the FullStory javascript library to your app & send custom events into FullStory.
+
+For more information on FullStory's official browser package, you can check out [the official FullStory Browser SDK on NPM](https://www.npmjs.com/package/@fullstory/browser).
 
 <!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
 <details>
@@ -217,11 +219,11 @@ Below are additional implementation examples.
 
 ## Formatting payloads
 
-Full story requires [specific naming conventions](https://help.fullstory.com/hc/en-us/articles/360020623234) for tracking.
+FullStory requires [specific naming conventions](https://help.fullstory.com/hc/en-us/articles/360020623234) for tracking.
 
 We have taken the liberty of making this easier to use with this plugin. 🎉
 
-Values sent to Full Story will be automatically converted into a values their API will understand.
+Values sent to FullStory will be automatically converted into a values their API will understand.
 
 **Example**
 
@@ -243,4 +245,4 @@ FS.event('itemPurchased', {
 })
 ```
 
-This will ensure data flows into full story correctly.
+This will ensure data flows into FullStory correctly.
