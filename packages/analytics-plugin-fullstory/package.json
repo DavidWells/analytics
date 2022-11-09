@@ -1,6 +1,6 @@
 {
   "name": "@analytics/fullstory",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Unofficial FullStory plugin for 'analytics' module",
   "projectMeta": {
     "provider": {
