@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.5](https://github.com/DavidWells/analytics/compare/@analytics/google-analytics@1.0.4...@analytics/google-analytics@1.0.5) (2022-11-09)
+
+
+### Bug Fixes
+
+* pre-installed gtag causes analytics.js plugin to not initialize ([fd10ab2](https://github.com/DavidWells/analytics/commit/fd10ab2ebabf73beb6242a59b2a04a0af035044e))
+
+
+
+
+
 ## [1.0.4](https://github.com/DavidWells/analytics/compare/@analytics/google-analytics@1.0.3...@analytics/google-analytics@1.0.4) (2022-11-09)
 
 
