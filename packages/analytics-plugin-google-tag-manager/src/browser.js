@@ -30,6 +30,9 @@ let initializedDataLayerName;
  * })
  */
 function googleTagManager(pluginConfig = {}) {
+
+  const defaultScriptSrc = 'https://www.googletagmanager.com/gtm.js'
+
   // Allow for userland overides of base methods
   return {
     name: 'google-tag-manager',
@@ -45,7 +48,8 @@ function googleTagManager(pluginConfig = {}) {
       if (preview && !auth) {
         throw new Error('When enabling preview mode, both preview and auth parameters must be defined');
       }
-      const scriptSrc = customScriptSrc || 'https://www.googletagmanager.com/gtm.js';
+
+      const scriptSrc = customScriptSrc || defaultScriptSrc;
 
       if (!scriptLoaded(containerId)) {
         /* eslint-disable */
@@ -99,7 +103,7 @@ function googleTagManager(pluginConfig = {}) {
     },
     loaded: () => {
       const hasDataLayer = !!initializedDataLayerName && !!(window[initializedDataLayerName] && Array.prototype.push !== window[initializedDataLayerName].push)
-      return scriptLoaded(pluginConfig.containerId) && hasDataLayer
+      return scriptLoaded(pluginConfig.containerId, pluginConfig.customScriptSrc || defaultScriptSrc) && hasDataLayer
     },
   }
 }
@@ -113,10 +117,14 @@ TODO add logic to make it impossible to load 2 plugins with the same container I
 [containerID]: pluginName
 */
 
-function scriptLoaded(containerId) {
+function scriptLoaded(containerId, scriptSrc) {
   let regex = regexCache[containerId]
   if (!regex) {
-    regex = new RegExp('googletagmanager\\.com\\/gtm\\.js.*[?&]id=' + containerId)
+    const scriptSrcEscaped = scriptSrc
+      .replace(/^https?:\/\//, '')
+      .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+    regex = new RegExp(scriptSrcEscaped + '.*[?&]id=' + containerId)
     regexCache[containerId] = regex
   }
   const scripts = document.querySelectorAll('script[src]')
