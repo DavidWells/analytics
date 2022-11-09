@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.4](https://github.com/DavidWells/analytics/compare/@analytics/google-analytics@1.0.3...@analytics/google-analytics@1.0.4) (2022-11-09)
+
+
+### Bug Fixes
+
+* fixes a sneaky bug that causes all ga4 events (gtag) to fire in debug mode ([1da35cb](https://github.com/DavidWells/analytics/commit/1da35cbef06d93605a4e82767f0e4c6a2ac9aca8))
+
+
+
+
+
 ## [1.0.3](https://github.com/DavidWells/analytics/compare/@analytics/google-analytics@1.0.2...@analytics/google-analytics@1.0.3) (2022-07-22)
 
 **Note:** Version bump only for package @analytics/google-analytics
