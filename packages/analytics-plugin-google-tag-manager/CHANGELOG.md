@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.3](https://github.com/DavidWells/analytics/compare/@analytics/google-tag-manager@0.5.2...@analytics/google-tag-manager@0.5.3) (2022-11-09)
+
+
+### Bug Fixes
+
+* google tag manager not working with custom script src ([7eb9683](https://github.com/DavidWells/analytics/commit/7eb96834b9d3fec8f06ebda72bd04e1986018e96))
+
+
+
+
+
 ## [0.5.2](https://github.com/DavidWells/analytics/compare/@analytics/google-tag-manager@0.5.1...@analytics/google-tag-manager@0.5.2) (2022-02-05)
 
 **Note:** Version bump only for package @analytics/google-tag-manager
