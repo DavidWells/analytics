@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.4](https://github.com/DavidWells/analytics/compare/@analytics/segment@1.1.3...@analytics/segment@1.1.4) (2022-11-09)
+
+
+### Bug Fixes
+
+* missing loadPlugin [#283](https://github.com/DavidWells/analytics/issues/283) ([40035c8](https://github.com/DavidWells/analytics/commit/40035c813886eb0bcafd9ba636da18987810f19d))
+
+
+
+
+
 ## [1.1.3](https://github.com/DavidWells/analytics/compare/@analytics/segment@1.1.2...@analytics/segment@1.1.3) (2022-01-02)
 
 **Note:** Version bump only for package @analytics/segment
