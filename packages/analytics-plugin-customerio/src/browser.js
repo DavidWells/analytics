@@ -6,7 +6,7 @@
  * @link https://customer.io/docs/javascript-quick-start
  * @param {object} pluginConfig - Plugin settings
  * @param {string} pluginConfig.siteId - Customer.io site Id for client side tracking
- * @param {string} pluginConfig.customScriptSrc - Load Customer.io script from custom source
+ * @param {string} [pluginConfig.customScriptSrc] - Load Customer.io script from custom source
  * @param {boolean} [pluginConfig.disableAnonymousTraffic] -  Disable anonymous events from firing
  * @return {object} Analytics plugin
  * @example
