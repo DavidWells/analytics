@@ -258,7 +258,7 @@ if available:
         ga4Plugin.track({
           ...arg,
           payload: {
-            event: 'app_event',
+            event: 'other_event',
             properties: {
               event: arg.payload.event,
               ...arg.payload.properties,
