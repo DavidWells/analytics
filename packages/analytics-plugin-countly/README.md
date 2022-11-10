@@ -10,19 +10,11 @@ This analytics plugin will load Countly library and allow to send tracking sessi
 
 [View the docs](https://getanalytics.io/plugins/countly/)
 
-## Installation
-
-```bash
-npm install analytics
-npm install @analytics/countly
-```
-
 <!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
 <details>
 <summary>Click to expand</summary>
 
 - [Installation](#installation)
-- [Installation](#installation-1)
 - [How to use](#how-to-use)
 - [Platforms Supported](#platforms-supported)
 - [Browser usage](#browser-usage)
@@ -40,7 +32,7 @@ npm install @analytics/countly
 
 ```bash
 npm install analytics
-npm install @analytics/amplitude
+npm install @analytics/countly
 ```
 
 <!-- AUTO-GENERATED-CONTENT:START (PLUGIN_DOCS) -->
