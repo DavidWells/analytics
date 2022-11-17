@@ -90,7 +90,7 @@ function googleTagManager(pluginConfig = {}) {
           formattedPayload.category = 'All'
         }
         if (config.debug) {
-          console.log('gtag push', {
+          console.log('dataLayer push', {
             event: payload.event,
             ...formattedPayload
           })
