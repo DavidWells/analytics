@@ -93,14 +93,17 @@ function googleAnalytics(pluginConfig = {}) {
         script.src = src
         document.body.appendChild(script)
       }
-      /* Set gtag and datalayer */
+      /* Set up gtag and datalayer */
       if (!window[dataLayerName]) {
         window[dataLayerName] = window[dataLayerName] || []
+      }
+      if (!window[gtagName]) {
         window[gtagName] = function () {
           window[dataLayerName].push(arguments)
         }
-        window[gtagName]('js', new Date())
       }
+      window[gtagName]('js', new Date())
+
       // Initialize tracker instances on page
       let gtagConf = {
         ...defaultGtagConf,
