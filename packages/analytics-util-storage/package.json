@@ -21,6 +21,7 @@
   "source": "src/index.js",
   "main": "dist/analytics-util-storage.js",
   "module": "dist/analytics-util-storage.module.js",
+  "types": "types/analytics-util-storage.d.ts",
   "unpkg": "dist/analytics-util-storage.umd.js",
   "sideEffects": false,
   "scripts": {
@@ -44,6 +45,7 @@
   "files": [
     "lib",
     "dist",
+    "types",
     "package.json",
     "package-lock.json",
     "README.md"
