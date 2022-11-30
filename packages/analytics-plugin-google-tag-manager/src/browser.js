@@ -5,14 +5,16 @@ export const config = {
   dataLayer: undefined,
   preview: undefined,
   auth: undefined,
-  execution: 'async'
-  // assumesPageview: true,
+  execution: 'async',
+  pageViewEvent: null
+  // assumesPageview: true
 }
 
 let initializedDataLayerName;
 
 /**
  * Google tag manager plugin
+ *
  * @link https://getanalytics.io/plugins/google-tag-manager
  * @link https://developers.google.com/tag-manager/
  * @param {object} pluginConfig - Plugin settings
@@ -22,6 +24,9 @@ let initializedDataLayerName;
  * @param {string} [pluginConfig.preview] - The preview-mode environment
  * @param {string} [pluginConfig.auth] - The preview-mode authentication credentials
  * @param {string} [pluginConfig.execution] - The script execution mode
+ * @param {string} [pluginConfig.pageViewEvent] - If configured, a custom event will be sent for each page view with the
+ *    given name.  This can be used to capture page view events consistently in a single page application where
+ *    Google Tag Manager would only fire a page view on the first page load.
  * @return {object} Analytics plugin
  * @example
  *
@@ -73,7 +78,9 @@ function googleTagManager(pluginConfig = {}) {
     },
     page: ({ payload, options, instance, config }) => {
       if (typeof config.dataLayer !== 'undefined') {
-        config.dataLayer.push(payload.properties)
+        if(config.pageViewEvent) {
+          config.dataLayer.push({ event: config.pageViewEvent, ...payload.properties });
+        }
       }
     },
     track: ({ payload, options, config }) => {
