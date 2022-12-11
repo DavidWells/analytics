@@ -42,6 +42,8 @@ export const REGEX_JSON = /^\{[\s\S]*\}$|^\[[\s\S]*\]$/
 /* ────────────────────
 Environment checks
 ─────────────────────── */
+// alt implementations 
+// - https://github.com/MikeKovarik/platform-detect
 /** @type {Object} */
 const PROCESS = typeof process !== UNDEFINED ? process : {}
 
