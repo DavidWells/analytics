@@ -64,5 +64,11 @@
     "name": "RudderStack",
     "url": "https://www.npmjs.com/package/begrowth-analytics-rudderstack",
     "description": "Adds Analytics support for RudderStack"
+  },
+  {
+    "name": "Conscia",
+    "url": "https://www.npmjs.com/package/analytics-plugin-conscia",
+    "repo": "https://github.com/conscia/analytics-plugin-conscia",
+    "description": "Adds Analytics support for conscia.ai"
   }
 ]
