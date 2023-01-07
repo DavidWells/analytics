@@ -166,7 +166,7 @@ function googleAnalytics(pluginConfig = {}) {
         page_referrer: properties.referrer,
       }
       const campaignData = addCampaignData(campaign)
-      const userData = instance.user('userId') ? { user_id: instance.user() } : {}
+      const userData = instance.user('userId') ? { user_id: instance.user(analytics.user('userId')) } : {}
       const finalPayload = {
         ...(send_to ? { send_to } : {}),
         ...pageView,
@@ -193,7 +193,7 @@ function googleAnalytics(pluginConfig = {}) {
       /* Attach campaign data */
       const campaignData = addCampaignData(campaign)
       /* Attach user data */
-      const userData = instance.user('userId') ? { user_id: instance.user() } : {}
+      const userData = instance.user('userId') ? { user_id: instance.user(analytics.user('userId')) } : {}
       // Limits https://support.google.com/analytics/answer/9267744
       const finalPayload = {
         ...properties,
