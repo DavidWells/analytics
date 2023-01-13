@@ -31,8 +31,8 @@ const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
     googleAnalytics({
-      trackingId: 'ua-111-22222',
-      // Disable GA from loading 
+      measurementIds: 'ua-111-22222',
+      // Disable GA from loading
       enabled: false,
     }),
   ]
@@ -70,7 +70,7 @@ const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
     googleAnalytics({
-      trackingId: 'ua-111-22222',
+      measurementIds: 'ua-111-22222',
       enabled: !dontTrack
     })
   ]
@@ -89,8 +89,8 @@ const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
     googleAnalyticsPlugin({
-      trackingId: 'UA-xyz-123',
-      // Disable GA from loading until `analytics.plugins.enable` called 
+      measurementIds: 'UA-xyz-123',
+      // Disable GA from loading until `analytics.plugins.enable` called
       enabled: false,
     }),
     hubSpotPlugin({
@@ -167,7 +167,7 @@ const devOnlyPlugins = [
 // prod only plugins
 const prodOnlyPlugins = [
   googleAnalyticsPlugin({
-    trackingId: GOOGLE_ANALYTICS
+    measurementIds: GOOGLE_ANALYTICS
   }),
 ]
 
@@ -192,6 +192,6 @@ const analytics = Analytics({
   plugins: plugins
 })
 
-// Use it 
+// Use it
 analytics.page()
 ```

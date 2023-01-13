@@ -116,7 +116,7 @@ const analytics = Analytics({
     }),
     */
     googleAnalytics({
-      trackingId: process.env.REACT_APP_GOOGLE_ANALYTICS_ID,
+      measurementIds: process.env.REACT_APP_GOOGLE_ANALYTICS_ID,
     }),
     reduxPlugin,
     /*{

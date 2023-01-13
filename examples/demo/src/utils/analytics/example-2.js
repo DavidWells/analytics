@@ -5,7 +5,7 @@ import exampleProviderPlugin from './plugins/provider-example'
 
 const googleAnalyticsInstanceTwo = {
   ...googleAnalytics({
-    trackingId: 'UA-126647663-6',
+    measurementIds: 'UA-126647663-6',
     instanceName: 'two'
   }),
   ...{
@@ -34,7 +34,7 @@ const analytics = Analytics({
       settingOne: 'xyz'
     }),
     googleAnalytics({
-      trackingId: process.env.REACT_APP_GOOGLE_ANALYTICS_ID,
+      measurementIds: process.env.REACT_APP_GOOGLE_ANALYTICS_ID,
       // Custom dimensions mapping example
       customDimensions: {
         baz: 'dimension1',

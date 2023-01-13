@@ -2,7 +2,7 @@
 
 ![npm](https://img.shields.io/npm/dm/analytics?style=flat-square) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/analytics?style=flat-square) ![GitHub](https://img.shields.io/github/license/davidwells/analytics?style=flat-square)
 
-A lightweight analytics abstraction library for tracking page views, custom events, & identify visitors. 
+A lightweight analytics abstraction library for tracking page views, custom events, & identify visitors.
 
 Designed to work with any [third-party analytics tool](https://getanalytics.io/plugins/) or your own backend.
 
@@ -107,7 +107,7 @@ const analytics = Analytics({
   version: 100,
   plugins: [
     googleAnalytics({
-      trackingId: 'UA-121991291',
+      measurementIds: 'UA-121991291',
     }),
     customerIo({
       siteId: '123-xyz'
@@ -148,7 +148,7 @@ analytics.identify('user-id-xyz', {
     version: 100,
     plugins: [
       googleAnalytics({
-        trackingId: 'UA-121991291',
+        measurementIds: 'UA-121991291',
       }),
       customerIo({
         siteId: '123-xyz'
@@ -590,7 +590,7 @@ analytics.storage.removeItem('storage_key')
 
 ### analytics.plugins
 
-Async Management methods for plugins. 
+Async Management methods for plugins.
 
 This is also where [custom methods](https://bit.ly/329vFXy) are loaded into the instance.
 
@@ -901,7 +901,7 @@ const analytics = Analytics({
     // include myPlugin
     myPlugin(),
     customerIoPlugin({
-      trackingId: '1234'
+      measurementIds: '1234'
     })
     ...otherPlugins
   ]

@@ -51,7 +51,7 @@ const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
     googleAnalytics({
-      trackingId: 'UA-1234567',
+      measurementIds: 'UA-1234567',
     })
   ]
 })
@@ -127,7 +127,7 @@ const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
     googleAnalytics({
-      trackingId: 'UA-1234567',
+      measurementIds: 'UA-1234567',
     })
   ]
 })
@@ -211,7 +211,7 @@ const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
     googleAnalytics({
-      trackingId: 'UA-1234567',
+      measurementIds: 'UA-1234567',
     })
   ]
 })
@@ -269,7 +269,7 @@ const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
     googleAnalytics({
-      trackingId: 'UA-1234567',
+      measurementIds: 'UA-1234567',
     })
   ]
 })
