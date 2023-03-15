@@ -74,7 +74,7 @@ export const isDeno = typeof Deno !== UNDEFINED && typeof Deno.core !== UNDEFINE
 export const isWebWorker = typeof self === OBJECT && self.constructor && self.constructor.name === 'DedicatedWorkerGlobalScope'
 
 /** @type {Boolean} */
-export const isJsDom = (isBrowser && window.name === 'nodejs') || (typeof navigator !== UNDEFINED && typeof navigator.userAgent !== UNDEFINED (navigator.userAgent.includes('Node.js') || navigator.userAgent.includes('jsdom')))
+export const isJsDom = (isBrowser && window.name === 'nodejs') || (typeof navigator !== UNDEFINED && typeof navigator.userAgent !== UNDEFINED && (navigator.userAgent.includes('Node.js') || navigator.userAgent.includes('jsdom')))
 
 /* ────────────────────
 Type checks
