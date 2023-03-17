@@ -247,6 +247,14 @@ importers:
       aws-sdk-client-mock: 0.5.5
       c8: 7.10.0
 
+  packages/analytics-plugin-countly:
+    specifiers:
+      '@babel/core': ^7.2.2
+      '@babel/preset-env': ^7.3.1
+    devDependencies:
+      '@babel/core': 7.17.0
+      '@babel/preset-env': 7.16.11_@babel+core@7.17.0
+
   packages/analytics-plugin-crazy-egg:
     specifiers:
       '@babel/core': ^7.2.2
@@ -4854,9 +4862,9 @@ packages:
   /@evocateur/npm-registry-fetch/4.0.0:
     resolution: {integrity: sha512-k1WGfKRQyhJpIr+P17O5vLIo2ko1PFLKwoetatdduUSt/aQ4J2sJrJwwatdI5Z3SiYk/mRH9S3JpdmMFd/IK4g==}
     dependencies:
+      JSONStream: 1.3.5
       bluebird: 3.7.2
       figgy-pudding: 3.5.2
-      JSONStream: 1.3.5
       lru-cache: 5.1.1
       make-fetch-happen: 5.0.2
       npm-package-arg: 6.1.1
@@ -4887,7 +4895,7 @@ packages:
       npm-packlist: 1.4.8
       npm-pick-manifest: 3.0.2
       osenv: 0.1.5
-      promise-inflight: 1.0.1
+      promise-inflight: 1.0.1_bluebird@3.7.2
       promise-retry: 1.1.1
       protoduck: 5.0.1
       rimraf: 2.7.1
@@ -8191,7 +8199,7 @@ packages:
       mississippi: 3.0.0
       mkdirp: 0.5.5
       move-concurrently: 1.0.1
-      promise-inflight: 1.0.1
+      promise-inflight: 1.0.1_bluebird@3.7.2
       rimraf: 2.7.1
       ssri: 6.0.2
       unique-filename: 1.1.1
@@ -9121,8 +9129,8 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
-      is-text-path: 1.0.1
       JSONStream: 1.3.5
+      is-text-path: 1.0.1
       lodash: 4.17.21
       meow: 8.1.2
       split2: 3.2.2
@@ -15789,6 +15797,17 @@ packages:
     peerDependenciesMeta:
       bluebird:
         optional: true
+    dev: true
+
+  /promise-inflight/1.0.1_bluebird@3.7.2:
+    resolution: {integrity: sha1-mEcocL8igTL8vdhoEputEsPAKeM=}
+    peerDependencies:
+      bluebird: '*'
+    peerDependenciesMeta:
+      bluebird:
+        optional: true
+    dependencies:
+      bluebird: 3.7.2
     dev: true
 
   /promise-retry/1.1.1:
