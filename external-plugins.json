@@ -64,5 +64,10 @@
     "name": "RudderStack",
     "url": "https://www.npmjs.com/package/begrowth-analytics-rudderstack",
     "description": "Adds Analytics support for RudderStack"
+  },
+  {
+    "name": "PostHog",
+    "url": "https://www.npmjs.com/package/@metro-fs/analytics-plugin-posthog",
+    "description": "Adds Analytics support for PostHog"
   }
 ]
