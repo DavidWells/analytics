@@ -27,9 +27,11 @@
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
-    "es": "../../node_modules/.bin/babel-node ./testBabel.js"
+    "es": "../../node_modules/.bin/babel-node ./testBabel.js",
+    "types": "tsc"
   },
   "main": "lib/analytics-plugin-intercom.cjs.js",
+  "types": "types/browser.d.ts",
   "globalName": "analyticsIntercom",
   "jsnext:main": "lib/analytics-plugin-intercom.es.js",
   "module": "lib/analytics-plugin-intercom.es.js",
@@ -40,6 +42,7 @@
   "files": [
     "dist",
     "lib",
+    "types",
     "README.md"
   ],
   "homepage": "https://github.com/DavidWells/analytics#readme",
