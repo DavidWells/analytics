@@ -47,7 +47,7 @@ const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
     googleAnalytics({
-      measurementIds: ['UA-1234567']
+      measurementIds: ['G-abc123']
     })
   ]
 })
