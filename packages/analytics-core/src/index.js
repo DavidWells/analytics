@@ -638,7 +638,7 @@ function analytics(config = {}) {
       return () => removeMiddleware(handler, position)
     },
     /**
-     * Attach a handler function to an event and only trigger it only once.
+     * Attach a handler function to an event and only trigger it once.
      * @typedef {Function} Once
      * @param  {String} name - Name of event to listen to
      * @param  {Function} callback - function to fire on event
@@ -646,9 +646,9 @@ function analytics(config = {}) {
      *
      * @example
      *
-     * // Fire function only once 'track'
+     * // Fire function only once per 'track'
      * analytics.once('track', ({ payload }) => {
-     *   console.log('This will only triggered once when analytics.track() fires')
+     *   console.log('This is only triggered once when analytics.track() fires')
      * })
      *
      * // Remove listener before it is called
