@@ -58,7 +58,6 @@ function analytics(config = {}) {
   // if (BROWSER) {
   //   console.log('INIT browser')
   // }
-
   // if (SERVER) {
   //   console.log('INIT SERVER')
   // }
