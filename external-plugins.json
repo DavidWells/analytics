@@ -69,5 +69,11 @@
     "name": "PostHog",
     "url": "https://www.npmjs.com/package/@metro-fs/analytics-plugin-posthog",
     "description": "Adds Analytics support for PostHog"
+  },
+  {
+    "name": "Conscia",
+    "url": "https://www.npmjs.com/package/analytics-plugin-conscia",
+    "repo": "https://github.com/conscia/analytics-plugin-conscia",
+    "description": "Adds Analytics support for conscia.ai"
   }
 ]
