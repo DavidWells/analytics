@@ -1,6 +1,6 @@
 {
   "name": "analytics-utils",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Analytics utility functions used by 'analytics' module",
   "author": "David Wells <hello@davidwells.io>",
   "license": "MIT",
@@ -48,7 +48,7 @@
     "watchlist": "^0.2.3"
   },
   "dependencies": {
-    "@analytics/type-utils": "^0.6.1",
+    "@analytics/type-utils": "^0.6.2",
     "dlv": "^1.1.3"
   },
   "peerDependencies": {
