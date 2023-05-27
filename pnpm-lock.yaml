@@ -95,8 +95,8 @@ importers:
 
   packages/analytics:
     specifiers:
-      '@analytics/core': ^0.12.3
-      '@analytics/storage-utils': ^0.4.1
+      '@analytics/core': ^0.12.5
+      '@analytics/storage-utils': ^0.4.2
       '@babel/core': 7.17.0
       '@babel/plugin-proposal-class-properties': 7.16.7
       '@babel/plugin-transform-runtime': 7.17.0
@@ -147,15 +147,15 @@ importers:
 
   packages/analytics-core:
     specifiers:
-      '@analytics/global-storage-utils': ^0.1.6
-      '@analytics/type-utils': ^0.6.1
+      '@analytics/global-storage-utils': ^0.1.7
+      '@analytics/type-utils': ^0.6.2
       '@babel/core': 7.17.0
       '@babel/plugin-proposal-class-properties': 7.16.7
       '@babel/plugin-transform-runtime': 7.17.0
       '@babel/preset-env': 7.16.11
       '@babel/register': 7.17.0
       '@babel/runtime': 7.17.0
-      analytics-utils: ^1.0.11
+      analytics-utils: ^1.0.12
       ava: ^2.2.0
       gen-esm-wrapper: ^1.1.3
       microbundle: ^0.14.2
@@ -212,10 +212,10 @@ importers:
 
   packages/analytics-plugin-aws-pinpoint:
     specifiers:
-      '@analytics/activity-utils': ^0.1.14
-      '@analytics/localstorage-utils': ^0.1.9
+      '@analytics/activity-utils': ^0.1.15
+      '@analytics/localstorage-utils': ^0.1.10
       '@analytics/queue-utils': ^0.1.2
-      '@analytics/session-utils': ^0.1.18
+      '@analytics/session-utils': ^0.1.19
       '@analytics/type-utils': ^0.3.1
       '@aws-sdk/client-pinpoint': ^3.31.0
       '@babel/core': ^7.2.2
@@ -223,7 +223,7 @@ importers:
       '@babel/preset-env': ^7.3.1
       '@babel/register': ^7.15.3
       analytics-plugin-tab-events: ^0.2.1
-      analytics-utils: ^1.0.11
+      analytics-utils: ^1.0.12
       aws-sdk-client-mock: ^0.5.5
       aws4fetch: ^1.0.13
       c8: ^7.10.0
@@ -388,9 +388,9 @@ importers:
 
   packages/analytics-plugin-original-source:
     specifiers:
-      '@analytics/storage-utils': ^0.4.1
-      '@analytics/type-utils': ^0.6.1
-      analytics-utils: ^1.0.11
+      '@analytics/storage-utils': ^0.4.2
+      '@analytics/type-utils': ^0.6.2
+      analytics-utils: ^1.0.12
       concurrently: ^6.1.0
       esm: ^3.2.25
       microbundle: ^0.13.0
@@ -501,7 +501,7 @@ importers:
 
   packages/analytics-util-activity:
     specifiers:
-      '@analytics/listener-utils': ^0.3.1
+      '@analytics/listener-utils': ^0.3.2
       analytics-plugin-tab-events: ^0.2.1
       concurrently: ^6.1.0
       microbundle: ^0.13.0
@@ -518,8 +518,8 @@ importers:
 
   packages/analytics-util-control-flow:
     specifiers:
-      '@analytics/type-utils': ^0.6.1
-      '@analytics/url-utils': ^0.2.2
+      '@analytics/type-utils': ^0.6.2
+      '@analytics/url-utils': ^0.2.3
       concurrently: ^6.1.0
       esm: ^3.2.25
       microbundle: ^0.14.2
@@ -541,7 +541,7 @@ importers:
 
   packages/analytics-util-forms:
     specifiers:
-      '@analytics/type-utils': ^0.6.1
+      '@analytics/type-utils': ^0.6.2
       concurrently: ^6.1.0
       microbundle: ^0.13.0
       servor: ^4.0.2
@@ -556,7 +556,7 @@ importers:
 
   packages/analytics-util-listener:
     specifiers:
-      '@analytics/type-utils': ^0.6.1
+      '@analytics/type-utils': ^0.6.2
       concurrently: ^6.1.0
       esm: ^3.2.25
       microbundle: ^0.14.2
@@ -630,7 +630,7 @@ importers:
 
   packages/analytics-util-redact:
     specifiers:
-      '@analytics/type-utils': ^0.6.1
+      '@analytics/type-utils': ^0.6.2
       '@babel/register': 7.5.5
       ava: ^3.15.0
       concurrently: ^6.0.1
@@ -657,8 +657,8 @@ importers:
 
   packages/analytics-util-scroll:
     specifiers:
-      '@analytics/type-utils': ^0.6.1
-      analytics-utils: ^1.0.11
+      '@analytics/type-utils': ^0.6.2
+      analytics-utils: ^1.0.12
       concurrently: ^6.1.0
       microbundle: ^0.13.0
       servor: ^4.0.2
@@ -674,10 +674,10 @@ importers:
 
   packages/analytics-util-session:
     specifiers:
-      '@analytics/cookie-utils': ^0.2.11
-      '@analytics/global-storage-utils': ^0.1.6
-      '@analytics/session-storage-utils': ^0.0.6
-      analytics-utils: ^1.0.11
+      '@analytics/cookie-utils': ^0.2.12
+      '@analytics/global-storage-utils': ^0.1.7
+      '@analytics/session-storage-utils': ^0.0.7
+      analytics-utils: ^1.0.12
       concurrently: ^6.1.0
       microbundle: ^0.13.0
       servor: ^4.0.2
@@ -695,11 +695,11 @@ importers:
 
   packages/analytics-util-storage:
     specifiers:
-      '@analytics/cookie-utils': ^0.2.11
-      '@analytics/global-storage-utils': ^0.1.6
-      '@analytics/localstorage-utils': ^0.1.9
-      '@analytics/session-storage-utils': ^0.0.6
-      '@analytics/type-utils': ^0.6.1
+      '@analytics/cookie-utils': ^0.2.12
+      '@analytics/global-storage-utils': ^0.1.7
+      '@analytics/localstorage-utils': ^0.1.10
+      '@analytics/session-storage-utils': ^0.0.7
+      '@analytics/type-utils': ^0.6.2
       concurrently: ^6.1.0
       esm: ^3.2.25
       microbundle: ^0.13.0
@@ -722,7 +722,7 @@ importers:
 
   packages/analytics-util-storage-cookie:
     specifiers:
-      '@analytics/global-storage-utils': ^0.1.6
+      '@analytics/global-storage-utils': ^0.1.7
       concurrently: ^6.1.0
       microbundle: ^0.13.0
       servor: ^4.0.2
@@ -737,7 +737,7 @@ importers:
 
   packages/analytics-util-storage-global:
     specifiers:
-      '@analytics/type-utils': ^0.6.1
+      '@analytics/type-utils': ^0.6.2
       concurrently: ^6.1.0
       microbundle: ^0.13.0
       servor: ^4.0.2
@@ -752,7 +752,7 @@ importers:
 
   packages/analytics-util-storage-local:
     specifiers:
-      '@analytics/global-storage-utils': ^0.1.6
+      '@analytics/global-storage-utils': ^0.1.7
       concurrently: ^6.1.0
       microbundle: ^0.13.0
       servor: ^4.0.2
@@ -767,10 +767,10 @@ importers:
 
   packages/analytics-util-storage-remote:
     specifiers:
-      '@analytics/type-utils': ^0.6.1
+      '@analytics/type-utils': ^0.6.2
       '@babel/core': ^7.4.5
       '@babel/preset-env': ^7.4.5
-      analytics-utils: ^1.0.11
+      analytics-utils: ^1.0.12
       cross-storage: ^1.0.0
     dependencies:
       '@analytics/type-utils': link:../analytics-util-types
@@ -782,7 +782,7 @@ importers:
 
   packages/analytics-util-storage-session:
     specifiers:
-      '@analytics/global-storage-utils': ^0.1.6
+      '@analytics/global-storage-utils': ^0.1.7
       concurrently: ^6.1.0
       microbundle: ^0.13.0
       servor: ^4.0.2
@@ -813,7 +813,7 @@ importers:
 
   packages/analytics-util-url:
     specifiers:
-      '@analytics/type-utils': ^0.6.1
+      '@analytics/type-utils': ^0.6.2
       concurrently: ^6.1.0
       esm: ^3.2.25
       microbundle: ^0.14.2
@@ -832,8 +832,8 @@ importers:
 
   packages/analytics-util-visitor-source:
     specifiers:
-      '@analytics/type-utils': ^0.6.1
-      '@analytics/url-utils': ^0.2.2
+      '@analytics/type-utils': ^0.6.2
+      '@analytics/url-utils': ^0.2.3
       concurrently: ^6.1.0
       esm: ^3.2.25
       microbundle: ^0.14.2
@@ -853,7 +853,7 @@ importers:
 
   packages/analytics-utils:
     specifiers:
-      '@analytics/type-utils': ^0.6.1
+      '@analytics/type-utils': ^0.6.2
       concurrently: ^6.1.0
       dlv: ^1.1.3
       microbundle: ^0.13.0
@@ -886,11 +886,9 @@ importers:
       '@babel/plugin-proposal-decorators': ^7.8.3
       babel-eslint: ^10.0.3
       hoist-non-react-statics: ^3.3.2
-      mini-create-react-context: ^0.4.1
       tiny-invariant: ^1.1.0
     dependencies:
       hoist-non-react-statics: 3.3.2
-      mini-create-react-context: 0.4.1
       tiny-invariant: 1.1.0
     devDependencies:
       '@babel/plugin-proposal-decorators': 7.15.8
@@ -13939,16 +13937,6 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /mini-create-react-context/0.4.1:
-    resolution: {integrity: sha512-YWCYEmd5CQeHGSAKrYvXgmzzkrvssZcuuQDDeqkT+PziKGMgE+0MCCtcKbROzocGBG1meBLl2FotlRwf4gAzbQ==}
-    peerDependencies:
-      prop-types: ^15.0.0
-      react: ^0.14.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
-    dependencies:
-      '@babel/runtime': 7.15.4
-      tiny-warning: 1.0.3
-    dev: false
-
   /minimalistic-assert/1.0.1:
     resolution: {integrity: sha512-UtJcAD4yEaGtjPezWuO9wC4nwUnVH/8/Im3yEHQP4b67cXlD/Qr9hdITCU1xDbSEXg2XKNaP8jsReV7vQd00/A==}
     dev: true
@@ -18151,10 +18139,6 @@ packages:
 
   /tiny-invariant/1.1.0:
     resolution: {integrity: sha512-ytxQvrb1cPc9WBEI/HSeYYoGD0kWnGEOR8RY6KomWLBVhqz0RgTwVO9dLrGz7dC+nN9llyI7OKAgRq8Vq4ZBSw==}
-    dev: false
-
-  /tiny-warning/1.0.3:
-    resolution: {integrity: sha512-lBN9zLN/oAf68o3zNXYrdCt1kP8WsiGW8Oo2ka41b2IM5JL/S1CTyX1rW0mb/zSuJun0ZUrDxx4sqvYS2FWzPA==}
     dev: false
 
   /tmp/0.0.33:
