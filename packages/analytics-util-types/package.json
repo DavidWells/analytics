@@ -21,7 +21,8 @@
   "sideEffects": false,
   "scripts": {
     "test": "uvu tests -r esm -i setup",
-    "types": "tsc --noEmit false --emitDeclarationOnly true",
+    "types": "echo 'BROKEN COMMAND tsc --noEmit false --emitDeclarationOnly true'",
+    "types:broken": "tsc -p --noEmit false --emitDeclarationOnly true",
     "start": "npm run sync && concurrently 'npm:watch:*' 'npm:copy' 'npm:serve'",
     "serve": "servor dist index.html 8081 --reload --browse",
     "copy": "watchlist examples -- npm run sync",
