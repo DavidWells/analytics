@@ -51,7 +51,7 @@ function googleTagManager(pluginConfig = {}) {
 
       const scriptSrc = customScriptSrc || defaultScriptSrc;
 
-      if (!scriptLoaded(containerId)) {
+      if (!scriptLoaded(containerId, scriptSrc)) {
         /* eslint-disable */
         (function(w, d, s, l, i) {
           w[l] = w[l] || [];
