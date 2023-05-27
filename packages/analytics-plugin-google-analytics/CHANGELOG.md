@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.7](https://github.com/DavidWells/analytics/compare/@analytics/google-analytics@1.0.6...@analytics/google-analytics@1.0.7) (2023-05-27)
+
+**Note:** Version bump only for package @analytics/google-analytics
+
+
+
+
+
 ## [1.0.6](https://github.com/DavidWells/analytics/compare/@analytics/google-analytics@1.0.5...@analytics/google-analytics@1.0.6) (2023-05-27)
 
 **Note:** Version bump only for package @analytics/google-analytics
