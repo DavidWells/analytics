@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.4](https://github.com/DavidWells/analytics/compare/@analytics/google-tag-manager@0.5.3...@analytics/google-tag-manager@0.5.4) (2023-05-27)
+
+
+### Bug Fixes
+
+* missing script src ([fe8e86f](https://github.com/DavidWells/analytics/commit/fe8e86f0b441d1908a07368ccc3a3f2f6c9ae1ee))
+
+
+
+
+
 ## [0.5.3](https://github.com/DavidWells/analytics/compare/@analytics/google-tag-manager@0.5.2...@analytics/google-tag-manager@0.5.3) (2022-11-09)
 
 

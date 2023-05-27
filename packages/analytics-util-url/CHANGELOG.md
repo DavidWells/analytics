@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.2](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-url/compare/@analytics/url-utils@0.2.1...@analytics/url-utils@0.2.2) (2023-05-27)
+
+**Note:** Version bump only for package @analytics/url-utils
+
+
+
+
+
 ## [0.2.1](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-url/compare/@analytics/url-utils@0.2.0...@analytics/url-utils@0.2.1) (2022-03-18)
 
 **Note:** Version bump only for package @analytics/url-utils
