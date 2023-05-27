@@ -66,7 +66,7 @@ const defaultConfig = {
  * @example
  *
  * googleAnalytics({
- *   measurementIds: ['UA-1234567']
+ *   measurementIds: ['G-abc123']
  * })
  */
 function googleAnalytics(pluginConfig = {}) {

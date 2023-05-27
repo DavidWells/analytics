@@ -7,19 +7,11 @@ Integration with Countly for [analytics](https://www.npmjs.com/package/analytics
 
 This analytics plugin will load Countly library and allow to send tracking sessions, views, clicks, custom events, user data, etc.
 
-## Installation
-
-```bash
-npm install analytics
-npm install @analytics/countly
-```
-
 <!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
 <details>
 <summary>Click to expand</summary>
 
 - [Installation](#installation)
-- [Installation](#installation-1)
 - [How to use](#how-to-use)
 - [Platforms Supported](#platforms-supported)
 - [Browser usage](#browser-usage)
@@ -37,7 +29,7 @@ npm install @analytics/countly
 
 ```bash
 npm install analytics
-npm install @analytics/amplitude
+npm install @analytics/countly
 ```
 
 <!-- AUTO-GENERATED-CONTENT:START (PLUGIN_DOCS) -->

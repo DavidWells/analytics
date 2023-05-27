@@ -95,7 +95,7 @@ const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
     googleAnalytics({
-      measurementIds: ['UA-1234567']
+      measurementIds: ['G-abc123']
     })
   ]
 })
@@ -140,7 +140,7 @@ Below are additional implementation examples.
           app: 'my-app-name',
           plugins: [
             analyticsGa.init({
-              measurementIds: ['UA-1234567']
+              measurementIds: ['G-abc123']
             })
           ]
         })
@@ -194,7 +194,7 @@ Below are additional implementation examples.
           debug: true,
           plugins: [
             analyticsGa({
-              measurementIds: ['UA-1234567']
+              measurementIds: ['G-abc123']
             })
             // ... add any other third party analytics plugins
           ]
