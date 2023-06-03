@@ -32,6 +32,10 @@ import './pluginTypeDef'
  * @param {string} [config.app] - Name of site / app
  * @param {string} [config.version] - Version of your app
  * @param {boolean} [config.debug] - Should analytics run in debug mode
+ * @param {boolean} [config.initialUser] - User information already known on initialization
+ * @param {string} [config.initialUser.userId] - User ID already known on initialization
+ * @param {string} [config.initialUser.anonymousId] - Anonymous ID (session ID) already known on initialization
+ * @param {object} [config.initialUser.traits] - User traits alreayd know on initialization
  * @param {Array.<AnalyticsPlugin>}  [config.plugins] - Array of analytics plugins
  * @return {AnalyticsInstance} Analytics Instance
  * @example
@@ -61,7 +65,7 @@ function analytics(config = {}) {
   // if (SERVER) {
   //   console.log('INIT SERVER')
   // }
-  
+
   /* Parse plugins array */
   const parsedOptions = (config.plugins || []).reduce((acc, plugin) => {
     if (isFunction(plugin)) {
@@ -124,7 +128,7 @@ function analytics(config = {}) {
     middlewares: [],
     events: []
   })
-  
+
   /* Storage by default is set to global & is not persisted */
   const storage = (config.storage) ? config.storage : {
     getItem: get,
@@ -159,7 +163,7 @@ function analytics(config = {}) {
     // throw new Error(`${ERROR_URL}3`)
     throw new Error('Abort disabled inListener')
   }
-  
+
   // Parse URL parameters
   const params = paramsParse()
   // Initialize visitor information
@@ -176,8 +180,8 @@ function analytics(config = {}) {
   }
 
   /**
-   * Async Management methods for plugins. 
-   * 
+   * Async Management methods for plugins.
+   *
    * This is also where [custom methods](https://bit.ly/329vFXy) are loaded into the instance.
    * @typedef {Object} Plugins
    * @property {EnablePlugin} enable - Set storage value
@@ -274,7 +278,7 @@ function analytics(config = {}) {
     // Merge in custom plugin methods
     ...parsedOptions.methods
   }
-  
+
   let readyCalled = false
   /**
    * Analytic instance returned from initialization
@@ -290,12 +294,15 @@ function analytics(config = {}) {
    * @property {GetState} getState - Get data about user, activity, or context.
    * @property {Storage} storage - storage methods
    * @property {Plugins} plugins - plugin methods
+   * @property {SetAnonymousId} setAnonymousId - set anonymousId value for user
    */
+
   const instance = {
     /**
     * Identify a user. This will trigger `identify` calls in any installed plugins and will set user data in localStorage
     * @typedef {Function} Identify
     * @param  {String}   userId  - Unique ID of user
+    * @param  {String}   anonymousId  - Anonymous ID (session ID) of user
     * @param  {Object}   [traits]  - Object of user traits
     * @param  {Object}   [options] - Options to pass to identify call
     * @param  {Function} [callback] - Callback function after identify completes
@@ -801,9 +808,11 @@ function analytics(config = {}) {
         })
       },
     },
-    /*
+    /**
      * Set the anonymous ID of the visitor
-     * @param {String} anonymousId - anonymous Id to set
+     *
+     * @typedef {Function} SetAnonymousId
+     * @param {String} anonymousId
      * @param {Object} [options] - storage options
      *
      * @example
@@ -886,7 +895,7 @@ function analytics(config = {}) {
     }
     return acc
   }, {})
-  
+
   const initialState = {
     context: initialConfig,
     user: visitorInfo,
@@ -940,7 +949,7 @@ function analytics(config = {}) {
 
   const enabledPlugins = pluginKeys.filter((name) => parsedOptions.pluginEnabled[name])
   const disabledPlugins = pluginKeys.filter((name) => !parsedOptions.pluginEnabled[name])
- 
+
   /* Register analytic plugins */
   store.dispatch({
     type: EVENTS.registerPlugins,
