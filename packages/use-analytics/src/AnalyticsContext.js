@@ -1,7 +1,7 @@
-import React from 'react'
+import { createContext } from 'react'
 
 const createNamedContext = name => {
-  const context = React.createContext()
+  const context = createContext()
   context.displayName = name
 
   return context
