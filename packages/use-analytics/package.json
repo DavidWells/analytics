@@ -16,8 +16,8 @@
     "node": ">=10"
   },
   "scripts": {
-    "build": "microbundle --no-compress --format modern,cjs",
-    "watch": "microbundle watch --no-compress --format modern,cjs",
+    "build": "microbundle --no-compress --format modern,cjs --jsx 'React.createElement' --jsxImportSource react --globals react/jsx-runtime=jsx",
+    "watch": "microbundle watch --no-compress --format modern,cjs --jsx 'React.createElement' --jsxImportSource react --globals react/jsx-runtime=jsx",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish"
