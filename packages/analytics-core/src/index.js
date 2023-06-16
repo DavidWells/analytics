@@ -61,7 +61,6 @@ function analytics(config = {}) {
   // if (SERVER) {
   //   console.log('INIT SERVER')
   // }
-  
   /* Parse plugins array */
   const parsedOptions = (config.plugins || []).reduce((acc, plugin) => {
     if (isFunction(plugin)) {
