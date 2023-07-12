@@ -27,7 +27,8 @@
     "tiny-invariant": "^1.1.0"
   },
   "peerDependencies": {
-    "react": ">=16"
+    "react": ">=16",
+    "analytics": "^0.5.2"
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.8.3",
