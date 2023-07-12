@@ -10,6 +10,7 @@
     "url": "git+https://github.com/DavidWells/analytics.git"
   },
   "main": "dist/index.js",
+  "types": "index.d.ts",
   "module": "dist/index.modern.js",
   "source": "src/index.js",
   "engines": {
@@ -35,7 +36,8 @@
     "babel-eslint": "^10.0.3"
   },
   "files": [
-    "dist"
+    "dist",
+    "index.d.ts"
   ],
   "keywords": [
     "analytics",
