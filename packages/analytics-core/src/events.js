@@ -131,7 +131,7 @@ export const coreEvents = [
   /*
    * `loadPlugin` - Fires when 'analytics.loadPlugin()' is called
    */
-  // 'loadPlugin',
+  'loadPlugin',
   /******************
    * Browser activity events
    ******************/
