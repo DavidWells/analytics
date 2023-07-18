@@ -75,5 +75,11 @@
     "url": "https://www.npmjs.com/package/analytics-plugin-conscia",
     "repo": "https://github.com/conscia/analytics-plugin-conscia",
     "description": "Adds Analytics support for conscia.ai"
+  },
+  {
+    "name": "Planhat",
+    "url": "https://www.npmjs.com/package/analytics-plugin-planhat",
+    "repo": "https://github.com/WarreH/analytics-plugin-planhat",
+    "description": "Adds Analytics support for Planhat"
   }
 ]
