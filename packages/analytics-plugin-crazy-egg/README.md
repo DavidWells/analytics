@@ -6,9 +6,9 @@ description: Using the CrazyEgg plugin
 
 Integration with [crazy egg](https://www.crazyegg.com/) for [analytics](https://www.npmjs.com/package/analytics)
 
-Crazy egg adds heat mapping, A/B testing, and session recording functionality to websites and applications. This allows developers, marketers, and product owners to see what is working and what areas of an application might need improvements.
+Crazy Egg adds heat mapping, A/B testing, and session recording functionality to websites and applications. This allows developers, marketers, and product owners to see what is working and what areas of an application might need improvements.
 
-This analytics plugin will load crazy egg into your application.
+This analytics plugin will load Crazy Egg into your application.
 
 [View the docs](https://getanalytics.io/plugins/crazyegg/).
 
@@ -41,18 +41,18 @@ npm install @analytics/crazy-egg
 
 ## How to use
 
-The `@analytics/crazy-egg` package works in [the browser](#browser-usage). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
+The `@analytics/crazy-egg` package works in [the browser](#browser-usage). To use, install the package, include it in your project, and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
 
 Below is an example of how to use the browser plugin.
 
 ```js
 import Analytics from 'analytics'
-import exports from '@analytics/crazy-egg'
+import crazyEgg from '@analytics/crazy-egg'
 
 const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
-    // This will load crazy egg on to the page
+    // This will load Crazy Egg onto the page
     crazyEgg({
       accountNumber: '1234578'
     })
@@ -69,18 +69,18 @@ The `@analytics/crazy-egg` package works in [the browser](#browser-usage)
 
 ## Browser usage
 
-See below from browser API
+See below from the browser API
 
 ### Browser API
 
 ```js
 import Analytics from 'analytics'
-import exports from '@analytics/crazy-egg'
+import crazyEgg from '@analytics/crazy-egg'
 
 const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
-    // This will load crazy egg on to the page
+    // This will load Crazy Egg onto the page
     crazyEgg({
       accountNumber: '1234578'
     })
@@ -117,7 +117,7 @@ Below are additional implementation examples.
         var Analytics = _analytics.init({
           app: 'my-app-name',
           plugins: [
-            // This will load crazy egg on to the page
+            // This will load Crazy Egg onto the page
             crazyEgg({
               accountNumber: '1234578'
             })
@@ -151,17 +151,17 @@ Below are additional implementation examples.
       </script>
       <script type="module">
         import analytics from 'https://unpkg.com/analytics/lib/analytics.browser.es.js?module'
-        import analyticsCrazyEgg from 'https://unpkg.com/@analytics/crazy-egg/lib/analytics-plugin-crazy-egg.browser.es.js?module'
+        import crazyEgg from 'https://unpkg.com/@analytics/crazy-egg/lib/analytics-plugin-crazy-egg.browser.es.js?module'
         /* Initialize analytics */
         const Analytics = analytics({
           app: 'analytics-html-demo',
           debug: true,
           plugins: [
-            // This will load crazy egg on to the page
+            // This will load Crazy Egg onto the page
             crazyEgg({
               accountNumber: '1234578'
             })
-            // ... add any other third party analytics plugins
+            // ... add any other third-party analytics plugins
           ]
         })
       </script>
@@ -185,18 +185,18 @@ Initialize analytics with the crazy-egg plugin and the crazy-egg heat mapping sc
 
 ```js
 import Analytics from 'analytics'
-import crazyEggPlugin from '@analytics/crazy-egg'
+import crazyEgg from '@analytics/crazy-egg'
 
 const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
-    crazyEggPlugin({
+    crazyEgg({
       accountNumber: '12345678'
     }),
   ]
 })
 
-// Crazy egg now loaded!
+// Crazy Egg is now loaded!
 ```
 
 See the [full list of analytics provider plugins](https://getanalytics.io/plugins/) in the main repo.
