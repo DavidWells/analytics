@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/DavidWells/analytics/compare/@analytics/simple-analytics@0.3.4...@analytics/simple-analytics@0.4.0) (2023-11-02)
+
+
+### Features
+
+* add allowParams to simple analytics ([844d2bc](https://github.com/DavidWells/analytics/commit/844d2bcc6d9845e84f91e9f6a03a07074acd7eda)), closes [#410](https://github.com/DavidWells/analytics/issues/410)
+
+
+
+
+
 ## [0.3.4](https://github.com/DavidWells/analytics/compare/@analytics/simple-analytics@0.3.3...@analytics/simple-analytics@0.3.4) (2022-06-10)
 
 
