@@ -145,9 +145,16 @@ const analytics = Analytics({
 
 | Option | description |
 |:---------------------------|:-----------|
-| `writeKey` <br/>**required** - string| Your segment writeKey |
-| `flushInterval` <br/>_optional_ - boolean| Segment sdk flushInterval. Docs https://bit.ly/2H2jJMb |
+| `writeKey` <br/>**required** - string| Key that corresponds to your Segment.io project |
 | `disableAnonymousTraffic` <br/>_optional_ - boolean| Disable loading segment for anonymous visitors |
+| `host` <br/>_optional_ - string| The base URL of the API. Default: "https://api.segment.io" |
+| `path` <br/>_optional_ - string| The API path route. Default: "/v1/batch" |
+| `maxRetries` <br/>_optional_ - number| The number of times to retry flushing a batch. Default: 3 |
+| `maxEventsInBatch` <br/>_optional_ - number| The number of messages to enqueue before flushing. Default: 15 |
+| `flushInterval` <br/>_optional_ - number| The number of milliseconds to wait before flushing the queue automatically. Default: 10000 |
+| `httpRequestTimeout` <br/>_optional_ - number| The maximum number of milliseconds to wait for an http request. Default: 10000 |
+| `disable` <br/>_optional_ - boolean| Disable the analytics library. All calls will be a noop. Default: false. |
+| `httpClient` <br/>_optional_ - HTTPFetchFn| Supply a default http client implementation |
 
 ## Additional examples
 
