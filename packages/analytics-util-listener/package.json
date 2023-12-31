@@ -1,6 +1,6 @@
 {
   "name": "@analytics/listener-utils",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "Backward compatible event listener library for attaching & detaching event handlers",
   "author": "David Wells",
   "license": "MIT",

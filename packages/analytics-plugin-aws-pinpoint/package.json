@@ -1,6 +1,6 @@
 {
   "name": "@analytics/aws-pinpoint",
-  "version": "0.7.10",
+  "version": "0.7.11",
   "description": "AWS Pinpoint integration for 'analytics' module",
   "projectMeta": {
     "provider": {
@@ -64,7 +64,7 @@
     "failWithoutAssertions": false
   },
   "dependencies": {
-    "@analytics/activity-utils": "^0.1.15",
+    "@analytics/activity-utils": "^0.1.16",
     "@analytics/localstorage-utils": "^0.1.10",
     "@analytics/queue-utils": "^0.1.2",
     "@analytics/session-utils": "^0.1.19",

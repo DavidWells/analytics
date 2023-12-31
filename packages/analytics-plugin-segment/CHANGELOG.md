@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.1.0](https://github.com/DavidWells/analytics/compare/@analytics/segment@1.1.4...@analytics/segment@2.1.0) (2023-12-31)
+
+
+### Features
+
+* update node segment package BREAKING ([5338699](https://github.com/DavidWells/analytics/commit/5338699fe9b5107f5fb0885a56c71f29aa96e4a7))
+
+
+
+
+
 ## [1.1.4](https://github.com/DavidWells/analytics/compare/@analytics/segment@1.1.3...@analytics/segment@1.1.4) (2022-11-09)
 
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-listener/compare/@analytics/listener-utils@0.3.2...@analytics/listener-utils@0.4.0) (2023-12-31)
+
+
+### Features
+
+* add support for comma separated values & dom arrays ([ab39bb5](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-listener/commit/ab39bb5c89a217f6a777413d26d8004880cd6d76))
+
+
+
+
+
 ## [0.3.2](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-listener/compare/@analytics/listener-utils@0.3.1...@analytics/listener-utils@0.3.2) (2023-05-27)
 
 **Note:** Version bump only for package @analytics/listener-utils
