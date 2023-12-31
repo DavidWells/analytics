@@ -33,13 +33,28 @@ test('Heading click handler works', async () => {
 test('{ once : true }', async () => {
   const button = ENV.getSelector('#once')
   assert.ok(button)
-  assert.is(window['onceCount'] === 0, true)
+  assert.is(window['onceCount'] === 0, true, 'one')
   button.click()
   assert.is(window['onceCount'] === 1, true)
   button.click()
   button.click()
   button.click()
   assert.is(window['onceCount'] === 1, true)
+})
+
+/* Once listener works */
+test('{ once : true } multiple items #list-click-once li', async () => {
+  const listItems = ENV.getSelectorAll('#list-click-once li')
+  assert.is(window['liClickOnceCount'] === 0, true, 'one')
+  listItems[0].click()
+  listItems[0].click() // should be onced
+  assert.is(window['liClickOnceCount'] === 1, true)
+  listItems[1].click()
+  listItems[1].click() // should be onced
+  assert.is(window['liClickOnceCount'] === 2, true)
+  listItems[2].click()
+  listItems[2].click() // should be onced
+  assert.is(window['liClickOnceCount'] === 3, true)
 })
 
 /* Listeners are recursive in nature */
