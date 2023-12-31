@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>Listener utils</title>
+    <meta charset="utf-8">
     <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVQI12P4//8/AAX+Av7czFnnAAAAAElFTkSuQmCC">
     <script type="text/javascript" src="./browser/listener-utils.js" charset="utf-8"></script>
     <style media="screen">
@@ -10,6 +11,7 @@
       }
       body {
         display: flex;
+        padding-bottom: 140px;
       }
       label {
         display: block;
@@ -52,116 +54,33 @@
         .github-corner:hover .octo-arm { animation:none }
         .github-corner .octo-arm { animation: octocat-wave .56s ease-in-out }
       }
+      button {
+        padding: 4px 8px;
+        cursor: pointer;
+        margin-right: 8px;
+      }
+      button:disabled {
+        cursor: not-allowed;
+      }
     </style>
+    <script type="text/javascript">
+      console.log('utilListener API', utilListener);
+      function delay(ms) {
+        return new Promise(res => setTimeout(res, ms))
+      }
+      /* Counts for tests */
+      window.onceCount = 0
+      window.liOnceCount = 0
+      window.liClickOnceCount = 0
+    </script>
   </head>
   <body>
     <a href="https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-listener" class="github-corner" aria-label="View source on GitHub"><svg viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin:130px 106px" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
-
-    <div>
-      <h2 id='heading'>Event listeners demo</h2>
-      <p>Open up console to see logs. View page source for example code</p>
-      <button id="once">
-        Run once
-      </button>
-      <button id="three-times">
-        Run only 3 times
-      </button>
-      <button id="once-timeout">
-        This only runs only once every 2 seconds
-      </button>
-      <br />
-      <br />
-      <button id="api">
-        Smart Fetch 'API button'. Disables self while request in flight
-      </button>
-      <button id="api-disable">
-        Disable "API button" button 
-      </button>
-      <button id="api-enable">
-        Enable "API button" button 
-      </button>
-      <br />
-      <br />
-      <button id="logger">
-        Simple console log button
-      </button>
-      <button id="disable-log">
-        Disable "Simple console log button" button 
-      </button>
-      <button id="enable-log">
-        Enable "Simple console log button" button 
-      </button>
-      <br />
-      <br />
-      <button id="disable-enable-example">
-        Click button to right
-      </button>
-      <button id="disable-enable-start">
-        Disable then re-enable button 
-      </button>
-      <br />
-      <br />
-      <div>
-        <div>
-          <h3>Click example on multiple <code>li</code></h3>
-          <button id="disable-list">
-            Disable Click List handlers
-          </button>
-          <button id="enable-list">
-            Enable Click List handlers
-          </button>
-          <ul id='click-list'>
-            <li>Click one</li>
-            <li>Click Two</li>
-            <li>Click Three</li>
-          </ul>
-          <h3>Hover once example on multiple <code>li</code></h3>
-          <ul id='list-two'>
-            <li>Hover one</li>
-            <li>Hover two</li>
-            <li>Hover three</li>
-          </ul>
-          <h3>Click example on multiple <code>li</code> only 1 time ever</h3>
-          <ul id='click-list-once-ever'>
-            <li>Click once one</li>
-            <li>Click once two</li>
-            <li>Click once three</li>
-          </ul>
-        </div>
-      </div>
-      <br />
-      <br />
-      <span id='span-one'>
-        Span one
-      </span>
-      <span id='span-two'>
-        Span two
-      </span>
-      <br />
-      <br id='tester' />
-      <span id='span-three'>
-        Span three
-      </span>
-      <span id='span-four'>
-        Span four
-      </span>
-      <div>
-        <h3>Throw error</h3>
-        <button id="fire-error">
-          Fire test error
-        </button>
-      </div>
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-    </div>
-  
-    <script type="text/javascript">
-      console.log('utilListener API', utilListener)
-      const { addListener, removeListener, addWindowEvent, once, onError, onLoad } = utilListener
-
+    <script>
+      /* import { addWindowEvent, onError, onLoad } from '@analytics/listener-utils' */
+      const { addWindowEvent, onError, onLoad } = utilListener
+      
+      /* Window events */
       addWindowEvent('onload', () => {
         console.log('load zero')
       })
@@ -189,31 +108,258 @@
       })
       window.onerror = onError((msg) => {
         console.log('onerror three', msg)
-      })
-
-      addListener('#fire-error', ['click'], (e) => {
-        throw new Error('test')
-      })
-
+      });
+    </script>
+    <div>
+      <script type="text/javascript">
+        /* import { addListener, removeListener, once } from '@analytics/listener-utils' */
+        const { addListener, removeListener, once } = utilListener
+        // console.log('addListener', addListener)
+        // console.log('removeListener', removeListener)
+        // console.log('once', once);
+      ;</script>
+      
+      <h2 id='heading'>Event listeners demo</h2>
+      <script type="text/javascript">
       addListener('#heading', ['mouseover', 'click'], (e) => {
         console.log('Change heading color!')
         e.target.style.color = `#${Math.floor(Math.random()*16777215).toString(16)}`
+      });
+      </script>
+
+      <p>Open up console to see logs. View page source for example code</p>
+      
+
+      <button id="once">
+        Run once via { once: true } option
+      </button>
+      <script>
+      // Run once via once options
+      const onceButton = document.querySelector('#once')
+      addListener(onceButton, 'click', (e) => {
+        console.log('This will only run once')
+        e.target.disabled = true
+        window.onceCount = window.onceCount + 1 // for tests
+      }, { once: true });
+      </script>
+
+
+      <button id="disabled-after-three-clicks">
+        Disable after 3 clicks
+      </button>
+      <script>
+      // Run three times via counter + cleanup function
+      let count = 0
+      const removeAfterThreeFn = addListener(document.querySelector('#disabled-after-three-clicks'), 'click', (e) => {
+        count = count + 1
+        console.log(`This will only run three times. count: ${count}`)
+        if (count === 3) {
+          e.target.disabled = true
+          removeAfterThreeFn()
+        }
+      });
+      </script>
+
+      <button id="two-second-throttle">
+        This only runs only once every 2 seconds
+      </button>
+      <script>
+      /* Throttle. Example. Note not extra throttle utility is needed */
+      const removeThrottledHandler = addListener(document.querySelector('#two-second-throttle'), 'click', () => {
+        console.log(`Only triggers once every 2 seconds, via reAttachHandler ${new Date()}`)
+        const reAttachThrottledHandler = removeThrottledHandler()
+        setTimeout(() => {
+          const disableAgain = reAttachThrottledHandler()
+          // It's possible to disable and re-enable listener whenever you wish
+        }, 2000)
+      })
+      </script>
+
+      <br />
+      <br />
+      
+      <button id="api">
+        ▶️ Smart Fetch 'API button'. Disables self while request in flight
+      </button>
+      <button id="api-disable">
+        🛑 Disable "API button" button 
+      </button>
+      <button id="api-enable">
+        🟢 Enable "API button" button 
+      </button>
+      <script>
+      /* Detach self example */
+      const apiButton = document.querySelector('#api')
+      const disableAPIClickHandler = addListener(apiButton, 'click', async (e) => {
+        console.log('API button wont call api again until the request has finished.')
+        console.log('Click this multiple times and see network tab')
+        // Fetch in progress disable click handler to avoid duplicate calls
+        const reEnableAPIClickHandler = disableAPIClickHandler()
+        const readyIcon = '▶️'
+        const loadingIcon = '🔄'
+        e.target.innerText = e.target.innerText.replace(readyIcon, loadingIcon)
+        console.log('... Simulated 1.5 sec delay for demo ...')
+        await delay(1500)
+        console.log('... Begin real api call to swapi.dev ...')
+        // Make API call
+        fetch(`https://swapi.dev/api/people/?search=l`)
+          .then((response) => {
+            return response.json()
+          })
+          .then((json) => {
+            console.log("api call result", json.results)
+            // Success! Reattach event handler
+            console.log('Ready to make another API call. You may click the button again')
+            e.target.innerText = e.target.innerText.replace(loadingIcon, readyIcon)
+            reEnableAPIClickHandler()
+          })
+          .catch((err) => {
+            console.log('API error', err)
+            // Error! Reattach event handler
+            console.log('Ready to make another API call')
+            e.target.innerText = e.target.innerText.replace(loadingIcon, readyIcon)
+            reEnableAPIClickHandler()
+          })
       })
 
+      const apiDisableButton = document.querySelector('#api-disable')
+      let reEnableApiListener
+      addListener(apiDisableButton, 'click', () => {
+        console.log('Disable API button')
+        reEnableApiListener = disableAPIClickHandler()
+        apiButton.disabled = true
+      })
+
+      const apiEnableButton = document.querySelector('#api-enable')
+      addListener(apiEnableButton, 'click', () => {
+        if (!reEnableApiListener) {
+          console.log('API button already enabled. Disable it first')
+          return
+        }
+        console.log('Re-enable API button')
+        reEnableApiListener()
+        apiButton.disabled = false
+      });
+      </script>
+
+      
+      <br />
+      <br />
+
+
+      <button id="click-me">
+        Click Me
+      </button>
+      <button id="disable-click-me">
+        Disable "Click Me" button 
+      </button>
+      <button id="enable-click-me">
+        Enable "Click Me" button 
+      </button>
+      <script>
+      const simpleButton = document.querySelector('#click-me')
+      const simpleFunction = () => {
+        console.log('"Click Me" button clicked!!!!')
+      }
+      addListener(simpleButton, 'click', simpleFunction);
+
+      let reAttach
+      addListener(document.querySelector('#disable-click-me'), 'click', () => {
+        console.log('Remove "Click Me" button function from other button')
+        reAttach = removeListener(simpleButton, 'click', simpleFunction);
+        console.log('reAttach', reAttach)
+        // optional reattach function
+      })
+
+      addListener('#enable-click-me', 'click', () => {
+        console.log('Enable  "Click Me" button')
+        reAttach(true)
+        console.log('done')
+      });
+      </script>
+
+
+
+      <br />
+      <br />
+      <button id="disable-enable-example">
+        🔴 Not clickable
+      </button>
+      <button id="disable-enable-start">
+        ✅ Click to enable button to left
+      </button>
+      <script>
+      const exampleFunction = () => {
+        console.log('Logger activated')
+      }
+
+      const timeout = 5000
+      const timedDelayButton = document.getElementById('disable-enable-example')
+      let hasListener
+      addListener('#disable-enable-start', 'click', async () => {
+        if (hasListener) {
+          console.log('in progress')
+          return
+        }
+
+        console.log('🟢 Attach listener addListener to timedDelayButton')
+        const tearDownOne = addListener(timedDelayButton, 'click', exampleFunction)
+        hasListener = tearDownOne
+        timedDelayButton.innerText = '🟢 Is clickable for 5 sec...'
+        console.log('wait 5 sec...')
+        await delay(timeout)
+
+        // Disable listener
+        console.log('🔴 detach listener addListener from timedDelayButton 1')
+        const reEnableOne = tearDownOne()
+        timedDelayButton.innerText = '🔴 Not clickable for 5 sec...'
+        console.log('wait 5 sec...')
+        await delay(timeout)
+        
+        // enable listener
+        console.log('🟢 Attach listener addListener to timedDelayButton 1')
+        const tearDownTwo = reEnableOne()
+        timedDelayButton.innerText = '🟢 Is clickable for 5 sec...'
+        console.log('wait 5 sec...')
+        await delay(timeout)
+        // Disable listener
+
+        console.log('🔴  detach listener addListener from timedDelayButton 2')
+        const reEnableTwo = tearDownTwo()
+        timedDelayButton.innerText = '🔴 Not clickable for 5 sec...'
+        hasListener = null
+      });
+      </script>
+
+
+
+      <br />
+      <br />
+
+
+      <div>
+        <h3>Click example on multiple <code>li</code></h3>
+        <button id="disable-list">
+          Disable Click List handlers
+        </button>
+        <button id="enable-list">
+          Enable Click List handlers
+        </button>
+        <ul id='click-list'>
+          <li>Click one</li>
+          <li>Click Two</li>
+          <li>Click Three</li>
+        </ul>
+      </div>
+      <script>
       /* Click listener on multiple items */
       const removeListClickListener = addListener('#click-list li', 'click', (e) => {
         console.log(`Clicked <li> ${e.target.innerText}`, e.target)
       })
 
-      /* Hover listener on multiple items with once */
-      const listTwo = document.querySelectorAll('#list-two li')
-      addListener(listTwo, ['mouseover'], (e) => {
-        console.log(`Hovered <li> ${e.target.innerText}. Fired only once`, e.target)
-      }, { once: true })
-
       var addBackListListener
       addListener('#disable-list', 'click', () => {
-        console.log('disable list')
+        console.log('disable list click handler')
         addBackListListener = removeListClickListener()
       })
       
@@ -222,152 +368,233 @@
           return console.log('List click handlers already active, remove them first to reattach')
         }
         addBackListListener()
-      })
+      });
+      </script>
 
-      addListener('#click-list-once-ever li', 'click', once((e) => {
-        console.log(`Clicked <li> ${e.target.innerText}`, e.target)
-        console.log('This handler only fires once')
-      }))
-
-      // Run once via once options
-      window.onceCount = 0
-      const onceButton = document.querySelector('#once')
-      addListener(onceButton, 'click', () => {
-        console.log('This will only run once')
-        window.onceCount = window.onceCount + 1
-      }, { once: true })
-      
-      // Run three times via counter + cleanup function
-      let count = 0
-      const removeAfterThree = addListener(document.querySelector('#three-times'), 'click', () => {
-        count = count + 1
-        console.log(`This will only run three times. count: ${count}`)
-        if (count === 3) {
-          removeAfterThree()
+      <div>
+        <h3>Hover example on multiple <code>li</code></h3>
+        <ul id='list-hover'>
+          <li>Hover one - hover count: 0</li>
+          <li>Hover two - hover count: 0</li>
+          <li>Hover three - hover count: 0</li>
+        </ul>
+        <h3>Hover `{ once: true }` example on multiple <code>li</code></h3>
+        <ul id='list-hover-once'>
+          <li>hover one - hover count: 0</li>
+          <li>hover two - hover count: 0</li>
+          <li>hover three - hover count: 0</li>
+        </ul>
+        <h3>Click `{ once: true }` example on multiple <code>li</code></h3>
+        <ul id='list-click-once'>
+          <li>Click one - click count: 0</li>
+          <li>Click two - click count: 0</li>
+          <li>Click three - click count: 0</li>
+        </ul>
+      </div>
+      <script>
+      function incrementCount(e) {
+        const num = (e.target.innerText || '').match(/\d+$/)
+        if (num) {
+          const newNumber = parseInt(num, 10) + 1
+          e.target.innerText = e.target.innerText.replace(num, newNumber)
+          return
         }
-      })
-
-      const removeOnceTimeout = addListener(document.querySelector('#once-timeout'), 'click', () => {
-        console.log(`Only triggers once every 2 seconds, via reAttachHandler ${new Date()}`)
-        const reAttachHandler = removeOnceTimeout()
-        setTimeout(() => {
-          const disableAgain = reAttachHandler()
-          // It's possible to disable and re-enable listener whenever you wish
-        }, 2000)
-      })
-
-      /* Detach self example */
-      const apiButton = document.querySelector('#api')
-      const disableFetchListener = addListener(apiButton, 'click', async () => {
-        // Fetch in progress disable click handler to avoid duplicate calls
-        const reAddAPIClickHandler = disableFetchListener()
-        console.log('1.5 sec delay...')
-        console.log('API button wont call api again until the request has finished')
-        await delay(1500)
-        // Make API call
-        fetch(`https://swapi.dev/api/people/?search=l`)
-          .then((response) => {
-            return response.json()
-          })
-          .then((json) => {
-            console.log("data", json.results)
-            // Success! Reattach event handler
-            console.log('Ready to make another API call')
-            reAddAPIClickHandler()
-          })
-          .catch((err) => {
-            console.log('API error', err)
-            // Error! Reattach event handler
-            console.log('Ready to make another API call')
-            reAddAPIClickHandler()
-          })
-      })
-
-      const apiDisableButton = document.querySelector('#api-disable')
-      let reEnableApiListener
-      addListener(apiDisableButton, 'click', () => {
-        console.log('Disable API button')
-        reEnableApiListener = disableFetchListener()
-      })
-
-      const apiEnableButton = document.querySelector('#api-enable')
-      let reEnableApiButton
-      addListener(apiEnableButton, 'click', () => {
-        console.log('Re-enable API button')
-        reEnableApiListener()
-      })
-
-      const simpleButton = document.querySelector('#logger')
-      const simpleFunction = () => {
-        console.log('Simple logger!!!!')
-      }
-      addListener(simpleButton, 'click', simpleFunction);
-
-      const removeSimple = document.querySelector('#disable-log')
-      let reAttach
-      addListener(removeSimple, 'click', () => {
-        console.log('Remove logger function from other button')
-        reAttach = removeListener(simpleButton, 'click', simpleFunction);
-        console.log('reAttach', reAttach)
-        // optional reattach function
-      })
-
-      addListener('#enable-log', 'click', () => {
-        console.log('Enable logger')
-        reAttach()
-        console.log('done')
-      })
-
-
-      const exampleFunction = () => {
-        console.log('Logger activated')
+        e.target.innerText = e.target.innerText + ` - ${e.type} count: 1`
       }
 
-      const timeout = 2000
-      addListener('#disable-enable-start', 'click', async () => {
-        // Add listener
-
-        const tearDownOne = addListener('#disable-enable-example', 'click', exampleFunction)
-        console.log('typeof tearDownOne', typeof tearDownOne)
-        console.log('Attach listener addListener tearDownOne')
-        console.log('wait 5 sec')
-        await delay(timeout)
-
-        // Disable listener
-        const setupTwo = tearDownOne()
-        console.log('typeof setupTwo', typeof setupTwo)
-        console.log('tearDownOne() called returned setupTwo')
-
-        console.log('wait 5 sec')
-        await delay(timeout)
-        
-        // enable listener
-        const tearDownThree = setupTwo()
-        console.log('typeof tearDownThree', typeof tearDownThree)
-        console.log('setupTwo() called returned tearDownThree')
-
-        console.log('wait 5 sec')
-        await delay(timeout)
-        // Disable listener
-
-        const setupFour = tearDownThree()
-        console.log('typeof setupFour', typeof setupFour)
-        console.log('tearDownThree() called returned setupFour')
+      /* Hover listener on multiple items */
+      addListener('#list-hover li', ['mouseover'], (e) => {
+        console.log(`Hovered "${e.target.innerText}". Fired only once`, e.target)
+        incrementCount(e)
       })
 
-      addListener('#span-one, #span-two', 'click', (e) => {
-        console.log('hi',  e.target)
-      })
+      /* Hover listener on multiple items with once */
+      addListener('#list-hover-once li', ['mouseover'], (e) => {
+        console.log(`Hover "${e.target.innerText}". Fired only once`, e.target)
+        incrementCount(e)
+      }, { once: true });
 
-      const spanThree = document.querySelector('#span-three')
-      const spanFour = document.querySelector('#span-four')
-      addListener([spanThree, spanFour], 'click', (e) => {
-        console.log('array test',  e.target)
-      })
+      /* Hover listener on multiple items with once */
+      const listTwo = document.querySelectorAll('#list-click-once li')
+      addListener(listTwo, ['click'], (e) => {
+        console.log(`Clicked "${e.target.innerText}". Fired only once`, e.target)
+        incrementCount(e)
+        window.liClickOnceCount = window.liClickOnceCount + 1 // for tests
+      }, { once: true });
+      </script>
 
-      function delay(ms) {
-        return new Promise(res => setTimeout(res, ms))
-      }
-    ;</script>
+      <div>
+        <h3>Click `once` EVER via function on multiple <code>li</code></h3>
+        <ul id='click-list-once-ever'>
+          <li>Only one of these.</li>
+          <li>List items can be clicked</li>
+          <li>Click one and then try to click another</li>
+        </ul>
+      </div>
+      <script>
+      /* Wrap handler in once function for once ever firing */
+      addListener('#click-list-once-ever li', 'click', once((e) => {
+        console.log(`Clicked`, e.target)
+        console.log('This handler only fires once')
+        window.liOnceCount = window.liOnceCount + 1 // for tests
+        incrementCount(e)
+      }));
+      </script>
+
+
+      <div>
+        <h3>Comma separated events - addListener('selector', 'click, mouseover', cb)</h3>
+        <ul id='click-or-hover-comma'>
+          <li>Click once one</li>
+          <li>Click once two</li>
+          <li>Click once three</li>
+        </ul>
+      </div>
+      <script>
+      addListener('#click-or-hover-comma li', 'click, mouseover', (e) => {
+        console.log(`Fired comma ${e.type}`, e.target)
+      });
+      </script>
+
+
+      <div>
+        <h3>Space separated events - addListener('selector', 'click mouseover', cb)</h3>
+        <ul id='click-or-hover-spaces'>
+          <li>Click once one</li>
+          <li>Click once two</li>
+          <li>Click once three</li>
+        </ul>
+      </div>
+      <script>
+      addListener('#click-or-hover-spaces li', 'click mouseover', (e) => {
+        console.log(`Fired spaces ${e.type}`, e.target)
+      });
+      </script>
+
+
+      <div>
+        <h3>Array syntax events - addListener('selector', ['click',  'mouseover'], cb)</h3>
+        <ul id='click-or-hover-array'>
+          <li>Click once one</li>
+          <li>Click once two</li>
+          <li>Click once three</li>
+        </ul>
+      </div>
+      <script>
+      addListener('#click-or-hover-array li', ['click',  'mouseover'], (e) => {
+        console.log(`Fired array ${e.type}`, e.target)
+      });
+      </script>
+
+      <br />
+
+      <span id='span-one'>
+        Span one
+      </span>
+      <span id='span-two'>
+        Span two
+      </span>
+      <span class='span-class'>
+        Span class one
+      </span>
+      <span class='span-class'>
+        Span class two
+      </span>
+      <span class='span-class'>
+        Span class two
+      </span>
+      <br />
+      <br id='tester' />
+      <span id='span-three'>
+        Span three
+      </span>
+      <span id='span-four'>
+        Span four
+      </span>
+      <script type="text/javascript">
+        addListener(['#span-one', '#span-two', '.span-class'], 'click', (e) => {
+          console.log('clicked span',  e.target)
+        })
+
+        const spanThree = document.querySelector('#span-three')
+        const spanFour = document.querySelector('#span-four')
+        addListener([spanThree, spanFour], 'click', (e) => {
+          console.log('array test',  e.target)
+        })
+      ;</script>
+      <br />
+      <br />
+
+      <div>
+        <h3>Throw error</h3>
+        <button id="fire-error">
+          Fire test error
+        </button>
+      </div>
+      <script>
+        addListener('#fire-error', ['click'], (e) => {
+          throw new Error('test')
+        });
+      </script>
+
+      <div id="buttonContainer">
+        <h3>Event types</h3>
+        <p>
+          All browser events are supported. Below are just some examples
+        </p>
+
+      </div>
+      <script>
+        const container = document.getElementById('buttonContainer');
+        const eventTypes = [
+          'click',
+          'dblclick',
+          'mousedown',
+          'mouseup',
+          'mousemove',
+          'mouseover',
+          'mouseout',
+          'mouseenter',
+          'mouseleave',
+        ]
+
+        for (let index = 0; index < eventTypes.length; index++) {
+          const event = eventTypes[index];
+
+          const div = document.createElement('div')
+          div.style.marginBottom = '16px'
+          const button = document.createElement('button')
+          button.textContent = `Trigger "${event}"`
+
+          const buttonInverse = document.createElement('button')
+          buttonInverse.textContent = `Disable "${event}"`
+          const inverseFn = addListener(button, event, (e) => {
+            console.log(`Fired ${e.type}`, e.target)
+          })
+
+          let reEnable
+          addListener(buttonInverse, 'click', (e) => {
+            console.log(`Removed ${event} handler`)
+            reEnable = inverseFn()
+          })
+
+          const buttonEnable = document.createElement('button')
+          buttonEnable.textContent = `Enable "${event}"`
+          buttonInverse.style.marginRight = '8px'
+          addListener(buttonEnable, event, (e) => {
+            if (reEnable) {
+              console.log(`reEnabled ${event} handler`)
+              reEnable()
+            }
+          })
+
+          // Append the button to the container
+          div.appendChild(button)
+          div.appendChild(buttonInverse)
+          div.appendChild(buttonEnable)
+          container.appendChild(div)
+        }
+      ;</script>
+    </div>
   </body>
 </html>
