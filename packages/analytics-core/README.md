@@ -775,7 +775,8 @@ Below are plugins created outside of this repo:
 - [Logrocket](https://www.npmjs.com/package/analytics-plugin-logrocket) Adds Analytics support for LogRocket
 - [Planhat](https://www.npmjs.com/package/analytics-plugin-planhat) Adds Analytics support for Planhat
 - [Plausible](https://www.npmjs.com/package/analytics-plugin-plausible) Adds Analytics support for Plausible
-- [PostHog](https://www.npmjs.com/package/@metro-fs/analytics-plugin-posthog) Adds Analytics support for PostHog
+- [PostHog](https://www.npmjs.com/package/@metro-fs/analytics-plugin-posthog) Adds Analytics support for PostHog by @metro-fs
+- [PostHog](https://www.npmjs.com/package/analytics-plugin-posthog) Adds Analytics support for PostHog by deevus
 - [ProfitWell](https://github.com/deevus/analytics-plugin-profitwell) Adds Analytics support for ProfitWell
 - [Reddit Pixel](https://www.npmjs.com/package/analytics-plugin-reddit-pixel) Adds Analytics support for Reddit Pixel
 - [RudderStack](https://www.npmjs.com/package/begrowth-analytics-rudderstack) Adds Analytics support for RudderStack
