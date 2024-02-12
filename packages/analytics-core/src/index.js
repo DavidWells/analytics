@@ -23,6 +23,7 @@ import ensureArray from './utils/ensureArray'
 import enrichMeta from './utils/enrichMeta'
 import './pluginTypeDef'
 
+
 /**
  * Analytics library configuration
  *
