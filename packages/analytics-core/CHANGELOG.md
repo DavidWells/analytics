@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.12.8](https://github.com/DavidWells/analytics/compare/@analytics/core@0.12.7...@analytics/core@0.12.8) (2024-02-12)
+
+
+### Bug Fixes
+
+* add abort to queue drain and make queue methods abortable. Fixes [#418](https://github.com/DavidWells/analytics/issues/418) ([58b1849](https://github.com/DavidWells/analytics/commit/58b184993106ae2234a2508193cdb7ef0e8c0893))
+
+
+
+
+
 ## [0.12.7](https://github.com/DavidWells/analytics/compare/@analytics/core@0.12.6...@analytics/core@0.12.7) (2023-06-16)
 
 **Note:** Version bump only for package @analytics/core
