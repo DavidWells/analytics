@@ -2,7 +2,7 @@ import Analytics from 'analytics'
 import googleAnalytics from '@analytics/google-analytics'
 
 const customGA = googleAnalytics({
-  trackingId: process.env.REACT_APP_GOOGLE_ANALYTICS_ID,
+  measurementIds: process.env.REACT_APP_GOOGLE_ANALYTICS_ID,
 })
 
 /* initialize analytics and load plugins */

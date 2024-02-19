@@ -33,7 +33,7 @@ import googleAnalyticsPlugin from '@analytics/google-analytics'
 
 // Original google analytics plugin with no alterations
 const originalGoogleAnalytics = googleAnalytics({
-  trackingId: '1234'
+  measurementIds: '1234'
 })
 
 function myCustomTrack({ payload }) {

@@ -67,7 +67,7 @@ const analytics = Analytics({
   app: 'app-name',
   plugins: [
     googleAnalytics({
-      trackingId: 'UA-121991123',
+      measurementIds: 'UA-121991123',
     })
   ]
 })
@@ -189,7 +189,7 @@ const analytics = Analytics({
   version: 100,
   plugins: [
     googleAnalyticsPlugin({
-      trackingId: 'UA-121991291',
+      measurementIds: 'UA-121991291',
     }),
     customerIOPlugin({
       siteId: '123-xyz'
@@ -266,7 +266,7 @@ const analytics = Analytics({
   version: 100,
   plugins: [
     googleAnalyticsPlugin({
-      trackingId: 'UA-121991291',
+      measurementIds: 'UA-121991291',
     }),
     customerIOPlugin({
       siteId: '123-xyz'

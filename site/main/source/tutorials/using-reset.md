@@ -31,12 +31,12 @@ const analytics = Analytics({
   version: 100,
   plugins: [
     googleAnalyticsPlugin({
-      trackingId: 'UA-121991291',
+      measurementIds: 'UA-121991291',
     })
   ]
 })
 
-/*  
+/*
  Your app does stuff...
  User logs in to a different account...
 */

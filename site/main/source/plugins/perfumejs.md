@@ -57,7 +57,7 @@ const analytics = Analytics({
   plugins: [
     // Attach Google analytics
     googleAnalytics({
-      trackingId: 'UA-12341131-6',
+      measurementIds: 'UA-12341131-6',
       instanceName: 'two'
     })
     // Attach Hubspot analytics
@@ -220,7 +220,7 @@ const analytics = Analytics({
   plugins: [
     // Attach Google analytics
     googleAnalytics({
-      trackingId: 'UA-12341131-6',
+      measurementIds: 'UA-12341131-6',
       instanceName: 'two'
     })
     // Attach Hubspot analytics

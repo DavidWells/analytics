@@ -104,7 +104,7 @@ const analytics = Analytics({
   plugins: [
     // Attach analytic provider plugins
     googleAnalytics({
-      trackingId: '123-xyz'
+      measurementIds: '123-xyz'
     }),
     hubSpot({
       portalId: '234576'

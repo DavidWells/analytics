@@ -29,7 +29,7 @@ const analyticsInstance = Analytics({
   plugins: [
     myPlugin,
     googleAnalytics({
-      trackingId: 'UA-XYZ-123'
+      measurementIds: 'UA-XYZ-123'
     })
   ]
 })
@@ -114,7 +114,7 @@ export default function AboutPage() {
       text: event.target.innerText
     })
   }
-  
+
   return (
     <div>
       <h1>About page</h1>

@@ -256,7 +256,7 @@ const analytics = Analytics({
     }),
     /* Load Google Analytics v3 */
     googleAnalyticsV3Plugin({
-      trackingId: 'UA-11111111-2',
+      measurementIds: 'UA-11111111-2',
     }),
   ],
 })

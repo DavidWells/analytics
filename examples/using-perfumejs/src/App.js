@@ -23,7 +23,7 @@ const analytics = Analytics({
     // Custom plugins to now send perf data to
     customAnalyticsPlugin,
     googleAnalytics({
-      trackingId: 'UA-126647663-7'
+      measurementIds: 'UA-126647663-7'
     }),
     perfumePlugin({
       category: 'perf',

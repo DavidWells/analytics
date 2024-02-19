@@ -104,7 +104,7 @@ const analytics = Analytics({
   plugins: [
     customValidationPlugin,
     googleAnalytics({
-      trackingId: 'UA-121991123',
+      measurementIds: 'UA-121991123',
     })
   ]
 })

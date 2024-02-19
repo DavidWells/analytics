@@ -6,7 +6,7 @@ const analytics = Analytics({
   debug: true,
   plugins: [
     googleAnalytics({
-      trackingId: 'UA-126647663-2',
+      measurementIds: 'UA-126647663-2',
     }),
   ]
 })
