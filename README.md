@@ -109,7 +109,7 @@ const analytics = Analytics({
   version: 100,
   plugins: [
     googleAnalytics({
-      trackingId: 'UA-121991291',
+      measurementIds: ['G-XXXXXXXX'],
     }),
     customerIo({
       siteId: '123-xyz'
@@ -150,7 +150,7 @@ analytics.identify('user-id-xyz', {
     version: 100,
     plugins: [
       googleAnalytics({
-        trackingId: 'UA-121991291',
+        measurementIds: ['G-XXXXXXXX'],
       }),
       customerIo({
         siteId: '123-xyz'
