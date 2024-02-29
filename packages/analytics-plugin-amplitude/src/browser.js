@@ -49,7 +49,7 @@ function amplitudePlugin(pluginConfig = {}) {
         return
       }
       
-      const scriptSrc = customScriptSrc ? customScriptSrc : 'https://cdn.amplitude.com/libs/amplitude-8.1.0-min.gz.js'
+      const scriptSrc = customScriptSrc ? customScriptSrc : 'https://cdn.amplitude.com/libs/analytics-browser-2.0.0-min.js.gz'
 
       // Fix https://bit.ly/3m7EBGi
       let integrity
@@ -58,78 +58,142 @@ function amplitudePlugin(pluginConfig = {}) {
         integrity = integritySha
       } else if (!customScriptSrc) {
         // Use default 'https://cdn.amplitude.com/libs/amplitude-8.1.0-min.gz.js' sha
-        integrity = 'sha384-u0hlTAJ1tNefeBKwiBNwB4CkHZ1ck4ajx/pKmwWtc+IufKJiCQZ+WjJIi+7C6Ntm'
+        integrity = 'sha384-x0ik2D45ZDEEEpYpEuDpmj05fY91P7EOZkgdKmq4dKL/ZAVcufJ+nULFtGn0HIZE'
       }
 
       // Initialize amplitude js
       ;(function(e, t) {
-        var n = e.amplitude || { _q: [], _iq: {} };
-        var r = t.createElement("script");
-        r.type = "text/javascript";
-        // Only apply integrity sha if provided or default script source
-        if (integrity) {
-          r.integrity = integrity
+        var n = e.amplitude || { _q: [], _iq: {} }
+        if (n.invoked)
+          e.console &&
+            console.error &&
+            console.error("Amplitude snippet has been loaded.")
+        else {
+          var r = function (e, t) {
+            e.prototype[t] = function () {
+              return (
+                this._q.push({
+                  name: t,
+                  args: Array.prototype.slice.call(arguments, 0),
+                }),
+                this
+              )
+            }
+          },
+            s = function (e, t, n) {
+              return function (r) {
+                e._q.push({
+                  name: t,
+                  args: Array.prototype.slice.call(n, 0),
+                  resolve: r,
+                })
+              }
+            },
+            o = function (e, t, n) {
+              e[t] = function () {
+                if (n)
+                  return {
+                    promise: new Promise(
+                      s(e, t, Array.prototype.slice.call(arguments))
+                    ),
+                  }
+              }
+            },
+            i = function (e) {
+              for (var t = 0; t < m.length; t++) o(e, m[t], !1)
+              for (var n = 0; n < g.length; n++) o(e, g[n], !0)
+            }
+          n.invoked = !0
+          var u = t.createElement("script")
+            ; (u.type = "text/javascript"),
+              (u.integrity =
+                "sha384-x0ik2D45ZDEEEpYpEuDpmj05fY91P7EOZkgdKmq4dKL/ZAVcufJ+nULFtGn0HIZE"),
+              (u.crossOrigin = "anonymous"),
+              (u.async = !0),
+              (u.src =
+                "https://cdn.amplitude.com/libs/analytics-browser-2.0.0-min.js.gz"),
+              (u.onload = function () {
+                e.amplitude.runQueuedFunctions ||
+                  console.log("[Amplitude] Error: could not load SDK")
+              })
+          var a = t.getElementsByTagName("script")[0]
+          a.parentNode.insertBefore(u, a)
+          for (
+            var c = function () {
+              return (this._q = []), this
+            },
+            p = [
+              "add",
+              "append",
+              "clearAll",
+              "prepend",
+              "set",
+              "setOnce",
+              "unset",
+              "preInsert",
+              "postInsert",
+              "remove",
+              "getUserProperties",
+            ],
+            l = 0;
+            l < p.length;
+            l++
+          )
+            r(c, p[l])
+          n.Identify = c
+          for (
+            var d = function () {
+              return (this._q = []), this
+            },
+            f = [
+              "getEventProperties",
+              "setProductId",
+              "setQuantity",
+              "setPrice",
+              "setRevenue",
+              "setRevenueType",
+              "setEventProperties",
+            ],
+            v = 0;
+            v < f.length;
+            v++
+          )
+            r(d, f[v])
+          n.Revenue = d
+          var m = [
+            "getDeviceId",
+            "setDeviceId",
+            "getSessionId",
+            "setSessionId",
+            "getUserId",
+            "setUserId",
+            "setOptOut",
+            "setTransport",
+            "reset",
+            "extendSession",
+          ],
+            g = [
+              "init",
+              "add",
+              "remove",
+              "track",
+              "logEvent",
+              "identify",
+              "groupIdentify",
+              "setGroup",
+              "revenue",
+              "flush",
+            ]
+          i(n),
+            (n.createInstance = function (e) {
+              return (n._iq[e] = { _q: [] }), i(n._iq[e]), n._iq[e]
+            }),
+            (e.amplitude = n)
         }
-        r.crossOrigin = "anonymous";
-        r.async = true;
-        r.src = scriptSrc;
-        r.onload = function() {
-          if (!e.amplitude.runQueuedFunctions) {
-            console.log("[Amplitude] Error: could not load SDK")
-          }
-        };
-        var i = t.getElementsByTagName("script")[0];
-        i.parentNode.insertBefore(r, i);
-
-        function s(e, t) {
-          e.prototype[t] = function() {
-            this._q.push([t].concat(Array.prototype.slice.call(arguments, 0)));
-            return this
-          }
-        }
-        var o = function() {
-          this._q = [];
-          return this
-        };
-        var a = ["add", "append", "clearAll", "prepend", "set", "setOnce", "unset", "preInsert", "postInsert", "remove"];
-        for (var c = 0; c < a.length; c++) {
-          s(o, a[c])
-        }
-        n.Identify = o;
-        var u = function() {
-          this._q = [];
-          return this
-        };
-        var l = ["setProductId", "setQuantity", "setPrice", "setRevenueType", "setEventProperties"];
-        for (var p = 0; p < l.length; p++) {
-          s(u, l[p])
-        }
-        n.Revenue = u;
-        var d = [
-          "init", "logEvent", "logRevenue", "setUserId", "setUserProperties", "setOptOut", "setVersionName", "setDomain", "setDeviceId", "enableTracking", "setGlobalUserProperties", "identify", "clearUserProperties", "setGroup", "logRevenueV2", "regenerateDeviceId", "groupIdentify", "onInit", "logEventWithTimestamp", "logEventWithGroups", "setSessionId", "resetSessionId"
-        ];
-
-        function v(e) {
-          function t(t) {
-            e[t] = function() { e._q.push([t].concat(Array.prototype.slice.call(arguments, 0))) }
-          }
-          for (var n = 0; n < d.length; n++) {
-            t(d[n])
-          }
-        }
-        v(n);
-        n.getInstance = function(e) {
-          e = (!e || e.length === 0 ? "$default_instance" : e).toLowerCase();
-          if (!Object.prototype.hasOwnProperty.call(n._iq, e)) {
-            n._iq[e] = { _q: [] };
-            v(n._iq[e])
-          }
-          return n._iq[e]
-        };
-        e.amplitude = n
       })(window, document);
-      // See options at https://amplitude.github.io/Amplitude-JavaScript/Options/
-      window.amplitude.init(config.apiKey, null, options, initComplete);
+      // See options at https://www.docs.developers.amplitude.com/data/sdks/browser-2/#configuration
+      window.amplitude.init(config.apiKey, options).promise.then(() => initComplete(window.amplitude));
+
 
       // Set initial session id. Ref https://bit.ly/3vElAym
       if (initialSessionId) {
@@ -142,16 +206,17 @@ function amplitudePlugin(pluginConfig = {}) {
       if (options && options.eventType) {
         eventType = options.eventType
       }
-       client.logEvent(eventType, properties)
+      client.track(eventType, properties)
     },
 
     track: ({ payload: { event, properties } }) => {
-       client.logEvent(event, properties)
+       client.track(event, properties)
     },
 
     identify: ({ payload: { userId, traits }, instance }) => {
-      client.setUserId(userId)
-      client.setUserProperties(traits)
+      const identifyEvent = new window.amplitude.Identify();
+      identifyEvent.set("user_id", userId);
+      client.identify(identifyEvent);
     },
 
     loaded: () => amplitudeInitCompleted,
@@ -175,9 +240,7 @@ function setSessionId(sessionId) {
     console.log('Amplitude not loaded yet')
     return false
   }
-  const amplitudeInstance = window.amplitude.getInstance()
-  amplitudeInstance.setSessionId(sessionId)
-  amplitudeInstance.enableTracking()
+  window.amplitude.setSessionId(sessionId)
 }
 
 export default amplitudePlugin
