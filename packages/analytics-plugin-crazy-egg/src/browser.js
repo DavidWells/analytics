@@ -14,7 +14,7 @@
  *   accountNumber: '1234578'
  * })
  */
-export default function crazyEgg(pluginConfig = {}) {
+function crazyEgg(pluginConfig = {}) {
   return {
     name: 'crazy-egg',
     config: pluginConfig,
@@ -48,3 +48,5 @@ export default function crazyEgg(pluginConfig = {}) {
     }
   }
 }
+
+export default crazyEgg;

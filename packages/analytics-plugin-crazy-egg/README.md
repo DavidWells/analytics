@@ -41,7 +41,7 @@ npm install @analytics/crazy-egg
 
 ## How to use
 
-The `@analytics/crazy-egg` package works in [the browser](#browser-usage). To use, install the package, include it in your project, and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
+The `@analytics/crazy-egg` package works in [the browser](#browser-usage). To use, install the package, include in your project and initialize the plugin with [analytics](https://www.npmjs.com/package/analytics).
 
 Below is an example of how to use the browser plugin.
 
@@ -52,7 +52,7 @@ import crazyEgg from '@analytics/crazy-egg'
 const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
-    // This will load Crazy Egg onto the page
+    // This will load crazy egg on to the page
     crazyEgg({
       accountNumber: '1234578'
     })
@@ -69,7 +69,7 @@ The `@analytics/crazy-egg` package works in [the browser](#browser-usage)
 
 ## Browser usage
 
-See below from the browser API
+See below from browser API
 
 ### Browser API
 
@@ -80,7 +80,7 @@ import crazyEgg from '@analytics/crazy-egg'
 const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
-    // This will load Crazy Egg onto the page
+    // This will load crazy egg on to the page
     crazyEgg({
       accountNumber: '1234578'
     })
@@ -117,8 +117,8 @@ Below are additional implementation examples.
         var Analytics = _analytics.init({
           app: 'my-app-name',
           plugins: [
-            // This will load Crazy Egg onto the page
-            crazyEgg({
+            // This will load crazy egg on to the page
+            analyticsCrazyEgg({
               accountNumber: '1234578'
             })
           ]
@@ -151,17 +151,17 @@ Below are additional implementation examples.
       </script>
       <script type="module">
         import analytics from 'https://unpkg.com/analytics/lib/analytics.browser.es.js?module'
-        import crazyEgg from 'https://unpkg.com/@analytics/crazy-egg/lib/analytics-plugin-crazy-egg.browser.es.js?module'
+        import analyticsCrazyEgg from 'https://unpkg.com/@analytics/crazy-egg/lib/analytics-plugin-crazy-egg.browser.es.js?module'
         /* Initialize analytics */
         const Analytics = analytics({
           app: 'analytics-html-demo',
           debug: true,
           plugins: [
-            // This will load Crazy Egg onto the page
-            crazyEgg({
+            // This will load crazy egg on to the page
+            analyticsCrazyEgg({
               accountNumber: '1234578'
             })
-            // ... add any other third-party analytics plugins
+            // ... add any other third party analytics plugins
           ]
         })
       </script>

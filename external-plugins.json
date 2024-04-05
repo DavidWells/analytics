@@ -86,5 +86,10 @@
     "url": "https://www.npmjs.com/package/analytics-plugin-planhat",
     "repo": "https://github.com/WarreH/analytics-plugin-planhat",
     "description": "Adds Analytics support for Planhat"
+  },
+  {
+    "name": "mailmodo",
+    "url": "https://www.npmjs.com/package/analytics-plugin-mailmodo",
+    "repo": "https://github.com/fotoflo/analytics-plugin-mailmodo/"
   }
 ]
