@@ -26,6 +26,9 @@ export default function Layout(props) {
               <link rel="icon" href={withPrefix('/favicon.ico')} />
             </Helmet>
             {props.children}
+            <div className='ad-container' id="ads" dangerouslySetInnerHTML={{
+              __html: `<script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CWYIE2JU&placement=getanalyticsio&format=cover" id="_carbonads_js"></script>`
+            }} />
           </Fragment>
         )
       }}
