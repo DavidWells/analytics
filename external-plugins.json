@@ -90,6 +90,7 @@
   {
     "name": "mailmodo",
     "url": "https://www.npmjs.com/package/analytics-plugin-mailmodo",
-    "repo": "https://github.com/fotoflo/analytics-plugin-mailmodo/"
+    "repo": "https://github.com/fotoflo/analytics-plugin-mailmodo/",
+    "description": "Adds Analytics support for mailmodo"
   }
 ]
