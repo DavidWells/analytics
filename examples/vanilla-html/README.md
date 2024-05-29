@@ -1,6 +1,6 @@
 # Using Analytics with HTML
 
-[Demo](https://analytics-html-example.netlify.com/)
+[Demo](https://analytics-html-example.netlify.app/)
 
 ## Usage
 

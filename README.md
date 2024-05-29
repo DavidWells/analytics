@@ -8,7 +8,7 @@ A lightweight analytics abstraction library for tracking page views, custom even
 
 Designed to work with any [third-party analytics tool](https://getanalytics.io/plugins/) or your own backend.
 
-[Read the docs](https://getanalytics.io/) or view the [live demo app](https://analytics-demo.netlify.com)
+[Read the docs](https://getanalytics.io/) or view the [live demo app](https://analytics-demo.netlify.app)
 
 ## Table of Contents
 <!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true&collapseText=Click to expand) -->
@@ -215,7 +215,7 @@ analytics.identify('user-id-xyz', {
 
 ## Demo
 
-See [Analytics Demo](https://analytics-demo.netlify.com/) for a site example.
+See [Analytics Demo](https://analytics-demo.netlify.app/) for a site example.
 
 ## API
 

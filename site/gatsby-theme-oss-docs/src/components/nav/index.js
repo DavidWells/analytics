@@ -25,7 +25,7 @@ const navConfig = {
   //   text: 'Tutorial',
   //   matchRegex: /^\/docs\/tutorial/
   // },
-  'https://analytics-demo.netlify.com': {
+  'https://analytics-demo.netlify.app': {
     text: 'Demo'
   },
   /* '/docs/react': {

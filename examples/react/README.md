@@ -1,6 +1,6 @@
 # Using Analytics with React
 
-[Demo](https://analytics-react-example.netlify.com/)
+[Demo](https://analytics-react-example.netlify.app/)
 
 ## Usage
 
