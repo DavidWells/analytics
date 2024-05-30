@@ -1,6 +1,6 @@
 {
   "name": "@analytics/core",
-  "version": "0.12.10",
+  "version": "0.12.13",
   "description": "Lightweight analytics library for tracking events, page views, & identifying users. Works with any third party analytics provider via an extendable plugin system.",
   "keywords": [
     "analytics",
@@ -55,10 +55,12 @@
     "client/**/*.js.map",
     "client/**/*.d.ts",
     "client/**/package.json",
+    "!client/node_modules",
     "server/**/*.js",
     "server/**/*.js.map",
     "server/**/*.d.ts",
     "server/**/package.json",
+    "!server/node_modules",
     "README.md"
   ],
   "dependencies": {

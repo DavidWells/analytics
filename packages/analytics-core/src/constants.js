@@ -7,6 +7,7 @@
  */
 import { PREFIX } from '@analytics/type-utils'
 
+
 /**
  * Anonymous visitor Id localstorage key
  * @typedef {String} ANON_ID
