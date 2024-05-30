@@ -239,7 +239,7 @@ After the library is initialized with config, the core API is exposed & ready fo
 
 - **config** <code>object</code> - analytics core config
 - **[config.app]** (optional) <code>string</code> - Name of site / app
-- **[config.version]** (optional) <code>string</code> - Version of your app
+- **[config.version]** (optional) <code>string</code>|<code>number</code> - Version of your app
 - **[config.debug]** (optional) <code>boolean</code> - Should analytics run in debug mode
 - **[config.plugins]** (optional) <code>Array</code>.&lt;<a href="https://getanalytics.io/plugins">AnalyticsPlugin</a>&gt; - Array of analytics plugins
 
