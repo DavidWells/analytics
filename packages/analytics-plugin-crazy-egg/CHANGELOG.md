@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.3](https://github.com/DavidWells/analytics/compare/@analytics/crazy-egg@0.1.2...@analytics/crazy-egg@0.1.3) (2024-05-30)
+
+**Note:** Version bump only for package @analytics/crazy-egg
+
+
+
+
+
 ## [0.1.2](https://github.com/DavidWells/analytics/compare/@analytics/crazy-egg@0.1.1...@analytics/crazy-egg@0.1.2) (2020-12-23)
 
 **Note:** Version bump only for package @analytics/crazy-egg
