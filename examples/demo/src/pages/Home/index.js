@@ -13,6 +13,8 @@ let hasCleared = false
 //   analytics.plugins['google-analytics'].addTag('foobar')
 // })
 
+let history = []
+
 function sortByTimeStamp(a, b) {
   if (!a.meta || !b.meta) {
     return 0
@@ -42,9 +44,10 @@ export default class App extends Component {
   componentDidMount() {
     this.listener = analytics.on('*', ({ payload }) => {
       console.log('payload', payload)
-      this.setState({
-        history: window.__global__.analytics.concat(payload) // .sort(sortByTimeStamp)
-      })
+      history.push(payload)
+      // this.setState({
+      //   history: window.__global__.analytics.concat(payload) //.sort(sortByTimeStamp)
+      // })
     })
     setInterval(() => {
       this.setState({
@@ -85,7 +88,7 @@ export default class App extends Component {
   // Clear logs for demo buttons
   clearLogs() {
     if (!hasCleared) {
-       window.__global__.analytics = []
+      history = []
       hasCleared = true
     }
   }
@@ -122,7 +125,6 @@ export default class App extends Component {
    })
   }
   render() {
-    const { history } = this.state
     return (
       <div className="App">
         <Navigation />
