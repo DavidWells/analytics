@@ -114,6 +114,12 @@ Analytics uses the [Forking Workflow](https://www.atlassian.com/git/tutorials/co
 6. PR's must be rebased before merge (feel free to ask for help).
 7. PR should be reviewed by two maintainers prior to merging.
 
+## Troubleshooting
+
+`Publishing error`
+
+`Hard link is not allowed` means the node_modules folder is in the npm package. Delete those from /analytics-core/{client|server} dirs.
+
 ## License
 
 By contributing to `analytics`, you agree that your contributions will be licensed
