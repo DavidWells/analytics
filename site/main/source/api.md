@@ -228,11 +228,13 @@ analytics.reset()
 
 ## `analytics.ready`
 
-Fire callback on analytics ready event
+Fire callback when analytics library is ready.  If the `ready` event has already fired, this calls the
+callback.  If not, it registers  the callback to be called once when the `ready` event fires.
 
 **Arguments**
 
-- **callback** <code>Function</code> - function to trigger when all providers have loaded
+- **callback** <code>Function</code> - function to trigger when all providers have loaded, or
+  immediately if all providers have already loaded
 
 **Example**
 
