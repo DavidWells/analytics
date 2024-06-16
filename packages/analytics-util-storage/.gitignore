@@ -10,3 +10,4 @@ node_modules
 # OS stuff
 .DS_Store
 .tmp
+!types/
