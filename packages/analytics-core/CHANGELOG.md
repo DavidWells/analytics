@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.12.15](https://github.com/DavidWells/analytics/compare/@analytics/core@0.12.14...@analytics/core@0.12.15) (2024-07-29)
+
+
+### Bug Fixes
+
+* fix typedef ([d58f70d](https://github.com/DavidWells/analytics/commit/d58f70d60422b4c4e862dd732f3df50d8e802e25))
+
+
+
+
+
 ## [0.12.14](https://github.com/DavidWells/analytics/compare/@analytics/core@0.12.10...@analytics/core@0.12.14) (2024-05-30)
 
 **Note:** Version bump only for package @analytics/core
