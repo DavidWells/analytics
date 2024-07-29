@@ -51,6 +51,7 @@ const typesFromJsDocs = content
   .replace(/ \| /gm, ' & ')
   // https://github.com/DavidWells/analytics/issues/218
   .replace(/string & string\[\]/gm, 'string | string[]')
+  .replace(/string & number/gm, 'string | number')
   
 
   // Make types extensible
