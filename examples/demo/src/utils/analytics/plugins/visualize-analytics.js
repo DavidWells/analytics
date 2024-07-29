@@ -3,7 +3,15 @@
  * through the analytics event chain
  */
 
-export const initialHistory = []
+export let initialHistory = []
+
+export function clearHistory() {
+	initialHistory = []
+}
+
+export function recordHistory(action) {
+	initialHistory.push(action)
+}
 
 export default function visualizeState() {
 	return store => next => action => {
