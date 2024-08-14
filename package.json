@@ -93,7 +93,7 @@
   },
   "dependencies": {
     "acorn": "^8.7.0",
-    "brotli-size": "0.0.3",
+    "brotli-size": "4.0.0",
     "gzip-size": "^5.0.0",
     "prettier": "^1.18.2",
     "pretty-bytes": "^5.1.0"

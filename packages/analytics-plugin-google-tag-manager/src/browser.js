@@ -22,6 +22,7 @@ let initializedDataLayerName;
  * @param {string} [pluginConfig.preview] - The preview-mode environment
  * @param {string} [pluginConfig.auth] - The preview-mode authentication credentials
  * @param {string} [pluginConfig.execution] - The script execution mode
+ * @param {string} [pluginConfig.nonce] - Content-Security-Policy nonce value
  * @return {object} Analytics plugin
  * @example
  *
@@ -41,7 +42,7 @@ function googleTagManager(pluginConfig = {}) {
       ...pluginConfig
     },
     initialize: ({ config }) => {
-      const { containerId, dataLayerName, customScriptSrc, preview, auth, execution } = config
+      const { containerId, dataLayerName, customScriptSrc, preview, auth, execution, nonce } = config
       if (!containerId) {
         throw new Error('No google tag manager containerId defined')
       }
@@ -64,6 +65,9 @@ function googleTagManager(pluginConfig = {}) {
             j[execution] = true;
           }
           j.src = `${scriptSrc}?id=` + i + dl + p;
+          if (nonce) {
+            j.setAttribute('nonce', nonce);
+          }
           f.parentNode.insertBefore(j, f);
         })(window, document, 'script', dataLayerName, containerId);
         /* eslint-enable */

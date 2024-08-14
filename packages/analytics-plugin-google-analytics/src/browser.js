@@ -62,6 +62,7 @@ const defaultConfig = {
  * @param {object}  [pluginConfig.gtagConfig.cookie_update] - Additional cookie properties for configuring the [ga cookie](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#configuring_cookie_field_settings)
  * @param {object}  [pluginConfig.gtagConfig.cookie_flags] - Additional cookie properties for configuring the [ga cookie](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#configuring_cookie_field_settings)
  * @param {string}  [pluginConfig.customScriptSrc] - Custom URL for google analytics script, if proxying calls
+ * @param {string}  [pluginConfig.nonce] - Content-Security-Policy nonce value
  * @return {*}
  * @example
  *
@@ -82,7 +83,7 @@ function googleAnalytics(pluginConfig = {}) {
     config: initConfig,
     // Load gtag.js and define gtag
     initialize: ({ config, instance }) => {
-      const { dataLayerName, customScriptSrc, gtagName, gtagConfig, debug } = config
+      const { dataLayerName, customScriptSrc, gtagName, gtagConfig, debug, nonce } = config
       /* Inject google gtag.js script if not found */
       /* If other gtags are loaded already, add ours anyway */
       const customLayerName = dataLayerName ? `&l=${dataLayerName}` : "";
@@ -91,6 +92,9 @@ function googleAnalytics(pluginConfig = {}) {
         const script = document.createElement('script')
         script.async = true
         script.src = src
+        if (nonce) {
+          script.setAttribute('nonce', nonce);
+        }
         document.body.appendChild(script)
       }
       /* Set up gtag and datalayer */
