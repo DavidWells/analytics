@@ -1,0 +1,57 @@
+{
+    "name": "@analytics/churn-zero",
+    "version": "0.0.1",
+    "description": "Churnzero integration for 'analytics' module for browser & node",
+    "projectMeta": {
+        "provider": {
+            "name": "Churnzero",
+            "url": "https://www.churnzero.com/"
+        },
+        "platforms": {
+            "browser": "./src/browser.js",
+            "node": "./src/node.js"
+        }
+    },
+    "keywords": [
+        "analytics",
+        "analytics-project",
+        "analytics-plugin",
+        "churn-zero"
+    ],
+    "author": "Ahmed Onawale <atolagbeabisoye@gmail.com>",
+    "license": "MIT",
+    "scripts": {
+        "docs": "node ../analytics-cli/bin/run docs",
+        "build": "node ../../scripts/build/index.js",
+        "watch": "node ../../scripts/build/_watch.js",
+        "release:patch": "npm version patch && npm publish",
+        "release:minor": "npm version minor && npm publish",
+        "release:major": "npm version major && npm publish",
+        "es": "../../node_modules/.bin/babel-node ./testBabel.js"
+    },
+    "main": "lib/analytics-plugin-churn-zero.cjs.js",
+    "globalName": "analyticsChurnzero",
+    "jsnext:main": "lib/analytics-plugin-churn-zero.es.js",
+    "module": "lib/analytics-plugin-churn-zero.es.js",
+    "browser": {
+        "./lib/analytics-plugin-churn-zero.cjs.js": "./lib/analytics-plugin-churn-zero.browser.cjs.js",
+        "./lib/analytics-plugin-churn-zero.es.js": "./lib/analytics-plugin-churn-zero.browser.es.js"
+    },
+    "files": [
+        "dist",
+        "lib",
+        "README.md"
+    ],
+    "homepage": "https://github.com/DavidWells/analytics#readme",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/DavidWells/analytics.git"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.2.2",
+        "@babel/preset-env": "^7.3.1"
+    },
+    "dependencies": {
+        "unfetch": "^4.2.0"
+    }
+}
