@@ -4,7 +4,7 @@
     "description": "Churnzero integration for 'analytics' module for browser & node",
     "projectMeta": {
         "provider": {
-            "name": "Churnzero",
+            "name": "ChurnZero",
             "url": "https://www.churnzero.com/"
         },
         "platforms": {
