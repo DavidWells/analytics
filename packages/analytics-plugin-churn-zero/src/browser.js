@@ -51,10 +51,6 @@ function churnZeroPlugin(pluginConfig = {}) {
         ChurnZero.push(['setContact', company.id, email]);
       }
 
-      if (name) {
-        ChurnZero.push(['setAttribute', 'account', 'Name', name]);
-      }
-
       if (firstName) {
         ChurnZero.push(['setAttribute', 'contact', 'FirstName', firstName]);
       }
