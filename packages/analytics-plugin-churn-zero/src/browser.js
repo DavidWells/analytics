@@ -39,7 +39,7 @@ function churnZeroPlugin(pluginConfig = {}) {
       firstScript.parentNode.insertBefore(script, firstScript);
     },
     identify: ({ payload, config }) => {
-      const { company, email, name, firstName, lastName } = payload.traits
+      const { company, email, firstName, lastName } = payload.traits
 
       if (typeof ChurnZero === 'undefined') return
 

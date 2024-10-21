@@ -49,7 +49,6 @@ function churnZeroPlugin() {
       var _payload$traits = payload.traits,
         company = _payload$traits.company,
         email = _payload$traits.email,
-        name = _payload$traits.name,
         firstName = _payload$traits.firstName,
         lastName = _payload$traits.lastName;
       if (typeof ChurnZero === 'undefined') return;
@@ -58,9 +57,6 @@ function churnZeroPlugin() {
       }
       if (company && company.id && email) {
         ChurnZero.push(['setContact', company.id, email]);
-      }
-      if (name) {
-        ChurnZero.push(['setAttribute', 'account', 'Name', name]);
       }
       if (firstName) {
         ChurnZero.push(['setAttribute', 'contact', 'FirstName', firstName]);
