@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/DavidWells/analytics/compare/@analytics/google-analytics-v3@0.6.1...@analytics/google-analytics-v3@0.7.0) (2024-12-11)
+
+
+### Features
+
+* [#235](https://github.com/DavidWells/analytics/issues/235) add csp nonce for google tag and analytics packages ([abd2b28](https://github.com/DavidWells/analytics/commit/abd2b2898426577ba3b28eeab5ae999191f21c75))
+
+
+
+
+
 ## [0.6.1](https://github.com/DavidWells/analytics/compare/@analytics/google-analytics-v3@0.6.0...@analytics/google-analytics-v3@0.6.1) (2022-07-22)
 
 **Note:** Version bump only for package @analytics/google-analytics-v3

@@ -1,6 +1,6 @@
 {
     "name": "@analytics/churn-zero",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Churnzero integration for 'analytics' module for browser & node",
     "projectMeta": {
         "provider": {
