@@ -26,6 +26,7 @@
   "unpkg": "dist/analytics-utils.umd.js",
   "sideEffects": false,
   "scripts": {
+    "test": "uvu tests -r esm",
     "start": "npm run sync && concurrently 'npm:watch:dev' 'npm:copy' 'npm:serve'",
     "serve": "servor dist index.html 8081 --reload --browse",
     "copy": "watchlist examples -- npm run sync",
@@ -43,8 +44,10 @@
   "devDependencies": {
     "concurrently": "^6.1.0",
     "microbundle": "^0.13.0",
+    "esm": "^3.2.25",
     "servor": "^4.0.2",
     "typescript": "^4.2.3",
+    "uvu": "^0.5.1",
     "watchlist": "^0.2.3"
   },
   "dependencies": {

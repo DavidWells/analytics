@@ -1,28 +1,45 @@
-import test from 'ava'
-import {parseParam} from '../dist/paramsParse'
+import { test } from 'uvu'
+import * as assert from 'uvu/assert'
+import { paramsParse } from '../src/paramsParse'
 
-test('test simple params', t => {
+function toPlainObject(obj) {
+  return JSON.parse(JSON.stringify(obj))
+}
+
+function _paramsParse(url) {
+  return toPlainObject(paramsParse(url))
+}
+
+test('test simple params', () => {
   const url = 'http://localhost:3000/?hi=there&wow=lol'
-  const parsed = parseParam(url)
-  t.deepEqual(parsed, {
+  const parsed = _paramsParse(url)
+  assert.equal(parsed, {
     hi: 'there',
     wow: 'lol',
   })
 })
 
-test('test boolean params', t => {
+test('test boolean params', () => {
   const url = 'http://localhost:3000/?hi&no=false'
-  const parsed = parseParam(url)
-  t.deepEqual(parsed, {
+  const parsed = _paramsParse(url)
+  assert.equal(parsed, {
     hi: true,
     no: 'false',
   })
 })
 
-test('test utm params', t => {
+test('Duplicate param keys', () => {
+  const url = 'http://localhost:3000/?foo=&foo[]='
+  const parsed = _paramsParse(url)
+  assert.equal(parsed, {
+    foo: [''],
+  })
+})
+
+test('test utm params', () => {
   const url = 'http://localhost:3000/http://glocal.dev/?utm_source=the_source&utm_medium=camp%20med&utm_term=Bought%20keyword&utm_content=Funny%20Text&utm_campaign=400kpromo'
-  const parsed = parseParam(url)
-  t.deepEqual(parsed, {
+  const parsed = _paramsParse(url)
+  assert.equal(parsed, {
     utm_campaign: '400kpromo',
     utm_content: 'Funny Text',
     utm_medium: 'camp med',
@@ -31,12 +48,12 @@ test('test utm params', t => {
   })
 })
 
-test('test deeply nested url values', t => {
+test('test deeply nested url values', () => {
   const url =
     'http://localhost:3000/?Target=Offer&Method=findAll&filters[has_goals_enabled][TRUE]=1&filters[status]=active&filters[otherthing]&filters[wow]arr[]=yaz&filters[wow]arr[]=naz&filters[wow]arr[]=[other]&fields[]=id&fields[]=name&fields[]=default_goal_name&yes'
 
-  const parsed = parseParam(url)
-  t.deepEqual(parsed, {
+  const parsed = _paramsParse(url)
+  assert.equal(parsed, {
     Target: 'Offer',
     Method: 'findAll',
     fields: ['id', 'name', 'default_goal_name'],
@@ -49,3 +66,5 @@ test('test deeply nested url values', t => {
     },
   })
 })
+
+test.run()

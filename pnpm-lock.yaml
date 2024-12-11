@@ -142,7 +142,7 @@ importers:
   packages/analytics:
     dependencies:
       '@analytics/core':
-        specifier: ^0.12.9
+        specifier: ^0.12.15
         version: link:../analytics-core
       '@analytics/storage-utils':
         specifier: ^0.4.2
@@ -307,7 +307,7 @@ importers:
         specifier: ^0.1.2
         version: link:../analytics-util-queue
       '@analytics/session-utils':
-        specifier: ^0.1.19
+        specifier: ^0.2.0
         version: link:../analytics-util-session
       '@analytics/type-utils':
         specifier: ^0.3.1
@@ -342,7 +342,7 @@ importers:
         version: 7.15.3(@babel/core@7.15.8)
       aws-sdk-client-mock:
         specifier: ^0.5.5
-        version: 0.5.5(@aws-sdk/client-s3@3.511.0)(@aws-sdk/types@3.38.0)
+        version: 0.5.5(@aws-sdk/client-s3@3.511.0)(@aws-sdk/types@3.511.0)
       c8:
         specifier: ^7.10.0
         version: 7.10.0
@@ -1127,6 +1127,9 @@ importers:
       concurrently:
         specifier: ^6.1.0
         version: 6.3.0
+      esm:
+        specifier: ^3.2.25
+        version: 3.2.25
       microbundle:
         specifier: ^0.13.0
         version: 0.13.3(acorn@8.7.0)
@@ -1136,6 +1139,9 @@ importers:
       typescript:
         specifier: ^4.2.3
         version: 4.4.4
+      uvu:
+        specifier: ^0.5.1
+        version: 0.5.2
       watchlist:
         specifier: ^0.2.3
         version: 0.2.3
@@ -2261,6 +2267,7 @@ packages:
   /@aws-sdk/types@3.38.0:
     resolution: {integrity: sha512-Opux3HLwMlWb7GIJxERsOnmbHrT2A1gsd8aF5zHapWPPH5Z0rYsgTIq64qgim896XlKlOw6/YzhD5CdyNjlQWg==}
     engines: {node: '>= 10.0.0'}
+    dev: false
 
   /@aws-sdk/types@3.511.0:
     resolution: {integrity: sha512-P03ufufxmkvd7nO46oOeEqYIMPJ8qMCKxAsfJk1JBVPQ1XctVntbail4/UFnrnzij8DTl4Mk/D62uGo7+RolXA==}
@@ -5843,6 +5850,7 @@ packages:
   /@humanwhocodes/config-array@0.11.14:
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
     engines: {node: '>=10.10.0'}
+    deprecated: Use @eslint/config-array instead
     dependencies:
       '@humanwhocodes/object-schema': 2.0.2
       debug: 4.3.2(supports-color@8.1.1)
@@ -5858,6 +5866,7 @@ packages:
 
   /@humanwhocodes/object-schema@2.0.2:
     resolution: {integrity: sha512-6EwiSjwWYP7pTckG6I5eyFANjPhmPjUX9JRLUSfNPC7FX7zK9gyZAfUEaECL6ALTpGX5AjnBq3C9XmVWPitNpw==}
+    deprecated: Use @eslint/object-schema instead
     dev: true
 
   /@istanbuljs/schema@0.1.3:
@@ -8964,14 +8973,14 @@ packages:
       - supports-color
     dev: true
 
-  /aws-sdk-client-mock@0.5.5(@aws-sdk/client-s3@3.511.0)(@aws-sdk/types@3.38.0):
+  /aws-sdk-client-mock@0.5.5(@aws-sdk/client-s3@3.511.0)(@aws-sdk/types@3.511.0):
     resolution: {integrity: sha512-djwyYj4vRAXGGH0nycd04/qxj4lK4UscK12dgRgYLigFzQ8EdM0+eZoFobbjXnXoPBG+YeN57UqrEbE1YW1qag==}
     peerDependencies:
       '@aws-sdk/client-s3': ^3.0.0
       '@aws-sdk/types': ^3.0.0
     dependencies:
       '@aws-sdk/client-s3': 3.511.0
-      '@aws-sdk/types': 3.38.0
+      '@aws-sdk/types': 3.511.0
       '@types/sinon': 10.0.2
       sinon: 11.1.2
       tslib: 2.3.1
@@ -11674,6 +11683,7 @@ packages:
   /eslint@8.56.0:
     resolution: {integrity: sha512-Go19xM6T9puCOWntie1/P997aXxFsOi37JIHRWI514Hc6ZnaHGKY9xFhrU65RT6CcBEzZoGG1e6Nq+DT04ZtZQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
     dependencies:
       '@eslint-community/eslint-utils': 4.4.0(eslint@8.56.0)
@@ -12380,7 +12390,7 @@ packages:
     resolution: {integrity: sha512-oWb1Z6mkHIskLzEJ/XWX0srkpkTQ7vaopMQkyaEIoq0fmtFVxOthb8cCxeT+p3ynTdkk/RZwbgG4brR5BeWECw==}
     engines: {node: '>= 4.0'}
     os: [darwin]
-    deprecated: The v1 package contains DANGEROUS / INSECURE binaries. Upgrade to safe fsevents v2
+    deprecated: Upgrade to fsevents v2 to mitigate potential security issues
     requiresBuild: true
     dependencies:
       bindings: 1.5.0

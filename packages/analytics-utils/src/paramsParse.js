@@ -41,7 +41,9 @@ function getParamsAsObject(query) {
     var v = decodeUri(temp[2])
     if (k.substring(k.length - 2) === '[]') {
       k = k.substring(0, k.length - 2);
-      (params[k] || (params[k] = [])).push(v)
+      var arrVal = params[k] || (params[k] = [])
+      params[k] = Array.isArray(arrVal) ? arrVal : []
+      params[k].push(v)
     } else {
       params[k] = (v === '') ? true : v
     }
