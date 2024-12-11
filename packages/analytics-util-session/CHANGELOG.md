@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.1](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-session/compare/@analytics/session-utils@0.2.0...@analytics/session-utils@0.2.1) (2024-12-11)
+
+**Note:** Version bump only for package @analytics/session-utils
+
+
+
+
+
 # [0.2.0](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-session/compare/@analytics/session-utils@0.1.19...@analytics/session-utils@0.2.0) (2024-02-24)
 
 
