@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.14](https://github.com/DavidWells/analytics/compare/@analytics/aws-pinpoint@0.7.13...@analytics/aws-pinpoint@0.7.14) (2024-12-11)
+
+
+### Bug Fixes
+
+* crash in analytics.reset for aws pinpoint ([515f8c2](https://github.com/DavidWells/analytics/commit/515f8c208f0e2781c2f5b3efcf5f799db0e7e153))
+
+
+
+
+
 ## [0.7.13](https://github.com/DavidWells/analytics/compare/@analytics/aws-pinpoint@0.7.12...@analytics/aws-pinpoint@0.7.13) (2024-12-11)
 
 **Note:** Version bump only for package @analytics/aws-pinpoint
