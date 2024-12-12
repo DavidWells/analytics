@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.14](https://github.com/DavidWells/analytics/compare/analytics-utils@1.0.13...analytics-utils@1.0.14) (2024-12-12)
+
+
+### Bug Fixes
+
+* [#391](https://github.com/DavidWells/analytics/issues/391) param parse ([b693e2b](https://github.com/DavidWells/analytics/commit/b693e2ba07450e84130a752f3e1a5dc7646a4e8a))
+
+
+
+
+
 ## [1.0.13](https://github.com/DavidWells/analytics/compare/analytics-utils@1.0.12...analytics-utils@1.0.13) (2024-12-11)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "@analytics/aws-pinpoint",
-  "version": "0.7.14",
+  "version": "0.7.15",
   "description": "AWS Pinpoint integration for 'analytics' module",
   "projectMeta": {
     "provider": {
@@ -67,11 +67,11 @@
     "@analytics/activity-utils": "^0.1.16",
     "@analytics/localstorage-utils": "^0.1.10",
     "@analytics/queue-utils": "^0.1.2",
-    "@analytics/session-utils": "^0.2.1",
+    "@analytics/session-utils": "^0.2.2",
     "@analytics/type-utils": "^0.3.1",
     "@aws-sdk/client-pinpoint": "^3.31.0",
     "analytics-plugin-tab-events": "^0.2.1",
-    "analytics-utils": "^1.0.13",
+    "analytics-utils": "^1.0.14",
     "aws4fetch": "^1.0.13",
     "deepmerge": "^4.2.2"
   },

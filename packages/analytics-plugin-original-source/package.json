@@ -1,6 +1,6 @@
 {
   "name": "@analytics/original-source-plugin",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "Save original referral source of visitor plugin for 'analytics' pkg",
   "keywords": [
     "analytics",
@@ -46,7 +46,7 @@
   "dependencies": {
     "@analytics/storage-utils": "^0.4.2",
     "@analytics/type-utils": "^0.6.2",
-    "analytics-utils": "^1.0.13"
+    "analytics-utils": "^1.0.14"
   },
   "devDependencies": {
     "concurrently": "^6.1.0",
