@@ -30,7 +30,6 @@ https://random.url.com?Target=Offer&Method=findAll&filters%5Bhas_goals_enabled%5
 http://localhost:3000/?Target=Offer&Method=findAll&filters[has_goals_enabled][TRUE]=1&filters[status]=active&filters[wow]arr[]=yaz&filters[wow]arr[]=naz&fields[]=id&fields[]=name&fields[]=default_goal_name */
 
 
-
 function getParamsAsObject(query) {
   let params = Object.create(null)
   let temp
@@ -39,6 +38,7 @@ function getParamsAsObject(query) {
   while (temp = re.exec(query)) {
     var k = decodeUri(temp[1])
     var v = decodeUri(temp[2])
+    if (!k) continue
     if (k.substring(k.length - 2) === '[]') {
       k = k.substring(0, k.length - 2);
       var arrVal = params[k] || (params[k] = [])

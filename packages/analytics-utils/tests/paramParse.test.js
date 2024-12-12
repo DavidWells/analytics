@@ -36,6 +36,16 @@ test('Duplicate param keys', () => {
   })
 })
 
+test('Handles null broken uri', () => {
+  const url = 'http://localhost:3000/?a=1&foo=cool&%%20Exe'
+  const parsed = _paramsParse(url)
+  // console.log('parsed', parsed)
+  assert.equal(parsed, {
+    a: '1',
+    foo: 'cool',
+  })
+})
+
 test('test utm params', () => {
   const url = 'http://localhost:3000/http://glocal.dev/?utm_source=the_source&utm_medium=camp%20med&utm_term=Bought%20keyword&utm_content=Funny%20Text&utm_campaign=400kpromo'
   const parsed = _paramsParse(url)
