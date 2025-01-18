@@ -1,5 +1,6 @@
 // import analytics from './basic'
-import analytics from './just-ga'
+// import analytics from './just-ga'
+import analytics from './example-1'
 
 // import analytics from './example-multiple-gtm-instances'
 
