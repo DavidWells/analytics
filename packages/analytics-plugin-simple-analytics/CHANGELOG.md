@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.1](https://github.com/DavidWells/analytics/compare/@analytics/simple-analytics@0.4.0...@analytics/simple-analytics@0.4.1) (2025-03-19)
+
+**Note:** Version bump only for package @analytics/simple-analytics
+
+
+
+
+
 # [0.4.0](https://github.com/DavidWells/analytics/compare/@analytics/simple-analytics@0.3.4...@analytics/simple-analytics@0.4.0) (2023-11-02)
 
 
