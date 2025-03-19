@@ -88,7 +88,7 @@ function simpleAnalyticsPlugin(pluginConfig = {}) {
     track: ({ payload, config }) => {
       var saEventFunction = window[config.saGlobal] || window.sa_event || window.sa
       if (!saEventFunction) return false
-      saEventFunction(payload.event)
+      saEventFunction(payload.event, payload.properties)
     },
     /* Verify script loaded */
     loaded: () => {
