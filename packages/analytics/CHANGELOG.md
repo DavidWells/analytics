@@ -3,6 +3,102 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.16](https://github.com/DavidWells/analytics/compare/analytics@0.8.15...analytics@0.8.16) (2024-12-12)
+
+**Note:** Version bump only for package analytics
+
+
+
+
+
+## [0.8.15](https://github.com/DavidWells/analytics/compare/analytics@0.8.14...analytics@0.8.15) (2024-12-11)
+
+**Note:** Version bump only for package analytics
+
+
+
+
+
+## [0.8.14](https://github.com/DavidWells/analytics/compare/analytics@0.8.13...analytics@0.8.14) (2024-07-29)
+
+**Note:** Version bump only for package analytics
+
+
+
+
+
+## [0.8.13](https://github.com/DavidWells/analytics/compare/analytics@0.8.12...analytics@0.8.13) (2024-05-30)
+
+**Note:** Version bump only for package analytics
+
+
+
+
+
+## [0.8.12](https://github.com/DavidWells/analytics/compare/analytics@0.8.11...analytics@0.8.12) (2024-05-30)
+
+**Note:** Version bump only for package analytics
+
+
+
+
+
+## [0.8.11](https://github.com/DavidWells/analytics/compare/analytics@0.8.10...analytics@0.8.11) (2024-02-12)
+
+**Note:** Version bump only for package analytics
+
+
+
+
+
+## [0.8.10](https://github.com/DavidWells/analytics/compare/analytics@0.8.9...analytics@0.8.10) (2024-02-12)
+
+**Note:** Version bump only for package analytics
+
+
+
+
+
+## [0.8.9](https://github.com/DavidWells/analytics/compare/analytics@0.8.8...analytics@0.8.9) (2023-06-16)
+
+**Note:** Version bump only for package analytics
+
+
+
+
+
+## [0.8.8](https://github.com/DavidWells/analytics/compare/analytics@0.8.7...analytics@0.8.8) (2023-06-16)
+
+**Note:** Version bump only for package analytics
+
+
+
+
+
+## [0.8.7](https://github.com/DavidWells/analytics/compare/analytics@0.8.6...analytics@0.8.7) (2023-05-27)
+
+**Note:** Version bump only for package analytics
+
+
+
+
+
+## [0.8.6](https://github.com/DavidWells/analytics/compare/analytics@0.8.5...analytics@0.8.6) (2023-05-27)
+
+**Note:** Version bump only for package analytics
+
+
+
+
+
+## [0.8.5](https://github.com/DavidWells/analytics/compare/analytics@0.8.4...analytics@0.8.5) (2023-05-27)
+
+**Note:** Version bump only for package analytics
+
+
+
+
+
 ## [0.8.4](https://github.com/DavidWells/analytics/compare/analytics@0.8.3...analytics@0.8.4) (2022-07-21)
 
 **Note:** Version bump only for package analytics

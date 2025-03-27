@@ -11,7 +11,7 @@
     "build": "gatsby build",
     "postbuild": "node scripts/sitemap.js && cp _redirects public",
     "serve": "http-server public",
-    "deploy": "./node_modules/.bin/netlify deploy -p --dir public",
+    "deploy": "./node_modules/.bin/netlify deploy -p --dir public --site 09429c65-5e92-4873-9805-ae4f30027d8a",
     "deploydev": "./node_modules/.bin/netlify deploy --dir public"
   },
   "dependencies": {

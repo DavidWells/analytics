@@ -7,7 +7,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "serve": "cd build && http-server",
-    "deploy": "netlify deploy --dir build --prod"
+    "deploy": "netlify deploy --dir build --prod --site b5accf61-3856-49a1-ac48-86bb06b57d4b"
   },
   "dependencies": {
     "@analytics/core": "file:../../packages/analytics-core",

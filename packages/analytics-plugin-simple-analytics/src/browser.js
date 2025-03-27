@@ -12,6 +12,7 @@
  * @param {string}  [pluginConfig.ignorePages] - Add ignore pages https://docs.simpleanalytics.com/ignore-pages
  * @param {string}  [pluginConfig.saGlobal] - Overwrite SA global for events https://docs.simpleanalytics.com/events#the-variable-sa_event-is-already-used
  * @param {boolean} [pluginConfig.autoCollect] - Overwrite SA global for events https://docs.simpleanalytics.com/trigger-custom-page-views#use-custom-collection-anyway
+ * @param {string}  [pluginConfig.allowParams] - Allow custom URL parameters https://docs.simpleanalytics.com/allow-params
  * @param {string}  [pluginConfig.onloadCallback] -  Allow onload callback https://docs.simpleanalytics.com/trigger-custom-page-views#use-custom-collection-anyway
  * @return {object} Analytics plugin
  * @example
@@ -61,6 +62,10 @@ function simpleAnalyticsPlugin(pluginConfig = {}) {
       // https://docs.simpleanalytics.com/trigger-custom-page-views#use-custom-collection-anyway
       if (config.autoCollect) script.dataset.autoCollect = config.autoCollect;
 
+      // Allow URL parameters
+      // https://docs.simpleanalytics.com/allow-params
+      if (config.allowParams) script.dataset.allowParams = config.allowParams;
+
       // Allow onload callback
       // https://docs.simpleanalytics.com/trigger-custom-page-views#use-custom-collection-anyway
       if (config.onloadCallback) script.onload = config.onloadCallback;
@@ -83,7 +88,7 @@ function simpleAnalyticsPlugin(pluginConfig = {}) {
     track: ({ payload, config }) => {
       var saEventFunction = window[config.saGlobal] || window.sa_event || window.sa
       if (!saEventFunction) return false
-      saEventFunction(payload.event)
+      saEventFunction(payload.event, payload.properties)
     },
     /* Verify script loaded */
     loaded: () => {

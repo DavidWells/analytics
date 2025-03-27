@@ -37,6 +37,7 @@ let loadedInstances = {}
  * @param {string}  [pluginConfig.customScriptSrc] - Custom URL for google analytics script, if proxying calls
  * @param {object}  [pluginConfig.cookieConfig] - Additional cookie properties for configuring the [ga cookie](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#configuring_cookie_field_settings)
  * @param {object}  [pluginConfig.tasks] - [Set custom google analytic tasks](https://developers.google.com/analytics/devguides/collection/analyticsjs/tasks)
+ * @param {string}  [pluginConfig.nonce] - Content-Security-Policy nonce value
  * @return {*}
  * @example
  *
@@ -58,7 +59,7 @@ function googleAnalyticsV3(pluginConfig = {}) {
     initialize: (pluginApi) => {
       const { config, instance } = pluginApi
       if (!config.trackingId) throw new Error('No GA trackingId defined')
-      const { customDimensions, customScriptSrc } = config
+      const { customDimensions, customScriptSrc, nonce } = config
       // var to hoist
       const scriptSrc = customScriptSrc || 'https://www.google-analytics.com/analytics.js'
       // Load google analytics script to page
@@ -68,7 +69,7 @@ function googleAnalyticsV3(pluginConfig = {}) {
           i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function() {
             (i[r].q = i[r].q || []).push(arguments)
           }, i[r].l = 1 * new Date(); a = s.createElement(o),
-          m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+          m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; nonce && a.setAttribute('nonce', nonce); m.parentNode.insertBefore(a, m)
         })(window, document, 'script', scriptSrc, 'ga')
         /* eslint-enable */
       }

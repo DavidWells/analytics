@@ -1,6 +1,6 @@
 # Preact analytics example
 
-[Demo link](https://analytics-preact-example.netlify.com/)
+[Demo link](https://analytics-preact-example.netlify.app/)
 
 See `/src/analytics.js` for analytics setup.
 

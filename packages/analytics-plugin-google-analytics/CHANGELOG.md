@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/DavidWells/analytics/compare/@analytics/google-analytics@1.0.7...@analytics/google-analytics@1.1.0) (2024-12-11)
+
+
+### Features
+
+* [#235](https://github.com/DavidWells/analytics/issues/235) add csp nonce for google tag and analytics packages ([abd2b28](https://github.com/DavidWells/analytics/commit/abd2b2898426577ba3b28eeab5ae999191f21c75))
+
+
+
+
+
+## [1.0.7](https://github.com/DavidWells/analytics/compare/@analytics/google-analytics@1.0.6...@analytics/google-analytics@1.0.7) (2023-05-27)
+
+**Note:** Version bump only for package @analytics/google-analytics
+
+
+
+
+
+## [1.0.6](https://github.com/DavidWells/analytics/compare/@analytics/google-analytics@1.0.5...@analytics/google-analytics@1.0.6) (2023-05-27)
+
+**Note:** Version bump only for package @analytics/google-analytics
+
+
+
+
+
+## [1.0.5](https://github.com/DavidWells/analytics/compare/@analytics/google-analytics@1.0.4...@analytics/google-analytics@1.0.5) (2022-11-09)
+
+
+### Bug Fixes
+
+* pre-installed gtag causes analytics.js plugin to not initialize ([fd10ab2](https://github.com/DavidWells/analytics/commit/fd10ab2ebabf73beb6242a59b2a04a0af035044e))
+
+
+
+
+
+## [1.0.4](https://github.com/DavidWells/analytics/compare/@analytics/google-analytics@1.0.3...@analytics/google-analytics@1.0.4) (2022-11-09)
+
+
+### Bug Fixes
+
+* fixes a sneaky bug that causes all ga4 events (gtag) to fire in debug mode ([1da35cb](https://github.com/DavidWells/analytics/commit/1da35cbef06d93605a4e82767f0e4c6a2ac9aca8))
+
+
+
+
+
 ## [1.0.3](https://github.com/DavidWells/analytics/compare/@analytics/google-analytics@1.0.2...@analytics/google-analytics@1.0.3) (2022-07-22)
 
 **Note:** Version bump only for package @analytics/google-analytics

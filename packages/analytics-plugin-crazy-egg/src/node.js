@@ -1,5 +1,5 @@
 
-export default function crazyEgg(pluginConfig) {
+function crazyEgg(pluginConfig) {
   return {
     name: 'crazy-egg',
     initialize: ({ config }) => {
@@ -7,3 +7,5 @@ export default function crazyEgg(pluginConfig) {
     }
   }
 }
+
+export default crazyEgg

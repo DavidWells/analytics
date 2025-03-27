@@ -23,7 +23,7 @@ For more information [see the docs](https://getanalytics.io/plugins/intercom/).
   - [Server-side API](#server-side-api)
   - [Configuration options for server-side](#configuration-options-for-server-side)
 - [Additional examples](#additional-examples)
-- [Custom browser methos](#custom-browser-methos)
+- [Custom browser methods](#custom-browser-methos)
   - [actions](#actions)
   - [hooks](#hooks)
   - [Browser Example](#browser-example)
@@ -336,7 +336,7 @@ Below are additional implementation examples.
 
 <!-- AUTO-GENERATED-CONTENT:END -->
 
-## Custom browser methos
+## Custom browser methods
 
 This plugin exposes some custom intercom methods thanks to [custom methods](https://getanalytics.io/plugins/writing-plugins/#adding-custom-methods) on plugins.
 

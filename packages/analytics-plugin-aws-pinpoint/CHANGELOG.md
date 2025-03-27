@@ -3,6 +3,73 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.15](https://github.com/DavidWells/analytics/compare/@analytics/aws-pinpoint@0.7.14...@analytics/aws-pinpoint@0.7.15) (2024-12-12)
+
+**Note:** Version bump only for package @analytics/aws-pinpoint
+
+
+
+
+
+## [0.7.14](https://github.com/DavidWells/analytics/compare/@analytics/aws-pinpoint@0.7.13...@analytics/aws-pinpoint@0.7.14) (2024-12-11)
+
+
+### Bug Fixes
+
+* crash in analytics.reset for aws pinpoint ([515f8c2](https://github.com/DavidWells/analytics/commit/515f8c208f0e2781c2f5b3efcf5f799db0e7e153))
+
+
+
+
+
+## [0.7.13](https://github.com/DavidWells/analytics/compare/@analytics/aws-pinpoint@0.7.12...@analytics/aws-pinpoint@0.7.13) (2024-12-11)
+
+**Note:** Version bump only for package @analytics/aws-pinpoint
+
+
+
+
+
+## [0.7.12](https://github.com/DavidWells/analytics/compare/@analytics/aws-pinpoint@0.7.11...@analytics/aws-pinpoint@0.7.12) (2024-02-24)
+
+**Note:** Version bump only for package @analytics/aws-pinpoint
+
+
+
+
+
+## [0.7.11](https://github.com/DavidWells/analytics/compare/@analytics/aws-pinpoint@0.7.10...@analytics/aws-pinpoint@0.7.11) (2023-12-31)
+
+**Note:** Version bump only for package @analytics/aws-pinpoint
+
+
+
+
+
+## [0.7.10](https://github.com/DavidWells/analytics/compare/@analytics/aws-pinpoint@0.7.9...@analytics/aws-pinpoint@0.7.10) (2023-07-28)
+
+**Note:** Version bump only for package @analytics/aws-pinpoint
+
+
+
+
+
+## [0.7.9](https://github.com/DavidWells/analytics/compare/@analytics/aws-pinpoint@0.7.8...@analytics/aws-pinpoint@0.7.9) (2023-05-27)
+
+**Note:** Version bump only for package @analytics/aws-pinpoint
+
+
+
+
+
+## [0.7.8](https://github.com/DavidWells/analytics/compare/@analytics/aws-pinpoint@0.7.7...@analytics/aws-pinpoint@0.7.8) (2023-05-27)
+
+**Note:** Version bump only for package @analytics/aws-pinpoint
+
+
+
+
+
 ## [0.7.7](https://github.com/DavidWells/analytics/compare/@analytics/aws-pinpoint@0.7.6...@analytics/aws-pinpoint@0.7.7) (2022-03-18)
 
 **Note:** Version bump only for package @analytics/aws-pinpoint

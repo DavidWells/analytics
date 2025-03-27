@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.13](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-form/compare/@analytics/form-utils@0.3.12...@analytics/form-utils@0.3.13) (2023-05-27)
+
+**Note:** Version bump only for package @analytics/form-utils
+
+
+
+
+
+## [0.3.12](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-form/compare/@analytics/form-utils@0.3.11...@analytics/form-utils@0.3.12) (2023-05-27)
+
+**Note:** Version bump only for package @analytics/form-utils
+
+
+
+
+
 ## [0.3.11](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-form/compare/@analytics/form-utils@0.3.10...@analytics/form-utils@0.3.11) (2022-03-18)
 
 **Note:** Version bump only for package @analytics/form-utils

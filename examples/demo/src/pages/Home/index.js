@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from "@reach/router"
-import { initialHistory } from '../../utils/analytics/plugins/visualize-analytics'
+import { initialHistory, clearHistory, recordHistory } from '../../utils/analytics/plugins/visualize-analytics'
 import analytics from '../../utils/analytics'
 import Navigation from '../../fragments/Nav'
 import Log from '../../components/Log'
@@ -8,6 +8,7 @@ import './Home.css'
 
 let hasCleared = false
 
+console.log('initialHistory', initialHistory)
 // analytics.ready((info) => {
 //   console.log('info', info)
 //   analytics.plugins['google-analytics'].addTag('foobar')
@@ -42,9 +43,10 @@ export default class App extends Component {
   componentDidMount() {
     this.listener = analytics.on('*', ({ payload }) => {
       console.log('payload', payload)
-      this.setState({
-        history: window.__global__.analytics.concat(payload) // .sort(sortByTimeStamp)
-      })
+      recordHistory(payload)
+      // this.setState({
+      //   history: window.__global__.analytics.concat(payload) //.sort(sortByTimeStamp)
+      // })
     })
     setInterval(() => {
       this.setState({
@@ -85,7 +87,7 @@ export default class App extends Component {
   // Clear logs for demo buttons
   clearLogs() {
     if (!hasCleared) {
-       window.__global__.analytics = []
+      clearHistory()
       hasCleared = true
     }
   }
@@ -122,7 +124,6 @@ export default class App extends Component {
    })
   }
   render() {
-    const { history } = this.state
     return (
       <div className="App">
         <Navigation />
@@ -157,7 +158,7 @@ export default class App extends Component {
           </a> & listeners. This makes calls to third party analytic tools completely customizable & cancellable.
           </p>
         </div>
-        <Log items={history} />
+        <Log items={initialHistory} />
       </div>
     )
   }

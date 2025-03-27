@@ -8,6 +8,12 @@ body {
   color: @color-text2;
 }
 
+.ad-container {
+  position: fixed;
+  right: 30px;
+  bottom: 8px;
+}
+
 @default-margin: 1.45rem;
 
 h1, h2, h3, h4, h5, h6, p, ul, ol {
@@ -112,4 +118,11 @@ hr {
   margin-bottom: calc(@default-margin - 1px);
   border: none;
   background-color: @color-divider
+}
+
+
+@media (max-width: 768px) {
+  .ad-container {
+    display: none;
+  }
 }

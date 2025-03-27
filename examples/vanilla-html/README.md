@@ -1,6 +1,6 @@
 # Using Analytics with HTML
 
-[Demo](https://analytics-html-example.netlify.com/)
+[Demo](https://analytics-html-example.netlify.app/)
 
 ## Usage
 
@@ -17,8 +17,8 @@
     debug: true,
     version: 100,
     plugins: [
-      analyticsGa({
-        trackingId: 'UA-126647663-3'
+      analyticsGa.default({
+        measurementIds: 'UA-126647663-3'
       })
       // ... add other plugins
     ]

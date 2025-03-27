@@ -1,6 +1,6 @@
 {
   "name": "@analytics/core",
-  "version": "0.12.2",
+  "version": "0.12.17",
   "description": "Lightweight analytics library for tracking events, page views, & identifying users. Works with any third party analytics provider via an extendable plugin system.",
   "keywords": [
     "analytics",
@@ -33,11 +33,10 @@
     "test": "ava -v",
     "test:watch": "ava -v --watch",
     "prebuild": "rimraf dist _temp-types",
-    "build": "npm run build-client && npm run build-server",
+    "build": "npm run build-client && npm run build-server && npm run types",
     "build-client": "cd client && npm run build",
     "build-server": "cd server && npm run build",
     "types": "../../node_modules/.bin/jsdoc -t ../../node_modules/tsd-jsdoc/dist -r ./src/ -d _temp-types && node scripts/types.js",
-    "postbuild": "npm run types",
     "publish": "git push origin && git push origin --tags",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
@@ -56,16 +55,18 @@
     "client/**/*.js.map",
     "client/**/*.d.ts",
     "client/**/package.json",
+    "!client/node_modules",
     "server/**/*.js",
     "server/**/*.js.map",
     "server/**/*.d.ts",
     "server/**/package.json",
+    "!server/node_modules",
     "README.md"
   ],
   "dependencies": {
-    "@analytics/global-storage-utils": "^0.1.5",
-    "@analytics/type-utils": "^0.6.0",
-    "analytics-utils": "^1.0.10"
+    "@analytics/global-storage-utils": "^0.1.7",
+    "@analytics/type-utils": "^0.6.2",
+    "analytics-utils": "^1.0.14"
   },
   "ava": {
     "files": [

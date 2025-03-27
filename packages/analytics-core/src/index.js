@@ -23,6 +23,7 @@ import ensureArray from './utils/ensureArray'
 import enrichMeta from './utils/enrichMeta'
 import './pluginTypeDef'
 
+
 /**
  * Analytics library configuration
  *
@@ -30,7 +31,7 @@ import './pluginTypeDef'
  *
  * @param {object} config - analytics core config
  * @param {string} [config.app] - Name of site / app
- * @param {string} [config.version] - Version of your app
+ * @param {string|number} [config.version] - Version of your app
  * @param {boolean} [config.debug] - Should analytics run in debug mode
  * @param {Array.<AnalyticsPlugin>}  [config.plugins] - Array of analytics plugins
  * @return {AnalyticsInstance} Analytics Instance
@@ -58,11 +59,9 @@ function analytics(config = {}) {
   // if (BROWSER) {
   //   console.log('INIT browser')
   // }
-
   // if (SERVER) {
   //   console.log('INIT SERVER')
   // }
-
   /* Parse plugins array */
   const parsedOptions = (config.plugins || []).reduce((acc, plugin) => {
     if (isFunction(plugin)) {
@@ -222,7 +221,7 @@ function analytics(config = {}) {
      * Disable analytics plugin
      * @typedef {Function} DisablePlugin
      * @param  {string|string[]} plugins - name of integration(s) to disable
-     * @param  {Function} callback - callback after disable runs
+     * @param  {Function} [callback] - callback after disable runs
      * @returns {Promise}
      * @example
      *
@@ -639,7 +638,7 @@ function analytics(config = {}) {
       return () => removeMiddleware(handler, position)
     },
     /**
-     * Attach a handler function to an event and only trigger it only once.
+     * Attach a handler function to an event and only trigger it once.
      * @typedef {Function} Once
      * @param  {String} name - Name of event to listen to
      * @param  {Function} callback - function to fire on event
@@ -647,9 +646,9 @@ function analytics(config = {}) {
      *
      * @example
      *
-     * // Fire function only once 'track'
+     * // Fire function only once per 'track'
      * analytics.once('track', ({ payload }) => {
-     *   console.log('This will only triggered once when analytics.track() fires')
+     *   console.log('This is only triggered once when analytics.track() fires')
      * })
      *
      * // Remove listener before it is called

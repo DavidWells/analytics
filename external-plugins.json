@@ -64,5 +64,33 @@
     "name": "RudderStack",
     "url": "https://www.npmjs.com/package/begrowth-analytics-rudderstack",
     "description": "Adds Analytics support for RudderStack"
+  },
+  {
+    "name": "PostHog",
+    "url": "https://www.npmjs.com/package/@metro-fs/analytics-plugin-posthog",
+    "description": "Adds Analytics support for PostHog by @metro-fs"
+  },
+  {
+    "name": "PostHog",
+    "url": "https://www.npmjs.com/package/analytics-plugin-posthog",
+    "description": "Adds Analytics support for PostHog by deevus"
+  },
+  {
+    "name": "Conscia",
+    "url": "https://www.npmjs.com/package/analytics-plugin-conscia",
+    "repo": "https://github.com/conscia/analytics-plugin-conscia",
+    "description": "Adds Analytics support for conscia.ai"
+  },
+  {
+    "name": "Planhat",
+    "url": "https://www.npmjs.com/package/analytics-plugin-planhat",
+    "repo": "https://github.com/WarreH/analytics-plugin-planhat",
+    "description": "Adds Analytics support for Planhat"
+  },
+  {
+    "name": "mailmodo",
+    "url": "https://www.npmjs.com/package/analytics-plugin-mailmodo",
+    "repo": "https://github.com/fotoflo/analytics-plugin-mailmodo/",
+    "description": "Adds Analytics support for mailmodo"
   }
 ]

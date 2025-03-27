@@ -87,3 +87,10 @@ export function reset(context) {
 export function getSelector(selector) {
 	return document.querySelector(selector)
 }
+
+/**
+ * @return {RenderOutput}
+ */
+export function getSelectorAll(selector) {
+	return document.querySelectorAll(selector)
+}

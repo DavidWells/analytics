@@ -47,7 +47,7 @@ const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
     googleAnalytics({
-      measurementIds: ['UA-1234567']
+      measurementIds: ['G-abc123']
     })
   ]
 })
@@ -95,7 +95,7 @@ const analytics = Analytics({
   app: 'awesome-app',
   plugins: [
     googleAnalytics({
-      measurementIds: ['UA-1234567']
+      measurementIds: ['G-abc123']
     })
   ]
 })
@@ -106,10 +106,10 @@ const analytics = Analytics({
 
 | Option | description |
 |:---------------------------|:-----------|
-| `measurementIds` <br/>**required** - string| Google Analytics MEASUREMENT IDs |
+| `measurementIds` <br/>**required** - Array.<string>| Google Analytics MEASUREMENT IDs |
 | `debug` <br/>_optional_ - boolean| Enable Google Analytics debug mode |
 | `dataLayerName` <br/>_optional_ - string| The optional name for dataLayer object. Defaults to ga4DataLayer. |
-| `gtagName` <br/>_optional_ - string| The optional name for dataLayer object. Defaults to ga4DataLayer. |
+| `gtagName` <br/>_optional_ - string| The optional name for dataLayer object. Defaults to `gtag`. |
 | `gtagConfig.anonymize_ip` <br/>_optional_ - boolean| Enable [Anonymizing IP addresses](https://bit.ly/3c660Rd) sent to Google Analytics. |
 | `gtagConfig.cookie_domain` <br/>_optional_ - object| Additional cookie properties for configuring the [ga cookie](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#configuring_cookie_field_settings) |
 | `gtagConfig.cookie_expires` <br/>_optional_ - object| Additional cookie properties for configuring the [ga cookie](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#configuring_cookie_field_settings) |
@@ -140,7 +140,7 @@ Below are additional implementation examples.
           app: 'my-app-name',
           plugins: [
             analyticsGa.init({
-              measurementIds: ['UA-1234567']
+              measurementIds: ['G-abc123']
             })
           ]
         })
@@ -194,7 +194,7 @@ Below are additional implementation examples.
           debug: true,
           plugins: [
             analyticsGa({
-              measurementIds: ['UA-1234567']
+              measurementIds: ['G-abc123']
             })
             // ... add any other third party analytics plugins
           ]

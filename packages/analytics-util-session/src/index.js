@@ -6,6 +6,7 @@ import { set, get } from '@analytics/global-storage-utils'
 
 const PREFIX = '__'
 const SESSION = 'session'
+const KEY = PREFIX + SESSION
 const PAGE = 'page'
 const KEYS = ['id', 'createdAt', 'created']
 const TIMEOUT = 30
@@ -24,11 +25,12 @@ export function sessionData() {
   }
 }
 
+const storageMechanism = {
+  session: [ getSessionItem, setSessionItem ],
+  page: [ get, set ]
+}
+
 function logic(kind, isSetter) {
-  const storageMechanism = {
-    session: [ getSessionItem, setSessionItem ],
-    page: [ get, set ]
-  }
   const [ getter, setter ] = storageMechanism[kind]
   const data = sessionData()
   let isNew = false
@@ -36,33 +38,33 @@ function logic(kind, isSetter) {
 
   for (let i = 0; i < KEYS.length; i++) {
     const key = KEYS[i]
-    // e.g. __page__session__createdAt
+    // e.g. __page__session__createdAt, __session__session__createdAt, 
     const k = PREFIX + kind + PREFIX + SESSION + PREFIX + key
     const currentVal = getter(k)
     // Triple ! sets !!!false | !!!null | !!!undefined to true
     isNew = isSetter || !!!currentVal
-    const value = (currentVal && !isSetter) ? currentVal : setter(k, data[key])
+    if (isSetter || !isSetter && !currentVal) setter(k, data[key])
+    const value = (currentVal && !isSetter) ? currentVal : data[key]
     const finValue = (key !== 'created') ? value : Number(value)
     info[key] = finValue
   }
-
   return addContext(info, isNew)
 }
 
 function addContext(obj, isNew) {
   const now = Date.now()
   obj.elapsed = now - obj.created
-  if (obj.expires) obj.remaining = Math.abs(obj.expires - now)
+  if (obj.expires) {
+    obj.remaining = Math.max(obj.expires - now, 0)
+    /* Expire session */
+    obj.isExpired = obj.remaining === 0
+  }
   obj.isNew = isNew
   return obj
 }
 
-function getName() {
-  return PREFIX + SESSION
-}
-
-export function getSession(minutes = TIMEOUT, persistedOnly)  {
-  const cookieData = getCookie(getName())
+export function getSession(minutes = TIMEOUT, persistedOnly) {
+  const cookieData = getCookie(KEY)
   const data = (cookieData) ? JSON.parse(cookieData) : setSession(minutes)
   return persistedOnly ? data : addContext(data, !!!cookieData)
 }
@@ -81,16 +83,17 @@ export function setSession(minutes = TIMEOUT, extra, extend) {
   const [ expiresIso, expiresUnix ] = getDate(timeExpire + (exp * 1e3))
   data.expires = expiresUnix
   data.expiresAt = expiresIso
+  data.duration = (exp * 1e3)
   if (extra) {
     data = Object.assign(data, extra)
   }
-  setCookie(getName(), JSON.stringify(data), exp)
+  setCookie(KEY, JSON.stringify(data), exp)
   return addContext(data, !extend)
 }
 
 export const extendSession = (minutes = TIMEOUT, extra) => setSession((minutes || 1), extra, true)
 
-export const removeSession = () => removeCookie(getName())
+export const removeSession = () => removeCookie(KEY)
 
 export const getTabSession = logic.bind(null, SESSION)
 export const setTabSession = logic.bind(null, SESSION, true)

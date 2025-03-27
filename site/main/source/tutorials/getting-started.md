@@ -127,13 +127,13 @@ In the browser, `analytics` will work with any frontend framework.
 
 Analytics works in vanilla HTML pages and can be [imported from a CDN](#cdn-browser-usage).
 
-[Live demo](https://analytics-html-example.netlify.com/) & the [source code](https://github.com/DavidWells/analytics/tree/master/examples/vanilla-html).
+[Live demo](https://analytics-html-example.netlify.app/) & the [source code](https://github.com/DavidWells/analytics/tree/master/examples/vanilla-html).
 
 ### React
 
-Checkout the [using analytics with react demo](https://analytics-react-example.netlify.com/) & the [source code](https://github.com/DavidWells/analytics/tree/master/examples/react)
+Checkout the [using analytics with react demo](https://analytics-react-example.netlify.app/) & the [source code](https://github.com/DavidWells/analytics/tree/master/examples/react)
 
-For a larger example see the [kitchen sink example](https://analytics-demo.netlify.com) & its [source code](https://github.com/DavidWells/analytics/tree/master/examples/demo).
+For a larger example see the [kitchen sink example](https://analytics-demo.netlify.app) & its [source code](https://github.com/DavidWells/analytics/tree/master/examples/demo).
 
 Also checkout the [`useAnalytics`](http://getanalytics.io/utils/react-hooks) react hooks.
 
@@ -163,11 +163,11 @@ You can also reference the various [react examples](https://getanalytics.io/tuto
 
 Preact is a fast 3kB alternative to React with the same modern API.
 
-[Using analytics with preact demo](https://analytics-preact-example.netlify.com/) & the [source code](https://github.com/DavidWells/analytics/tree/master/examples/preact).
+[Using analytics with preact demo](https://analytics-preact-example.netlify.app/) & the [source code](https://github.com/DavidWells/analytics/tree/master/examples/preact).
 
 ### Vue
 
-[Using analytics with vue demo](https://analytics-vue-example.netlify.com/) & the [source code](
+[Using analytics with vue demo](https://analytics-vue-example.netlify.app/) & the [source code](
 https://github.com/DavidWells/analytics/tree/master/examples/vue).
 
 ### Angular

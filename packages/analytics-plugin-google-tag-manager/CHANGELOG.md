@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/DavidWells/analytics/compare/@analytics/google-tag-manager@0.5.5...@analytics/google-tag-manager@0.6.0) (2024-12-11)
+
+
+### Features
+
+* [#235](https://github.com/DavidWells/analytics/issues/235) add csp nonce for google tag and analytics packages ([abd2b28](https://github.com/DavidWells/analytics/commit/abd2b2898426577ba3b28eeab5ae999191f21c75))
+
+
+
+
+
+## [0.5.5](https://github.com/DavidWells/analytics/compare/@analytics/google-tag-manager@0.5.4...@analytics/google-tag-manager@0.5.5) (2023-06-16)
+
+**Note:** Version bump only for package @analytics/google-tag-manager
+
+
+
+
+
+## [0.5.4](https://github.com/DavidWells/analytics/compare/@analytics/google-tag-manager@0.5.3...@analytics/google-tag-manager@0.5.4) (2023-05-27)
+
+
+### Bug Fixes
+
+* missing script src ([fe8e86f](https://github.com/DavidWells/analytics/commit/fe8e86f0b441d1908a07368ccc3a3f2f6c9ae1ee))
+
+
+
+
+
+## [0.5.3](https://github.com/DavidWells/analytics/compare/@analytics/google-tag-manager@0.5.2...@analytics/google-tag-manager@0.5.3) (2022-11-09)
+
+
+### Bug Fixes
+
+* google tag manager not working with custom script src ([7eb9683](https://github.com/DavidWells/analytics/commit/7eb96834b9d3fec8f06ebda72bd04e1986018e96))
+
+
+
+
+
 ## [0.5.2](https://github.com/DavidWells/analytics/compare/@analytics/google-tag-manager@0.5.1...@analytics/google-tag-manager@0.5.2) (2022-02-05)
 
 **Note:** Version bump only for package @analytics/google-tag-manager

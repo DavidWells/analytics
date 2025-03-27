@@ -345,4 +345,4 @@ Add a _netlify.toml_ file to the repo root. It should contain `base`, `publish`,
 
 ### 5. Deploy
 
-When these changes are pushed to GitHub and a pull request is opened, Netlify will build a deploy preview so you can check out the changes made. When you open the deploy preview in your web browser, be sure to append the `pathPrefix` to the URL. In the example of the iOS docs, the URL would look like this: https://deploy-preview-471--apollo-ios-docs.netlify.com/docs/ios
+When these changes are pushed to GitHub and a pull request is opened, Netlify will build a deploy preview so you can check out the changes made. When you open the deploy preview in your web browser, be sure to append the `pathPrefix` to the URL. In the example of the iOS docs, the URL would look like this: https://deploy-preview-471--apollo-ios-docs.netlify.app/docs/ios

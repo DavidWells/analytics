@@ -1,4 +1,3 @@
-import React from 'react'
 import invariant from 'tiny-invariant'
 import hoistStatics from 'hoist-non-react-statics'
 import AnalyticsContext from './AnalyticsContext'

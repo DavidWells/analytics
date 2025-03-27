@@ -1,6 +1,6 @@
 {
   "name": "analytics-utils",
-  "version": "1.0.10",
+  "version": "1.0.14",
   "description": "Analytics utility functions used by 'analytics' module",
   "author": "David Wells <hello@davidwells.io>",
   "license": "MIT",
@@ -26,6 +26,7 @@
   "unpkg": "dist/analytics-utils.umd.js",
   "sideEffects": false,
   "scripts": {
+    "test": "uvu tests -r esm",
     "start": "npm run sync && concurrently 'npm:watch:dev' 'npm:copy' 'npm:serve'",
     "serve": "servor dist index.html 8081 --reload --browse",
     "copy": "watchlist examples -- npm run sync",
@@ -42,13 +43,15 @@
   "types": "./types/index.d.ts",
   "devDependencies": {
     "concurrently": "^6.1.0",
+    "esm": "^3.2.25",
     "microbundle": "^0.13.0",
     "servor": "^4.0.2",
     "typescript": "^4.2.3",
+    "uvu": "^0.5.1",
     "watchlist": "^0.2.3"
   },
   "dependencies": {
-    "@analytics/type-utils": "^0.6.0",
+    "@analytics/type-utils": "^0.6.2",
     "dlv": "^1.1.3"
   },
   "peerDependencies": {

@@ -51,10 +51,10 @@ const defaultConfig = {
  * @link https://analytics.google.com/analytics/web/
  * @link https://developers.google.com/analytics/devguides/collection/analyticsjs
  * @param {object}  pluginConfig - Plugin settings
- * @param {string|array} pluginConfig.measurementIds - Google Analytics MEASUREMENT IDs
+ * @param {string[]} pluginConfig.measurementIds - Google Analytics MEASUREMENT IDs
  * @param {boolean} [pluginConfig.debug] - Enable Google Analytics debug mode
  * @param {string}  [pluginConfig.dataLayerName=ga4DataLayer] - The optional name for dataLayer object. Defaults to ga4DataLayer.
- * @param {string}  [pluginConfig.gtagName=gtag] - The optional name for dataLayer object. Defaults to ga4DataLayer.
+ * @param {string}  [pluginConfig.gtagName=gtag] - The optional name for dataLayer object. Defaults to `gtag`.
  * @param {boolean} [pluginConfig.gtagConfig.anonymize_ip] - Enable [Anonymizing IP addresses](https://bit.ly/3c660Rd) sent to Google Analytics.
  * @param {object}  [pluginConfig.gtagConfig.cookie_domain] - Additional cookie properties for configuring the [ga cookie](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#configuring_cookie_field_settings)
  * @param {object}  [pluginConfig.gtagConfig.cookie_expires] - Additional cookie properties for configuring the [ga cookie](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#configuring_cookie_field_settings)
@@ -62,11 +62,12 @@ const defaultConfig = {
  * @param {object}  [pluginConfig.gtagConfig.cookie_update] - Additional cookie properties for configuring the [ga cookie](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#configuring_cookie_field_settings)
  * @param {object}  [pluginConfig.gtagConfig.cookie_flags] - Additional cookie properties for configuring the [ga cookie](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#configuring_cookie_field_settings)
  * @param {string}  [pluginConfig.customScriptSrc] - Custom URL for google analytics script, if proxying calls
+ * @param {string}  [pluginConfig.nonce] - Content-Security-Policy nonce value
  * @return {*}
  * @example
  *
  * googleAnalytics({
- *   measurementIds: ['UA-1234567']
+ *   measurementIds: ['G-abc123']
  * })
  */
 function googleAnalytics(pluginConfig = {}) {
@@ -82,23 +83,31 @@ function googleAnalytics(pluginConfig = {}) {
     config: initConfig,
     // Load gtag.js and define gtag
     initialize: ({ config, instance }) => {
-      const { dataLayerName, customScriptSrc, gtagName, gtagConfig, debug } = config
+      const { dataLayerName, customScriptSrc, gtagName, gtagConfig, debug, nonce } = config
       /* Inject google gtag.js script if not found */
-      if (!scriptLoaded(customScriptSrc || gtagScriptSource)) {
-        const customLayerName = dataLayerName ? `&l=${dataLayerName}` : ''
+      /* If other gtags are loaded already, add ours anyway */
+      const customLayerName = dataLayerName ? `&l=${dataLayerName}` : "";
+      const src = customScriptSrc || `${gtagScriptSource}?id=${measurementIds[0]}${customLayerName}`;
+      if (!scriptLoaded(src)) {
         const script = document.createElement('script')
         script.async = true
-        script.src = customScriptSrc || `${gtagScriptSource}?id=${measurementIds[0]}${customLayerName}`
+        script.src = src
+        if (nonce) {
+          script.setAttribute('nonce', nonce);
+        }
         document.body.appendChild(script)
       }
-      /* Set gtag and datalayer */
+      /* Set up gtag and datalayer */
       if (!window[dataLayerName]) {
         window[dataLayerName] = window[dataLayerName] || []
+      }
+      if (!window[gtagName]) {
         window[gtagName] = function () {
           window[dataLayerName].push(arguments)
         }
-        window[gtagName]('js', new Date())
       }
+      window[gtagName]('js', new Date())
+
       // Initialize tracker instances on page
       let gtagConf = {
         ...defaultGtagConf,
@@ -164,10 +173,14 @@ function googleAnalytics(pluginConfig = {}) {
         page_referrer: properties.referrer,
       }
       const campaignData = addCampaignData(campaign)
+      const userId = instance.user('userId')
       const finalPayload = {
         ...(send_to ? { send_to } : {}),
         ...pageView,
+        /* Attach campaign data, if exists */
         ...campaignData,
+        /* Attach userId, if exists */
+        ...(userId) ? { user_id: userId } : {},
       }
       /* If send_page_view true, ignore first analytics.page call */
       if (gtagConfig && gtagConfig.send_page_view && pageCallCount === 0) {
@@ -186,13 +199,17 @@ function googleAnalytics(pluginConfig = {}) {
       const campaign = instance.getState('context.campaign')
       const { gtagName } = config
       if (!window[gtagName] || !measurementIds.length) return
-      /* Attach campaign data */
+
       const campaignData = addCampaignData(campaign)
+      const userId = instance.user('userId')
+      
       // Limits https://support.google.com/analytics/answer/9267744
       const finalPayload = {
         ...properties,
         /* Attach campaign data, if exists */
         ...campaignData,
+        /* Attach userId, if exists */
+        ...(userId) ? { user_id: userId } : {},
       }
       /*
         console.log('finalPayload', finalPayload)

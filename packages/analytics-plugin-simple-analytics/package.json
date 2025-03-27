@@ -1,6 +1,6 @@
 {
   "name": "@analytics/simple-analytics",
-  "version": "0.3.4",
+  "version": "0.4.1",
   "description": "Simple analytics plugin for 'analytics' module for browser",
   "projectMeta": {
     "provider": {

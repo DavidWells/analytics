@@ -41,6 +41,8 @@ module.exports = {
             'plugins/simple-analytics',
             'plugins/ownstats',
             'plugins/perfumejs',
+            'plugins/countly',
+            'plugins/custify',
             'plugins/do-not-track',
             'plugins/tab-events',
             'plugins/window-events',

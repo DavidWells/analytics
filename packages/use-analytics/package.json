@@ -1,6 +1,6 @@
 {
   "name": "use-analytics",
-  "version": "0.0.5",
+  "version": "1.1.0",
   "description": "Analytics hooks for React",
   "author": "DavidWells",
   "license": "MIT",
@@ -16,19 +16,18 @@
     "node": ">=10"
   },
   "scripts": {
-    "build": "microbundle --no-compress --format modern,cjs",
-    "watch": "microbundle watch --no-compress --format modern,cjs",
+    "build": "microbundle --no-compress --format modern,cjs --jsx 'React.createElement' --jsxImportSource react --globals react/jsx-runtime=jsx",
+    "watch": "microbundle watch --no-compress --format modern,cjs --jsx 'React.createElement' --jsxImportSource react --globals react/jsx-runtime=jsx",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish"
   },
   "dependencies": {
     "hoist-non-react-statics": "^3.3.2",
-    "mini-create-react-context": "^0.4.1",
     "tiny-invariant": "^1.1.0"
   },
   "peerDependencies": {
-    "react": ">=15"
+    "react": ">=16"
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.8.3",

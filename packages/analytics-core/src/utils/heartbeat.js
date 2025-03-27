@@ -1,7 +1,12 @@
-import { isFunction } from '@analytics/type-utils'
+import { isFunction, isObject } from '@analytics/type-utils'
 import { ID, ANONID } from './internalConstants'
 
+function abort(reason) {
+  return { abort: reason }
+}
+
 export function processQueue(store, getPlugins, instance) {
+  const abortedCalls = {}
   const pluginMethods = getPlugins()
   const { plugins, context, queue, user } = store.getState()
   const isOnline = !context.offline
@@ -40,23 +45,37 @@ export function processQueue(store, getPlugins, instance) {
           // console.log('user.userId', user.userId)
           // console.log('user.anonymousId', user.anonymousId)
           // console.log('after enrich', enrichedPayload)
-          method({
-            payload: enrichedPayload,
-            config: plugins[currentPlugin].config,
-            instance,
-          })
+          let retVal
+          const isAborted = abortedCalls[enrichedPayload.meta.rid]
+          /* if not aborted call method */
+          if (!isAborted) {
+            // TODO make async
+            retVal = method({
+              payload: enrichedPayload,
+              config: plugins[currentPlugin].config,
+              instance,
+              abort
+            })
+            // If aborted, cancel the downstream calls
+            if (retVal && isObject(retVal) && retVal.abort) {
+              abortedCalls[enrichedPayload.meta.rid] = true
+              return
+            }
+          }
 
           /* Then redispatch for .on listeners / other middleware */
-          const pluginEvent = `${currentMethod}:${currentPlugin}`
-          store.dispatch({
-            ...enrichedPayload,
-            type: pluginEvent,
-            /* Internal data for analytics engine */
-            _: {
-              called: pluginEvent,
-              from: 'queueDrain'
-            }
-          })
+          if (!isAborted) {
+            const pluginEvent = `${currentMethod}:${currentPlugin}`
+            store.dispatch({
+              ...enrichedPayload,
+              type: pluginEvent,
+              /* Internal data for analytics engine */
+              _: {
+                called: pluginEvent,
+                from: 'queueDrain'
+              }
+            })
+          }
         }
       })
 
@@ -68,6 +87,13 @@ export function processQueue(store, getPlugins, instance) {
 
       /* Set queue actions. TODO refactor to non mutatable or move out of redux */
       queue.actions = reQueueActions
+
+      /*
+      if (!reQueueActions.length) {
+        console.log('Queue clears')
+        console.log('abortedCalls', abortedCalls)
+      }
+      /** */
     }
   }
 }

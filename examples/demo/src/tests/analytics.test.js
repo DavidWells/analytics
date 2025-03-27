@@ -96,6 +96,12 @@ it('should abort if a plugin aborts', (done) => {
         track: trackSpy,
       },
       {
+        NAMESPACE: 'test-plugin-start',
+        trackStart: ({ abort }) => {
+          return abort('stop all other track calls')
+        },
+      },
+      {
         NAMESPACE: 'test-plugin',
         track: ({ abort }) => {
           return abort('stop all other track calls')

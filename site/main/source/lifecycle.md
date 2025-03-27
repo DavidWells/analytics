@@ -12,7 +12,7 @@ The lifecycle flows like so 👇, and continues depending on which [methods](htt
 
 ![Analytics Lifecycle](https://user-images.githubusercontent.com/532272/64586657-db813300-d351-11e9-83d8-0d81c6973e49.png)
 
-Below is a list of events exposed by default. To see the events flowing through your setup, turn on [debug mode](https://getanalytics.io/debugging/) or check out the [demo](https://analytics-demo.netlify.com/).
+Below is a list of events exposed by default. To see the events flowing through your setup, turn on [debug mode](https://getanalytics.io/debugging/) or check out the [demo](https://analytics-demo.netlify.app/).
 
 ## Initialization Events
 

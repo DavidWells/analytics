@@ -18,7 +18,7 @@ The core `analytics` API is exposed once the library is initialized with [config
 5. [Write custom plugins](http://getanalytics.io/plugins/writing-plugins)
 
 <!-- AUTO-GENERATED-CONTENT:START (API_DOCS) -->
-## Configuration
+## `Configuration`
 
 Analytics library configuration
 
@@ -28,13 +28,13 @@ After the library is initialized with config, the core API is exposed & ready fo
 
 - **config** <code>object</code> - analytics core config
 - **[config.app]** (optional) <code>string</code> - Name of site / app
-- **[config.version]** (optional) <code>string</code> - Version of your app
+- **[config.version]** (optional) <code>string|number</code> - Version of your app
 - **[config.debug]** (optional) <code>boolean</code> - Should analytics run in debug mode
-- **[config.plugins]** (optional) <code>Array</code>.&lt;<code>Object</code>&gt; - Array of analytics plugins
+- **[config.plugins]** (optional) <code>Array</code>.&lt;<a href="https://getanalytics.io/plugins">AnalyticsPlugin</a>&gt; - Array of analytics plugins
 
 **Example**
 
-```js{8-11}
+```js
 import Analytics from 'analytics'
 import pluginABC from 'analytics-plugin-abc'
 import pluginXYZ from 'analytics-plugin-xyz'
@@ -238,7 +238,7 @@ Fire callback on analytics ready event
 
 ```js
 analytics.ready((payload) => {
-    console.log('all plugins have loaded or were skipped', payload);
+  console.log('all plugins have loaded or were skipped', payload);
 })
 ```
 
@@ -267,10 +267,10 @@ const removeListener = analytics.on('track', ({ payload }) => {
 // cleanup .on listener
 removeListener()
 ```
-`
+
 ## `analytics.once`
 
-Attach a handler function to an event and only trigger it only once.
+Attach a handler function to an event and only trigger it once.
 
 **Arguments**
 
@@ -280,9 +280,9 @@ Attach a handler function to an event and only trigger it only once.
 **Example**
 
 ```js
-// Fire function only once 'track'
+// Fire function only once per 'track'
 analytics.once('track', ({ payload }) => {
-  console.log('This will only triggered once when analytics.track() fires')
+  console.log('This is only triggered once when analytics.track() fires')
 })
 
 // Remove listener before it is called
@@ -381,7 +381,9 @@ analytics.storage.removeItem('storage_key')
 
 ## `analytics.plugins`
 
-Management methods for plugins. This is also where custom methods are loaded into the instance.
+Async Management methods for plugins. 
+
+This is also where [custom methods](https://bit.ly/329vFXy) are loaded into the instance.
 
 **Example**
 
@@ -399,16 +401,20 @@ Enable analytics plugin
 
 **Arguments**
 
-- **plugins** <code>String</code>|<code>Array</code> - name of plugins(s) to disable
+- **plugins** <code>string</code>|<code>Array</code>.&lt;<code>string</code>&gt; - name of plugins(s) to disable
 - **[callback]** (optional) <code>Function</code> - callback after enable runs
 
 **Example**
 
 ```js
-analytics.plugins.enable('google')
+analytics.plugins.enable('google-analytics').then(() => {
+  console.log('do stuff')
+})
 
 // Enable multiple plugins at once
-analytics.plugins.enable(['google', 'segment'])
+analytics.plugins.enable(['google-analytics', 'segment']).then(() => {
+  console.log('do stuff')
+})
 ```
 
 ### `analytics.plugins.disable`
@@ -417,14 +423,18 @@ Disable analytics plugin
 
 **Arguments**
 
-- **name** <code>String</code>|<code>Array</code> - name of integration(s) to disable
+- **plugins** <code>string</code>|<code>Array</code>.&lt;<code>string</code>&gt; - name of integration(s) to disable
 - **callback** <code>Function</code> - callback after disable runs
 
 **Example**
 
 ```js
-analytics.plugins.disable('google')
+analytics.plugins.disable('google').then(() => {
+  console.log('do stuff')
+})
 
-analytics.plugins.disable(['google', 'segment'])
+analytics.plugins.disable(['google', 'segment']).then(() => {
+  console.log('do stuff')
+})
 ```
 <!-- AUTO-GENERATED-CONTENT:END -->

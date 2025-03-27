@@ -7,11 +7,10 @@ if (!process.browser) {
 const defaultConfig = {
   /* Your segment write key */
   writeKey: null,
-  /* Segment sdk config options. Docs https://bit.ly/2H2jJMb */
+  /* Segment sdk config options. Docs https://github.com/segmentio/analytics-next/blob/master/packages/node/src/app/settings.ts#L4C25-L4C25 */
   flushInterval: 1000,
-  flushAt: 1,
-  /* enable or disable flush */
-  enable: true,
+  /* enable or disable sending events */
+  disable: false,
   /* Disable anonymous MTU */
   disableAnonymousTraffic: false
 }
@@ -19,11 +18,18 @@ const defaultConfig = {
 /**
  * Segment serverside analytics plugin
  * @link https://getanalytics.io/plugins/segment/
- * @link https://segment.com/docs/sources/website/analytics.js/
+ * @link https://segment.com/docs/connections/sources/catalog/libraries/server/node/
  * @param {object}  pluginConfig - Plugin settings
- * @param {string}  pluginConfig.writeKey - Your segment writeKey
- * @param {boolean} [pluginConfig.flushInterval] - Segment sdk flushInterval. Docs https://bit.ly/2H2jJMb
+ * @param {string}  pluginConfig.writeKey - Key that corresponds to your Segment.io project
  * @param {boolean} [pluginConfig.disableAnonymousTraffic] - Disable loading segment for anonymous visitors
+ * @param {string}  [pluginConfig.host] - The base URL of the API. Default: "https://api.segment.io"
+ * @param {string}  [pluginConfig.path] - The API path route. Default: "/v1/batch"
+ * @param {number}  [pluginConfig.maxRetries] - The number of times to retry flushing a batch. Default: 3
+ * @param {number}  [pluginConfig.maxEventsInBatch] - The number of messages to enqueue before flushing. Default: 15
+ * @param {number}  [pluginConfig.flushInterval] - The number of milliseconds to wait before flushing the queue automatically. Default: 10000
+ * @param {number}  [pluginConfig.httpRequestTimeout] - The maximum number of milliseconds to wait for an http request. Default: 10000
+ * @param {boolean} [pluginConfig.disable] - Disable the analytics library. All calls will be a noop. Default: false.
+ * @param {HTTPFetchFn | HTTPClient} [pluginConfig.httpClient] - Supply a default http client implementation 
  * @return {object} Analytics plugin
  * @example
  *
@@ -36,8 +42,11 @@ function segmentPlugin(userConfig = {}) {
     ...defaultConfig,
     ...userConfig
   }
-  const client = new Analytics(config.writeKey, {
-    ...config
+
+  const { disableAnonymousTraffic, ...segmentConfig } = config  
+
+  const client = new Analytics({
+    ...segmentConfig
   })
 
   return {
@@ -62,7 +71,7 @@ function segmentPlugin(userConfig = {}) {
       getClient: () => client,
     },
     /* page view */
-    page: ({ payload, config }) => {
+    page: ({ payload }) => {
       const { userId, anonymousId } = payload
       if (!userId && !anonymousId) {
         throw new Error('Missing userId and anonymousId. You must include one to make segment call')
@@ -77,7 +86,7 @@ function segmentPlugin(userConfig = {}) {
       client.page(data)
     },
     /* track event */
-    track: ({ payload, config }) => {
+    track: ({ payload }) => {
       const { userId, anonymousId } = payload
       if (!userId && !anonymousId) {
         throw new Error('Missing userId and anonymousId. You must include one to make segment call')
@@ -95,7 +104,7 @@ function segmentPlugin(userConfig = {}) {
       }
 
       // Save boat loads of cash
-      if (config.disableAnonymousTraffic && !userId) {
+      if (disableAnonymousTraffic && !userId) {
         return false
       }
 

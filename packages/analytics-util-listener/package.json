@@ -1,6 +1,6 @@
 {
   "name": "@analytics/listener-utils",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Backward compatible event listener library for attaching & detaching event handlers",
   "author": "David Wells",
   "license": "MIT",
@@ -13,7 +13,6 @@
     "events",
     "listeners"
   ],
-  "netlifySiteId": "804da5e7-8aa8-4da8-a983-8593754cacb9",
   "amdName": "utilListener",
   "source": "src/index.js",
   "main": "dist/analytics-util-listener.js",
@@ -27,15 +26,15 @@
     "start": "npm run sync && concurrently 'npm:watch:*' 'npm:copy' 'npm:serve'",
     "serve": "servor dist index.html 8081 --reload --browse",
     "copy": "watchlist examples -- npm run sync",
-    "sync": "cp examples/index.html dist",
+    "sync": "mkdir dist && cp examples/index.html dist",
     "watch:dev": "microbundle watch --external none -f iife,umd -o dist/browser --no-compress",
     "watch:test": "watchlist src tests examples -- npm t",
-    "build": "microbundle && npm run build:dev",
+    "build": "rm -rf dist && npm run sync && microbundle && npm run build:dev",
     "build:dev": "microbundle build --external none -f iife,umd -o dist/browser",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
-    "deploy": "npm run build:dev && npm run sync && netlify deploy --prod --dir dist --site $npm_package_netlifySiteId"
+    "deploy": "npm run build:dev && npm run sync && netlify deploy --prod --dir dist --site 804da5e7-8aa8-4da8-a983-8593754cacb9"
   },
   "files": [
     "lib",
@@ -54,6 +53,6 @@
     "watchlist": "^0.2.3"
   },
   "dependencies": {
-    "@analytics/type-utils": "^0.6.0"
+    "@analytics/type-utils": "^0.6.2"
   }
 }

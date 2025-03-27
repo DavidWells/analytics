@@ -174,7 +174,13 @@ export default async function mergeEndpointData(endpoint = {}, config = {}) {
     // console.log('Update lastSession info', sessionData.id)
   }
   // Increment pageViews.
-  if (endpoint.Attributes.lastPageSession[0] !== pageSession) {
+  if (
+    endpoint.Attributes && 
+    endpoint.Attributes.lastPageSession && 
+    Array.isArray(endpoint.Attributes.lastPageSession) &&
+    endpoint.Attributes.lastPageSession.length > 0 &&
+    endpoint.Attributes.lastPageSession[0] !== pageSession
+  ) {
     endpoint.Attributes.lastPageSession = [pageSession]
     endpoint.Metrics[pageKey] += 1.0
     // console.log('Update lastPageSession info', pageSession)

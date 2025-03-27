@@ -64,21 +64,21 @@
         <p id='info'>
           Use the buttons below to see the sessions in action.
         </p>
-        <h3>Persisted session</h3>
-        <button id="get-persisted">Get Persisted Session</button>
-        <button id="set-persisted">Update Persisted Session</button>
-        <button id="extend-persisted">Extend Persisted Session</button>
-        <button id="remove-persisted">Clear Persisted Session</button>
+        <h3>Persisted session (in cookie). Shared across tabs</h3>
+        <button id="set-persisted">New Session</button>
+        <button id="get-persisted">Get Session</button>
+        <button id="extend-persisted">Extend Session 5 minutes</button>
+        <button id="remove-persisted">Clear Session</button>
         <pre id="data-persisted"></pre>
         <hr/>
-        <h3>Tab session</h3>
-        <button id="get">Get Session</button>
-        <button id="set">Update Session</button>
-        <pre id="data"></pre>
+        <h3>Tab session (in session storage). Refresh on new tab opens</h3>
+        <button id='get-tab-session'>Get Tab Session</button>
+        <button id='set-tab-session'>New Tab Session</button>
+        <pre id="data-tab"></pre>
         <hr/>
-        <h3>Page session</h3>
+        <h3>Page session (in global storage). Refresh on page routing</h3>
         <button id="get-page">Get Page Session</button>
-        <button id="set-page">Update Page Session</button>
+        <button id="set-page">New Page Session</button>
         <pre id="data-page"></pre>
       </div>
   
@@ -94,8 +94,15 @@
         getPageSession, 
         setPageSession 
       } = utilSessions
+
+      function getSessionCookie() {
+        const name = '__session'
+        const val = decodeURIComponent((('; ' + document.cookie).split('; ' + name + '=')[1] || '').split(';')[0])
+        return (val) ? JSON.parse(val) : {}
+        // return decodeURIComponent((('; ' + document.cookie).split('; ' + name + '=')[1] || '').split(';')[0])
+      }
       
-        /* Page */
+      /* Page */
       const getButtonPersisted = document.querySelector('#get-persisted')
       const updateButtonPersisted = document.querySelector('#set-persisted')
       const removeButtonPersisted = document.querySelector('#remove-persisted')
@@ -103,7 +110,6 @@
       const dataNodePersisted = document.querySelector('#data-persisted')
       const SESSION_LENGTH_IN_MINUTES = 1
       const initialPersistedData = getSession(SESSION_LENGTH_IN_MINUTES)
-      console.log('initialPersistedData', initialPersistedData)
       setPersistedData(initialPersistedData)
 
       function setPersistedData(d) {
@@ -112,11 +118,11 @@
 
       getButtonPersisted.addEventListener('click', () => {
         const data = getSession(SESSION_LENGTH_IN_MINUTES)
-        console.log(data)
+        console.log('getSession', data)
         setPersistedData(data)
       })
       updateButtonPersisted.addEventListener('click', () => {
-        const newData = setSession(SESSION_LENGTH_IN_MINUTES)
+        const newData = setSession(SESSION_LENGTH_IN_MINUTES, { customAttribute: 'bar' })
         console.log(newData)
         setPersistedData(newData)
       })
@@ -129,9 +135,11 @@
         setPersistedData(d)
       })
 
-      const getButton = document.querySelector('#get')
-      const updateButton = document.querySelector('#set')
-      const dataNode = document.querySelector('#data')
+      const getButton = document.querySelector('#get-tab-session')
+      const updateButton = document.querySelector('#set-tab-session')
+      const dataNode = document.querySelector('#data-tab')
+
+      /* Set initial ui */
       const initialData = getTabSession()
       setData(initialData)
 
@@ -146,7 +154,7 @@
       })
       updateButton.addEventListener('click', () => {
         const newData = setTabSession()
-        console.log(newData)
+        console.log('newData tabSession', newData)
         setData(newData)
       })
 
@@ -168,7 +176,7 @@
       })
       updateButtonPage.addEventListener('click', () => {
         const newData = setPageSession()
-        console.log(newData)
+        console.log('newData pageSession', newData)
         setPageData(newData)
       })
   

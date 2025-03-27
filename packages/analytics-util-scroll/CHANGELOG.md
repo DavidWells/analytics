@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.24](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-scroll/compare/@analytics/scroll-utils@0.1.23...@analytics/scroll-utils@0.1.24) (2024-12-12)
+
+**Note:** Version bump only for package @analytics/scroll-utils
+
+
+
+
+
+## [0.1.23](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-scroll/compare/@analytics/scroll-utils@0.1.22...@analytics/scroll-utils@0.1.23) (2024-12-11)
+
+**Note:** Version bump only for package @analytics/scroll-utils
+
+
+
+
+
+## [0.1.22](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-scroll/compare/@analytics/scroll-utils@0.1.21...@analytics/scroll-utils@0.1.22) (2023-05-27)
+
+**Note:** Version bump only for package @analytics/scroll-utils
+
+
+
+
+
+## [0.1.21](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-scroll/compare/@analytics/scroll-utils@0.1.20...@analytics/scroll-utils@0.1.21) (2023-05-27)
+
+**Note:** Version bump only for package @analytics/scroll-utils
+
+
+
+
+
 ## [0.1.20](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-scroll/compare/@analytics/scroll-utils@0.1.19...@analytics/scroll-utils@0.1.20) (2022-03-18)
 
 **Note:** Version bump only for package @analytics/scroll-utils

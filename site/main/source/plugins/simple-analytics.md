@@ -92,6 +92,7 @@ const analytics = Analytics({
 | `ignorePages` <br/>_optional_ - string| Add ignore pages https://docs.simpleanalytics.com/ignore-pages |
 | `saGlobal` <br/>_optional_ - string| Overwrite SA global for events https://docs.simpleanalytics.com/events#the-variable-sa_event-is-already-used |
 | `autoCollect` <br/>_optional_ - boolean| Overwrite SA global for events https://docs.simpleanalytics.com/trigger-custom-page-views#use-custom-collection-anyway |
+| `allowParams` <br/>_optional_ - string| Allow custom URL parameters https://docs.simpleanalytics.com/allow-params |
 | `onloadCallback` <br/>_optional_ - string| Allow onload callback https://docs.simpleanalytics.com/trigger-custom-page-views#use-custom-collection-anyway |
 
 ## Additional examples

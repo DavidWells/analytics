@@ -3,6 +3,108 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.12.17](https://github.com/DavidWells/analytics/compare/@analytics/core@0.12.16...@analytics/core@0.12.17) (2024-12-12)
+
+**Note:** Version bump only for package @analytics/core
+
+
+
+
+
+## [0.12.16](https://github.com/DavidWells/analytics/compare/@analytics/core@0.12.15...@analytics/core@0.12.16) (2024-12-11)
+
+**Note:** Version bump only for package @analytics/core
+
+
+
+
+
+## [0.12.15](https://github.com/DavidWells/analytics/compare/@analytics/core@0.12.14...@analytics/core@0.12.15) (2024-07-29)
+
+
+### Bug Fixes
+
+* fix typedef ([d58f70d](https://github.com/DavidWells/analytics/commit/d58f70d60422b4c4e862dd732f3df50d8e802e25))
+
+
+
+
+
+## [0.12.14](https://github.com/DavidWells/analytics/compare/@analytics/core@0.12.10...@analytics/core@0.12.14) (2024-05-30)
+
+**Note:** Version bump only for package @analytics/core
+
+
+
+
+
+## [0.12.10](https://github.com/DavidWells/analytics/compare/@analytics/core@0.12.9...@analytics/core@0.12.10) (2024-05-30)
+
+**Note:** Version bump only for package @analytics/core
+
+
+
+
+
+## [0.12.9](https://github.com/DavidWells/analytics/compare/@analytics/core@0.12.8...@analytics/core@0.12.9) (2024-02-12)
+
+**Note:** Version bump only for package @analytics/core
+
+
+
+
+
+## [0.12.8](https://github.com/DavidWells/analytics/compare/@analytics/core@0.12.7...@analytics/core@0.12.8) (2024-02-12)
+
+
+### Bug Fixes
+
+* add abort to queue drain and make queue methods abortable. Fixes [#418](https://github.com/DavidWells/analytics/issues/418) ([58b1849](https://github.com/DavidWells/analytics/commit/58b184993106ae2234a2508193cdb7ef0e8c0893))
+
+
+
+
+
+## [0.12.7](https://github.com/DavidWells/analytics/compare/@analytics/core@0.12.6...@analytics/core@0.12.7) (2023-06-16)
+
+**Note:** Version bump only for package @analytics/core
+
+
+
+
+
+## [0.12.6](https://github.com/DavidWells/analytics/compare/@analytics/core@0.12.5...@analytics/core@0.12.6) (2023-06-16)
+
+**Note:** Version bump only for package @analytics/core
+
+
+
+
+
+## [0.12.5](https://github.com/DavidWells/analytics/compare/@analytics/core@0.12.4...@analytics/core@0.12.5) (2023-05-27)
+
+**Note:** Version bump only for package @analytics/core
+
+
+
+
+
+## [0.12.4](https://github.com/DavidWells/analytics/compare/@analytics/core@0.12.3...@analytics/core@0.12.4) (2023-05-27)
+
+**Note:** Version bump only for package @analytics/core
+
+
+
+
+
+## [0.12.3](https://github.com/DavidWells/analytics/compare/@analytics/core@0.12.2...@analytics/core@0.12.3) (2023-05-27)
+
+**Note:** Version bump only for package @analytics/core
+
+
+
+
+
 ## [0.12.2](https://github.com/DavidWells/analytics/compare/@analytics/core@0.12.1...@analytics/core@0.12.2) (2022-07-21)
 
 **Note:** Version bump only for package @analytics/core

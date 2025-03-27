@@ -1,6 +1,6 @@
 {
   "name": "@analytics/cookie-utils",
-  "version": "0.2.10",
+  "version": "0.2.12",
   "description": "Tiny cookie utility library",
   "author": "David Wells",
   "license": "MIT",
@@ -49,6 +49,6 @@
     "watchlist": "^0.2.3"
   },
   "dependencies": {
-    "@analytics/global-storage-utils": "^0.1.5"
+    "@analytics/global-storage-utils": "^0.1.7"
   }
 }

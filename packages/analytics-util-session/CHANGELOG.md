@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.2](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-session/compare/@analytics/session-utils@0.2.1...@analytics/session-utils@0.2.2) (2024-12-12)
+
+**Note:** Version bump only for package @analytics/session-utils
+
+
+
+
+
+## [0.2.1](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-session/compare/@analytics/session-utils@0.2.0...@analytics/session-utils@0.2.1) (2024-12-11)
+
+**Note:** Version bump only for package @analytics/session-utils
+
+
+
+
+
+# [0.2.0](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-session/compare/@analytics/session-utils@0.1.19...@analytics/session-utils@0.2.0) (2024-02-24)
+
+
+### Features
+
+* add isExpired to session utils ([7859858](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-session/commit/7859858feaf799740878ecf33aa085a7baba9883))
+
+
+
+
+
+## [0.1.19](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-session/compare/@analytics/session-utils@0.1.18...@analytics/session-utils@0.1.19) (2023-05-27)
+
+**Note:** Version bump only for package @analytics/session-utils
+
+
+
+
+
+## [0.1.18](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-session/compare/@analytics/session-utils@0.1.17...@analytics/session-utils@0.1.18) (2023-05-27)
+
+**Note:** Version bump only for package @analytics/session-utils
+
+
+
+
+
 ## [0.1.17](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-session/compare/@analytics/session-utils@0.1.16...@analytics/session-utils@0.1.17) (2022-03-18)
 
 **Note:** Version bump only for package @analytics/session-utils

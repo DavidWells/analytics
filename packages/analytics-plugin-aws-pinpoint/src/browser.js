@@ -310,7 +310,7 @@ function awsPinpointPlugin(pluginConfig = {}) {
     reset: ({ instance }) => {
       const id = instance.user('anonymousId')
       const key = getStorageKey(id)
-      storage.removeItem(key)
+      removeItem(key)
     },
     loaded: () => !!recordEvent,
   }
