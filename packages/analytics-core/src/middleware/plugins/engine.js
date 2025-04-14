@@ -24,6 +24,7 @@ export default async function (action, getPlugins, instance, store, eventsInfo) 
 
   /* If analytics.plugin.enable calls do special behavior */
   if (originalType === EVENTS.initializeStart && action.fromEnable) {
+    console.log('from enable action', action)
     // Return list of all enabled plugins that have NOT been initialized yet
     activePlugins = Object.keys(state.plugins).filter((name) => {
       const info = state.plugins[name]
