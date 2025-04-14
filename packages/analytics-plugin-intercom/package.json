@@ -52,6 +52,6 @@
     "@babel/preset-env": "^7.3.1"
   },
   "dependencies": {
-    "intercom-client": "^2.11.2"
+    "intercom-client": "^5.0.0"
   }
 }
