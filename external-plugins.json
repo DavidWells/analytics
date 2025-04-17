@@ -92,5 +92,11 @@
     "url": "https://www.npmjs.com/package/analytics-plugin-mailmodo",
     "repo": "https://github.com/fotoflo/analytics-plugin-mailmodo/",
     "description": "Adds Analytics support for mailmodo"
+  },
+  {
+    "name": "Yandex Metrika",
+    "url": "https://www.npmjs.com/package/@hexlet/analytics-plugin-yandex-metrika",
+    "repo": "https://github.com/Hexlet/analytics-plugin-yandex-metrika",
+    "description": "Adds Analytics support for Yandex Metrika"
   }
 ]
