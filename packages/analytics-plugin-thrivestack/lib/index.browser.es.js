@@ -21,37 +21,35 @@ function thriveStackPlugin(pluginConfig = {}) {
     initCompleted = true;
     console.log('ThriveStack initialization completed');
   };
-
-  // Helper function to normalize URLs by removing protocol and anything after the first slash
   const normalizeUrl = url => {
     return url.replace(/^https?:\/\//, '').split('/')[0];
   };
-
-  // Helper function to check if current domain matches any validated domain
-  const isValidDomain = () => {
-    const validatedUrls = JSON.parse(localStorage.getItem('website_urls') || '[]');
-    if (!validatedUrls.length) {
-      console.warn('No validated website URLs found in localStorage.');
+  const isValidDomain = (source = '') => {
+    let urlsToCheck = [];
+    if (source === 'product') {
+      urlsToCheck = JSON.parse(localStorage.getItem('product_urls') || '[]');
+    } else if (source === 'marketing') {
+      urlsToCheck = JSON.parse(localStorage.getItem('marketing_urls') || '[]');
+    } else {
+      urlsToCheck = JSON.parse(localStorage.getItem('website_urls') || '[]');
+    }
+    if (!urlsToCheck.length) {
+      console.warn(`No validated ${source || 'website'} URLs found in localStorage.`);
       return false;
     }
     const currentHost = window.location.hostname;
-
-    // Check if current host matches any of the allowed domains
-    for (const allowedDomain of validatedUrls) {
+    for (const allowedDomain of urlsToCheck) {
       if (currentHost.includes(allowedDomain) || allowedDomain.includes(currentHost)) {
         return true;
       }
     }
-    console.warn(`Current host ${currentHost} does not match any validated domains: ${validatedUrls.join(', ')}`);
+    console.warn(`Current host ${currentHost} does not match any validated ${source || 'website'} domains: ${urlsToCheck.join(', ')}`);
     return false;
   };
-
-  // Fetch onboarding step details and validate website domain
   const validateWebsite = async () => {
     try {
       const productId = 'X6EcdUZFY';
       const environmentId = '2lwIjczu1';
-      const stepId = 'name_your_website';
       const response = await fetch(`https://api.dev.app.thrivestack.ai/onboarding`, {
         method: 'POST',
         headers: {
@@ -60,29 +58,28 @@ function thriveStackPlugin(pluginConfig = {}) {
         },
         body: JSON.stringify({
           query: `query GetCAOnboardingStepDetails($input: GetCAOnboardingStepDetailsInput!) {
-            getCAOnboardingStepDetails(input: $input) {
-              productId
-              environmentId
-              moduleDetails {
-                moduleId
-                stepDetails {
-                  stepId
+          getCAOnboardingStepDetails(input: $input) {
+            productId
+            environmentId
+            moduleDetails {
+              moduleId
+              stepDetails {
+                stepId
+                isCompleted
+                value
+                subStepDetails {
+                  subStepId
                   isCompleted
-                  value
-                  subStepDetails {
-                    subStepId
-                    isCompleted
-                    value    
-                  }
+                  value    
                 }
               }
             }
-          }`,
+          }
+        }`,
           variables: {
             input: {
               productId: productId,
-              environmentId: environmentId,
-              stepId: stepId
+              environmentId: environmentId
             }
           }
         })
@@ -91,55 +88,60 @@ function thriveStackPlugin(pluginConfig = {}) {
       console.log("API Response:", result);
       if (result.data && result.data.getCAOnboardingStepDetails) {
         const moduleDetails = result.data.getCAOnboardingStepDetails.moduleDetails;
-
-        // Find the name_your_website step
+        let marketingUrls = [];
+        let productUrls = [];
         for (const module of moduleDetails) {
-          for (const step of module.stepDetails) {
-            if (step.stepId === 'name_your_website' && step.value) {
-              try {
-                const stepValue = JSON.parse(step.value);
-                if (stepValue.website_urls && Array.isArray(stepValue.website_urls)) {
-                  const normalizedUrls = stepValue.website_urls.map(url => normalizeUrl(url));
-                  localStorage.setItem('website_urls', JSON.stringify(normalizedUrls));
-                  const currentHost = window.location.hostname;
-                  const isValid = normalizedUrls.some(domain => currentHost.includes(domain) || domain.includes(currentHost));
-                  if (isValid) {
-                    console.log('Website domain validated successfully');
-                    return true;
-                  } else {
-                    console.log(`Domain mismatch: Current=${currentHost}, Allowed=${normalizedUrls.join(', ')}`);
-                    return false;
+          if (module.moduleId === 'marketing_attribution') {
+            for (const step of module.stepDetails) {
+              if (step.stepId === 'name_your_website' && step.value) {
+                try {
+                  const stepValue = JSON.parse(step.value);
+                  if (stepValue.website_urls && Array.isArray(stepValue.website_urls)) {
+                    marketingUrls = stepValue.website_urls.map(url => normalizeUrl(url));
                   }
-                } else {
-                  console.warn('No website_urls array found in step value');
-                  return false;
+                } catch (parseError) {
+                  console.error('Failed to parse marketing URLs JSON:', parseError);
                 }
-              } catch (parseError) {
-                console.error('Failed to parse step value JSON:', parseError);
-                return false;
+              }
+            }
+          }
+          if (module.moduleId === 'product_analytics') {
+            for (const step of module.stepDetails) {
+              for (const subStep of step.subStepDetails || []) {
+                if (subStep.subStepId === 'product_url' && subStep.value) {
+                  try {
+                    const subStepValue = JSON.parse(subStep.value);
+                    if (subStepValue.website_urls && Array.isArray(subStepValue.website_urls)) {
+                      productUrls = subStepValue.website_urls.map(url => normalizeUrl(url));
+                    }
+                  } catch (parseError) {
+                    console.error('Failed to parse product URLs JSON:', parseError);
+                  }
+                }
               }
             }
           }
         }
+        localStorage.setItem('website_urls', JSON.stringify([...productUrls, ...marketingUrls]));
+        localStorage.setItem('product_urls', JSON.stringify(productUrls));
+        localStorage.setItem('marketing_urls', JSON.stringify(marketingUrls));
+        console.log('Stored product URLs:', productUrls);
+        console.log('Stored marketing URLs:', marketingUrls);
+        return true;
       }
-      console.warn('No name_your_website step found in API response');
+      console.warn('No valid website URLs found in API response');
       return false;
     } catch (error) {
       console.error('Failed to validate website:', error);
       return false;
     }
   };
-
-  // Load ThriveStack script function
   const loadThriveStackScript = () => {
     return new Promise((resolve, reject) => {
-      // Check if script is already loaded
       if (window.ThriveStack) {
         resolve(window.ThriveStack);
         return;
       }
-
-      // Create script element
       const script = document.createElement('script');
       script.type = 'text/javascript';
       script.async = true;
@@ -159,8 +161,6 @@ function thriveStackPlugin(pluginConfig = {}) {
       if (options.respectDoNotTrack !== undefined) {
         script.setAttribute('respect-dnt', options.respectDoNotTrack ? 'true' : 'false');
       }
-
-      // Set up onload handler
       script.onload = () => {
         if (window.ThriveStack) {
           if (options.debug) {
@@ -171,18 +171,12 @@ function thriveStackPlugin(pluginConfig = {}) {
           reject(new Error('ThriveStack script loaded but window.ThriveStack is not defined'));
         }
       };
-
-      // Set up error handler
       script.onerror = () => {
         reject(new Error('Failed to load ThriveStack script'));
       };
-
-      // Append script to head
       document.head.appendChild(script);
     });
   };
-
-  // Process the event queue
   const processQueue = () => {
     if (!window.ThriveStack || !Array.isArray(window._tsq) || window._tsq.length === 0) {
       return;
@@ -198,8 +192,6 @@ function thriveStackPlugin(pluginConfig = {}) {
     });
     window._tsq = [];
   };
-
-  // Create plugin object
   const plugin = {
     name: 'thrivestack',
     config: {
@@ -214,10 +206,7 @@ function thriveStackPlugin(pluginConfig = {}) {
       try {
         await loadThriveStackScript();
         console.log('ThriveStack script loaded successfully');
-
-        // Initialize ThriveStack
         if (window.ThriveStack) {
-          // If ThriveStack's init method takes parameters, pass them
           if (config.userId) {
             await window.ThriveStack.init(config.userId, options.source || '');
           } else {
@@ -225,25 +214,19 @@ function thriveStackPlugin(pluginConfig = {}) {
           }
           console.log('ThriveStack plugin initialized');
         }
-
-        // Validate website domain
         const isValid = await validateWebsite();
         if (!isValid) {
           console.warn('Website domain validation failed. Analytics calls will be blocked.');
         }
-
-        // Set initialization complete
         initComplete(analyticsInstance);
         initCompleted = true;
-
-        // Process queued events
         processQueue();
       } catch (error) {
         console.error('Failed to initialize ThriveStack plugin:', error);
         throw error;
       }
     },
-    // Core methods
+    // CORE-METHODS
 
     identify: ({
       payload
@@ -259,8 +242,9 @@ function thriveStackPlugin(pluginConfig = {}) {
         traits = {},
         options = {}
       } = payload;
-      if (!isValidDomain()) {
-        console.warn('Website domain not validated. Identify call blocked.');
+      const source = options.source || window.ThriveStack.getSource() || '';
+      if (!isValidDomain(source)) {
+        console.warn(`Website domain not validated for source '${source}'. Identify call blocked.`);
         return;
       }
       try {
@@ -315,18 +299,14 @@ function thriveStackPlugin(pluginConfig = {}) {
         properties = {},
         options = {}
       } = payload;
-
-      // Check domain validation before processing
-      if (!isValidDomain()) {
-        console.warn('Website domain not validated. Track call blocked.');
+      const source = options.source || window.ThriveStack.getSource() || '';
+      if (!isValidDomain(source)) {
+        console.warn(`Website domain not validated for source '${source}'. Identify call blocked.`);
         return;
       }
       try {
-        // Get the IDs without fallback to empty string
         const deviceId = window.ThriveStack.getDeviceId();
         const userId = options.userId || options.user_id || window.ThriveStack.userId;
-
-        // Validation: userId or deviceId must be present
         if (options.source === 'marketing' && !userId && !deviceId) {
           const error = new Error('Track event requires either userId or deviceId');
           console.error('Failed to send track event:', error);
@@ -342,11 +322,9 @@ function thriveStackPlugin(pluginConfig = {}) {
           event_name: event,
           properties: properties,
           user_id: userId || '',
-          // Use empty string only when sending the payload
           context: {
             group_id: groupId,
             device_id: deviceId || '',
-            // Use empty string only when sending the payload
             session_id: sessionId,
             source: source
           },
@@ -369,22 +347,21 @@ function thriveStackPlugin(pluginConfig = {}) {
         }]);
         return;
       }
-
-      // Check domain validation before processing
-      if (!isValidDomain()) {
-        console.warn('Website domain not validated. Page call blocked.');
+      const {
+        properties = {},
+        options = {}
+      } = payload;
+      const source = options.source || window.ThriveStack.getSource() || '';
+      if (!isValidDomain(source)) {
+        console.warn(`Website domain not validated for source '${source}'. Page call blocked.`);
         return;
       }
       try {
-        // ThriveStack has its own page tracking, so we can tap into that
-        // or explicitly trigger a page event
         window.ThriveStack.capturePageVisit();
       } catch (err) {
         console.error('Failed to send page event:', err);
       }
     },
-    // Additional methods based on Analytics package spec
-
     reset: (payload, next) => {
       if (!window.ThriveStack) {
         if (next) next(payload);
@@ -393,8 +370,6 @@ function thriveStackPlugin(pluginConfig = {}) {
       try {
         window.ThriveStack.setUserId('');
         window.ThriveStack.setGroupId('');
-
-        // Clear cookies if necessary
         const pastDate = new Date(0);
         document.cookie = `thrivestack_user_id=;expires=${pastDate.toUTCString()};path=/;SameSite=Lax`;
         document.cookie = `thrivestack_group_id=;expires=${pastDate.toUTCString()};path=/;SameSite=Lax`;
@@ -408,10 +383,8 @@ function thriveStackPlugin(pluginConfig = {}) {
       }
     },
     ready: payload => {
-      // Called when analytics instance is fully initialized
       return initCompleted;
     },
-    // Storage methods
     storage: {
       getItem: key => {
         try {
@@ -440,14 +413,16 @@ function thriveStackPlugin(pluginConfig = {}) {
         }
       }
     },
-    // Context methods
     setAnonymousId: anonymousId => {
       if (!window.ThriveStack) return false;
+      const source = options.source || window.ThriveStack.getSource() || '';
+      if (!isValidDomain(source)) {
+        console.warn(`Website domain not validated for source '${source}'. setAnonymousId call blocked.`);
+        return;
+      }
       try {
-        // ThriveStack uses device ID as anonymous ID
         const currentDeviceId = window.ThriveStack.getDeviceId();
         if (currentDeviceId !== anonymousId) {
-          // ThriveStack doesn't allow setting device ID externally
           console.warn('ThriveStack device ID is automatically generated and cannot be overridden');
         }
         return true;
@@ -456,18 +431,20 @@ function thriveStackPlugin(pluginConfig = {}) {
         return false;
       }
     },
-    // User methods
     user: () => {
       if (!window.ThriveStack) return null;
+      const source = options.source || window.ThriveStack.getSource() || '';
+      if (!isValidDomain(source)) {
+        console.warn(`Website domain not validated for source '${source}'. User call blocked.`);
+        return;
+      }
       return {
         id: window.ThriveStack.userId || null,
         anonymousId: window.ThriveStack.getDeviceId() || null,
         isAuthenticated: !!window.ThriveStack.userId
       };
     },
-    // Plugin-specific methods
     methods: {
-      // Group identification()
       group: (groupId, traits = {}, options = {}, callback) => {
         if (!window.ThriveStack) {
           const error = new Error('ThriveStack not initialized');
@@ -476,10 +453,11 @@ function thriveStackPlugin(pluginConfig = {}) {
           }
           return Promise.reject(error);
         }
+        const source = options.source || window.ThriveStack.getSource() || '';
 
         // Check domain validation before processing
-        if (!isValidDomain()) {
-          const error = new Error('Website domain not validated. Group call blocked.');
+        if (!isValidDomain(source)) {
+          const error = new Error(`Website domain not validated for source '${source}'. Group call blocked.`);
           console.warn(error.message);
           if (callback && typeof callback === 'function') {
             callback(error);
@@ -535,6 +513,11 @@ function thriveStackPlugin(pluginConfig = {}) {
         });
       },
       setApiConfig: (config = {}) => {
+        const source = options.source || window.ThriveStack.getSource() || '';
+        if (!isValidDomain(source)) {
+          console.warn(`Website domain not validated for source '${source}'. setApiConfig call blocked.`);
+          return;
+        }
         if (config.apiKey) {
           API_KEY = config.apiKey;
         }
@@ -544,8 +527,9 @@ function thriveStackPlugin(pluginConfig = {}) {
         return true;
       },
       setConsent: (category, enabled) => {
-        if (!window.ThriveStack || !isValidDomain()) {
-          console.warn('Website domain not validated. setConsent call blocked.');
+        const source = options.source || window.ThriveStack.getSource() || '';
+        if (!window.ThriveStack || !isValidDomain(source)) {
+          console.warn(`Website domain not validated for source '${source}'. setConsent call blocked.`);
           return false;
         }
         try {
@@ -626,8 +610,9 @@ function thriveStackPlugin(pluginConfig = {}) {
       },
       // Page tracking methods
       capturePageVisit: () => {
-        if (!window.ThriveStack || !isValidDomain()) {
-          console.warn('Website domain not validated. capturePageVisit call blocked.');
+        const source = window.ThriveStack ? window.ThriveStack.getSource() || '' : '';
+        if (!window.ThriveStack || !isValidDomain(source)) {
+          console.warn(`Website domain not validated for source '${source}'. capturePageVisit call blocked.`);
           return false;
         }
         try {
