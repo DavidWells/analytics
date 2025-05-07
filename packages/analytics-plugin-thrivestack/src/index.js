@@ -27,27 +27,37 @@ function thriveStackPlugin(pluginConfig = {}) {
     console.log('ThriveStack initialization completed');
   };
 
-  // Helper function to check if current domain matches validated domain
+  // Helper function to normalize URLs by removing protocol and anything after the first slash
+  const normalizeUrl = (url) => {
+    return url.replace(/^https?:\/\//, '').split('/')[0];
+  };
+
+  // Helper function to check if current domain matches any validated domain
   const isValidDomain = () => {
-    const validatedUrl = localStorage.getItem('website_url');
-    if (!validatedUrl) {
-      console.warn('No validated website URL found in localStorage.');
+    const validatedUrls = JSON.parse(localStorage.getItem('website_urls') || '[]');
+    if (!validatedUrls.length) {
+      console.warn('No validated website URLs found in localStorage.');
       return false;
     }
 
     const currentHost = window.location.hostname;
-    const allowedDomain = validatedUrl.replace(/^https?:\/\//, '').split('/')[0];
-
-    console.log("9999", currentHost, allowedDomain)
     
-    return currentHost.includes(allowedDomain) || allowedDomain.includes(currentHost);
+    // Check if current host matches any of the allowed domains
+    for (const allowedDomain of validatedUrls) {
+      if (currentHost.includes(allowedDomain) || allowedDomain.includes(currentHost)) {
+        return true;
+      }
+    }
+    
+    console.warn(`Current host ${currentHost} does not match any validated domains: ${validatedUrls.join(', ')}`);
+    return false;
   };
 
   // Fetch onboarding step details and validate website domain
   const validateWebsite = async () => {
     try {  
-      const productId = 'mZvcguoUd'; 
-      const environmentId = 'GBASnf2UQ'; 
+      const productId = 'X6EcdUZFY'; 
+      const environmentId = '2lwIjczu1'; 
       const stepId = 'name_your_website'; 
   
       const response = await fetch(`https://api.dev.app.thrivestack.ai/onboarding`, {
@@ -96,26 +106,40 @@ function thriveStackPlugin(pluginConfig = {}) {
         for (const module of moduleDetails) {
           for (const step of module.stepDetails) {
             if (step.stepId === 'name_your_website' && step.value) {
-              const stepValue = JSON.parse(step.value);
-              if (stepValue.website_url) {
-                localStorage.setItem('website_url', stepValue.website_url);
+              try {
+                const stepValue = JSON.parse(step.value);
                 
-                const currentHost = window.location.hostname;
-                const allowedDomain = stepValue.website_url.replace(/^https?:\/\//, '').split('/')[0];
-                
-                if (currentHost.includes(allowedDomain) || allowedDomain.includes(currentHost)) {
-                  console.log('Website domain validated successfully');
-                  return true;
+                if (stepValue.website_urls && Array.isArray(stepValue.website_urls)) {
+                  const normalizedUrls = stepValue.website_urls.map(url => normalizeUrl(url));
+                  localStorage.setItem('website_urls', JSON.stringify(normalizedUrls));
+                  
+                  const currentHost = window.location.hostname;
+
+                  const isValid = normalizedUrls.some(domain => 
+                    currentHost.includes(domain) || domain.includes(currentHost)
+                  );
+                  
+                  if (isValid) {
+                    console.log('Website domain validated successfully');
+                    return true;
+                  } else {
+                    console.log(`Domain mismatch: Current=${currentHost}, Allowed=${normalizedUrls.join(', ')}`);
+                    return false;
+                  }
                 } else {
-                  console.log(`Domain mismatch: Current=${currentHost}, Allowed=${allowedDomain}`);
+                  console.warn('No website_urls array found in step value');
                   return false;
                 }
+              } catch (parseError) {
+                console.error('Failed to parse step value JSON:', parseError);
+                return false;
               }
             }
           }
         }
       }
       
+      console.warn('No name_your_website step found in API response');
       return false;
     } catch (error) {
       console.error('Failed to validate website:', error);
@@ -473,8 +497,6 @@ function thriveStackPlugin(pluginConfig = {}) {
         isAuthenticated: !!window.ThriveStack.userId
       };
     },
-
-
 
     // Plugin-specific methods
     methods: {
