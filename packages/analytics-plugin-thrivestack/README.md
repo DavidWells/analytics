@@ -51,30 +51,36 @@ analytics.identify('user-123', {
 analytics.reset()
 
 
-### Basic Configuration
+Basic Configuration
+When initializing the ThriveStack plugin, two parameters are critical for proper functionality:
 
-When initializing the ThriveStack plugin, two parameters are **critical** for proper functionality:
+apiKey (REQUIRED): Your unique ThriveStack API key. Without this, all tracking calls will fail.
+source (REQUIRED): Must be one of exactly two allowed values:
 
-- **`apiKey`** (REQUIRED): Your unique ThriveStack API key. Without this, all tracking calls will fail.
-- **`source`** (REQUIRED): Identifies the source of the tracking data (e.g., 'website', 'marketing', 'product').
-```
+'marketing': For tracking marketing-related analytics
+'product': For tracking product usage analytics
+
+⚠️ Important: No other values are accepted for the source parameter!
+
 
 ## Configuration Options
 
 The ThriveStack plugin accepts the following configuration options:
 
-| Option | Description | Required | Default Value |
-|:------|:------------|:---------|:--------------|
-| `apiKey` | Your ThriveStack API key | Yes | - |
-| `respectDoNotTrack` | Whether to respect DNT browser setting | No | `true` |
-| `trackClicks` | Automatically track click events | No | `false` |
-| `trackForms` | Automatically track form submissions | No | `false` |
-| `enableConsent` | Enable consent management | No | `false` |
-| `defaultConsent` | Default consent value | No | `false` |
-| `source` | Source identifier | No | `''` |
-| `batchSize` | Number of events to batch together | No | `10` |
-| `batchInterval` | Interval in ms for processing event queue | No | `2000` |
-| `options` | Additional options object | No | `{}` |
+| Option | Description | Required | Default Value | Allowed Values |
+|:------|:------------|:---------|:--------------|:---------------|
+| `apiKey` | Your ThriveStack API key | Yes | - | Valid API key |
+| `source` | Source identifier | Yes | - | Only `'marketing'` or `'product'` |
+| `respectDoNotTrack` | Whether to respect DNT browser setting | No | `true` | `true`, `false` |
+| `trackClicks` | Automatically track click events | No | `false` | `true`, `false` |
+| `trackForms` | Automatically track form submissions | No | `false` | `true`, `false` |
+| `enableConsent` | Enable consent management | No | `false` | `true`, `false` |
+| `defaultConsent` | Default consent value | No | `false` | `true`, `false` |
+| `batchSize` | Number of events to batch together | No | `10` | Positive number |
+| `batchInterval` | Interval in ms for processing event queue | No | `2000` | Positive number |
+| `options` | Additional options object | No | `{}` | Object |
+
+> ⚠️ **Source Parameter Limitation**: The `source` parameter must be set to either `'marketing'` or `'product'`. Any other value will result in validation errors and tracking will fail.
 
 ## Methods
 
