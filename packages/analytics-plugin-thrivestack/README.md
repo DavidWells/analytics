@@ -15,12 +15,15 @@ import Analytics from 'analytics'
 import thriveStackPlugin from '@analytics/thrivestack'
 
 const analytics = Analytics({
-  app: 'awesome-app',
+  app: 'TS-Analytic-app',
   plugins: [
     thriveStackPlugin({
-      apiKey: 'your-thrivestack-api-key',
+      apiKey: 'your-thrivestack-api-key', // ⚠️ REQUIRED
+      source: 'website',  // ⚠️ REQUIRED
+
       options: {
-        // Additional configuration
+        // Additional configuration (optional)
+        debug: true,
         respectDoNotTrack: true,
         trackClicks: true,
         trackForms: true
@@ -46,6 +49,14 @@ analytics.identify('user-123', {
 
 // Reset user and group data
 analytics.reset()
+
+
+### Basic Configuration
+
+When initializing the ThriveStack plugin, two parameters are **critical** for proper functionality:
+
+- **`apiKey`** (REQUIRED): Your unique ThriveStack API key. Without this, all tracking calls will fail.
+- **`source`** (REQUIRED): Identifies the source of the tracking data (e.g., 'website', 'marketing', 'product').
 ```
 
 ## Configuration Options

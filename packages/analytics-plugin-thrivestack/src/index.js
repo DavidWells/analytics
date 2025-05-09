@@ -113,7 +113,7 @@ function thriveStackPlugin(pluginConfig = {}) {
       const marketingResult = await marketingResponse.json();
       const productResult = await productResponse.json();
       
-      console.log("Marketing API Response:", marketingResult);
+      console.log("Marketing API Response:", marketingResult, pluginConfig.source);
       console.log("Product API Response:", productResult);
   
       let marketingUrls = [];
