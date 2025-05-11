@@ -60,6 +60,9 @@ export default function providerPluginExample(userConfig) {
     identify: ({ payload }) => {
       // call provider specific user identify method
     },
+    reset: ({ payload }) => {
+      // call provider specific reset method
+    },
     loaded: () => {
       // return boolean so analytics knows when it can send data to third party
       return !!window.myPluginLoaded
@@ -112,6 +115,7 @@ export default function doNotTrackPlugin(userConfig = {}) {
 * @property {function} [page] - Page visit tracking method
 * @property {function} [track] - Custom event tracking method
 * @property {function} [identify] - User identify method
+* @property {function} [reset] - Clear all information about the user & reset analytics state
 * @property {function} [loaded] - Function to determine if analytics script loaded
 * @property {function} [ready] - Fire function when plugin ready
 
