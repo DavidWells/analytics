@@ -72,7 +72,7 @@ function thriveStackPlugin(pluginConfig = {}) {
   };
   const validateWebsite = async () => {
     try {
-      const marketingResponse = await fetch('https://api.dev.app.thrivestack.ai/api/caOnboardingDetails', {
+      const marketingResponse = await fetch('https://api.app.thrivestack.ai/api/caOnboardingDetails', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -84,7 +84,7 @@ function thriveStackPlugin(pluginConfig = {}) {
           'module_id': 'marketing_attribution'
         })
       });
-      const productResponse = await fetch('https://api.dev.app.thrivestack.ai/api/caOnboardingDetails', {
+      const productResponse = await fetch('https://api.app.thrivestack.ai/api/caOnboardingDetails', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

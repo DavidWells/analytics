@@ -13,7 +13,7 @@ function thriveStackPlugin(pluginConfig = {}) {
 
   let instance = null;
   let initCompleted = false;
-  const API_URL = pluginConfig.apiEndpoint || 'https://api.dev.app.thrivestack.ai/api';
+  const API_URL = pluginConfig.apiEndpoint || 'https://api.app.thrivestack.ai/api';
   let API_KEY = pluginConfig.apiKey;
   const options = {
     respectDoNotTrack: pluginConfig.respectDoNotTrack !== false,
