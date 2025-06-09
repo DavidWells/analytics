@@ -7,7 +7,7 @@ import runPlugins from './engine'
 export default function pluginMiddleware(instance, getPlugins, systemEvents) {
   const isReady = {}
   return store => next => async action => {
-    const { type, abort, plugins } = action
+    const { type, abort, readyCalled, plugins } = action
     let updatedAction = action
 
     if (abort) {
@@ -30,39 +30,27 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
       setTimeout(() => runCallback(action.meta.rid, { payload: action }), 0)
     }
 
-    /* @TODO implement
     if (type === EVENTS.loadPlugin) {
-      // Rerun initialize calls in plugins
-      const allPlugins = getPlugins()
-      const pluginsToLoad = Object.keys(allPlugins).filter((name) => {
-        return plugins.includes(name)
-      }).reduce((acc, curr) => {
-        acc[curr] = allPlugins[curr]
-        return acc
-      }, {})
+      const pluginsToLoad = getPlugins(plugins)
       const initializeAction = {
         type: EVENTS.initializeStart,
-        plugins: plugins
+        plugins: plugins,
+        fromEnable: true,
       }
+      console.log('initializeAction', initializeAction)
       const updated = await runPlugins(initializeAction, pluginsToLoad, instance, store, systemEvents)
       return next(updated)
     }
-    */
 
     //  || type.match(/^initializeAbort:/)
     if (type === EVENTS.initializeEnd) {
-      const allPlugins = getPlugins()
-      const pluginsArray = Object.keys(allPlugins)
-      const allRegisteredPlugins = pluginsArray.filter((name) => {
-        return plugins.includes(name)
-      }).map((name) => {
-        return allPlugins[name]
-      })
+      const enabledPlugins = getPlugins(plugins, true)
+      console.log('enabledPlugins', enabledPlugins)
       let completed = []
       let failed = []
       let disabled = action.disabled
-      // console.log('allRegisteredPlugins', allRegisteredPlugins)
-      const waitForPluginsToLoad = allRegisteredPlugins.map((plugin) => {
+      // console.log('allEnabledPlugins', allEnabledPlugins)
+      const waitForPluginsToLoad = enabledPlugins.map((plugin) => {
         const { loaded, name, config } = plugin
         const loadedFn = () => loaded({ config }) // @TODO add in more to api to match other funcs?
         /* Plugins will abort trying to load after 10 seconds. 1e4 === 10000 MS */
@@ -96,17 +84,13 @@ export default function pluginMiddleware(instance, getPlugins, systemEvents) {
 
       Promise.all(waitForPluginsToLoad).then((calls) => {
         // setTimeout to ensure runs after 'page'
-        const payload = {
-          plugins: completed,
-          failed: failed,
-          disabled: disabled
-        }
         setTimeout(() => {
-          if (pluginsArray.length === (waitForPluginsToLoad.length + disabled.length)) {
+          if (!readyCalled && enabledPlugins.length === waitForPluginsToLoad.length) {
             store.dispatch({
-              ...{ type: EVENTS.ready },
-              ...payload,
-              
+              type: EVENTS.ready,
+              plugins: completed,
+              failed: failed,
+              disabled: disabled
             })
           }
         }, 0)
