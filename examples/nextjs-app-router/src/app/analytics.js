@@ -26,6 +26,12 @@ function AnalyticsTracker() {
   return null;
 }
 
+/**
+ * Analytics wrapper component that provides analytics instance to children
+ * @param {Object} props - Component props
+ * @param {React.ReactNode} props.children - Child components
+ * @returns {JSX.Element}
+ */
 export default function AnalyticsComponent({ children }) {
   return (
     <AnalyticsProvider instance={analyticsInstance}>
