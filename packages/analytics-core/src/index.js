@@ -110,7 +110,7 @@ import enrichMeta from './utils/enrichMeta'
 function analytics(config = {}) {
   const customReducers = config.reducers || {}
   const initialUser = config.initialUser || {}
-  // @TODO add custom value reolvers for userId and anonId
+  // @TODO add custom value resolvers for userId and anonId
   // const resolvers = config.resolvers || {}
   // if (BROWSER) {
   //   console.log('INIT browser')
@@ -140,7 +140,7 @@ function analytics(config = {}) {
 
     const enabledFromMerge = !(plugin.enabled === false)
     const enabledFromPluginConfig = !(plugin.config.enabled === false)
-    // top level { enabled: false } takes presidence over { config: enabled: false }
+    // top level { enabled: false } takes precedence over { config: enabled: false }
     acc.pluginEnabled[plugin.name] = enabledFromMerge && enabledFromPluginConfig
     delete plugin.enabled
 
@@ -190,7 +190,7 @@ function analytics(config = {}) {
 
   const getUserProp = getUserPropFunc(storage)
 
-  // mutable intregrations object for dynamic loading
+  // mutable integrations object for dynamic loading
   let customPlugins = parsedOptions.plugins
 
   /* Grab all registered events from plugins loaded */
@@ -238,7 +238,7 @@ function analytics(config = {}) {
    * @example
    *
    * // Enable a plugin by namespace
-   * analytics.plugins.enable('keenio')
+   * analytics.plugins.enable('hubspot')
    *
    * // Disable a plugin by namespace
    * analytics.plugins.disable('google-analytics')
@@ -507,7 +507,7 @@ function analytics(config = {}) {
       const opts = isObject(options) ? options : {}
 
       /*
-      // @TODO add custom value reolvers for userId and anonId
+      // @TODO add custom value resolvers for userId and anonId
       if (resolvers.getUserId) {
         const asyncUserId = await resolvers.getUserId()
         console.log('x', x)
@@ -756,13 +756,13 @@ function analytics(config = {}) {
       }
       store.dispatch(dispatchData)
     },
-    // Do not use. Will be removed. Here for Backwards compatiblity.
+    // Do not use. Will be removed. Here for Backwards compatibility.
     // Moved to analytics.plugins.enable
     enablePlugin: plugins.enable,
-    /// Do not use. Will be removed. Here for Backwards compatiblity.
+    /// Do not use. Will be removed. Here for Backwards compatibility.
     /// Moved to analytics.plugins.disable
     disablePlugin: plugins.disable,
-    // Do not use. Will be removed. Here for Backwards compatiblity.
+    // Do not use. Will be removed. Here for Backwards compatibility.
     // New plugins api
     plugins: plugins,
     /**
@@ -910,7 +910,7 @@ function analytics(config = {}) {
 
   const initialConfig = makeContext(config)
 
-  const intialPluginState = parsedOptions.pluginsArray.reduce((acc, plugin) => {
+  const initialPluginState = parsedOptions.pluginsArray.reduce((acc, plugin) => {
     const { name, config, loaded } = plugin
     const isEnabled = parsedOptions.pluginEnabled[name]
     acc[name] = {
@@ -926,7 +926,7 @@ function analytics(config = {}) {
   const initialState = {
     context: initialConfig,
     user: visitorInfo,
-    plugins: intialPluginState,
+    plugins: initialPluginState,
     // Todo allow for more userland defined initial state?
   }
 
