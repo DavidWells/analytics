@@ -21,7 +21,7 @@ import { Debug, composeWithDebug } from './utils/debug'
 import heartBeat from './utils/heartbeat'
 import ensureArray from './utils/ensureArray'
 import enrichMeta from './utils/enrichMeta'
-import './pluginTypeDef'
+import './types'
 
 
 /**
@@ -29,12 +29,8 @@ import './pluginTypeDef'
  *
  * After the library is initialized with config, the core API is exposed & ready for use in the application.
  *
- * @param {object} config - analytics core config
- * @param {string} [config.app] - Name of site / app
- * @param {string|number} [config.version] - Version of your app
- * @param {boolean} [config.debug] - Should analytics run in debug mode
- * @param {Array.<AnalyticsPlugin>}  [config.plugins] - Array of analytics plugins
- * @return {AnalyticsInstance} Analytics Instance
+ * @param {AnalyticsInstanceConfig} [config={}] - analytics core config
+ * @returns {AnalyticsInstance} Analytics Instance
  * @example
  *
  * import Analytics from 'analytics'
@@ -179,9 +175,6 @@ function analytics(config = {}) {
    * Async Management methods for plugins. 
    * 
    * This is also where [custom methods](https://bit.ly/329vFXy) are loaded into the instance.
-   * @typedef {Object} Plugins
-   * @property {EnablePlugin} enable - Set storage value
-   * @property {DisablePlugin} disable - Remove storage value
    * @example
    *
    * // Enable a plugin by namespace
@@ -193,10 +186,9 @@ function analytics(config = {}) {
   const plugins = {
     /**
      * Enable analytics plugin
-     * @typedef {Function} EnablePlugin
-     * @param  {string|string[]} plugins - name of plugins(s) to disable
-     * @param  {Function} [callback] - callback after enable runs
-     * @returns {Promise}
+     * @param {string|string[]} plugins - name of plugins(s) to enable
+     * @param {Callback} [callback] - callback after enable runs
+     * @returns {Promise<void>}
      * @example
      *
      * analytics.plugins.enable('google-analytics').then(() => {
@@ -219,10 +211,9 @@ function analytics(config = {}) {
     },
     /**
      * Disable analytics plugin
-     * @typedef {Function} DisablePlugin
-     * @param  {string|string[]} plugins - name of integration(s) to disable
-     * @param  {Function} [callback] - callback after disable runs
-     * @returns {Promise}
+     * @param {string|string[]} plugins - name of integration(s) to disable
+     * @param {Callback} [callback] - callback after disable runs
+     * @returns {Promise<void>}
      * @example
      *
      * analytics.plugins.disable('google').then(() => {
@@ -278,29 +269,16 @@ function analytics(config = {}) {
   let readyCalled = false
   /**
    * Analytic instance returned from initialization
-   * @typedef {Object} AnalyticsInstance
-   * @property {Identify} identify - Identify a user
-   * @property {Track} track - Track an analytics event
-   * @property {Page} page - Trigger page view
-   * @property {User} user - Get user data
-   * @property {Reset} reset - Clear information about user & reset analytics
-   * @property {Ready} ready - Fire callback on analytics ready event
-   * @property {On} on - Fire callback on analytics lifecycle events.
-   * @property {Once} once - Fire callback on analytics lifecycle events once.
-   * @property {GetState} getState - Get data about user, activity, or context.
-   * @property {Storage} storage - storage methods
-   * @property {Plugins} plugins - plugin methods
+   * @type {AnalyticsInstance}
    */
   const instance = {
     /**
     * Identify a user. This will trigger `identify` calls in any installed plugins and will set user data in localStorage
-    * @typedef {Function} Identify
-    * @param  {String}   userId  - Unique ID of user
-    * @param  {Object}   [traits]  - Object of user traits
-    * @param  {Object}   [options] - Options to pass to identify call
-    * @param  {Function} [callback] - Callback function after identify completes
-    * @returns {Promise}
-    * @api public
+    * @param {string|Object} [userId] - Unique ID of user or traits object
+    * @param {Object} [traits] - Object of user traits
+    * @param {Object} [options] - Options to pass to identify call
+    * @param {Callback} [callback] - Callback function after identify completes
+    * @returns {Promise<void>}
     *
     * @example
     *
@@ -360,13 +338,11 @@ function analytics(config = {}) {
     },
     /**
      * Track an analytics event. This will trigger `track` calls in any installed plugins
-     * @typedef {Function} Track
-     * @param  {String}   eventName - Event name
-     * @param  {Object}   [payload]   - Event payload
-     * @param  {Object}   [options]   - Event options
-     * @param  {Function} [callback]  - Callback to fire after tracking completes
-     * @returns {Promise}
-     * @api public
+     * @param {string} eventName - Event name
+     * @param {Object} [payload] - Event payload
+     * @param {Object} [options] - Event options
+     * @param {Callback} [callback] - Callback to fire after tracking completes
+     * @returns {Promise<void>}
      *
      * @example
      *
