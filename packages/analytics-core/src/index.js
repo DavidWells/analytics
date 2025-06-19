@@ -24,7 +24,7 @@ import enrichMeta from './utils/enrichMeta'
 
 /**
  * Configuration for initializing the analytics instance
- * @typedef {Object} AnalyticsInstanceConfig
+ * @typedef {Object} AnalyticsConfig
  * @property {string} [app] - Name of site / app
  * @property {string|number} [version] - Version of your app
  * @property {boolean} [debug] - Should analytics run in debug mode
@@ -56,16 +56,83 @@ import enrichMeta from './utils/enrichMeta'
 /**
  * Storage interface
  * @typedef {Object} StorageInterface
- * @property {Function} getItem - Get item from storage
- * @property {Function} setItem - Set item in storage
- * @property {Function} removeItem - Remove item from storage
+ * @property {GetItem} getItem - Get item from storage
+ * @property {SetItem} setItem - Set item in storage
+ * @property {RemoveItem} removeItem - Remove item from storage
+ */
+
+/**
+ * Get value from storage
+ * @callback GetItem
+ * @param {string} key - storage key
+ * @param {Object} [options] - storage options
+ * @returns {any}
+ * @example
+ *
+ * analytics.storage.getItem('storage_key')
+ */
+
+/**
+ * Set storage value
+ * @callback SetItem
+ * @param {string} key - storage key
+ * @param {any} value - storage value
+ * @param {Object} [options] - storage options
+ * @example
+ *
+ * analytics.storage.setItem('storage_key', 'value')
+ */
+
+/**
+ * Remove storage value
+ * @callback RemoveItem
+ * @param {string} key - storage key
+ * @param {Object} [options] - storage options
+ * @example
+ *
+ * analytics.storage.removeItem('storage_key')
+ */
+
+/**
+ * Enable analytics plugin
+ * @callback EnablePlugin
+ * @param {string|string[]} plugins - name of plugins(s) to enable
+ * @param {Callback} [callback] - callback after enable runs
+ * @returns {Promise<void>}
+ * @example
+ *
+ * analytics.plugins.enable('google-analytics').then(() => {
+ *   console.log('do stuff')
+ * })
+ *
+ * // Enable multiple plugins at once
+ * analytics.plugins.enable(['google-analytics', 'segment']).then(() => {
+ *   console.log('do stuff')
+ * })
+ */
+
+/**
+ * Disable analytics plugin
+ * @callback DisablePlugin
+ * @param {string|string[]} plugins - name of integration(s) to disable
+ * @param {Callback} [callback] - callback after disable runs
+ * @returns {Promise<void>}
+ * @example
+ *
+ * analytics.plugins.disable('google').then(() => {
+ *   console.log('do stuff')
+ * })
+ *
+ * analytics.plugins.disable(['google', 'segment']).then(() => {
+ *   console.log('do stuff')
+ * })
  */
 
 /**
  * Plugin management interface
  * @typedef {Object} PluginsInterface
- * @property {Function} enable - Enable plugin(s)
- * @property {Function} disable - Disable plugin(s)
+ * @property {EnablePlugin} enable - Enable plugin(s)
+ * @property {DisablePlugin} disable - Disable plugin(s)
  */
 
 /**
@@ -89,7 +156,7 @@ import enrichMeta from './utils/enrichMeta'
  *
  * After the library is initialized with config, the core API is exposed & ready for use in the application.
  *
- * @param {AnalyticsInstanceConfig} [config={}] - analytics core config
+ * @param {AnalyticsConfig} [config={}] - analytics core config
  * @returns {AnalyticsInstance} Analytics Instance
  * @example
  *
@@ -790,7 +857,6 @@ function analytics(config = {}) {
     storage: {
       /**
        * Get value from storage
-       * @typedef {Function} GetItem
        * @param {String} key - storage key
        * @param {Object} [options] - storage options
        * @return {Any}
@@ -802,7 +868,6 @@ function analytics(config = {}) {
       getItem: storage.getItem,
       /**
        * Set storage value
-       * @typedef {Function} SetItem
        * @param {String} key - storage key
        * @param {any} value - storage value
        * @param {Object} [options] - storage options
@@ -821,7 +886,6 @@ function analytics(config = {}) {
       },
       /**
        * Remove storage value
-       * @typedef {Function} RemoveItem
        * @param {String} key - storage key
        * @param {Object} [options] - storage options
        *
