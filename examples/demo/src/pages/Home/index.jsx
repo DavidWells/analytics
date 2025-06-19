@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { Link } from "@reach/router"
+import { Link } from "react-router-dom"
 import { initialHistory, clearHistory, recordHistory } from '../../utils/analytics/plugins/visualize-analytics'
 import analytics from '../../utils/analytics'
-import Navigation from '../../fragments/Nav'
-import Log from '../../components/Log'
+import Navigation from '../../fragments/Nav/index.jsx'
+import Log from '../../components/Log/index.jsx'
 import './Home.css'
 
 let hasCleared = false
@@ -13,6 +13,14 @@ console.log('initialHistory', initialHistory)
 //   console.log('info', info)
 //   analytics.plugins['google-analytics'].addTag('foobar')
 // })
+
+const listener = analytics.on('*', ({ payload }) => {
+  console.log('payload', payload)
+  recordHistory(payload)
+  // this.setState({
+  //   history: window.__global__.analytics.concat(payload) //.sort(sortByTimeStamp)
+  // })
+})
 
 function sortByTimeStamp(a, b) {
   if (!a.meta || !b.meta) {
@@ -41,13 +49,8 @@ export default class App extends Component {
     }
   }
   componentDidMount() {
-    this.listener = analytics.on('*', ({ payload }) => {
-      console.log('payload', payload)
-      recordHistory(payload)
-      // this.setState({
-      //   history: window.__global__.analytics.concat(payload) //.sort(sortByTimeStamp)
-      // })
-    })
+    console.log('componentDidMount analytics.on')
+    this.listener = listener
     setInterval(() => {
       this.setState({
         history:  window.__global__.analytics // .sort(sortByTimeStamp)

@@ -15,6 +15,7 @@ export function recordHistory(action) {
 
 export default function visualizeState() {
 	return store => next => action => {
+    console.log('action', action)
   	initialHistory.push(action)
     return next(action)
 	}
