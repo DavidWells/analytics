@@ -734,6 +734,7 @@ jobs:
               
               core.setOutput('pr-number', pr.number);
               core.setOutput('pr-url', pr.html_url);
+              core.setOutput('branch-name', branchName);
               
             } catch (error) {
               console.error('❌ PR creation error:', error);
