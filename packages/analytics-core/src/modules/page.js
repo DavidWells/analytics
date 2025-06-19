@@ -35,21 +35,13 @@ function currentUrl(search) {
 }
 
 /**
- * Page data for overides
- * @typedef {object} PageData
- * @property {string} [title] - Page title
- * @property {string} [url] - Page url
- * @property {string} [path] - Page path
- * @property {string} [search] - Page search
- * @property {string} [width] - Page width
- * @property {string} [height] - Page height
-*/
+ * Page data for overrides
+ */
 
 /**
  * Get information about current page
- * @typedef {Function} getPageData
- * @param  {PageData} [pageData = {}] - Page data overides
- * @return {PageData} resolved page data
+ * @param {PageData} [pageData={}] - Page data overrides
+ * @returns {PageData} resolved page data
  */
 export const getPageData = (pageData = {}) => {
   if (!isBrowser) return pageData
