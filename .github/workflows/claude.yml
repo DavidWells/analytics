@@ -1,0 +1,1021 @@
+name: Claude Code
+
+on:
+  # PR related events
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+  pull_request_review_comment:
+    types: [created]
+  pull_request_review:
+    types: [submitted]
+    
+  # Issue related events (added)
+  issues:
+    types: [opened, assigned]
+  issue_comment:
+    types: [created]
+
+# Concurrency control (one run per Issue/PR)
+concurrency:
+  group: claude-${{ github.repository }}-${{ github.event.number || github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  claude:
+    # Security-focused conditional execution (full support for Issues and PRs)
+    if: |
+      (
+        github.event_name == 'pull_request_target' &&
+        (
+          github.event.pull_request.head.repo.full_name == github.repository ||
+          contains(fromJSON('["COLLABORATOR", "MEMBER", "OWNER"]'), github.event.pull_request.author_association)
+        ) &&
+        contains(github.event.pull_request.body, '@claude')
+      ) ||
+      (
+        github.event_name == 'issue_comment' &&
+        (
+          github.event.sender.login == github.repository_owner ||
+          contains(fromJSON('["COLLABORATOR", "MEMBER", "OWNER"]'), github.event.comment.author_association)
+        ) &&
+        contains(github.event.comment.body, '@claude')
+      ) ||
+      (
+        github.event_name == 'issues' &&
+        (
+          github.event.sender.login == github.repository_owner ||
+          contains(fromJSON('["COLLABORATOR", "MEMBER", "OWNER"]'), github.event.issue.author_association)
+        ) &&
+        (
+          contains(github.event.issue.body, '@claude') ||
+          contains(github.event.issue.title, '@claude')
+        )
+      ) ||
+      (
+        github.event_name == 'pull_request_review_comment' &&
+        (
+          github.event.sender.login == github.repository_owner ||
+          contains(fromJSON('["COLLABORATOR", "MEMBER", "OWNER"]'), github.event.comment.author_association)
+        ) &&
+        contains(github.event.comment.body, '@claude')
+      ) ||
+      (
+        github.event_name == 'pull_request_review' &&
+        (
+          github.event.sender.login == github.repository_owner ||
+          contains(fromJSON('["COLLABORATOR", "MEMBER", "OWNER"]'), github.event.review.author_association)
+        ) &&
+        contains(github.event.review.body, '@claude')
+      )
+    
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    permissions:
+      # 📁 Content management (highest permissions)
+      contents: write
+      pull-requests: write
+      issues: write
+      discussions: write
+      
+      # 🔧 Development & CI/CD management
+      actions: write
+      checks: write
+      statuses: write
+      pages: write
+      deployments: write
+      
+      # 📦 Package & security management
+      packages: write
+      security-events: write
+      
+      # 🎯 Project management
+      repository-projects: write
+      
+      # 🆔 Authentication & token management
+      id-token: write
+
+    steps:
+      - name: Get Context Information
+        id: context-info
+        uses: actions/github-script@v7
+        with:
+          script: |
+            let issueNumber, prNumber, headRef, baseRef, headSha, isPR = false;
+            let triggerText = '';
+            
+            if (context.eventName === 'pull_request_target') {
+              // When a PR is created or updated
+              isPR = true;
+              issueNumber = context.payload.pull_request.number;
+              prNumber = context.payload.pull_request.number;
+              headRef = context.payload.pull_request.head.ref;
+              baseRef = context.payload.pull_request.base.ref;
+              headSha = context.payload.pull_request.head.sha;
+              triggerText = context.payload.pull_request.body;
+              
+              console.log(`PR #${prNumber}: ${baseRef} <- ${headRef} (${headSha})`);
+              
+            } else if (context.eventName === 'issues') {
+              // When an Issue is created or assigned
+              isPR = false;
+              issueNumber = context.payload.issue.number;
+              triggerText = `${context.payload.issue.title} ${context.payload.issue.body}`;
+              
+              console.log(`Issue #${issueNumber} created`);
+              
+            } else if (context.eventName === 'issue_comment') {
+              // Issue/PR comment
+              issueNumber = context.payload.issue.number;
+              triggerText = context.payload.comment.body;
+              
+              if (context.payload.issue.pull_request) {
+                // Comment on a PR
+                isPR = true;
+                try {
+                  const pr = await github.rest.pulls.get({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    pull_number: issueNumber
+                  });
+                  prNumber = issueNumber;
+                  headRef = pr.data.head.ref;
+                  baseRef = pr.data.base.ref;
+                  headSha = pr.data.head.sha;
+                  
+                  console.log(`PR Comment #${prNumber}: ${baseRef} <- ${headRef}`);
+                } catch (error) {
+                  console.error('Error fetching PR info:', error);
+                  // In case of error, treat as a regular Issue
+                  isPR = false;
+                }
+              } else {
+                // Regular Issue comment
+                isPR = false;
+                console.log(`Issue Comment #${issueNumber}`);
+              }
+              
+            } else if (context.eventName === 'pull_request_review_comment' || context.eventName === 'pull_request_review') {
+              // PR review related
+              isPR = true;
+              issueNumber = context.payload.pull_request.number;
+              prNumber = context.payload.pull_request.number;
+              headRef = context.payload.pull_request.head.ref;
+              baseRef = context.payload.pull_request.base.ref;
+              headSha = context.payload.pull_request.head.sha;
+              
+              if (context.eventName === 'pull_request_review_comment') {
+                triggerText = context.payload.comment.body;
+              } else {
+                triggerText = context.payload.review.body;
+              }
+              
+              console.log(`PR Review #${prNumber}: ${baseRef} <- ${headRef}`);
+            }
+            
+            // Set outputs
+            core.setOutput('issue-number', issueNumber);
+            core.setOutput('pr-number', prNumber || '');
+            core.setOutput('head-ref', headRef || '');
+            core.setOutput('base-ref', baseRef || '');
+            core.setOutput('head-sha', headSha || '');
+            core.setOutput('is-pr', isPR);
+            core.setOutput('trigger-text', triggerText);
+            
+            console.log(`Final Context: Issue #${issueNumber}, isPR: ${isPR}, Event: ${context.eventName}`);
+
+      - name: Validate Environment
+        run: |
+          echo "🔍 Runtime Environment Information"
+          echo "=================================="
+          echo "Event: ${{ github.event_name }}"
+          echo "Actor: ${{ github.actor }}"
+          echo "Repository: ${{ github.repository }}"
+          echo "Issue Number: ${{ steps.context-info.outputs.issue-number }}"
+          echo "Is PR: ${{ steps.context-info.outputs.is-pr }}"
+          echo "PR Number: ${{ steps.context-info.outputs.pr-number }}"
+          echo "Head Ref: ${{ steps.context-info.outputs.head-ref }}"
+          echo "Base Ref: ${{ steps.context-info.outputs.base-ref }}"
+          echo "Head SHA: ${{ steps.context-info.outputs.head-sha }}"
+          echo "=================================="
+          
+          # Check for secrets
+          if [ -z "${{ secrets.CLAUDE_CREDS_API_KEY }}" ]; then
+            echo "::error::CLAUDE_CREDS_API_KEY is not set"
+            exit 1
+          fi
+
+          if [ -z "${{ secrets.CLAUDE_CREDS_API }}" ]; then
+            echo "::error::CLAUDE_CREDS_API is not set"
+            exit 1
+          fi
+          
+          echo "✅ Environment validation complete"
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          # Checkout the feature branch for PRs, or the default branch for Issues
+          ref: ${{ steps.context-info.outputs.head-sha || github.ref }}
+          fetch-depth: ${{ steps.context-info.outputs.is-pr == 'true' && 0 || 1 }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fetch Base Branch (PR only)
+        if: steps.context-info.outputs.is-pr == 'true' && steps.context-info.outputs.base-ref
+        run: |
+          echo "📥 Fetching base branch: ${{ steps.context-info.outputs.base-ref }}"
+          git fetch origin ${{ steps.context-info.outputs.base-ref }}:${{ steps.context-info.outputs.base-ref }}
+          
+          echo "📋 Changed files:"
+          git diff --name-only origin/${{ steps.context-info.outputs.base-ref }}..HEAD || echo "Failed to get diff"
+          
+          echo "📊 Change statistics:"
+          git diff --stat origin/${{ steps.context-info.outputs.base-ref }}..HEAD || echo "Failed to get stats"
+
+      - name: Get Project Information
+        id: project-info
+        run: |
+          echo "📁 Collecting project information"
+          
+          # Determine project type
+          project_type="unknown"
+          framework=""
+          
+          if [ -f "package.json" ]; then
+            project_type="node"
+            echo "📦 Node.js project detected"
+            
+            # Detect framework
+            if grep -q "next" package.json; then
+              framework="Next.js"
+            elif grep -q "react" package.json; then
+              framework="React"
+            elif grep -q "vue" package.json; then
+              framework="Vue.js"
+            elif grep -q "angular" package.json; then
+              framework="Angular"
+            elif grep -q "express" package.json; then
+              framework="Express"
+            fi
+          elif [ -f "requirements.txt" ] || [ -f "pyproject.toml" ]; then
+            project_type="python"
+            framework="Python"
+            echo "🐍 Python project detected"
+          elif [ -f "Cargo.toml" ]; then
+            project_type="rust"
+            framework="Rust"
+            echo "🦀 Rust project detected"
+          elif [ -f "go.mod" ]; then
+            project_type="go"
+            framework="Go"
+            echo "🐹 Go project detected"
+          elif [ -f "pom.xml" ] || [ -f "build.gradle" ]; then
+            project_type="java"
+            framework="Java"
+            echo "☕ Java project detected"
+          fi
+          
+          echo "project-type=$project_type" >> $GITHUB_OUTPUT
+          echo "framework=$framework" >> $GITHUB_OUTPUT
+          
+          # Estimate number of files
+          total_files=$(find . -type f \( -name "*.js" -o -name "*.ts" -o -name "*.jsx" -o -name "*.tsx" -o -name "*.py" -o -name "*.rs" -o -name "*.go" -o -name "*.java" \) | wc -l)
+          echo "total-files=$total_files" >> $GITHUB_OUTPUT
+          
+          echo "📊 Project summary: $framework ($total_files files)"
+
+      - name: Setup Env
+        id: setup-env
+        uses: DavidWells/actions/get-claude-tokens@master
+        with:
+          api-key: ${{ secrets.CLAUDE_CREDS_API_KEY }}
+          api-endpoint: ${{ secrets.CLAUDE_CREDS_API }}
+
+      # - name: Run Claude PR Action
+      #   uses: davidwells/claude-code-action@main
+      #   with:
+      #     use_oauth: true
+      #     claude_access_token: ${{ steps.setup-env.outputs.access-token }}
+      #     claude_refresh_token: ${{ steps.setup-env.outputs.refresh-token }}
+      #     claude_expires_at: ${{ steps.setup-env.outputs.expires-at }}
+      #     model: ${{ steps.setup-env.outputs.model || 'claude-sonnet-4-20250514' }}
+      #     allowed_tools: ${{ steps.setup-env.outputs.allowed_tools || 'Bash,Edit,Read,Write,Glob,Grep,LS,MultiEdit,NotebookRead,NotebookEdit' }}
+      #     timeout_minutes: "60"
+          
+      - name: Run Claude Code
+        id: claude
+        uses: davidwells/claude-code-action@main
+        timeout-minutes: 10
+        continue-on-error: true
+        with:
+          use_oauth: true
+          claude_access_token: ${{ steps.setup-env.outputs.access-token }}
+          claude_refresh_token: ${{ steps.setup-env.outputs.refresh-token }}
+          claude_expires_at: ${{ steps.setup-env.outputs.expires-at }}
+          model: ${{ steps.setup-env.outputs.model || 'claude-sonnet-4-20250514' }}
+          # claude_access_token: ${{ secrets.CLAUDE_ACCESS_TOKEN }}
+          # claude_refresh_token: ${{ secrets.CLAUDE_REFRESH_TOKEN }}
+          # claude_expires_at: ${{ secrets.CLAUDE_EXPIRES_AT }}
+          # GITHUB ACTIONS (Maximum Freedom):
+          allowed_tools: |
+            Edit,View,Replace,Write,Create,
+            BatchTool,GlobTool,GrepTool,NotebookEditCell,
+            Bash(git:*),Bash(npm:*),Bash(yarn:*),Bash(python:*),
+            Bash(docker:*),Bash(make:*),Bash(cargo:*),Bash(go:*),
+            Bash(ls:*),Bash(cat:*),Bash(echo:*),Bash(curl:*),
+            mcp__*
+          disallowed_tools: |
+            Bash(sudo:*),
+            Bash(rm -rf /)
+        env:
+          # Pass context information to Claude Code
+          GITHUB_CONTEXT_TYPE: ${{ steps.context-info.outputs.is-pr == 'true' && 'PR' || 'ISSUE' }}
+          ISSUE_NUMBER: ${{ steps.context-info.outputs.issue-number }}
+          PR_NUMBER: ${{ steps.context-info.outputs.pr-number }}
+          BASE_BRANCH: ${{ steps.context-info.outputs.base-ref }}
+          HEAD_BRANCH: ${{ steps.context-info.outputs.head-ref }}
+          HEAD_SHA: ${{ steps.context-info.outputs.head-sha }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+          TRIGGER_TEXT: ${{ steps.context-info.outputs.trigger-text }}
+          PROJECT_TYPE: ${{ steps.project-info.outputs.project-type }}
+          PROJECT_FRAMEWORK: ${{ steps.project-info.outputs.framework }}
+          TOTAL_FILES: ${{ steps.project-info.outputs.total-files }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          REPOSITORY_NAME: ${{ github.repository }}
+          
+          # 🔑 Enhanced permission information
+          CLAUDE_PERMISSIONS_LEVEL: "ENHANCED"
+          REPO_ADMIN_MODE: "true"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+          # 📊 Repository information
+          REPOSITORY_OWNER: ${{ github.repository_owner }}
+          REPOSITORY_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          REPOSITORY_PRIVATE: ${{ github.event.repository.private }}
+          REPOSITORY_FORK: ${{ github.event.repository.fork }}
+          
+          # 🎯 Execution context
+          WORKFLOW_RUN_ID: ${{ github.run_id }}
+          WORKFLOW_RUN_NUMBER: ${{ github.run_number }}
+          COMMIT_SHA: ${{ github.sha }}
+          REF_NAME: ${{ github.ref_name }}
+          
+          # 🔧 Available feature flags
+          CAN_CREATE_RELEASES: "true"
+          CAN_MANAGE_LABELS: "true" 
+          CAN_MANAGE_MILESTONES: "true"
+          CAN_MANAGE_PROJECTS: "true"
+          CAN_MANAGE_WIKI: "true"
+          CAN_MANAGE_PAGES: "true"
+          CAN_MANAGE_DEPLOYMENTS: "true"
+          CAN_MANAGE_SECURITY: "true"
+          CAN_MANAGE_PACKAGES: "true"
+          CAN_MANAGE_ACTIONS: "true"
+
+      - name: Run Advanced Repository Management
+        id: advanced-management
+        if: steps.claude.outcome == 'success' && steps.context-info.outputs.issue-number
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issueNumber = ${{ steps.context-info.outputs.issue-number }};
+            const isPR = '${{ steps.context-info.outputs.is-pr }}' === 'true';
+            const triggerText = (${{ toJSON(steps.context-info.outputs.trigger-text) }} || '').toLowerCase();
+            const framework = '${{ steps.project-info.outputs.framework }}';
+            const hashSymbol = String.fromCharCode(35);
+            
+            console.log('🚀 Starting advanced repository management...');
+            
+            const managementResults = {
+              labels: [],
+              milestones: [],
+              projects: [],
+              releases: [],
+              security: [],
+              wiki: [],
+              pages: [],
+              actions: []
+            };
+            
+            try {
+              // 1. 🏷️ Intelligent Label Management
+              console.log('📋 Running automatic label management...');
+              
+              // Automatically create necessary labels
+              const requiredLabels = [
+                { name: 'claude-code', color: '7B68EE', description: 'Items created or modified by Claude Code' },
+                { name: 'auto-generated', color: '00D084', description: 'Automatically generated content' },
+                { name: 'security-fix', color: 'FF4444', description: 'Security-related fixes' },
+                { name: 'performance', color: 'FFA500', description: 'Performance improvements' },
+                { name: 'technical-debt', color: '8B4513', description: 'Resolving technical debt' },
+                { name: 'documentation', color: '0366D6', description: 'Documentation related' },
+                { name: 'ci-cd', color: '28A745', description: 'CI/CD improvements' }
+              ];
+              
+              for (const label of requiredLabels) {
+                try {
+                  await github.rest.issues.createLabel({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    name: label.name,
+                    color: label.color,
+                    description: label.description
+                  });
+                  managementResults.labels.push(`✅ Created: ${label.name}`);
+                } catch (error) {
+                  if (error.status === 422) {
+                    managementResults.labels.push(`📋 Exists: ${label.name}`);
+                  } else {
+                    managementResults.labels.push(`❌ Error: ${label.name} - ${error.message}`);
+                  }
+                }
+              }
+              
+              // Automatically apply relevant labels
+              const autoLabels = ['claude-code', 'auto-generated'];
+              if (triggerText.includes('security')) {
+                autoLabels.push('security-fix');
+              }
+              if (triggerText.includes('performance')) {
+                autoLabels.push('performance');
+              }
+              if (triggerText.includes('technical debt')) {
+                autoLabels.push('technical-debt');
+              }
+              if (triggerText.includes('document')) {
+                autoLabels.push('documentation');
+              }
+              if (triggerText.includes('ci') || triggerText.includes('cd') || triggerText.includes('deploy')) {
+                autoLabels.push('ci-cd');
+              }
+              
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                labels: autoLabels
+              });
+              
+              managementResults.labels.push(`🏷️ Applied: ${autoLabels.join(', ')}`);
+              
+              // 2. 🎯 Automatic Milestone Management
+              console.log('🎯 Running milestone management...');
+              
+              try {
+                // Create a milestone for the current year and month
+                const now = new Date();
+                const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                const currentMilestone = `${now.getFullYear()}-${monthNames[now.getMonth()]}`;
+                
+                try {
+                  const milestone = await github.rest.issues.createMilestone({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    title: currentMilestone,
+                    description: `Tasks and improvements for ${currentMilestone}`,
+                    due_on: new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString()
+                  });
+                  managementResults.milestones.push(`✅ Created: ${currentMilestone}`);
+                } catch (error) {
+                  if (error.status === 422) {
+                    managementResults.milestones.push(`📅 Exists: ${currentMilestone}`);
+                  } else {
+                    managementResults.milestones.push(`❌ Error: ${error.message}`);
+                  }
+                }
+              } catch (error) {
+                managementResults.milestones.push(`❌ Milestone management error: ${error.message}`);
+              }
+              
+              // 3. 📊 Project Board Management
+              console.log('📊 Running project management...');
+              
+              try {
+                // Get projects for the repository
+                const projects = await github.rest.projects.listForRepo({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo
+                });
+                
+                if (projects.data.length > 0) {
+                  const project = projects.data[0];
+                  managementResults.projects.push(`📊 Project detected: ${project.name}`);
+                  
+                  // Add a card to the To Do column
+                  const columns = await github.rest.projects.listColumns({
+                    project_id: project.id
+                  });
+                  
+                  const todoColumn = columns.data.find(col => 
+                    col.name.toLowerCase().includes('todo') || 
+                    col.name.toLowerCase().includes('backlog')
+                  );
+                  
+                  if (todoColumn) {
+                    await github.rest.projects.createCard({
+                      column_id: todoColumn.id,
+                      content_id: context.payload.issue.id, // Use issue ID for content_id
+                      content_type: 'Issue'
+                    });
+                    managementResults.projects.push(`📋 Card added: ${project.name}`);
+                  }
+                } else {
+                  managementResults.projects.push(`ℹ️ Project board not found`);
+                }
+              } catch (error) {
+                managementResults.projects.push(`❌ Project management error: ${error.message}`);
+              }
+              
+              // 4. 🔒 Security Alert Handling
+              console.log('🔒 Running security check...');
+              
+              try {
+                if (triggerText.includes('security') || triggerText.includes('vulnerability')) {
+                  // Check for security alerts
+                  try {
+                    const vulnerabilities = await github.rest.secretScanning.listAlertsForRepo({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      state: 'open'
+                    });
+                    
+                    managementResults.security.push(`🔍 Open security alerts: ${vulnerabilities.data.length}`);
+                    
+                    if (vulnerabilities.data.length > 0) {
+                      managementResults.security.push(`⚠️ Security alert confirmation required`);
+                    }
+                  } catch (error) {
+                    managementResults.security.push(`ℹ️ Security alert check: Access restricted or feature disabled`);
+                  }
+                } else {
+                  managementResults.security.push(`ℹ️ Security check: Skipped`);
+                }
+              } catch (error) {
+                managementResults.security.push(`❌ Security check error: ${error.message}`);
+              }
+              
+              // 5. 📚 Automatic Wiki Update
+              console.log('📚 Running Wiki management...');
+              
+              try {
+                if (triggerText.includes('wiki') || triggerText.includes('document')) {
+                  // Check if Wiki page exists
+                  try {
+                    const repoInfo = await github.rest.repos.get({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo
+                    });
+                    
+                    if (repoInfo.data.has_wiki) {
+                      managementResults.wiki.push(`📚 Wiki enabled: Updatable`);
+                      // Actual Wiki update is performed by Claude Code
+                    } else {
+                      managementResults.wiki.push(`📚 Wiki disabled: Needs to be enabled in settings`);
+                    }
+                  } catch (error) {
+                    managementResults.wiki.push(`❌ Wiki check error: ${error.message}`);
+                  }
+                } else {
+                  managementResults.wiki.push(`ℹ️ Wiki update: Skipped`);
+                }
+              } catch (error) {
+                managementResults.wiki.push(`❌ Wiki management error: ${error.message}`);
+              }
+              
+              // 6. 🌐 GitHub Pages Management
+              console.log('🌐 Running GitHub Pages management...');
+              
+              try {
+                if (triggerText.includes('pages') || triggerText.includes('deploy') || triggerText.includes('site')) {
+                  try {
+                    const pages = await github.rest.repos.getPages({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo
+                    });
+                    
+                    managementResults.pages.push(`🌐 Pages enabled: ${pages.data.html_url}`);
+                    
+                    // Trigger a Pages build
+                    await github.rest.repos.requestPagesBuild({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo
+                    });
+                    
+                    managementResults.pages.push(`🔄 Triggered Pages rebuild`);
+                  } catch (error) {
+                    if (error.status === 404) {
+                      managementResults.pages.push(`🌐 Pages disabled: Needs to be enabled in settings`);
+                    } else {
+                      managementResults.pages.push(`❌ Pages management error: ${error.message}`);
+                    }
+                  }
+                } else {
+                  managementResults.pages.push(`ℹ️ Pages management: Skipped`);
+                }
+              } catch (error) {
+                managementResults.pages.push(`❌ Pages management error: ${error.message}`);
+              }
+              
+              // 7. ⚙️ Actions Workflow Management
+              console.log('⚙️ Running Actions management...');
+              
+              try {
+                if (triggerText.includes('workflow') || triggerText.includes('action') || triggerText.includes('ci') || triggerText.includes('cd')) {
+                  const workflows = await github.rest.actions.listRepoWorkflows({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo
+                  });
+                  
+                  managementResults.actions.push(`⚙️ Number of workflows: ${workflows.data.total_count}`);
+                  
+                  // Check for disabled workflows
+                  const disabledWorkflows = workflows.data.workflows.filter(w => w.state === 'disabled_manually');
+                  if (disabledWorkflows.length > 0) {
+                    managementResults.actions.push(`⚠️ Disabled workflows: ${disabledWorkflows.length}`);
+                  }
+                } else {
+                  managementResults.actions.push(`ℹ️ Actions management: Skipped`);
+                }
+              } catch (error) {
+                managementResults.actions.push(`❌ Actions management error: ${error.message}`);
+              }
+              
+              console.log('✅ Advanced repository management complete');
+              
+              // Save results to output
+              core.setOutput('management-results', JSON.stringify(managementResults));
+              core.setOutput('management-success', 'true');
+              
+            } catch (error) {
+              console.error('❌ Advanced repository management error:', error);
+              core.setOutput('management-error', error.message);
+              core.setOutput('management-success', 'false');
+            }
+      - name: Check for Changes
+        id: check-changes
+        if: steps.claude.outcome == 'success' && steps.context-info.outputs.is-pr == 'false'
+        run: |
+          echo "🔍 Checking for changes after Claude Code execution"
+          
+          # Git configuration
+          git config --global user.name "Claude Code Bot"
+          git config --global user.email "claude-code-bot@github.com"
+          
+          # Check for modified files
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "No changes: Skipping branch creation"
+            echo "has-changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "Changes detected: Proceeding with branch creation"
+            echo "has-changes=true" >> $GITHUB_OUTPUT
+            
+            # List of changed files
+            echo "📄 Changed files:"
+            git diff --name-only
+            git diff --cached --name-only
+            
+            # Change statistics
+            echo "📊 Change statistics:"
+            git diff --stat
+            git diff --cached --stat
+          fi
+
+      - name: Create Branch and PR Automatically
+        id: auto-pr
+        if: steps.check-changes.outputs.has-changes == 'true' && steps.context-info.outputs.is-pr == 'false'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issueNumber = ${{ steps.context-info.outputs.issue-number }};
+            const timestamp = new Date().toISOString().slice(0, 16).replace(/[-:]/g, '');
+            const branchName = `claude-fix/issue-${issueNumber}-${timestamp}`;
+            const defaultBranch = '${{ github.event.repository.default_branch }}';
+            
+            console.log(`🌿 Creating branch: ${branchName}`);
+            
+            try {
+              // 1. Create a new branch from the default branch
+              const { data: ref } = await github.rest.git.getRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: `heads/${defaultBranch}`
+              });
+              
+              await github.rest.git.createRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: `refs/heads/${branchName}`,
+                sha: ref.object.sha
+              });
+              
+              console.log(`✅ Branch created successfully: ${branchName}`);
+              
+              // 2. Commit changes to this branch (This part is tricky with github-script as it doesn't share workspace state easily. A separate run step is better.
+              // For simplicity, this script will now attempt to use 'actions/checkout' logic and push changes.)
+              // A better implementation would use a dedicated action like 'create-pull-request'.
+              // For this script, we assume the changes are in the working directory.
+              const { execSync } = require('child_process');
+              
+              // Switch to the new branch
+              execSync(`git checkout -b ${branchName}`, { stdio: 'inherit' });
+              
+              // Stage all changes
+              execSync('git add .', { stdio: 'inherit' });
+              
+              // Generate commit message
+              const commitMessage = `🤖 Claude Code: Automated fix for Issue #${issueNumber}
+
+              Addresses Issue #${issueNumber}
+              Executed by: @${{ github.actor }}`;
+              
+              // Execute commit
+              execSync(`git commit -m "${commitMessage}"`, { stdio: 'inherit' });
+              
+              // Push the branch
+              execSync(`git push origin ${branchName}`, { stdio: 'inherit' });
+              
+              console.log(`📤 Branch push complete: ${branchName}`);
+              
+              // 3. Get Issue information
+              const { data: issue } = await github.rest.issues.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber
+              });
+              
+              // 4. Create PR
+              const prTitle = `🤖 Claude Code: ${issue.title}`;
+              const prBody = `## 🤖 Automated fix by Claude Code
+
+            **Related Issue:** #${issueNumber}
+            **Executed by:** @${{ github.actor }}
+
+            ### 📋 Original Issue
+            > ${issue.title}
+
+            ### ✅ Next Steps
+            1. Review the changes
+            2. Confirm that tests pass
+            3. Merge if there are no issues
+
+            **If additional fixes are needed:** Mention \`claude\` in this PR
+
+            resolves #${issueNumber}
+
+            ---
+              *Automated PR by [Claude Code Workflow](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})*`;
+
+              const { data: pr } = await github.rest.pulls.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: prTitle,
+                head: branchName,
+                base: defaultBranch,
+                body: prBody,
+                draft: false
+              });
+              
+              console.log(`🎉 PR created successfully: #${pr.number}`);
+              
+              // Set outputs
+              core.setOutput('pr-number', pr.number);
+              core.setOutput('pr-url', pr.html_url);
+              core.setOutput('branch-name', branchName);
+
+            /*  disabled for now
+              // Notify the original Issue about the PR creation
+              await github.rest.issues.createComment({
+                issue_number: issueNumber,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `🎉 **Automatic PR creation complete!**
+
+            **📥 PR:** [#${pr.number}](${pr.html_url})
+            **🌿 Branch:** \`${branchName}\`
+
+            Please review the PR and merge if there are no issues.
+            If additional fixes are needed, please mention \`claude\` in the PR.`
+              });
+            */
+              
+            } catch (error) {
+              console.error('❌ Branch/PR creation error:', error);
+              core.setOutput('error', error.message);
+              
+              // Error notification
+              await github.rest.issues.createComment({
+                issue_number: issueNumber,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `❌ **Automatic PR creation failed**
+
+              **Error:** \`${error.message}\`
+
+              Solution: Create a PR manually or rerun with \`claude\`
+              Details: [Actions run log](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})`
+              });
+            }
+
+      - name: Notify on Success
+        if: steps.claude.outcome == 'success' && steps.context-info.outputs.issue-number
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const isPR = '${{ steps.context-info.outputs.is-pr }}' === 'true';
+            const contextType = isPR ? 'Pull Request' : 'Issue';
+            const eventName = '${{ github.event_name }}';
+            const framework = '${{ steps.project-info.outputs.framework }}' || 'Unknown';
+            const totalFiles = '${{ steps.project-info.outputs.total-files }}' || '0';
+            const hasChanges = '${{ steps.check-changes.outputs.has-changes }}' === 'true';
+            const autoPrNumber = '${{ steps.auto-pr.outputs.pr-number }}';
+            const autoPrUrl = '${{ steps.auto-pr.outputs.pr-url }}';
+            const branchName = '${{ steps.auto-pr.outputs.branch-name }}';
+            const managementSuccess = '${{ steps.advanced-management.outputs.management-success }}' === 'true';
+            const managementResults = '${{ steps.advanced-management.outputs.management-results }}';
+            
+            const eventIcons = {
+              'pull_request_target': '🔀',
+              'issue_comment': '💬',
+              'issues': '📋',
+              'pull_request_review_comment': '📝',
+              'pull_request_review': '👀'
+            };
+            const icon = eventIcons[eventName] || '🤖';
+            const hashSymbol = '#';
+            
+            let message = `${icon} **Claude Code execution complete**\n\n`;
+            
+            // Result of automatic PR creation
+            if (!isPR && hasChanges && autoPrNumber) {
+              message += `🎉 **Automatic PR created successfully!**\n`;
+              message += `- PR: [${hashSymbol}${autoPrNumber}](${autoPrUrl})\n`;
+              message += `- Branch: \`${branchName}\`\n`;
+              message += `- Next step: Review PR → Merge\n\n`;
+            } else if (!isPR && !hasChanges) {
+              message += `ℹ️ **Analysis only** (no code changes)\n\n`;
+            }
+            
+            // Execution info (compact version)
+            message += `**📊 Execution Info:** ${contextType} ${hashSymbol}${${{ steps.context-info.outputs.issue-number }}} | ${framework} (${totalFiles} files) | @${{ github.actor }}\n`;
+            if (isPR) {
+              message += `**🌿 Branch:** \`${{ steps.context-info.outputs.head-ref }}\` → \`${{ steps.context-info.outputs.base-ref }}\`\n`;
+            }
+            
+            // Repository management results (summary)
+            if (managementSuccess && managementResults) {
+              try {
+                const results = JSON.parse(managementResults);
+                const sections = ['labels', 'milestones', 'projects', 'security', 'wiki', 'pages', 'actions'];
+                const hasResults = sections.some(s => results[s] && results[s].length > 0);
+                
+                if (hasResults) {
+                  message += `\n**🚀 Automated management executed:**\n`;
+                  sections.forEach(section => {
+                    if (results[section] && results[section].length > 0) {
+                      const summary = results[section].filter(r => r.includes('✅') || r.includes('⚠️')).slice(0, 2);
+                      if (summary.length > 0) {
+                        message += `${summary.map(r => `- ${r}`).join('\n')}\n`;
+                      }
+                    }
+                  });
+                }
+              } catch (error) {
+                // Do not display in case of error
+              }
+            }
+            
+            message += `\n---\n`;
+            message += `💡 **Example commands for Claude:**\n\n`;
+            
+            // Main commands by category (concise version)
+            const commands = {
+              '🔍 Analysis & Review': [
+                'Please review the code',
+                'Please perform a security check',
+                'Please suggest performance improvements'
+              ],
+              '🛠️ Tasks & Implementation': [
+                'Please add test cases',
+                'Please fix this issue and create a PR',
+                'Please suggest refactoring'
+              ],
+              '📚 Management & Operations': [
+                'Please create a release',
+                'Please check security alerts',
+                'Please optimize the workflow'
+              ]
+            };
+            
+            if (isPR) {
+              commands['🔀 PR Specific'] = [
+                'Please perform a final check before merging',
+                'Please check for breaking changes'
+              ];
+            } else {
+              commands['📋 Issue Specific'] = [
+                'Please investigate the root cause of this issue',
+                'Please propose multiple solutions'
+              ];
+            }
+            
+            Object.entries(commands).forEach(([category, cmds]) => {
+              message += `**${category}:**\n`;
+              cmds.forEach(cmd => message += `- \`claude ${cmd}\`\n`);
+              message += `\n`;
+            });
+            
+            message += `🔄 **Rerun**: You can run again anytime with \`claude [your instructions]\``;
+            
+            await github.rest.issues.createComment({
+              issue_number: ${{ steps.context-info.outputs.issue-number }},
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: message
+            });
+
+      - name: Notify on Failure
+        if: steps.claude.outcome == 'failure' && steps.context-info.outputs.issue-number
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const isPR = '${{ steps.context-info.outputs.is-pr }}' === 'true';
+            const contextType = isPR ? 'Pull Request' : 'Issue';
+            const managementError = '${{ steps.advanced-management.outputs.management-error }}';
+            const hashSymbol = '#';
+            
+            let message = `❌ **Claude Code execution failed**\n\n`;
+            message += `An error occurred while processing ${contextType} ${hashSymbol}${{ steps.context-info.outputs.issue-number }}.\n\n`;
+            
+            // Error info (compact version)
+            message += `**📊 Error Info:** ${contextType} | \`${{ github.event_name }}\` | @${{ github.actor }}\n`;
+            message += `**🔗 Detailed Log:** [Actions run log](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})\n\n`;
+            
+            if (managementError) {
+              message += `⚠️ **Repository Management Error:** \`${managementError}\`\n\n`;
+            }
+            
+            // Main causes and solutions (concise list)
+            message += `**🤔 Possible Causes and Solutions:**\n\n`;
+            
+            message += `**1. Temporary Issue** (most common)\n`;
+            message += `- Temporary limitations of the Claude API\n`;
+            message += `- → **Solution**: Rerun with \`claude\` after 5 minutes\n\n`;
+            
+            message += `**2. Timeout** (15-minute limit)\n`;
+            message += `- The task may be too complex\n`;
+            message += `- → **Solution**: Break down the task with more specific instructions\n\n`;
+            
+            message += `**3. Configuration Issue**\n`;
+            message += `- Expired or misconfigured tokens\n`;
+            message += `- → **Solution**: Check in Settings → Secrets → Actions\n`;
+            message += `  - \`CLAUDE_ACCESS_TOKEN\`\n`;
+            message += `  - \`CLAUDE_REFRESH_TOKEN\`\n`;
+            message += `  - \`CLAUDE_EXPIRES_AT\`\n\n`;
+            
+            // Concise rerun guide
+            message += `**💡 Rerun Tips:**\n`;
+            message += `- Be specific: \`claude review src/components/Button.tsx\`\n`;
+            message += `- Step by step: Start with one file\n`;
+            message += `- Be clear: State the expected outcome\n\n`;
+            
+            message += `---\n`;
+            message += `🔄 **Rerun**: Please try again with \`claude [specific instructions]\`\n`;
+            message += `📞 **Support**: If the problem persists, please contact an administrator`;
+            
+            await github.rest.issues.createComment({
+              issue_number: ${{ steps.context-info.outputs.issue-number }},
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: message
+            });
+
+      - name: Output Execution Log
+        if: always()
+        run: |
+          echo "📊 ===== Execution Summary ====="
+          echo "Status: ${{ steps.claude.outcome }}"
+          echo "Context Type: ${{ steps.context-info.outputs.is-pr == 'true' && 'PR' || 'Issue' }}"
+          echo "Issue/PR: '#${{ steps.context-info.outputs.issue-number }}'"
+          echo "Branch: ${{ steps.context-info.outputs.head-ref || 'default' }}"
+          echo "Actor: ${{ github.actor }}"
+          echo "Event: ${{ github.event_name }}"
+          echo "Project: ${{ steps.project-info.outputs.framework || 'Unknown' }}"
+          echo "Files: ${{ steps.project-info.outputs.total-files || '0' }}"
+          echo "Duration: ${{ steps.claude.outputs.duration || 'N/A' }}"
+          echo ""
+          echo "🔧 === Auto PR Creation Result ==="
+          echo "Has Changes: ${{ steps.check-changes.outputs.has-changes || 'N/A' }}"
+          echo "Auto PR Number: ${{ steps.auto-pr.outputs.pr-number || 'N/A' }}"
+          echo "Auto PR URL: ${{ steps.auto-pr.outputs.pr-url || 'N/A' }}"
+          echo "Branch Name: ${{ steps.auto-pr.outputs.branch-name || 'N/A' }}"
+          echo "Auto PR Error: ${{ steps.auto-pr.outputs.error || 'None' }}"
+          echo ""
+          echo "🚀 === Advanced Repository Management Result ==="
+          echo "Management Success: ${{ steps.advanced-management.outputs.management-success || 'N/A' }}"
+          echo "Management Error: ${{ steps.advanced-management.outputs.management-error || 'None' }}"
+          echo "Management Results Available: ${{ steps.advanced-management.outputs.management-results && 'Yes' || 'No' }}"
+          echo ""
+          echo "Timestamp: $(date -u)"
+          echo "=============================="
