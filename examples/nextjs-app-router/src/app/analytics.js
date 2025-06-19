@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import Analytics from "analytics";
 import { AnalyticsProvider } from "use-analytics";
 import { usePathname, useSearchParams } from "next/navigation";
@@ -15,7 +15,7 @@ const analyticsInstance = Analytics({
   ],
 });
 
-export default function AnalyticsComponent({ children }) {
+function AnalyticsTracker() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -23,8 +23,15 @@ export default function AnalyticsComponent({ children }) {
     analyticsInstance.page();
   }, [pathname, searchParams]);
 
+  return null;
+}
+
+export default function AnalyticsComponent({ children }) {
   return (
     <AnalyticsProvider instance={analyticsInstance}>
+      <Suspense fallback={null}>
+        <AnalyticsTracker />
+      </Suspense>
       {children}
     </AnalyticsProvider>
   );
