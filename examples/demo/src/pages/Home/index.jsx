@@ -14,6 +14,14 @@ console.log('initialHistory', initialHistory)
 //   analytics.plugins['google-analytics'].addTag('foobar')
 // })
 
+const listener = analytics.on('*', ({ payload }) => {
+  console.log('payload', payload)
+  recordHistory(payload)
+  // this.setState({
+  //   history: window.__global__.analytics.concat(payload) //.sort(sortByTimeStamp)
+  // })
+})
+
 function sortByTimeStamp(a, b) {
   if (!a.meta || !b.meta) {
     return 0
@@ -41,13 +49,8 @@ export default class App extends Component {
     }
   }
   componentDidMount() {
-    this.listener = analytics.on('*', ({ payload }) => {
-      console.log('payload', payload)
-      recordHistory(payload)
-      // this.setState({
-      //   history: window.__global__.analytics.concat(payload) //.sort(sortByTimeStamp)
-      // })
-    })
+    console.log('componentDidMount analytics.on')
+    this.listener = listener
     setInterval(() => {
       this.setState({
         history:  window.__global__.analytics // .sort(sortByTimeStamp)

@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useLocation } from "react-router-dom"
 import analytics from '../../utils/analytics'
 
 const PageViewTracking = () => {
   const location = useLocation()
+  const isInitialMount = useRef(true)
 
   useEffect(() => {
     analytics.on('pageStart', ({ payload }) => {
@@ -16,7 +17,14 @@ const PageViewTracking = () => {
   }, [])
 
   useEffect(() => {
+    // Skip the initial mount to avoid duplicate page tracking
+    if (isInitialMount.current) {
+      isInitialMount.current = false
+      return
+    }
+    
     // register page view on route changes
+    console.log('location', location)
     analytics.page(() => {
       console.log('page callback componentDidUpdate')
     })

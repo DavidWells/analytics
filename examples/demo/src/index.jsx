@@ -13,8 +13,8 @@ import main from "@analytics/core"
 
 import './index.css'
 
-console.log('tester', tester)
-console.log('main', main)
+// console.log('tester', tester)
+// console.log('main', main)
 
 const App = () => (
   <>

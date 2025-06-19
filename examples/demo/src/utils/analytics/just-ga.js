@@ -1,6 +1,8 @@
 import Analytics from 'analytics'
 import googleAnalytics from '@analytics/google-analytics'
 
+console.log('googleAnalytics', googleAnalytics)
+
 const validationPlugin = {
   NAMESPACE: 'id-plugin-start',
   identifyStart: ({ payload, abort }) => {
@@ -33,6 +35,7 @@ const GaPlugin = [
     // }
     // debug: true
   }),
+  validationPlugin
 ]
 
 /* initialize analytics and load plugins */
