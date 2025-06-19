@@ -2,6 +2,20 @@
  * @fileoverview TypeScript type definitions for Analytics Core using JSDoc
  */
 
+/**
+ * Anonymous visitor Id localstorage key
+ * @typedef {string} ANON_ID
+ */
+
+/**
+ * Visitor Id localstorage key
+ * @typedef {string} USER_ID
+ */
+
+/**
+ * Visitor traits localstorage key
+ * @typedef {string} USER_TRAITS
+ */
 
 /**
  * Event payload for tracking
@@ -29,7 +43,6 @@
  * @property {Object} [options] - Page options
  * @property {Object} [context] - Page context
  */
-
 
 /**
  * Callback function type

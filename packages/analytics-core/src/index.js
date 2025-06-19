@@ -23,7 +23,9 @@ import ensureArray from './utils/ensureArray'
 import enrichMeta from './utils/enrichMeta'
 
 /**
- * Configuration for initializing the analytics instance
+ * Analytics library configuration
+ * 
+ * After the library is initialized with config, the core API is exposed & ready for use in the application.
  * @typedef {Object} AnalyticsConfig
  * @property {string} [app] - Name of site / app
  * @property {string|number} [version] - Version of your app
@@ -38,19 +40,25 @@ import enrichMeta from './utils/enrichMeta'
  */
 
 /**
- * Analytics plugin definition
- * @typedef {Object} AnalyticsPlugin
+ * Analytics plugin base structure
+ * @typedef {Object} AnalyticsPluginBase
  * @property {string} name - Name of plugin
  * @property {Object} [EVENTS] - Exposed events of plugin
  * @property {Object} [config] - Configuration of plugin
  * @property {boolean} [enabled] - Whether plugin is enabled
- * @property {Function} [initialize] - Load analytics scripts method
- * @property {Function} [page] - Page visit tracking method
- * @property {Function} [track] - Custom event tracking method
- * @property {Function} [identify] - User identify method
- * @property {Function} [loaded] - Function to determine if analytics script loaded
- * @property {Function} [ready] - Fire function when plugin ready
+ * @property {(...params: any[]) => any} [initialize] - Load analytics scripts method
+ * @property {(...params: any[]) => any} [page] - Page visit tracking method
+ * @property {(...params: any[]) => any} [track] - Custom event tracking method
+ * @property {(...params: any[]) => any} [identify] - User identify method
+ * @property {(...params: any[]) => any} [loaded] - Function to determine if analytics script loaded
+ * @property {(...params: any[]) => any} [ready] - Fire function when plugin ready
  * @property {Object} [methods] - Custom methods exposed by plugin
+ */
+
+/**
+ * Analytics plugin with optional custom properties
+ * @template {string} [T=string]
+ * @typedef {AnalyticsPluginBase & (string extends T ? Record<string, unknown> : Record<T, unknown> & Record<string, unknown>)} AnalyticsPlugin
  */
 
 /**
@@ -65,7 +73,7 @@ import enrichMeta from './utils/enrichMeta'
  * Get value from storage
  * @callback GetItem
  * @param {string} key - storage key
- * @param {Object} [options] - storage options
+ * @param {any} [options] - storage options
  * @returns {any}
  * @example
  *
@@ -77,7 +85,8 @@ import enrichMeta from './utils/enrichMeta'
  * @callback SetItem
  * @param {string} key - storage key
  * @param {any} value - storage value
- * @param {Object} [options] - storage options
+ * @param {any} [options] - storage options
+ * @returns {void}
  * @example
  *
  * analytics.storage.setItem('storage_key', 'value')
@@ -87,7 +96,8 @@ import enrichMeta from './utils/enrichMeta'
  * Remove storage value
  * @callback RemoveItem
  * @param {string} key - storage key
- * @param {Object} [options] - storage options
+ * @param {any} [options] - storage options
+ * @returns {void}
  * @example
  *
  * analytics.storage.removeItem('storage_key')
@@ -97,8 +107,8 @@ import enrichMeta from './utils/enrichMeta'
  * Enable analytics plugin
  * @callback EnablePlugin
  * @param {string|string[]} plugins - name of plugins(s) to enable
- * @param {Callback} [callback] - callback after enable runs
- * @returns {Promise<void>}
+ * @param {(...params: any[]) => any} [callback] - callback after enable runs
+ * @returns {Promise<any>}
  * @example
  *
  * analytics.plugins.enable('google-analytics').then(() => {
@@ -115,8 +125,8 @@ import enrichMeta from './utils/enrichMeta'
  * Disable analytics plugin
  * @callback DisablePlugin
  * @param {string|string[]} plugins - name of integration(s) to disable
- * @param {Callback} [callback] - callback after disable runs
- * @returns {Promise<void>}
+ * @param {(...params: any[]) => any} [callback] - callback after disable runs
+ * @returns {Promise<any>}
  * @example
  *
  * analytics.plugins.disable('google').then(() => {
@@ -129,26 +139,339 @@ import enrichMeta from './utils/enrichMeta'
  */
 
 /**
- * Plugin management interface
- * @typedef {Object} PluginsInterface
+ * Async Management methods for plugins.
+ *
+ * This is also where [custom methods](https://bit.ly/329vFXy) are loaded into the instance.
+ * @typedef {Object} Plugins
  * @property {EnablePlugin} enable - Enable plugin(s)
  * @property {DisablePlugin} disable - Disable plugin(s)
+ * @example
+ * // Enable a plugin by namespace
+ * analytics.plugins.enable('keenio')
+ *
+ * // Disable a plugin by namespace
+ * analytics.plugins.disable('google-analytics')
  */
 
 /**
- * Main Analytics instance
+ * Identify a user. This will trigger `identify` calls in any installed plugins and will set user data in localStorage
+ * @callback Identify
+ * @param {string} userId - Unique ID of user
+ * @param {any} [traits] - Object of user traits
+ * @param {any} [options] - Options to pass to identify call
+ * @param {(...params: any[]) => any} [callback] - Callback function after identify completes
+ * @returns {Promise<any>}
+ * @example
+ * // Basic user id identify
+ * analytics.identify('xyz-123')
+ *
+ * // Identify with additional traits
+ * analytics.identify('xyz-123', {
+ *   name: 'steve',
+ *   company: 'hello-clicky'
+ * })
+ *
+ * // Fire callback with 2nd or 3rd argument
+ * analytics.identify('xyz-123', () => {
+ *   console.log('do this after identify')
+ * })
+ *
+ * // Disable sending user data to specific analytic tools
+ * analytics.identify('xyz-123', {}, {
+ *   plugins: {
+ *     // disable sending this identify call to segment
+ *     segment: false
+ *   }
+ * })
+ *
+ * // Send user data to only to specific analytic tools
+ * analytics.identify('xyz-123', {}, {
+ *   plugins: {
+ *     // disable this specific identify in all plugins except customerio
+ *     all: false,
+ *     customerio: true
+ *   }
+ * })
+ */
+
+/**
+ * Track an analytics event. This will trigger `track` calls in any installed plugins
+ * @callback Track
+ * @param {string} eventName - Event name
+ * @param {any} [payload] - Event payload
+ * @param {any} [options] - Event options
+ * @param {(...params: any[]) => any} [callback] - Callback to fire after tracking completes
+ * @returns {Promise<any>}
+ * @example
+ * // Basic event tracking
+ * analytics.track('buttonClicked')
+ *
+ * // Event tracking with payload
+ * analytics.track('itemPurchased', {
+ *   price: 11,
+ *   sku: '1234'
+ * })
+ *
+ * // Fire callback with 2nd or 3rd argument
+ * analytics.track('newsletterSubscribed', () => {
+ *   console.log('do this after track')
+ * })
+ *
+ * // Disable sending this event to specific analytic tools
+ * analytics.track('cartAbandoned', {
+ *   items: ['xyz', 'abc']
+ * }, {
+ *   plugins: {
+ *     // disable track event for segment
+ *     segment: false
+ *   }
+ * })
+ *
+ * // Send event to only to specific analytic tools
+ * analytics.track('customerIoOnlyEventExample', {
+ *   price: 11,
+ *   sku: '1234'
+ * }, {
+ *   plugins: {
+ *     // disable this specific track call all plugins except customerio
+ *     all: false,
+ *     customerio: true
+ *   }
+ * })
+ */
+
+/**
+ * Trigger page view. This will trigger `page` calls in any installed plugins  
+ * @callback Page
+ * @param {import('./modules/page').PageData} [data] - Page data overrides.
+ * @param {any} [options] - Page tracking options
+ * @param {(...params: any[]) => any} [callback] - Callback to fire after page view call completes
+ * @returns {Promise<any>}
+ * @example
+ * // Basic page tracking
+ * analytics.page()
+ *
+ * // Page tracking with page data overrides
+ * analytics.page({
+ *   url: 'https://google.com'
+ * })
+ *
+ * // Fire callback with 1st, 2nd or 3rd argument
+ * analytics.page(() => {
+ *   console.log('do this after page')
+ * })
+ *
+ * // Disable sending this pageview to specific analytic tools
+ * analytics.page({}, {
+ *   plugins: {
+ *     // disable page tracking event for segment
+ *     segment: false
+ *   }
+ * })
+ *
+ * // Send pageview to only to specific analytic tools
+ * analytics.page({}, {
+ *   plugins: {
+ *     // disable this specific page in all plugins except customerio
+ *     all: false,
+ *     customerio: true
+ *   }
+ * })
+ */
+
+/**
+ * Get user data
+ * @callback User
+ * @param {string} [key] - dot.prop.path of user data. Example: 'traits.company.name'
+ * @returns {string & any}
+ * @example
+ * // Get all user data
+ * const userData = analytics.user()
+ *
+ * // Get user id
+ * const userId = analytics.user('userId')
+ *
+ * // Get user company name
+ * const companyName = analytics.user('traits.company.name')
+ */
+
+/**
+ * Clear all information about the visitor & reset analytic state.
+ * @callback Reset
+ * @param {(...params: any[]) => any} [callback] - Handler to run after reset
+ * @returns {Promise<any>}
+ * @example
+ * // Reset current visitor
+ * analytics.reset()
+ */
+
+/**
+ * Fire callback on analytics ready event
+ * @callback Ready
+ * @param {(...params: any[]) => any} callback - function to trigger when all providers have loaded
+ * @returns {DetachListeners}
+ * @example
+ * analytics.ready((payload) => {
+ *   console.log('all plugins have loaded or were skipped', payload);
+ * })
+ */
+
+/**
+ * Attach an event handler function for analytics lifecycle events.
+ * @callback On
+ * @param {string} name - Name of event to listen to
+ * @param {(...params: any[]) => any} callback - function to fire on event
+ * @returns {DetachListeners}
+ * @example
+ * // Fire function when 'track' calls happen
+ * analytics.on('track', ({ payload }) => {
+ *   console.log('track call just happened. Do stuff')
+ * })
+ *
+ * // Remove listener before it is called
+ * const removeListener = analytics.on('track', ({ payload }) => {
+ *   console.log('This will never get called')
+ * })
+ *
+ * // cleanup .on listener
+ * removeListener()
+ */
+
+/**
+ * Detach listeners function
+ * @callback DetachListeners
+ * @returns {void}
+ */
+
+/**
+ * Attach a handler function to an event and only trigger it once.
+ * @callback Once
+ * @param {string} name - Name of event to listen to
+ * @param {(...params: any[]) => any} callback - function to fire on event
+ * @returns {DetachListeners}
+ * @example
+ * // Fire function only once per 'track'
+ * analytics.once('track', ({ payload }) => {
+ *   console.log('This is only triggered once when analytics.track() fires')
+ * })
+ *
+ * // Remove listener before it is called
+ * const listener = analytics.once('track', ({ payload }) => {
+ *   console.log('This will never get called b/c listener() is called')
+ * })
+ *
+ * // cleanup .once listener before it fires
+ * listener()
+ */
+
+/**
+ * Get data about user, activity, or context. Access sub-keys of state with `dot.prop` syntax.
+ * @callback GetState
+ * @param {string} [key] - dot.prop.path value of state
+ * @returns {any}
+ * @example
+ * // Get the current state of analytics
+ * analytics.getState()
+ *
+ * // Get a subpath of state
+ * analytics.getState('context.offline')
+ */
+
+/**
+ * Storage utilities for persisting data.
+ * These methods will allow you to save data in localStorage, cookies, or to the window.
+ * @typedef {Object} Storage
+ * @property {GetItem} getItem - Get value from storage
+ * @property {SetItem} setItem - Set storage value
+ * @property {RemoveItem} removeItem - Remove storage value
+ * @example
+ * // Pull storage off analytics instance
+ * const { storage } = analytics
+ *
+ * // Get value
+ * storage.getItem('storage_key')
+ *
+ * // Set value
+ * storage.setItem('storage_key', 'value')
+ *
+ * // Remove value
+ * storage.removeItem('storage_key')
+ */
+
+/**
+ * Analytic instance returned from initialization
  * @typedef {Object} AnalyticsInstance
- * @property {Function} identify - Identify a user
- * @property {Function} track - Track an analytics event
- * @property {Function} page - Trigger page view
- * @property {Function} user - Get user data
- * @property {Function} reset - Clear information about user & reset analytics
- * @property {Function} ready - Fire callback on analytics ready event
- * @property {Function} on - Fire callback on analytics lifecycle events
- * @property {Function} once - Fire callback on analytics lifecycle events once
- * @property {Function} getState - Get data about user, activity, or context
- * @property {StorageInterface} storage - Storage methods
- * @property {PluginsInterface} plugins - Plugin methods
+ * @property {Identify} identify - Identify a user
+ * @property {Track} track - Track an analytics event
+ * @property {Page} page - Trigger page view
+ * @property {User} user - Get user data
+ * @property {Reset} reset - Clear information about user & reset analytics
+ * @property {Ready} ready - Fire callback on analytics ready event
+ * @property {On} on - Fire callback on analytics lifecycle events.
+ * @property {Once} once - Fire callback on analytics lifecycle events once.
+ * @property {GetState} getState - Get data about user, activity, or context.
+ * @property {Storage} storage - storage methods
+ * @property {Plugins} plugins - plugin methods
+ */
+
+/**
+ * Async reduce over matched plugin methods
+ * Fires plugin functions
+ * @function processEvent
+ * @returns {void}
+ */
+
+/**
+ * Return array of event names
+ * @function getEventNames
+ * @param {string} eventType - original event type
+ * @param {string} namespace - optional namespace postfix
+ * @returns {any[]} - type, method, end
+ */
+
+/**
+ * Generate arguments to pass to plugin methods
+ * @function argumentFactory
+ * @param {any} instance - analytics instance
+ * @param {any[]} abortablePlugins - plugins that can be cancelled by caller
+ * @returns {any} function to inject plugin params
+ */
+
+/**
+ * Verify plugin is not calling itself with whatever:myPluginName self refs
+ * @function validateMethod
+ * @returns {void}
+ */
+
+/**
+ * Page data base interface
+ * @typedef {Object} PageDataBase
+ * @property {string} [title] - Page title
+ * @property {string} [url] - Page url
+ * @property {string} [path] - Page path
+ * @property {string} [search] - Page search
+ * @property {string} [width] - Page width
+ * @property {string} [height] - Page height
+ */
+
+/**
+ * Page data with optional custom properties
+ * @template {string} [T=string]
+ * @typedef {PageDataBase & Record<T, unknown>} PageData
+ */
+
+/**
+ * Get information about current page
+ * @function getPageData
+ * @param {PageData} [pageData={}] - Page data overrides
+ * @returns {PageData}
+ */
+
+/**
+ * Return the canonical URL and remove the hash.
+ * @function currentUrl
+ * @param {string} search - search param
+ * @returns {string} return current canonical URL
  */
 
 /**
