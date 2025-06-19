@@ -681,91 +681,44 @@ jobs:
             git diff --cached --stat
           fi
 
-      - name: Create Branch and PR Automatically
+      - name: Create Pull Request
         id: auto-pr
-        if: steps.check-changes.outputs.has-changes == 'true' && steps.context-info.outputs.is-pr == 'false'
+        if: steps.claude.outcome == 'success' && steps.context-info.outputs.is-pr == 'false' && steps.claude.outputs.CLAUDE_BRANCH
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const issueNumber = ${{ steps.context-info.outputs.issue-number }};
-            const timestamp = new Date().toISOString().slice(0, 16).replace(/[-:]/g, '');
-            const branchName = `claude-fix/issue-${issueNumber}-${timestamp}`;
+            const branchName = '${{ steps.claude.outputs.CLAUDE_BRANCH }}';
             const defaultBranch = '${{ github.event.repository.default_branch }}';
-            
-            console.log(`🌿 Creating branch: ${branchName}`);
+
+            console.log(`Attempting to create PR for branch: ${branchName}`);
             
             try {
-              // 1. Create a new branch from the default branch
-              const { data: ref } = await github.rest.git.getRef({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                ref: `heads/${defaultBranch}`
-              });
-              
-              await github.rest.git.createRef({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                ref: `refs/heads/${branchName}`,
-                sha: ref.object.sha
-              });
-              
-              console.log(`✅ Branch created successfully: ${branchName}`);
-              
-              // 2. Commit changes to this branch (This part is tricky with github-script as it doesn't share workspace state easily. A separate run step is better.
-              // For simplicity, this script will now attempt to use 'actions/checkout' logic and push changes.)
-              // A better implementation would use a dedicated action like 'create-pull-request'.
-              // For this script, we assume the changes are in the working directory.
-              const { execSync } = require('child_process');
-              
-              // Switch to the new branch
-              execSync(`git checkout -b ${branchName}`, { stdio: 'inherit' });
-              
-              // Stage all changes
-              execSync('git add .', { stdio: 'inherit' });
-              
-              // Generate commit message
-              const commitMessage = `🤖 Claude Code: Automated fix for Issue #${issueNumber}
-
-              Addresses Issue #${issueNumber}
-              Executed by: @${{ github.actor }}`;
-              
-              // Execute commit
-              execSync(`git commit -m "${commitMessage}"`, { stdio: 'inherit' });
-              
-              // Push the branch
-              execSync(`git push origin ${branchName}`, { stdio: 'inherit' });
-              
-              console.log(`📤 Branch push complete: ${branchName}`);
-              
-              // 3. Get Issue information
               const { data: issue } = await github.rest.issues.get({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: issueNumber
               });
               
-              // 4. Create PR
               const prTitle = `🤖 Claude Code: ${issue.title}`;
               const prBody = `## 🤖 Automated fix by Claude Code
 
             **Related Issue:** #${issueNumber}
             **Executed by:** @${{ github.actor }}
 
-            ### 📋 Original Issue
-            > ${issue.title}
-
             ### ✅ Next Steps
-            1. Review the changes
-            2. Confirm that tests pass
-            3. Merge if there are no issues
+            1. Review the changes in this PR.
+            2. Confirm that all tests pass.
+            3. Merge if everything looks good.
 
-            **If additional fixes are needed:** Mention \`claude\` in this PR
+            **If additional fixes are needed:** Mention \`@ claude\` in a comment on this PR.
 
             resolves #${issueNumber}
 
             ---
-              *Automated PR by [Claude Code Workflow](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})*`;
+            *Automated PR by [Claude Code Workflow](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})*
+            `;
 
               const { data: pr } = await github.rest.pulls.create({
                 owner: context.repo.owner,
@@ -779,42 +732,18 @@ jobs:
               
               console.log(`🎉 PR created successfully: #${pr.number}`);
               
-              // Set outputs
               core.setOutput('pr-number', pr.number);
               core.setOutput('pr-url', pr.html_url);
-              core.setOutput('branch-name', branchName);
-
-            /*  disabled for now
-              // Notify the original Issue about the PR creation
-              await github.rest.issues.createComment({
-                issue_number: issueNumber,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: `🎉 **Automatic PR creation complete!**
-
-            **📥 PR:** [#${pr.number}](${pr.html_url})
-            **🌿 Branch:** \`${branchName}\`
-
-            Please review the PR and merge if there are no issues.
-            If additional fixes are needed, please mention \`claude\` in the PR.`
-              });
-            */
               
             } catch (error) {
-              console.error('❌ Branch/PR creation error:', error);
+              console.error('❌ PR creation error:', error);
               core.setOutput('error', error.message);
               
-              // Error notification
               await github.rest.issues.createComment({
                 issue_number: issueNumber,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                body: `❌ **Automatic PR creation failed**
-
-              **Error:** \`${error.message}\`
-
-              Solution: Create a PR manually or rerun with \`claude\`
-              Details: [Actions run log](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})`
+                body: `❌ **Automatic PR creation failed**\n\n**Error:** \`${error.message}\`\n\n**Solution**: A branch named \`${branchName}\` was created with the changes. Please create a PR from it manually or rerun the job.\n**Details**: [Actions run log](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})`
               });
             }
 
