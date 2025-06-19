@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import analytics from '../../utils/analytics'
-import Log from '../../components/Log'
-import Navigation from '../../fragments/Nav'
+import Log from '../../components/Log/index.jsx'
+import Navigation from '../../fragments/Nav/index.jsx'
 
 export default class App extends Component {
   constructor (props, context) {

@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { Link } from "react-router-dom"
 import { initialHistory, clearHistory, recordHistory } from '../../utils/analytics/plugins/visualize-analytics'
 import analytics from '../../utils/analytics'
-import Navigation from '../../fragments/Nav'
-import Log from '../../components/Log'
+import Navigation from '../../fragments/Nav/index.jsx'
+import Log from '../../components/Log/index.jsx'
 import './Home.css'
 
 let hasCleared = false

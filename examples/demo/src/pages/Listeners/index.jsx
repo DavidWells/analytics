@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import Navigation from '../../fragments/Nav'
+import Navigation from '../../fragments/Nav/index.jsx'
 import outdent from 'outdent'
-import Demo from './demo'
+import Demo from './demo.jsx'
 import analytics from '../../utils/analytics'
 
 let listenerHistory = {

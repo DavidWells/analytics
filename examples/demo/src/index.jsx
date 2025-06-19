@@ -1,13 +1,13 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Home from './pages/Home'
-import About from './pages/About'
-import Listeners from './pages/Listeners'
-import State from './pages/State'
-import KitchenSink from './pages/KitchenSink'
-import Privacy from './pages/Privacy'
-import PageViewTracking from './components/PageViews'
+import Home from './pages/Home/index.jsx'
+import About from './pages/About/index.jsx'
+import Listeners from './pages/Listeners/index.jsx'
+import State from './pages/State/index.jsx'
+import KitchenSink from './pages/KitchenSink/index.jsx'
+import Privacy from './pages/Privacy/index.jsx'
+import PageViewTracking from './components/PageViews/index.jsx'
 import tester from "@analytics/core/client"
 import main from "@analytics/core"
 
@@ -18,8 +18,8 @@ console.log('main', main)
 
 const App = () => (
   <>
-    <PageViewTracking />
     <BrowserRouter>
+      <PageViewTracking />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />

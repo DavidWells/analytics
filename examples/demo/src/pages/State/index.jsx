@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Navigation from '../../fragments/Nav'
+import Navigation from '../../fragments/Nav/index.jsx'
 import analytics from '../../utils/analytics'
 import './State.css'
 
