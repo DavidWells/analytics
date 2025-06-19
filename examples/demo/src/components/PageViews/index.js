@@ -1,9 +1,11 @@
-import React from 'react'
-import { Location } from "@reach/router"
+import React, { useEffect } from 'react'
+import { useLocation } from "react-router-dom"
 import analytics from '../../utils/analytics'
 
-class PageViews extends React.Component {
-  componentDidMount() {
+const PageViewTracking = () => {
+  const location = useLocation()
+
+  useEffect(() => {
     analytics.on('pageStart', ({ payload }) => {
       console.log('pageStart', payload)
     })
@@ -11,28 +13,16 @@ class PageViews extends React.Component {
     analytics.page(() => {
       console.log('page callback initial')
     })
-  }
-  componentDidUpdate(prevProps) {
-    if (prevProps.href !== this.props.href) {
-      // register page view on route changes
-      analytics.page(() => {
-        console.log('page callback componentDidUpdate')
-      })
-    }
-  }
-  render() {
-    return null
-  }
-}
+  }, [])
 
-const PageViewTracking = () => {
-  return (
-    <Location>
-      {({ location }) => (
-        <PageViews href={location.href} />
-      )}
-    </Location>
-  )
+  useEffect(() => {
+    // register page view on route changes
+    analytics.page(() => {
+      console.log('page callback componentDidUpdate')
+    })
+  }, [location])
+
+  return null
 }
 
 export default PageViewTracking
