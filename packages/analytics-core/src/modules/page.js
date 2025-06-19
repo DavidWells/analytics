@@ -35,7 +35,16 @@ function currentUrl(search) {
 }
 
 /**
- * Page data for overrides
+ * Page data structure
+ * @typedef {Object} PageData
+ * @property {string} [title] - Page title
+ * @property {string} [url] - Page URL
+ * @property {string} [path] - Page path
+ * @property {string} [referrer] - Page referrer
+ * @property {string} [search] - URL search parameters
+ * @property {string} [hash] - URL hash
+ * @property {number} [width] - Screen width
+ * @property {number} [height] - Screen height
  */
 
 /**
