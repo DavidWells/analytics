@@ -56,10 +56,10 @@ function sanitizeAttribute(value) {
   // If null or undefined
   if (value == null) return
   if (Array.isArray(value)) {
-    return value.filter(notEmpty).map((val) => val.toString())
+    return value.filter(notEmpty).map((val) => val.toString().substring(0, 200))
   }
   // @TODO guard against null here
-  return isNullOrUndef(value) ? value : value.toString()
+  return isNullOrUndef(value) ? value : value.toString().substring(0, 200)
 }
 
 /**
