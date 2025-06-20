@@ -1046,3 +1046,7 @@ npm run watch
 ```
 
 While watch mode is activated, you can work against the demo site in examples to test out your changes on a live application.
+
+## Support
+
+If you find this project helpful, please consider [sponsoring the development](https://github.com/sponsors/DavidWells) to help maintain and improve it.
