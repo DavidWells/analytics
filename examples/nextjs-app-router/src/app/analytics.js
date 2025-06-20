@@ -6,16 +6,26 @@ import { usePathname, useSearchParams } from "next/navigation";
 import googleAnalytics from '@analytics/google-analytics'
 
 const analyticsInstance = Analytics({
-  app: "nextjsexample",
+  app: "nextjs-app-router",
   debug: true,
   plugins: [
     googleAnalytics({
-        measurementIds: ['G-abc123']
-      })
+      measurementIds: ['G-abc123']
+    }),
+    {
+      name: 'logger',
+      trackPageViews: true,
+      page: (payload) => {
+        console.log('Page view fired', payload);
+      },
+      track: (payload) => {
+        console.log('Track fired', payload);
+      }
+    }
   ],
 });
 
-function AnalyticsTracker() {
+function AnalyticsPageViews() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -27,18 +37,16 @@ function AnalyticsTracker() {
 }
 
 /**
- * Analytics wrapper component that provides analytics instance to children
- * @param {Object} props - Component props
- * @param {React.ReactNode} props.children - Child components
+ * Analytics component that provides analytics functionality
  * @returns {JSX.Element}
  */
-export default function AnalyticsComponent({ children }) {
+export default function AnalyticsProviderWrapper({ children }) {
   return (
     <AnalyticsProvider instance={analyticsInstance}>
-      <Suspense fallback={null}>
-        <AnalyticsTracker />
-      </Suspense>
       {children}
+      <Suspense fallback={null}>
+        <AnalyticsPageViews />
+      </Suspense>
     </AnalyticsProvider>
   );
 }

@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "start": "npm run dev",
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "serve": "serve -s out",
     "lint": "next lint"
   },
   "dependencies": {
@@ -19,6 +20,7 @@
   "devDependencies": {
     "autoprefixer": "^10",
     "postcss": "^8",
+    "serve": "^14.2.4",
     "tailwindcss": "^3"
   }
 }
