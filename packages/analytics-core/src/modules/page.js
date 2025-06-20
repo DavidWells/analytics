@@ -24,7 +24,7 @@ function urlPath(url) {
 }
 
 /**
- * Return the canonical URL and rmove the hash.
+ * Return the canonical URL and remove the hash.
  * @param  {string} search - search param
  * @return {string} return current canonical URL
  */
@@ -73,7 +73,7 @@ export const getPageData = (pageData = {}) => {
 
   return {
     ...page,
-    /* .page() user overrrides */
+    /* .page() user overrides */
     ...pageData
   }
 }
