@@ -710,72 +710,120 @@ jobs:
             echo "📊 Change statistics:"
             git diff --stat $BRANCH_RANGE
           fi
-
-      - name: Create Pull Request
+    #########################################################
+    # IF we have changes, create or update a pull request
+    #########################################################
+    - name: Create or Update Pull Request
         id: auto-pr
-        if: steps.claude.outcome == 'success' && steps.context-info.outputs.is-pr == 'false' && steps.claude.outputs.claude_branch_name && steps.check-changes.outputs.has-changes == 'true'
+        # The 'if' condition is now correctly chained.
+        if: |
+          steps.claude.outcome == 'success' 
+          && steps.context-info.outputs.is-pr == 'false' 
+          && steps.claude.outputs.claude_branch_name 
+          && steps.check-changes.outputs.has-changes == 'true'
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const issueNumber = ${{ steps.context-info.outputs.issue-number }};
-            const branchName = '${{ steps.claude.outputs.claude_branch_name }}';
-            const defaultBranch = '${{ github.event.repository.default_branch }}';
+            const issueNumber = ${{ steps.context-info.outputs.issue-number }}
+            const branchName = '${{ steps.claude.outputs.claude_branch_name }}'
+            const defaultBranch = '${{ github.event.repository.default_branch }}'
+            const owner = context.repo.owner
+            const repo = context.repo.repo
 
-            console.log(`Attempting to create PR for branch: ${branchName}`);
-            
             try {
-              const { data: issue } = await github.rest.issues.get({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: issueNumber
-              });
+              // 1. Check for an existing PR for this branch
+              console.log(`Checking for existing PRs for branch: ${branchName}`)
               
-              const prTitle = `🤖 Claude Code: ${issue.title}`;
-              const prBody = `## 🤖 Automated fix by Claude Code
+              let existingPr = null
+              try {
+                const { data: pulls } = await github.rest.pulls.list({
+                  owner,
+                  repo,
+                  head: `${owner}:${branchName}`,
+                  state: 'open',
+                  per_page: 1
+                })
+                existingPr = pulls.length > 0 ? pulls[0] : null
+              } catch (error) {
+                existingPr = null
+              }
+
+              let pr
+
+              if (existingPr) {
+                // 2. If PR exists, use it
+                pr = existingPr
+                console.log(`✅ Found existing PR: #${pr.number}. No new PR will be created.`)
+                
+                // Optional: Post a comment to the existing PR to notify of the update
+                const updateComment = `🔄 **Claude Code has updated this branch** with new changes.\n\n[View the latest workflow run](https://github.com/${owner}/${repo}/actions/runs/${{ github.run_id }})`
+                await github.rest.issues.createComment({
+                  owner,
+                  repo,
+                  issue_number: pr.number,
+                  body: updateComment,
+                })
+
+              } else {
+                // 3. If no PR exists, create one
+                console.log(`No existing PR found. Attempting to create a new PR for branch: ${branchName}`)
+                
+                const { data: issue } = await github.rest.issues.get({
+                  owner,
+                  repo,
+                  issue_number: issueNumber
+                })
+                
+                const prTitle = `🤖 Claude Code: ${issue.title}`
+                const prBody = `## 🤖 Automated fix by Claude Code
 
             **Related Issue:** #${issueNumber}
             **Executed by:** @${{ github.actor }}
 
             ### ✅ Next Steps
-            1. Review the changes in this PR.
-            2. Confirm that all tests pass.
-            3. Merge if everything looks good.
+            1.  Review the changes in this PR.
+            2.  Confirm that all tests pass.
+            3.  Merge if everything looks good.
 
             **If additional fixes are needed:** Mention \`@ claude\` in a comment on this PR.
 
-            resolves #${issueNumber}
+            *resolves #${issueNumber}*
 
             ---
-            *Automated PR by [Claude Code Workflow](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})*
-            `;
+            *Automated PR by [Claude Code Workflow](https://github.com/${owner}/${repo}/actions/runs/${{ github.run_id }})*
+            `
 
-              const { data: pr } = await github.rest.pulls.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title: prTitle,
-                head: branchName,
-                base: defaultBranch,
-                body: prBody,
-                draft: false
-              });
+                const { data: newPr } = await github.rest.pulls.create({
+                  owner,
+                  repo,
+                  title: prTitle,
+                  head: branchName,
+                  base: defaultBranch,
+                  body: prBody,
+                  draft: false
+                })
+
+                pr = newPr
+                console.log(`🎉 PR created successfully: #${pr.number}`)
+              }
               
-              console.log(`🎉 PR created successfully: #${pr.number}`);
-              
-              core.setOutput('pr-number', pr.number);
-              core.setOutput('pr-url', pr.html_url);
-              core.setOutput('branch-name', branchName);
-              
+              // 4. Set outputs with the PR info (whether new or existing)
+              core.setOutput('pr-number', pr.number)
+              core.setOutput('pr-url', pr.html_url)
+              core.setOutput('branch-name', branchName)
+
             } catch (error) {
-              console.error('❌ PR creation error:', error);
-              core.setOutput('error', error.message);
+              console.error('❌ PR creation/update error:', error)
+              core.setOutput('error', error.message)
               
+              const failureComment = `❌ **Automatic PR creation failed**\n\n**Error:** \`${error.message}\`\n\n**Solution**: A branch named \`${branchName}\` was created with the changes. Please create a PR from it manually or rerun the job.\n**Details**: [Actions run log](${{ github.server_url }}/${owner}/${repo}/actions/runs/${{ github.run_id }})`
               await github.rest.issues.createComment({
                 issue_number: issueNumber,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: `❌ **Automatic PR creation failed**\n\n**Error:** \`${error.message}\`\n\n**Solution**: A branch named \`${branchName}\` was created with the changes. Please create a PR from it manually or rerun the job.\n**Details**: [Actions run log](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})`
-              });
+                owner,
+                repo,
+                body: failureComment
+              })
             }
 
       - name: Notify on Success
