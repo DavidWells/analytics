@@ -3,6 +3,15 @@ import { isObject, PREFIX } from '@analytics/type-utils'
 import { ANON_ID, USER_ID, USER_TRAITS } from '../constants'
 import EVENTS from '../events'
 
+/**
+ * User data structure
+ * @typedef {Object} UserData
+ * @property {string} [id] - User ID
+ * @property {string} [userId] - User ID (alias)
+ * @property {string} anonymousId - Anonymous ID
+ * @property {Object} [traits] - User traits/properties
+ */
+
 /* user reducer */
 export default function userReducer(storage) {
   return function user(state = {}, action = {}) {
