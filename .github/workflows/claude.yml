@@ -682,13 +682,13 @@ jobs:
 
       - name: Create Pull Request
         id: auto-pr
-        if: steps.claude.outcome == 'success' && steps.context-info.outputs.is-pr == 'false' && steps.claude.outputs.CLAUDE_BRANCH
+        if: steps.claude.outcome == 'success' && steps.context-info.outputs.is-pr == 'false' && steps.claude.outputs.claude_branch_name
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const issueNumber = ${{ steps.context-info.outputs.issue-number }};
-            const branchName = '${{ steps.claude.outputs.CLAUDE_BRANCH }}';
+            const branchName = '${{ steps.claude.outputs.claude_branch_name }}';
             const defaultBranch = '${{ github.event.repository.default_branch }}';
 
             console.log(`Attempting to create PR for branch: ${branchName}`);
