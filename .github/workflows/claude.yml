@@ -651,33 +651,28 @@ jobs:
               core.setOutput('management-error', error.message);
               core.setOutput('management-success', 'false');
             }
-      - name: Check for Changes
+      - name: Check for Changes and Prepare for PR
         id: check-changes
-        if: steps.claude.outcome == 'success' && steps.context-info.outputs.is-pr == 'false'
+        if: steps.claude.outcome == 'success' && steps.context-info.outputs.is-pr == 'false' && steps.claude.outputs.claude_branch_name
         run: |
-          echo "🔍 Checking for changes after Claude Code execution"
+          BRANCH_RANGE="origin/${{ github.event.repository.default_branch }}...${{ steps.claude.outputs.claude_branch_name }}"
           
-          # Git configuration
-          git config --global user.name "Claude Code Bot"
-          git config --global user.email "claude-code-bot@github.com"
+          echo "🔍 Checking for changes on branch '${{ steps.claude.outputs.claude_branch_name }}' relative to the default branch..."
           
-          # Check for modified files
-          if git diff --quiet && git diff --cached --quiet; then
-            echo "No changes: Skipping branch creation"
+          if git diff --quiet $BRANCH_RANGE; then
+            echo "✅ No changes detected between '${{ steps.claude.outputs.claude_branch_name }}' and the default branch. Skipping PR creation."
             echo "has-changes=false" >> $GITHUB_OUTPUT
           else
-            echo "Changes detected: Proceeding with branch creation"
+            echo "📝 Changes detected. Proceeding with PR creation."
             echo "has-changes=true" >> $GITHUB_OUTPUT
             
-            # List of changed files
-            echo "📄 Changed files:"
-            git diff --name-only
-            git diff --cached --name-only
+            echo "---"
+            echo "📄 Changed files (compared to default branch):"
+            git diff --name-only $BRANCH_RANGE
             
-            # Change statistics
+            echo "---"
             echo "📊 Change statistics:"
-            git diff --stat
-            git diff --cached --stat
+            git diff --stat $BRANCH_RANGE
           fi
 
       - name: Create Pull Request
