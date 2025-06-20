@@ -1,0 +1,26 @@
+{
+  "name": "nextjs-pages-router",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "npm run dev",
+    "dev": "next dev",
+    "build": "next build",
+    "serve": "serve -s out",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@analytics/google-analytics": "^1.0.7",
+    "analytics": "^0.8.9",
+    "next": "15.3.4",
+    "react": "^19",
+    "react-dom": "^19",
+    "use-analytics": "^1.1.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10",
+    "postcss": "^8",
+    "serve": "^14.2.4",
+    "tailwindcss": "^3"
+  }
+}
