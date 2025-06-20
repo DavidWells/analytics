@@ -653,18 +653,32 @@ jobs:
             }
       - name: Check for Changes and Prepare for PR
         id: check-changes
+        # This step now requires the claude_branch_name output to exist
         if: steps.claude.outcome == 'success' && steps.context-info.outputs.is-pr == 'false' && steps.claude.outputs.claude_branch_name
         run: |
-          echo "Syncing remote state..."
-          # Fetch all remote branches and tags to ensure our local Git repo is up-to-date.
-          # This is CRITICAL because the claude step pushed a new branch to the remote.
-          git fetch --all
-          BRANCH_RANGE="origin/${{ github.event.repository.default_branch }}...${{ steps.claude.outputs.claude_branch_name }}"
+          BRANCH_NAME="${{ steps.claude.outputs.claude_branch_name }}"
+          DEFAULT_BRANCH="origin/${{ github.event.repository.default_branch }}"
+
+          echo "🚀 Optimizing fetch for single branch: '${BRANCH_NAME}'..."
           
-          echo "🔍 Checking for changes on branch '${{ steps.claude.outputs.claude_branch_name }}' relative to the default branch..."
+          # Fetch ONLY the specific branch created by Claude.
+          # This is much faster than 'git fetch --all'.
+          # The refspec '+refs/heads/...' ensures it fetches the branch head.
+          git fetch origin "+refs/heads/${BRANCH_NAME}:refs/remotes/origin/${BRANCH_NAME}"
+
+          echo "✅ Switched to the new branch: ${BRANCH_NAME}"
+          # Create a local branch that tracks the remote branch we just fetched.
+          # This is essential for the subsequent diff command.
+          git checkout "${BRANCH_NAME}"
+
+          # The diff range is now correct because we have both branches locally.
+          BRANCH_RANGE="${DEFAULT_BRANCH}...${BRANCH_NAME}"
           
+          echo "🔍 Checking for changes on branch '${BRANCH_NAME}' relative to '${DEFAULT_BRANCH}'..."
+          
+          # Use the exit code of 'git diff --quiet' to check for changes.
           if git diff --quiet $BRANCH_RANGE; then
-            echo "✅ No changes detected between '${{ steps.claude.outputs.claude_branch_name }}' and the default branch. Skipping PR creation."
+            echo "✅ No changes detected between branches. Skipping PR creation."
             echo "has-changes=false" >> $GITHUB_OUTPUT
           else
             echo "📝 Changes detected. Proceeding with PR creation."
