@@ -653,30 +653,27 @@ jobs:
             }
       - name: Check for Changes and Prepare for PR
         id: check-changes
-        # This step now requires the claude_branch_name output to exist
+        # The 'if' condition remains correct.
         if: steps.claude.outcome == 'success' && steps.context-info.outputs.is-pr == 'false' && steps.claude.outputs.claude_branch_name
         run: |
           BRANCH_NAME="${{ steps.claude.outputs.claude_branch_name }}"
           DEFAULT_BRANCH="origin/${{ github.event.repository.default_branch }}"
 
-          echo "🚀 Optimizing fetch for single branch: '${BRANCH_NAME}'..."
-          
-          # Fetch ONLY the specific branch created by Claude.
-          # This is much faster than 'git fetch --all'.
-          # The refspec '+refs/heads/...' ensures it fetches the branch head.
+          echo "🚀 Fetching the specific branch pushed by Claude: '${BRANCH_NAME}'..."
+          # This fetch command is still the correct and optimal one.
           git fetch origin "+refs/heads/${BRANCH_NAME}:refs/remotes/origin/${BRANCH_NAME}"
 
-          echo "✅ Switched to the new branch: ${BRANCH_NAME}"
-          # Create a local branch that tracks the remote branch we just fetched.
-          # This is essential for the subsequent diff command.
-          git checkout "${BRANCH_NAME}"
+          echo "🔄 Forcibly aligning local branch with the fetched remote branch..."
+          # Use 'git checkout -B' (force create/reset) to ensure the local branch
+          # points to the correct, latest commit from origin and discards any local changes.
+          git checkout -B "${BRANCH_NAME}" "origin/${BRANCH_NAME}"
 
-          # The diff range is now correct because we have both branches locally.
+          # The diff range is now guaranteed to be correct.
           BRANCH_RANGE="${DEFAULT_BRANCH}...${BRANCH_NAME}"
           
-          echo "🔍 Checking for changes on branch '${BRANCH_NAME}' relative to '${DEFAULT_BRANCH}'..."
+          echo "🔍 Checking for changes in range: ${BRANCH_RANGE}..."
           
-          # Use the exit code of 'git diff --quiet' to check for changes.
+          # Use the exit code of 'git diff --quiet' to check for changes. It returns 1 if there are changes.
           if git diff --quiet $BRANCH_RANGE; then
             echo "✅ No changes detected between branches. Skipping PR creation."
             echo "has-changes=false" >> $GITHUB_OUTPUT
