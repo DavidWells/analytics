@@ -713,7 +713,7 @@ jobs:
     #########################################################
     # IF we have changes, create or update a pull request
     #########################################################
-    - name: Create or Update Pull Request
+      - name: Create or Update Pull Request
         id: auto-pr
         # The 'if' condition is now correctly chained.
         if: |
