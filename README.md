@@ -90,6 +90,24 @@ This module is distributed via [npm](https://npmjs.com/package/analytics), which
 npm install analytics --save
 ```
 
+Or with [yarn](https://yarnpkg.com/):
+
+```bash
+yarn add analytics
+```
+
+Or with [pnpm](https://pnpm.io/):
+
+```bash
+pnpm add analytics
+```
+
+Or with [bun](https://bun.sh/):
+
+```bash
+bun add analytics
+```
+
 Or as a script tag:
 
 ```html
