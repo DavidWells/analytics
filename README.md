@@ -1046,3 +1046,9 @@ npm run watch
 ```
 
 While watch mode is activated, you can work against the demo site in examples to test out your changes on a live application.
+
+## Sponsor
+
+If you find this project helpful, please consider supporting its development:
+
+[![Sponsor DavidWells](https://img.shields.io/badge/sponsor-DavidWells-pink?logo=github)](https://github.com/sponsors/DavidWells)
