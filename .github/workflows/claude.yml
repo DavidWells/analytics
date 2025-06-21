@@ -767,6 +767,7 @@ jobs:
               core.setOutput('management-error', error.message);
               core.setOutput('management-success', 'false');
             }
+
       - name: Check for Changes and Prepare for PR
         id: check-changes
         if: steps.claude.outcome == 'success' && needs.setup.outputs.is-pr == 'false' && steps.claude.outputs.claude_branch_name
@@ -776,30 +777,38 @@ jobs:
           BRANCH_NAME="${{ steps.claude.outputs.claude_branch_name }}"
           DEFAULT_BRANCH="origin/${{ github.event.repository.default_branch }}"
 
-          echo "--- 1. DEBUG: Initial Git State ---"
+          echo "--- 1. Checking if remote branch '${BRANCH_NAME}' exists ---"
+          # Use `git ls-remote` to check for the branch's existence. It exits with 0 if it exists, 2 if not.
+          if ! git ls-remote --exit-code --heads origin "${BRANCH_NAME}" >/dev/null 2>&1; then
+            echo "✅ Remote branch '${BRANCH_NAME}' not found. This indicates no code changes were committed."
+            echo "has-changes=false" >> $GITHUB_OUTPUT
+            echo "branch-exists=false" >> $GITHUB_OUTPUT
+            # Exit successfully as this is an expected outcome.
+            exit 0
+          fi
+          
+          echo "✅ Remote branch found. Proceeding with original fetch and reset logic."
+          echo "branch-exists=true" >> $GITHUB_OUTPUT
+
+          echo "--- 2. DEBUG: Initial Git State ---"
           echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
           echo "Current commit: $(git log -1 --pretty=%h)"
           echo "Workspace status:"
           git status -s
           echo "-----------------------------------"
 
-          echo "🚀 2. Fetching the specific branch pushed by Claude: '${BRANCH_NAME}'..."
-          # This fetch command is still the correct and optimal one.
+          echo "🚀 3. Fetching the specific branch pushed by Claude: '${BRANCH_NAME}'..."
           git fetch origin "+refs/heads/${BRANCH_NAME}:refs/remotes/origin/${BRANCH_NAME}"
 
-          echo "--- 3. DEBUG: After Fetch ---"
+          echo "--- 4. DEBUG: After Fetch ---"
           echo "Remote commit for '${BRANCH_NAME}' is: $(git log origin/${BRANCH_NAME} -1 --pretty=%h)"
           echo "-----------------------------"
           
-          echo "🔄 4. Forcibly resetting local branch to match the fetched remote state..."
-          # This is the KEY command. It tells Git to move the local branch pointer
-          # to the same commit as the remote-tracking branch, and force the
-          # working directory to match it. This solves both the "branch behind"
-          # and "uncommitted changes" problems in one step.
+          echo "🔄 5. Forcibly resetting local branch to match the fetched remote state..."
           git checkout "${BRANCH_NAME}"
           git reset --hard "origin/${BRANCH_NAME}"
 
-          echo "--- 5. DEBUG: After Resetting Local Branch ---"
+          echo "--- 6. DEBUG: After Resetting Local Branch ---"
           echo "Current branch is now: $(git rev-parse --abbrev-ref HEAD)"
           echo "Current commit is now: $(git log -1 --pretty=%h)"
           echo "Workspace status is now:"
@@ -808,7 +817,7 @@ jobs:
 
           BRANCH_RANGE="${DEFAULT_BRANCH}...${BRANCH_NAME}"
           
-          echo "🔍 6. Checking for changes in range: ${BRANCH_RANGE}..."
+          echo "🔍 7. Checking for changes in range: ${BRANCH_RANGE}..."
           
           # Use the exit code of 'git diff --quiet' to check for changes.
           if git diff --quiet $BRANCH_RANGE; then
