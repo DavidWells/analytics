@@ -79,7 +79,7 @@ This directory contains comprehensive examples demonstrating how to use the Anal
 ## 📋 Getting Started
 
 ### Prerequisites
-- Node.js 14+ for framework examples
+- Node.js 18+ for framework examples
 - Modern browser for HTML example
 - For demo example: Build local packages first
 
