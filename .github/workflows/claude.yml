@@ -99,6 +99,7 @@ jobs:
       is-pr: ${{ steps.context-info.outputs.is-pr }}
       trigger-text: ${{ steps.context-info.outputs.trigger-text }}
       has-linked-pr: ${{ steps.context-info.outputs.has-linked-pr }}
+      status-comment-id: ${{ steps.find_comment.outputs.comment-id || steps.create_comment.outputs.comment-id }}
     ######################
     # Setup steps
     ######################
@@ -284,7 +285,7 @@ jobs:
       - name: Find existing status comment
         if: steps.should-continue.outputs.should-continue == 'true'
         uses: peter-evans/find-comment@v3
-        id: fc # We'll check the output of this step
+        id: find_comment # We'll check the output of this step
         with:
           issue-number: ${{ steps.context-info.outputs.issue-number }}
           comment-author: 'github-actions[bot]'
@@ -292,8 +293,9 @@ jobs:
 
       - name: Create initial "in-progress" comment if it doesn't exist
         # This step ONLY runs if the 'find-comment' step found nothing
-        if: steps.should-continue.outputs.should-continue == 'true' && steps.fc.outputs.comment-id == ''
+        if: steps.should-continue.outputs.should-continue == 'true' && steps.find_comment.outputs.comment-id == ''
         uses: peter-evans/create-or-update-comment@v4
+        id: create_comment
         with:
           issue-number: ${{ steps.context-info.outputs.issue-number }}
           body: |
@@ -1092,30 +1094,11 @@ jobs:
               body: message
             });
             */
+            message += `<!-- claude-run-status -->`;
 
             // Set as output steps.generate_success_comment.outputs.result
-            return message;
-      
-      # Step 2: Find the comment again (it should exist now)
-      - name: Find status comment to update
-        uses: peter-evans/find-comment@v3
-        id: fc_update
-        with:
-          issue-number: ${{ needs.setup.outputs.issue-number }}
-          comment-author: 'github-actions[bot]'
-          body-includes: '<!-- claude-run-status -->' # Same unique marker
-
-      # Update the sticky comment with the success message
-      - name: Post or Update Sticky Comment
-        uses: peter-evans/create-or-update-comment@v4
-        with:
-          issue-number: ${{ needs.setup.outputs.issue-number }}
-          # Pass the ID found in the previous step to ensure we UPDATE
-          comment-id: ${{ steps.fc_update.outputs.comment-id }}
-          # The body comes from your script
-          body: ${{ steps.generate_success_comment.outputs.result }}
-          # Use 'replace' to overwrite the old "in-progress" message
-          edit-mode: replace
+            // return message;
+            core.setOutput('comment-body', message)
 
       - name: Notify on Failure
         if: steps.claude.outcome == 'failure' && needs.setup.outputs.issue-number
@@ -1176,18 +1159,25 @@ jobs:
             });
             */
 
-            // Set as output steps.generate_error_comment.outputs.result
-            return message;
+            message += `<!-- claude-run-status -->`;
 
-      # Update the sticky comment with the error message
+            // Set as output steps.generate_error_comment.outputs.result
+            // return message;
+            core.setOutput('comment-body', message)
+
+      # Update the sticky comment with the success or error message
       - name: Post or Update Sticky Comment
+        if: |
+          always() 
+          && (steps.generate_success_comment.outputs.comment-body || steps.generate_error_comment.outputs.comment-body)
+          && needs.setup.outputs.status-comment-id
         uses: peter-evans/create-or-update-comment@v4
         with:
           issue-number: ${{ needs.setup.outputs.issue-number }}
           # Pass the ID found in the previous step to ensure we UPDATE
-          comment-id: ${{ steps.fc_update.outputs.comment-id }}
+          comment-id: ${{ needs.setup.outputs.status-comment-id }}
           # The body comes from your script
-          body: ${{ steps.generate_error_comment.outputs.result }}
+          body: ${{ steps.generate_success_comment.outputs.comment-body || steps.generate_error_comment.outputs.comment-body }}
           # Use 'replace' to overwrite the old "in-progress" message
           edit-mode: replace
 
