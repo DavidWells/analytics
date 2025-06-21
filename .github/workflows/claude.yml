@@ -166,6 +166,8 @@ jobs:
                     }
                   })
 
+                  console.log(`Timeline: ${JSON.stringify(timeline, null, 2)}`)
+
                   const linkedPRs = timeline.filter(event => event.event === 'connected')
                     .map(event => event.source?.issue?.pull_request?.url)
                     .filter(Boolean)
