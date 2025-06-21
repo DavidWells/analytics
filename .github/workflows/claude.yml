@@ -1177,7 +1177,8 @@ jobs:
           # Pass the ID found in the previous step to ensure we UPDATE
           comment-id: ${{ needs.setup.outputs.status-comment-id }}
           # The body comes from your script
-          body: ${{ steps.generate_success_comment.outputs.comment-body || steps.generate_error_comment.outputs.comment-body }}
+          body: |
+            ${{ steps.generate_success_comment.outputs.comment-body || steps.generate_error_comment.outputs.comment-body }}
           # Use 'replace' to overwrite the old "in-progress" message
           edit-mode: replace
 
