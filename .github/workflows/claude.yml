@@ -20,7 +20,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  claude:
+  setup:
     # Security-focused conditional execution (full support for Issues and PRs)
     if: |
       (
@@ -69,31 +69,39 @@ jobs:
     
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    
     permissions:
       # 📁 Content management (highest permissions)
       contents: write
       pull-requests: write
       issues: write
       discussions: write
-      
       # 🔧 Development & CI/CD management
       actions: write
       checks: write
       statuses: write
       pages: write
       deployments: write
-      
       # 📦 Package & security management
       packages: write
       security-events: write
-      
       # 🎯 Project management
       repository-projects: write
-      
       # 🆔 Authentication & token management
       id-token: write
-
+    # Outputs
+    outputs:
+      should-continue: ${{ steps.should-continue.outputs.should-continue }}
+      issue-number: ${{ steps.context-info.outputs.issue-number }}
+      pr-number: ${{ steps.context-info.outputs.pr-number }}
+      head-ref: ${{ steps.context-info.outputs.head-ref }}
+      base-ref: ${{ steps.context-info.outputs.base-ref }}
+      head-sha: ${{ steps.context-info.outputs.head-sha }}
+      is-pr: ${{ steps.context-info.outputs.is-pr }}
+      trigger-text: ${{ steps.context-info.outputs.trigger-text }}
+      has-linked-pr: ${{ steps.context-info.outputs.has-linked-pr }}
+    ######################
+    # Setup steps
+    ######################
     steps:
       - name: Get Context Information
         id: context-info
@@ -255,33 +263,73 @@ jobs:
           
           echo "✅ Environment validation complete"
 
+      - name: Exit early if Issue already has linked PR
+        id: should-continue
+        run: |
+          IS_PR="${{ steps.context-info.outputs.is-pr }}"
+          HAS_LINKED_PR="${{ steps.context-info.outputs.has-linked-pr }}"
+          
+          if [[ "$IS_PR" == "false" && "$HAS_LINKED_PR" == "true" ]]; then
+            echo "Issue already has linked PR. Will skip remaining steps."
+            echo "should-continue=false" >> $GITHUB_OUTPUT
+          else
+            echo "No linked PRs found or this is a PR. Continuing."
+            echo "should-continue=true" >> $GITHUB_OUTPUT
+          fi
+  
+  #########################################################
+  # Claude Code
+  #########################################################
+  claude:
+    needs: setup
+    # Security-focused conditional execution (full support for Issues and PRs)
+    if: needs.setup.outputs.should-continue == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      # 📁 Content management (highest permissions)
+      contents: write
+      pull-requests: write
+      issues: write
+      discussions: write
+      
+      # 🔧 Development & CI/CD management
+      actions: write
+      checks: write
+      statuses: write
+      pages: write
+      deployments: write
+      
+      # 📦 Package & security management
+      packages: write
+      security-events: write
+      
+      # 🎯 Project management
+      repository-projects: write
+      
+      # 🆔 Authentication & token management
+      id-token: write
+
+    steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           # Checkout the feature branch for PRs, or the default branch for Issues
-          ref: ${{ steps.context-info.outputs.head-sha || github.ref }}
-          fetch-depth: ${{ steps.context-info.outputs.is-pr == 'true' && 0 || 1 }}
+          ref: ${{ needs.setup.outputs.outputs.head-sha || github.ref }}
+          fetch-depth: ${{ needs.setup.outputs.outputs.is-pr == 'true' && 0 || 1 }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fetch Base Branch (PR only)
-        if: steps.context-info.outputs.is-pr == 'true' && steps.context-info.outputs.base-ref
+        if: needs.setup.outputs.outputs.is-pr == 'true' && needs.setup.outputs.outputs.base-ref
         run: |
-          echo "📥 Fetching base branch: ${{ steps.context-info.outputs.base-ref }}"
-          git fetch origin ${{ steps.context-info.outputs.base-ref }}:${{ steps.context-info.outputs.base-ref }}
+          echo "📥 Fetching base branch: ${{ needs.setup.outputs.outputs.base-ref }}"
+          git fetch origin ${{ needs.setup.outputs.outputs.base-ref }}:${{ needs.setup.outputs.outputs.base-ref }}
           
           echo "📋 Changed files:"
-          git diff --name-only origin/${{ steps.context-info.outputs.base-ref }}..HEAD || echo "Failed to get diff"
+          git diff --name-only origin/${{ needs.setup.outputs.outputs.base-ref }}..HEAD || echo "Failed to get diff"
           
           echo "📊 Change statistics:"
-          git diff --stat origin/${{ steps.context-info.outputs.base-ref }}..HEAD || echo "Failed to get stats"
-
-      - name: Exit early if Issue already has linked PR
-        id: exit-early
-        if: |
-          steps.context-info.outputs.is-pr == 'false' && steps.context-info.outputs.has-linked-pr == 'true'
-        run: |
-          echo "Issue already has linked PR. Exiting early."
-          exit 0
+          git diff --stat origin/${{ needs.setup.outputs.outputs.base-ref }}..HEAD || echo "Failed to get stats"
 
       - name: Get Project Information
         id: project-info
@@ -380,14 +428,14 @@ jobs:
             Bash(rm -rf /)
         env:
           # Pass context information to Claude Code
-          GITHUB_CONTEXT_TYPE: ${{ steps.context-info.outputs.is-pr == 'true' && 'PR' || 'ISSUE' }}
-          ISSUE_NUMBER: ${{ steps.context-info.outputs.issue-number }}
-          PR_NUMBER: ${{ steps.context-info.outputs.pr-number }}
-          BASE_BRANCH: ${{ steps.context-info.outputs.base-ref }}
-          HEAD_BRANCH: ${{ steps.context-info.outputs.head-ref }}
-          HEAD_SHA: ${{ steps.context-info.outputs.head-sha }}
+          GITHUB_CONTEXT_TYPE: ${{ needs.setup.outputs.outputs.is-pr == 'true' && 'PR' || 'ISSUE' }}
+          ISSUE_NUMBER: ${{ needs.setup.outputs.outputs.issue-number }}
+          PR_NUMBER: ${{ needs.setup.outputs.outputs.pr-number }}
+          BASE_BRANCH: ${{ needs.setup.outputs.outputs.base-ref }}
+          HEAD_BRANCH: ${{ needs.setup.outputs.outputs.head-ref }}
+          HEAD_SHA: ${{ needs.setup.outputs.outputs.head-sha }}
           GITHUB_EVENT_NAME: ${{ github.event_name }}
-          TRIGGER_TEXT: ${{ steps.context-info.outputs.trigger-text }}
+          TRIGGER_TEXT: ${{ needs.setup.outputs.outputs.trigger-text }}
           PROJECT_TYPE: ${{ steps.project-info.outputs.project-type }}
           PROJECT_FRAMEWORK: ${{ steps.project-info.outputs.framework }}
           TOTAL_FILES: ${{ steps.project-info.outputs.total-files }}
@@ -425,14 +473,14 @@ jobs:
 
       - name: Run Advanced Repository Management
         id: advanced-management
-        if: steps.claude.outcome == 'success' && steps.context-info.outputs.issue-number
+        if: steps.claude.outcome == 'success' && needs.setup.outputs.outputs.issue-number
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const issueNumber = ${{ steps.context-info.outputs.issue-number }};
-            const isPR = '${{ steps.context-info.outputs.is-pr }}' === 'true';
-            const triggerText = (${{ toJSON(steps.context-info.outputs.trigger-text) }} || '').toLowerCase();
+            const issueNumber = ${{ needs.setup.outputs.outputs.issue-number }};
+            const isPR = '${{ needs.setup.outputs.outputs.is-pr }}' === 'true';
+            const triggerText = (${{ toJSON(needs.setup.outputs.outputs.trigger-text) }} || '').toLowerCase();
             const framework = '${{ steps.project-info.outputs.framework }}';
             const hashSymbol = String.fromCharCode(35);
             
@@ -705,7 +753,7 @@ jobs:
             }
       - name: Check for Changes and Prepare for PR
         id: check-changes
-        if: steps.claude.outcome == 'success' && steps.context-info.outputs.is-pr == 'false' && steps.claude.outputs.claude_branch_name
+        if: steps.claude.outcome == 'success' && needs.setup.outputs.outputs.is-pr == 'false' && steps.claude.outputs.claude_branch_name
         run: |
           set -e # Exit immediately if a command exits with a non-zero status.
 
@@ -770,14 +818,14 @@ jobs:
         # The 'if' condition is now correctly chained.
         if: |
           steps.claude.outcome == 'success' 
-          && steps.context-info.outputs.is-pr == 'false'
+          && needs.setup.outputs.outputs.is-pr == 'false'
           && steps.claude.outputs.claude_branch_name 
           && steps.check-changes.outputs.has-changes == 'true'
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const issueNumber = ${{ steps.context-info.outputs.issue-number }}
+            const issueNumber = ${{ needs.setup.outputs.outputs.issue-number }}
             const branchName = '${{ steps.claude.outputs.claude_branch_name }}'
             const defaultBranch = '${{ github.event.repository.default_branch }}'
             const owner = context.repo.owner
@@ -879,11 +927,11 @@ jobs:
             }
 
       - name: Notify on Success
-        if: steps.claude.outcome == 'success' && steps.context-info.outputs.issue-number
+        if: steps.claude.outcome == 'success' && needs.setup.outputs.outputs.issue-number
         uses: actions/github-script@v7
         with:
           script: |
-            const isPR = '${{ steps.context-info.outputs.is-pr }}' === 'true';
+            const isPR = '${{ needs.setup.outputs.outputs.is-pr }}' === 'true';
             const contextType = isPR ? 'Pull Request' : 'Issue';
             const eventName = '${{ github.event_name }}';
             const framework = '${{ steps.project-info.outputs.framework }}' || 'Unknown';
@@ -918,9 +966,9 @@ jobs:
             }
             
             // Execution info (compact version)
-            message += `**📊 Execution Info:** ${contextType} ${hashSymbol}${${{ steps.context-info.outputs.issue-number }}} | ${framework} (${totalFiles} files) | @${{ github.actor }}\n`;
+            message += `**📊 Execution Info:** ${contextType} ${hashSymbol}${${{ needs.setup.outputs.outputs.issue-number }}} | ${framework} (${totalFiles} files) | @${{ github.actor }}\n`;
             if (isPR) {
-              message += `**🌿 Branch:** \`${{ steps.context-info.outputs.head-ref }}\` → \`${{ steps.context-info.outputs.base-ref }}\`\n`;
+              message += `**🌿 Branch:** \`${{ needs.setup.outputs.outputs.head-ref }}\` → \`${{ needs.setup.outputs.outputs.base-ref }}\`\n`;
             }
             
             // Repository management results (summary)
@@ -989,24 +1037,24 @@ jobs:
             message += `🔄 **Rerun**: You can run again anytime with \`claude [your instructions]\``;
             
             await github.rest.issues.createComment({
-              issue_number: ${{ steps.context-info.outputs.issue-number }},
+              issue_number: ${{ needs.setup.outputs.outputs.issue-number }},
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: message
             });
 
       - name: Notify on Failure
-        if: steps.claude.outcome == 'failure' && steps.context-info.outputs.issue-number
+        if: steps.claude.outcome == 'failure' && needs.setup.outputs.outputs.issue-number
         uses: actions/github-script@v7
         with:
           script: |
-            const isPR = '${{ steps.context-info.outputs.is-pr }}' === 'true';
+            const isPR = '${{ needs.setup.outputs.outputs.is-pr }}' === 'true';
             const contextType = isPR ? 'Pull Request' : 'Issue';
             const managementError = '${{ steps.advanced-management.outputs.management-error }}';
             const hashSymbol = '#';
             
             let message = `❌ **Claude Code execution failed**\n\n`;
-            message += `An error occurred while processing ${contextType} ${hashSymbol}${{ steps.context-info.outputs.issue-number }}.\n\n`;
+            message += `An error occurred while processing ${contextType} ${hashSymbol}${{ needs.setup.outputs.outputs.issue-number }}.\n\n`;
             
             // Error info (compact version)
             message += `**📊 Error Info:** ${contextType} | \`${{ github.event_name }}\` | @${{ github.actor }}\n`;
@@ -1045,7 +1093,7 @@ jobs:
             message += `📞 **Support**: If the problem persists, please contact an administrator`;
             
             await github.rest.issues.createComment({
-              issue_number: ${{ steps.context-info.outputs.issue-number }},
+              issue_number: ${{ needs.setup.outputs.outputs.issue-number }},
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: message
@@ -1056,9 +1104,9 @@ jobs:
         run: |
           echo "📊 ===== Execution Summary ====="
           echo "Status: ${{ steps.claude.outcome }}"
-          echo "Context Type: ${{ steps.context-info.outputs.is-pr == 'true' && 'PR' || 'Issue' }}"
-          echo "Issue/PR: '#${{ steps.context-info.outputs.issue-number }}'"
-          echo "Branch: ${{ steps.context-info.outputs.head-ref || 'default' }}"
+          echo "Context Type: ${{ needs.setup.outputs.outputs.is-pr == 'true' && 'PR' || 'Issue' }}"
+          echo "Issue/PR: '#${{ needs.setup.outputs.outputs.issue-number }}'"
+          echo "Branch: ${{ needs.setup.outputs.outputs.head-ref || 'default' }}"
           echo "Actor: ${{ github.actor }}"
           echo "Event: ${{ github.event_name }}"
           echo "Project: ${{ steps.project-info.outputs.framework || 'Unknown' }}"
