@@ -276,6 +276,14 @@ jobs:
             echo "No linked PRs found or this is a PR. Continuing."
             echo "should-continue=true" >> $GITHUB_OUTPUT
           fi
+      
+      - name: Add Sticky Comment
+        if: steps.should-continue.outputs.should-continue == 'true'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: claude-code-detail-box
+          only_create: true
+          message: "Claude Code is running... ⏳"
   
   #########################################################
   # Claude Code
@@ -953,6 +961,7 @@ jobs:
 
       - name: Notify on Success
         if: steps.claude.outcome == 'success' && needs.setup.outputs.issue-number
+        id: generate_comment
         uses: actions/github-script@v7
         with:
           script: |
@@ -1061,12 +1070,25 @@ jobs:
             
             message += `🔄 **Rerun**: You can run again anytime with \`claude [your instructions]\``;
             
+            /* disabled
             await github.rest.issues.createComment({
               issue_number: ${{ needs.setup.outputs.issue-number }},
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: message
             });
+            */
+
+            return message;
+
+      - name: Post or Update Sticky Comment
+        if: steps.claude.outcome == 'success' && needs.setup.outputs.issue-number
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          # A unique identifier for this specific comment
+          header: claude-code-detail-box
+          # Use the output from the previous step as the message
+          message: ${{ steps.generate_comment.outputs.result }}
 
       - name: Notify on Failure
         if: steps.claude.outcome == 'failure' && needs.setup.outputs.issue-number
