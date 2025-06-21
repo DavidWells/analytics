@@ -168,12 +168,22 @@ jobs:
 
                   console.log(`Timeline: ${JSON.stringify(timeline, null, 2)}`)
 
-                  const linkedPRs = timeline.filter(event => event.event === 'connected')
-                    .map(event => event.source?.issue?.pull_request?.url)
-                    .filter(Boolean)
+                  const linkedPRs = timeline
+                    // filter out event.event is not cross-referenced
+                    .filter(event => event.event === 'cross-referenced')
+                    // filter out event.source?.issue?.pull_request is null
+                    .filter(event => event.source?.issue?.pull_request?.url)
+                    // return url and pr name, and the issue number and the body and the actor
+                    .map(event => ({
+                      issueNumber: event.source?.issue?.number,
+                      actor: event.actor?.login,
+                      url: event.source?.issue?.pull_request?.url,
+                      title: event.source?.issue?.title,
+                      body: event.source?.issue?.body,
+                    }))
 
                   hasLinkedPR = linkedPRs.length > 0
-                  console.log(`Linked PRs: ${linkedPRs.join(', ') || 'None'}`)
+                  console.log(`Linked PRs:`, linkedPRs)
                   console.log(`Issue Comment #${issueNumber}, already has linked PR: ${hasLinkedPR}`)
                   
                 } catch (error) {
