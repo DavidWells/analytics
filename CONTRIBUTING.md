@@ -7,6 +7,8 @@ please read the [code of conduct](CODE_OF_CONDUCT.md).
 
 > Install node & npm on your system: [https://nodejs.org/en/download/](https://nodejs.org/en/download/)
 
+**Note:** This project uses [pnpm](https://pnpm.io/) as the package manager. While the scripts below use `npm run`, pnpm is used internally for managing dependencies and workspaces.
+
 ### Install dependencies
 
 > Only required when setting up the project
