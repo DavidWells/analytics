@@ -315,21 +315,37 @@ jobs:
         uses: actions/checkout@v4
         with:
           # Checkout the feature branch for PRs, or the default branch for Issues
-          ref: ${{ needs.setup.outputs.outputs.head-sha || github.ref }}
-          fetch-depth: ${{ needs.setup.outputs.outputs.is-pr == 'true' && 0 || 1 }}
+          ref: ${{ needs.setup.outputs.head-sha || github.ref }}
+          fetch-depth: ${{ needs.setup.outputs.is-pr == 'true' && 0 || 1 }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Fetch Base Branch (PR only)
-        if: needs.setup.outputs.outputs.is-pr == 'true' && needs.setup.outputs.outputs.base-ref
+      - name: Validate Environment
         run: |
-          echo "📥 Fetching base branch: ${{ needs.setup.outputs.outputs.base-ref }}"
-          git fetch origin ${{ needs.setup.outputs.outputs.base-ref }}:${{ needs.setup.outputs.outputs.base-ref }}
+          echo "🔍 Runtime Environment Information"
+          echo "=================================="
+          echo "Event: ${{ github.event_name }}"
+          echo "Actor: ${{ github.actor }}"
+          echo "Repository: ${{ github.repository }}"
+          echo "Issue Number: ${{ needs.setup.outputs.issue-number }}"
+          echo "Is PR: ${{ needs.setup.outputs.is-pr }}"
+          echo "PR Number: ${{ needs.setup.outputs.pr-number }}"
+          echo "Head Ref: ${{ needs.setup.outputs.head-ref }}"
+          echo "Base Ref: ${{ needs.setup.outputs.base-ref }}"
+          echo "Head SHA: ${{ needs.setup.outputs.head-sha }}"
+          echo "Has Linked PR: ${{ needs.setup.outputs.has-linked-pr }}"
+          echo "=================================="
+      
+      - name: Fetch Base Branch (PR only)
+        if: needs.setup.outputs.is-pr == 'true' && needs.setup.outputs.base-ref
+        run: |
+          echo "📥 Fetching base branch: ${{ needs.setup.outputs.base-ref }}"
+          git fetch origin ${{ needs.setup.outputs.base-ref }}:${{ needs.setup.outputs.base-ref }}
           
           echo "📋 Changed files:"
-          git diff --name-only origin/${{ needs.setup.outputs.outputs.base-ref }}..HEAD || echo "Failed to get diff"
+          git diff --name-only origin/${{ needs.setup.outputs.base-ref }}..HEAD || echo "Failed to get diff"
           
           echo "📊 Change statistics:"
-          git diff --stat origin/${{ needs.setup.outputs.outputs.base-ref }}..HEAD || echo "Failed to get stats"
+          git diff --stat origin/${{ needs.setup.outputs.base-ref }}..HEAD || echo "Failed to get stats"
 
       - name: Get Project Information
         id: project-info
@@ -428,14 +444,14 @@ jobs:
             Bash(rm -rf /)
         env:
           # Pass context information to Claude Code
-          GITHUB_CONTEXT_TYPE: ${{ needs.setup.outputs.outputs.is-pr == 'true' && 'PR' || 'ISSUE' }}
-          ISSUE_NUMBER: ${{ needs.setup.outputs.outputs.issue-number }}
-          PR_NUMBER: ${{ needs.setup.outputs.outputs.pr-number }}
-          BASE_BRANCH: ${{ needs.setup.outputs.outputs.base-ref }}
-          HEAD_BRANCH: ${{ needs.setup.outputs.outputs.head-ref }}
-          HEAD_SHA: ${{ needs.setup.outputs.outputs.head-sha }}
+          GITHUB_CONTEXT_TYPE: ${{ needs.setup.outputs.is-pr == 'true' && 'PR' || 'ISSUE' }}
+          ISSUE_NUMBER: ${{ needs.setup.outputs.issue-number }}
+          PR_NUMBER: ${{ needs.setup.outputs.pr-number }}
+          BASE_BRANCH: ${{ needs.setup.outputs.base-ref }}
+          HEAD_BRANCH: ${{ needs.setup.outputs.head-ref }}
+          HEAD_SHA: ${{ needs.setup.outputs.head-sha }}
           GITHUB_EVENT_NAME: ${{ github.event_name }}
-          TRIGGER_TEXT: ${{ needs.setup.outputs.outputs.trigger-text }}
+          TRIGGER_TEXT: ${{ needs.setup.outputs.trigger-text }}
           PROJECT_TYPE: ${{ steps.project-info.outputs.project-type }}
           PROJECT_FRAMEWORK: ${{ steps.project-info.outputs.framework }}
           TOTAL_FILES: ${{ steps.project-info.outputs.total-files }}
@@ -473,14 +489,14 @@ jobs:
 
       - name: Run Advanced Repository Management
         id: advanced-management
-        if: steps.claude.outcome == 'success' && needs.setup.outputs.outputs.issue-number
+        if: steps.claude.outcome == 'success' && needs.setup.outputs.issue-number
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const issueNumber = ${{ needs.setup.outputs.outputs.issue-number }};
-            const isPR = '${{ needs.setup.outputs.outputs.is-pr }}' === 'true';
-            const triggerText = (${{ toJSON(needs.setup.outputs.outputs.trigger-text) }} || '').toLowerCase();
+            const issueNumber = ${{ needs.setup.outputs.issue-number }};
+            const isPR = '${{ needs.setup.outputs.is-pr }}' === 'true';
+            const triggerText = (${{ toJSON(needs.setup.outputs.trigger-text) }} || '').toLowerCase();
             const framework = '${{ steps.project-info.outputs.framework }}';
             const hashSymbol = String.fromCharCode(35);
             
@@ -753,7 +769,7 @@ jobs:
             }
       - name: Check for Changes and Prepare for PR
         id: check-changes
-        if: steps.claude.outcome == 'success' && needs.setup.outputs.outputs.is-pr == 'false' && steps.claude.outputs.claude_branch_name
+        if: steps.claude.outcome == 'success' && needs.setup.outputs.is-pr == 'false' && steps.claude.outputs.claude_branch_name
         run: |
           set -e # Exit immediately if a command exits with a non-zero status.
 
@@ -818,14 +834,14 @@ jobs:
         # The 'if' condition is now correctly chained.
         if: |
           steps.claude.outcome == 'success' 
-          && needs.setup.outputs.outputs.is-pr == 'false'
+          && needs.setup.outputs.is-pr == 'false'
           && steps.claude.outputs.claude_branch_name 
           && steps.check-changes.outputs.has-changes == 'true'
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const issueNumber = ${{ needs.setup.outputs.outputs.issue-number }}
+            const issueNumber = ${{ needs.setup.outputs.issue-number }}
             const branchName = '${{ steps.claude.outputs.claude_branch_name }}'
             const defaultBranch = '${{ github.event.repository.default_branch }}'
             const owner = context.repo.owner
@@ -927,11 +943,11 @@ jobs:
             }
 
       - name: Notify on Success
-        if: steps.claude.outcome == 'success' && needs.setup.outputs.outputs.issue-number
+        if: steps.claude.outcome == 'success' && needs.setup.outputs.issue-number
         uses: actions/github-script@v7
         with:
           script: |
-            const isPR = '${{ needs.setup.outputs.outputs.is-pr }}' === 'true';
+            const isPR = '${{ needs.setup.outputs.is-pr }}' === 'true';
             const contextType = isPR ? 'Pull Request' : 'Issue';
             const eventName = '${{ github.event_name }}';
             const framework = '${{ steps.project-info.outputs.framework }}' || 'Unknown';
@@ -966,9 +982,9 @@ jobs:
             }
             
             // Execution info (compact version)
-            message += `**📊 Execution Info:** ${contextType} ${hashSymbol}${${{ needs.setup.outputs.outputs.issue-number }}} | ${framework} (${totalFiles} files) | @${{ github.actor }}\n`;
+            message += `**📊 Execution Info:** ${contextType} ${hashSymbol}${${{ needs.setup.outputs.issue-number }}} | ${framework} (${totalFiles} files) | @${{ github.actor }}\n`;
             if (isPR) {
-              message += `**🌿 Branch:** \`${{ needs.setup.outputs.outputs.head-ref }}\` → \`${{ needs.setup.outputs.outputs.base-ref }}\`\n`;
+              message += `**🌿 Branch:** \`${{ needs.setup.outputs.head-ref }}\` → \`${{ needs.setup.outputs.base-ref }}\`\n`;
             }
             
             // Repository management results (summary)
@@ -1037,24 +1053,24 @@ jobs:
             message += `🔄 **Rerun**: You can run again anytime with \`claude [your instructions]\``;
             
             await github.rest.issues.createComment({
-              issue_number: ${{ needs.setup.outputs.outputs.issue-number }},
+              issue_number: ${{ needs.setup.outputs.issue-number }},
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: message
             });
 
       - name: Notify on Failure
-        if: steps.claude.outcome == 'failure' && needs.setup.outputs.outputs.issue-number
+        if: steps.claude.outcome == 'failure' && needs.setup.outputs.issue-number
         uses: actions/github-script@v7
         with:
           script: |
-            const isPR = '${{ needs.setup.outputs.outputs.is-pr }}' === 'true';
+            const isPR = '${{ needs.setup.outputs.is-pr }}' === 'true';
             const contextType = isPR ? 'Pull Request' : 'Issue';
             const managementError = '${{ steps.advanced-management.outputs.management-error }}';
             const hashSymbol = '#';
             
             let message = `❌ **Claude Code execution failed**\n\n`;
-            message += `An error occurred while processing ${contextType} ${hashSymbol}${{ needs.setup.outputs.outputs.issue-number }}.\n\n`;
+            message += `An error occurred while processing ${contextType} ${hashSymbol}${{ needs.setup.outputs.issue-number }}.\n\n`;
             
             // Error info (compact version)
             message += `**📊 Error Info:** ${contextType} | \`${{ github.event_name }}\` | @${{ github.actor }}\n`;
@@ -1093,7 +1109,7 @@ jobs:
             message += `📞 **Support**: If the problem persists, please contact an administrator`;
             
             await github.rest.issues.createComment({
-              issue_number: ${{ needs.setup.outputs.outputs.issue-number }},
+              issue_number: ${{ needs.setup.outputs.issue-number }},
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: message
@@ -1104,9 +1120,9 @@ jobs:
         run: |
           echo "📊 ===== Execution Summary ====="
           echo "Status: ${{ steps.claude.outcome }}"
-          echo "Context Type: ${{ needs.setup.outputs.outputs.is-pr == 'true' && 'PR' || 'Issue' }}"
-          echo "Issue/PR: '#${{ needs.setup.outputs.outputs.issue-number }}'"
-          echo "Branch: ${{ needs.setup.outputs.outputs.head-ref || 'default' }}"
+          echo "Context Type: ${{ needs.setup.outputs.is-pr == 'true' && 'PR' || 'Issue' }}"
+          echo "Issue/PR: '#${{ needs.setup.outputs.issue-number }}'"
+          echo "Branch: ${{ needs.setup.outputs.head-ref || 'default' }}"
           echo "Actor: ${{ github.actor }}"
           echo "Event: ${{ github.event_name }}"
           echo "Project: ${{ steps.project-info.outputs.framework || 'Unknown' }}"
