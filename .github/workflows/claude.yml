@@ -276,14 +276,17 @@ jobs:
             echo "No linked PRs found or this is a PR. Continuing."
             echo "should-continue=true" >> $GITHUB_OUTPUT
           fi
-      
-      # Only add comment if it doesnt exist
+
+      - name: Debug issue number
+        run: echo "The issue number is ${{ github.event.number }}"
+
+      # Only add comment if it doesn't exist
       - name: Find existing status comment
         if: steps.should-continue.outputs.should-continue == 'true'
         uses: peter-evans/find-comment@v3
         id: fc # We'll check the output of this step
         with:
-          issue-number: ${{ github.event.number }}
+          issue-number: ${{ steps.context-info.outputs.issue-number }}
           comment-author: 'github-actions[bot]'
           body-includes: '<!-- claude-run-status -->'
 
@@ -292,7 +295,7 @@ jobs:
         if: steps.should-continue.outputs.should-continue == 'true' && steps.fc.outputs.comment-id == ''
         uses: peter-evans/create-or-update-comment@v4
         with:
-          issue-number: ${{ github.event.number }}
+          issue-number: ${{ steps.context-info.outputs.issue-number }}
           body: |
             Claude Code is running... ⏳
             <!-- claude-run-status -->
