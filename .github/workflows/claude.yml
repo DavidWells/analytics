@@ -307,7 +307,7 @@ jobs:
     # Security-focused conditional execution (full support for Issues and PRs)
     if: needs.setup.outputs.should-continue == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     permissions:
       # 📁 Content management (highest permissions)
       contents: write
@@ -975,7 +975,7 @@ jobs:
 
       - name: Notify on Success
         if: steps.claude.outcome == 'success' && needs.setup.outputs.issue-number
-        id: generate_comment
+        id: generate_success_comment
         uses: actions/github-script@v7
         with:
           script: |
@@ -1093,7 +1093,7 @@ jobs:
             });
             */
 
-            // Set as output steps.generate_comment.outputs.result
+            // Set as output steps.generate_success_comment.outputs.result
             return message;
       
       # Step 2: Find the comment again (it should exist now)
@@ -1105,7 +1105,7 @@ jobs:
           comment-author: 'github-actions[bot]'
           body-includes: '<!-- claude-run-status -->' # Same unique marker
 
-      # Step 3: Always update the comment with the final result
+      # Update the sticky comment with the success message
       - name: Post or Update Sticky Comment
         uses: peter-evans/create-or-update-comment@v4
         with:
@@ -1113,12 +1113,13 @@ jobs:
           # Pass the ID found in the previous step to ensure we UPDATE
           comment-id: ${{ steps.fc_update.outputs.comment-id }}
           # The body comes from your script
-          body: ${{ steps.generate_comment.outputs.result }}
+          body: ${{ steps.generate_success_comment.outputs.result }}
           # Use 'replace' to overwrite the old "in-progress" message
           edit-mode: replace
 
       - name: Notify on Failure
         if: steps.claude.outcome == 'failure' && needs.setup.outputs.issue-number
+        id: generate_error_comment
         uses: actions/github-script@v7
         with:
           script: |
@@ -1166,12 +1167,29 @@ jobs:
             message += `🔄 **Rerun**: Please try again with \`claude [specific instructions]\`\n`;
             message += `📞 **Support**: If the problem persists, please contact an administrator`;
             
+            /*
             await github.rest.issues.createComment({
               issue_number: ${{ needs.setup.outputs.issue-number }},
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: message
             });
+            */
+
+            // Set as output steps.generate_error_comment.outputs.result
+            return message;
+
+      # Update the sticky comment with the error message
+      - name: Post or Update Sticky Comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ needs.setup.outputs.issue-number }}
+          # Pass the ID found in the previous step to ensure we UPDATE
+          comment-id: ${{ steps.fc_update.outputs.comment-id }}
+          # The body comes from your script
+          body: ${{ steps.generate_error_comment.outputs.result }}
+          # Use 'replace' to overwrite the old "in-progress" message
+          edit-mode: replace
 
       - name: Output Execution Log
         if: always()
