@@ -7,6 +7,19 @@ please read the [code of conduct](CODE_OF_CONDUCT.md).
 
 > Install node & npm on your system: [https://nodejs.org/en/download/](https://nodejs.org/en/download/)
 
+### Package Manager
+
+This project uses **pnpm** as the package manager. If you don't have pnpm installed, you can install it globally:
+
+```sh
+# Install pnpm globally
+npm install -g pnpm
+
+# Or using other methods:
+# curl -fsSL https://get.pnpm.io/install.sh | sh -
+# brew install pnpm (on macOS)
+```
+
 ### Install dependencies
 
 > Only required when setting up the project
@@ -14,7 +27,7 @@ please read the [code of conduct](CODE_OF_CONDUCT.md).
 ```sh
 $ git clone https://github.com/davidwells/analytics
 $ cd analytics
-$ npm run setup
+$ pnpm run setup
 ```
 
 Because analytics has a large number of packages, we need to also [install watchman](https://facebook.github.io/watchman/docs/install.html) for better watching.
@@ -28,11 +41,11 @@ brew install watchman
 
 To run analytics locally follow these steps:
 
-1. Make sure you have run `npm run setup` to install all packages
-2. Run `npm run build` to ensure analytics packages are built
-3. Run watch mode `npm run watch` to have changes reflected live in the demo app.
-4. In a new terminal window, change directories into the [`/examples/demo`](https://github.com/DavidWells/analytics/tree/master/examples/demo) folder & install the demo apps dependencies `npm install`
-5. Finally, you can start the demo app with `npm start`
+1. Make sure you have run `pnpm run setup` to install all packages
+2. Run `pnpm run build` to ensure analytics packages are built
+3. Run watch mode `pnpm run watch` to have changes reflected live in the demo app.
+4. In a new terminal window, change directories into the [`/examples/demo`](https://github.com/DavidWells/analytics/tree/master/examples/demo) folder & install the demo apps dependencies `pnpm install`
+5. Finally, you can start the demo app with `pnpm start`
 
 If you have any questions please ping [@DavidWells](https://twitter.com/davidwells) on Twitter.
 
@@ -45,7 +58,7 @@ Installs and sets up all analytics package dependencies.
 #### Usage
 
 ```sh
-$ npm run setup
+$ pnpm run setup
 ```
 
 ### `watch`
@@ -55,7 +68,7 @@ Watches all `analytics` packages and builds them on change.
 #### Usage
 
 ```sh
-$ npm run watch
+$ pnpm run watch
 ```
 
 ### `clean`
@@ -65,7 +78,7 @@ Removes all of the `analytics` packages `dist` directories.
 #### Usage
 
 ```sh
-npm run clean
+pnpm run clean
 ```
 
 ### `reset`
@@ -75,7 +88,7 @@ Runs the `clean` script and removes all the `node_modules` from the `analytics` 
 #### Usage
 
 ```sh
-npm run reset
+pnpm run reset
 ```
 
 ### `build`
@@ -85,7 +98,7 @@ Runs the `clean` script and builds the `analytics` packages.
 #### Usage
 
 ```sh
-npm run build
+pnpm run build
 ```
 
 ### `test`
@@ -95,7 +108,7 @@ Runs all the `analytics` packages tests.
 #### Usage
 
 ```sh
-npm run test
+pnpm run test
 ```
 
 ## Pull Requests
@@ -110,7 +123,7 @@ Analytics uses the [Forking Workflow](https://www.atlassian.com/git/tutorials/co
 2. Create a branch from `master`. If you're addressing a specific issue, prefix your branch name with the issue number.
 2. If you've added code that should be tested, add tests.
 3. If you've changed APIs, update the documentation.
-4. Run `npm run test` and ensure the test suite passes.
+4. Run `pnpm run test` and ensure the test suite passes.
 6. PR's must be rebased before merge (feel free to ask for help).
 7. PR should be reviewed by two maintainers prior to merging.
 
