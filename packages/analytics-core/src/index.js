@@ -21,20 +21,466 @@ import { Debug, composeWithDebug } from './utils/debug'
 import heartBeat from './utils/heartbeat'
 import ensureArray from './utils/ensureArray'
 import enrichMeta from './utils/enrichMeta'
-import './pluginTypeDef'
 
+/**
+ * Analytics library configuration
+ * 
+ * After the library is initialized with config, the core API is exposed & ready for use in the application.
+ * @typedef {Object} AnalyticsConfig
+ * @property {string} [app] - Name of site / app
+ * @property {string|number} [version] - Version of your app
+ * @property {boolean} [debug] - Should analytics run in debug mode
+ * @property {AnalyticsPlugin[]} [plugins] - Array of analytics plugins
+ * @property {Object} [storage] - Custom storage implementation
+ * @property {Function} [storage.getItem] - Function to get storage item
+ * @property {Function} [storage.setItem] - Function to set storage item
+ * @property {Function} [storage.removeItem] - Function to remove storage item
+ * @property {Object} [reducers] - Custom reducers for state management
+ * @property {Object} [initialUser] - Initial user data
+ */
+
+/**
+ * Analytics plugin base structure
+ * @typedef {Object} AnalyticsPluginBase
+ * @property {string} name - Name of plugin
+ * @property {Object} [EVENTS] - Exposed events of plugin
+ * @property {Object} [config] - Configuration of plugin
+ * @property {boolean} [enabled] - Whether plugin is enabled
+ * @property {(...params: any[]) => any} [initialize] - Load analytics scripts method
+ * @property {(...params: any[]) => any} [page] - Page visit tracking method
+ * @property {(...params: any[]) => any} [track] - Custom event tracking method
+ * @property {(...params: any[]) => any} [identify] - User identify method
+ * @property {(...params: any[]) => any} [loaded] - Function to determine if analytics script loaded
+ * @property {(...params: any[]) => any} [ready] - Fire function when plugin ready
+ * @property {Object} [methods] - Custom methods exposed by plugin
+ */
+
+/**
+ * Analytics plugin with optional custom properties
+ * @template {string} [T=string]
+ * @typedef {AnalyticsPluginBase & (string extends T ? Record<string, unknown> : Record<T, unknown> & Record<string, unknown>)} AnalyticsPlugin
+ */
+
+/**
+ * Storage interface
+ * @typedef {Object} StorageInterface
+ * @property {GetItem} getItem - Get item from storage
+ * @property {SetItem} setItem - Set item in storage
+ * @property {RemoveItem} removeItem - Remove item from storage
+ */
+
+/**
+ * Get value from storage
+ * @callback GetItem
+ * @param {string} key - storage key
+ * @param {any} [options] - storage options
+ * @returns {any}
+ * @example
+ *
+ * analytics.storage.getItem('storage_key')
+ */
+
+/**
+ * Set storage value
+ * @callback SetItem
+ * @param {string} key - storage key
+ * @param {any} value - storage value
+ * @param {any} [options] - storage options
+ * @returns {void}
+ * @example
+ *
+ * analytics.storage.setItem('storage_key', 'value')
+ */
+
+/**
+ * Remove storage value
+ * @callback RemoveItem
+ * @param {string} key - storage key
+ * @param {any} [options] - storage options
+ * @returns {void}
+ * @example
+ *
+ * analytics.storage.removeItem('storage_key')
+ */
+
+/**
+ * Enable analytics plugin
+ * @callback EnablePlugin
+ * @param {string|string[]} plugins - name of plugins(s) to enable
+ * @param {(...params: any[]) => any} [callback] - callback after enable runs
+ * @returns {Promise<any>}
+ * @example
+ *
+ * analytics.plugins.enable('google-analytics').then(() => {
+ *   console.log('do stuff')
+ * })
+ *
+ * // Enable multiple plugins at once
+ * analytics.plugins.enable(['google-analytics', 'segment']).then(() => {
+ *   console.log('do stuff')
+ * })
+ */
+
+/**
+ * Disable analytics plugin
+ * @callback DisablePlugin
+ * @param {string|string[]} plugins - name of integration(s) to disable
+ * @param {(...params: any[]) => any} [callback] - callback after disable runs
+ * @returns {Promise<any>}
+ * @example
+ *
+ * analytics.plugins.disable('google').then(() => {
+ *   console.log('do stuff')
+ * })
+ *
+ * analytics.plugins.disable(['google', 'segment']).then(() => {
+ *   console.log('do stuff')
+ * })
+ */
+
+/**
+ * Async Management methods for plugins.
+ *
+ * This is also where [custom methods](https://bit.ly/329vFXy) are loaded into the instance.
+ * @typedef {Object} Plugins
+ * @property {EnablePlugin} enable - Enable plugin(s)
+ * @property {DisablePlugin} disable - Disable plugin(s)
+ * @example
+ * // Enable a plugin by namespace
+ * analytics.plugins.enable('keenio')
+ *
+ * // Disable a plugin by namespace
+ * analytics.plugins.disable('google-analytics')
+ */
+
+/**
+ * Identify a user. This will trigger `identify` calls in any installed plugins and will set user data in localStorage
+ * @callback Identify
+ * @param {string} userId - Unique ID of user
+ * @param {any} [traits] - Object of user traits
+ * @param {any} [options] - Options to pass to identify call
+ * @param {(...params: any[]) => any} [callback] - Callback function after identify completes
+ * @returns {Promise<any>}
+ * @example
+ * // Basic user id identify
+ * analytics.identify('xyz-123')
+ *
+ * // Identify with additional traits
+ * analytics.identify('xyz-123', {
+ *   name: 'steve',
+ *   company: 'hello-clicky'
+ * })
+ *
+ * // Fire callback with 2nd or 3rd argument
+ * analytics.identify('xyz-123', () => {
+ *   console.log('do this after identify')
+ * })
+ *
+ * // Disable sending user data to specific analytic tools
+ * analytics.identify('xyz-123', {}, {
+ *   plugins: {
+ *     // disable sending this identify call to segment
+ *     segment: false
+ *   }
+ * })
+ *
+ * // Send user data to only to specific analytic tools
+ * analytics.identify('xyz-123', {}, {
+ *   plugins: {
+ *     // disable this specific identify in all plugins except customerio
+ *     all: false,
+ *     customerio: true
+ *   }
+ * })
+ */
+
+/**
+ * Track an analytics event. This will trigger `track` calls in any installed plugins
+ * @callback Track
+ * @param {string} eventName - Event name
+ * @param {any} [payload] - Event payload
+ * @param {any} [options] - Event options
+ * @param {(...params: any[]) => any} [callback] - Callback to fire after tracking completes
+ * @returns {Promise<any>}
+ * @example
+ * // Basic event tracking
+ * analytics.track('buttonClicked')
+ *
+ * // Event tracking with payload
+ * analytics.track('itemPurchased', {
+ *   price: 11,
+ *   sku: '1234'
+ * })
+ *
+ * // Fire callback with 2nd or 3rd argument
+ * analytics.track('newsletterSubscribed', () => {
+ *   console.log('do this after track')
+ * })
+ *
+ * // Disable sending this event to specific analytic tools
+ * analytics.track('cartAbandoned', {
+ *   items: ['xyz', 'abc']
+ * }, {
+ *   plugins: {
+ *     // disable track event for segment
+ *     segment: false
+ *   }
+ * })
+ *
+ * // Send event to only to specific analytic tools
+ * analytics.track('customerIoOnlyEventExample', {
+ *   price: 11,
+ *   sku: '1234'
+ * }, {
+ *   plugins: {
+ *     // disable this specific track call all plugins except customerio
+ *     all: false,
+ *     customerio: true
+ *   }
+ * })
+ */
+
+/**
+ * Trigger page view. This will trigger `page` calls in any installed plugins  
+ * @callback Page
+ * @param {import('./modules/page').PageData} [data] - Page data overrides.
+ * @param {any} [options] - Page tracking options
+ * @param {(...params: any[]) => any} [callback] - Callback to fire after page view call completes
+ * @returns {Promise<any>}
+ * @example
+ * // Basic page tracking
+ * analytics.page()
+ *
+ * // Page tracking with page data overrides
+ * analytics.page({
+ *   url: 'https://google.com'
+ * })
+ *
+ * // Fire callback with 1st, 2nd or 3rd argument
+ * analytics.page(() => {
+ *   console.log('do this after page')
+ * })
+ *
+ * // Disable sending this pageview to specific analytic tools
+ * analytics.page({}, {
+ *   plugins: {
+ *     // disable page tracking event for segment
+ *     segment: false
+ *   }
+ * })
+ *
+ * // Send pageview to only to specific analytic tools
+ * analytics.page({}, {
+ *   plugins: {
+ *     // disable this specific page in all plugins except customerio
+ *     all: false,
+ *     customerio: true
+ *   }
+ * })
+ */
+
+/**
+ * Get user data
+ * @callback User
+ * @param {string} [key] - dot.prop.path of user data. Example: 'traits.company.name'
+ * @returns {string & any}
+ * @example
+ * // Get all user data
+ * const userData = analytics.user()
+ *
+ * // Get user id
+ * const userId = analytics.user('userId')
+ *
+ * // Get user company name
+ * const companyName = analytics.user('traits.company.name')
+ */
+
+/**
+ * Clear all information about the visitor & reset analytic state.
+ * @callback Reset
+ * @param {(...params: any[]) => any} [callback] - Handler to run after reset
+ * @returns {Promise<any>}
+ * @example
+ * // Reset current visitor
+ * analytics.reset()
+ */
+
+/**
+ * Fire callback on analytics ready event
+ * @callback Ready
+ * @param {(...params: any[]) => any} callback - function to trigger when all providers have loaded
+ * @returns {DetachListeners}
+ * @example
+ * analytics.ready((payload) => {
+ *   console.log('all plugins have loaded or were skipped', payload);
+ * })
+ */
+
+/**
+ * Attach an event handler function for analytics lifecycle events.
+ * @callback On
+ * @param {string} name - Name of event to listen to
+ * @param {(...params: any[]) => any} callback - function to fire on event
+ * @returns {DetachListeners}
+ * @example
+ * // Fire function when 'track' calls happen
+ * analytics.on('track', ({ payload }) => {
+ *   console.log('track call just happened. Do stuff')
+ * })
+ *
+ * // Remove listener before it is called
+ * const removeListener = analytics.on('track', ({ payload }) => {
+ *   console.log('This will never get called')
+ * })
+ *
+ * // cleanup .on listener
+ * removeListener()
+ */
+
+/**
+ * Detach listeners function
+ * @callback DetachListeners
+ * @returns {void}
+ */
+
+/**
+ * Attach a handler function to an event and only trigger it once.
+ * @callback Once
+ * @param {string} name - Name of event to listen to
+ * @param {(...params: any[]) => any} callback - function to fire on event
+ * @returns {DetachListeners}
+ * @example
+ * // Fire function only once per 'track'
+ * analytics.once('track', ({ payload }) => {
+ *   console.log('This is only triggered once when analytics.track() fires')
+ * })
+ *
+ * // Remove listener before it is called
+ * const listener = analytics.once('track', ({ payload }) => {
+ *   console.log('This will never get called b/c listener() is called')
+ * })
+ *
+ * // cleanup .once listener before it fires
+ * listener()
+ */
+
+/**
+ * Get data about user, activity, or context. Access sub-keys of state with `dot.prop` syntax.
+ * @callback GetState
+ * @param {string} [key] - dot.prop.path value of state
+ * @returns {any}
+ * @example
+ * // Get the current state of analytics
+ * analytics.getState()
+ *
+ * // Get a subpath of state
+ * analytics.getState('context.offline')
+ */
+
+/**
+ * Storage utilities for persisting data.
+ * These methods will allow you to save data in localStorage, cookies, or to the window.
+ * @typedef {Object} Storage
+ * @property {GetItem} getItem - Get value from storage
+ * @property {SetItem} setItem - Set storage value
+ * @property {RemoveItem} removeItem - Remove storage value
+ * @example
+ * // Pull storage off analytics instance
+ * const { storage } = analytics
+ *
+ * // Get value
+ * storage.getItem('storage_key')
+ *
+ * // Set value
+ * storage.setItem('storage_key', 'value')
+ *
+ * // Remove value
+ * storage.removeItem('storage_key')
+ */
+
+/**
+ * Analytic instance returned from initialization
+ * @typedef {Object} AnalyticsInstance
+ * @property {Identify} identify - Identify a user
+ * @property {Track} track - Track an analytics event
+ * @property {Page} page - Trigger page view
+ * @property {User} user - Get user data
+ * @property {Reset} reset - Clear information about user & reset analytics
+ * @property {Ready} ready - Fire callback on analytics ready event
+ * @property {On} on - Fire callback on analytics lifecycle events.
+ * @property {Once} once - Fire callback on analytics lifecycle events once.
+ * @property {GetState} getState - Get data about user, activity, or context.
+ * @property {Storage} storage - storage methods
+ * @property {Plugins} plugins - plugin methods
+ */
+
+/**
+ * Async reduce over matched plugin methods
+ * Fires plugin functions
+ * @function processEvent
+ * @returns {void}
+ */
+
+/**
+ * Return array of event names
+ * @function getEventNames
+ * @param {string} eventType - original event type
+ * @param {string} namespace - optional namespace postfix
+ * @returns {any[]} - type, method, end
+ */
+
+/**
+ * Generate arguments to pass to plugin methods
+ * @function argumentFactory
+ * @param {any} instance - analytics instance
+ * @param {any[]} abortablePlugins - plugins that can be cancelled by caller
+ * @returns {any} function to inject plugin params
+ */
+
+/**
+ * Verify plugin is not calling itself with whatever:myPluginName self refs
+ * @function validateMethod
+ * @returns {void}
+ */
+
+/**
+ * Page data base interface
+ * @typedef {Object} PageDataBase
+ * @property {string} [title] - Page title
+ * @property {string} [url] - Page url
+ * @property {string} [path] - Page path
+ * @property {string} [search] - Page search
+ * @property {string} [width] - Page width
+ * @property {string} [height] - Page height
+ */
+
+/**
+ * Page data with optional custom properties
+ * @template {string} [T=string]
+ * @typedef {PageDataBase & Record<T, unknown>} PageData
+ */
+
+/**
+ * Get information about current page
+ * @function getPageData
+ * @param {PageData} [pageData={}] - Page data overrides
+ * @returns {PageData}
+ */
+
+/**
+ * Return the canonical URL and remove the hash.
+ * @function currentUrl
+ * @param {string} search - search param
+ * @returns {string} return current canonical URL
+ */
 
 /**
  * Analytics library configuration
  *
  * After the library is initialized with config, the core API is exposed & ready for use in the application.
  *
- * @param {object} config - analytics core config
- * @param {string} [config.app] - Name of site / app
- * @param {string|number} [config.version] - Version of your app
- * @param {boolean} [config.debug] - Should analytics run in debug mode
- * @param {Array.<AnalyticsPlugin>}  [config.plugins] - Array of analytics plugins
- * @return {AnalyticsInstance} Analytics Instance
+ * @param {AnalyticsConfig} [config={}] - analytics core config
+ * @returns {AnalyticsInstance} Analytics Instance
  * @example
  *
  * import Analytics from 'analytics'
@@ -54,7 +500,7 @@ import './pluginTypeDef'
 function analytics(config = {}) {
   const customReducers = config.reducers || {}
   const initialUser = config.initialUser || {}
-  // @TODO add custom value reolvers for userId and anonId
+  // @TODO add custom value resolvers for userId and anonId
   // const resolvers = config.resolvers || {}
   // if (BROWSER) {
   //   console.log('INIT browser')
@@ -84,7 +530,7 @@ function analytics(config = {}) {
 
     const enabledFromMerge = !(plugin.enabled === false)
     const enabledFromPluginConfig = !(plugin.config.enabled === false)
-    // top level { enabled: false } takes presidence over { config: enabled: false }
+    // top level { enabled: false } takes precedence over { config: enabled: false }
     acc.pluginEnabled[plugin.name] = enabledFromMerge && enabledFromPluginConfig
     delete plugin.enabled
 
@@ -134,7 +580,7 @@ function analytics(config = {}) {
 
   const getUserProp = getUserPropFunc(storage)
 
-  // mutable intregrations object for dynamic loading
+  // mutable integrations object for dynamic loading
   let customPlugins = parsedOptions.plugins
 
   /* Grab all registered events from plugins loaded */
@@ -179,13 +625,10 @@ function analytics(config = {}) {
    * Async Management methods for plugins. 
    * 
    * This is also where [custom methods](https://bit.ly/329vFXy) are loaded into the instance.
-   * @typedef {Object} Plugins
-   * @property {EnablePlugin} enable - Set storage value
-   * @property {DisablePlugin} disable - Remove storage value
    * @example
    *
    * // Enable a plugin by namespace
-   * analytics.plugins.enable('keenio')
+   * analytics.plugins.enable('hubspot')
    *
    * // Disable a plugin by namespace
    * analytics.plugins.disable('google-analytics')
@@ -193,10 +636,9 @@ function analytics(config = {}) {
   const plugins = {
     /**
      * Enable analytics plugin
-     * @typedef {Function} EnablePlugin
-     * @param  {string|string[]} plugins - name of plugins(s) to disable
-     * @param  {Function} [callback] - callback after enable runs
-     * @returns {Promise}
+     * @param {string|string[]} plugins - name of plugins(s) to enable
+     * @param {Callback} [callback] - callback after enable runs
+     * @returns {Promise<void>}
      * @example
      *
      * analytics.plugins.enable('google-analytics').then(() => {
@@ -219,10 +661,9 @@ function analytics(config = {}) {
     },
     /**
      * Disable analytics plugin
-     * @typedef {Function} DisablePlugin
-     * @param  {string|string[]} plugins - name of integration(s) to disable
-     * @param  {Function} [callback] - callback after disable runs
-     * @returns {Promise}
+     * @param {string|string[]} plugins - name of integration(s) to disable
+     * @param {Callback} [callback] - callback after disable runs
+     * @returns {Promise<void>}
      * @example
      *
      * analytics.plugins.disable('google').then(() => {
@@ -278,29 +719,16 @@ function analytics(config = {}) {
   let readyCalled = false
   /**
    * Analytic instance returned from initialization
-   * @typedef {Object} AnalyticsInstance
-   * @property {Identify} identify - Identify a user
-   * @property {Track} track - Track an analytics event
-   * @property {Page} page - Trigger page view
-   * @property {User} user - Get user data
-   * @property {Reset} reset - Clear information about user & reset analytics
-   * @property {Ready} ready - Fire callback on analytics ready event
-   * @property {On} on - Fire callback on analytics lifecycle events.
-   * @property {Once} once - Fire callback on analytics lifecycle events once.
-   * @property {GetState} getState - Get data about user, activity, or context.
-   * @property {Storage} storage - storage methods
-   * @property {Plugins} plugins - plugin methods
+   * @type {AnalyticsInstance}
    */
   const instance = {
     /**
     * Identify a user. This will trigger `identify` calls in any installed plugins and will set user data in localStorage
-    * @typedef {Function} Identify
-    * @param  {String}   userId  - Unique ID of user
-    * @param  {Object}   [traits]  - Object of user traits
-    * @param  {Object}   [options] - Options to pass to identify call
-    * @param  {Function} [callback] - Callback function after identify completes
-    * @returns {Promise}
-    * @api public
+    * @param {string|Object} [userId] - Unique ID of user or traits object
+    * @param {Object} [traits] - Object of user traits
+    * @param {Object} [options] - Options to pass to identify call
+    * @param {Callback} [callback] - Callback function after identify completes
+    * @returns {Promise<void>}
     *
     * @example
     *
@@ -360,13 +788,11 @@ function analytics(config = {}) {
     },
     /**
      * Track an analytics event. This will trigger `track` calls in any installed plugins
-     * @typedef {Function} Track
-     * @param  {String}   eventName - Event name
-     * @param  {Object}   [payload]   - Event payload
-     * @param  {Object}   [options]   - Event options
-     * @param  {Function} [callback]  - Callback to fire after tracking completes
-     * @returns {Promise}
-     * @api public
+     * @param {string} eventName - Event name
+     * @param {Object} [payload] - Event payload
+     * @param {Object} [options] - Event options
+     * @param {Callback} [callback] - Callback to fire after tracking completes
+     * @returns {Promise<void>}
      *
      * @example
      *
@@ -428,7 +854,7 @@ function analytics(config = {}) {
     /**
      * Trigger page view. This will trigger `page` calls in any installed plugins
      * @typedef {Function} Page
-     * @param  {PageData} [data] - Page data overrides.
+     * @param  {import('./modules/page').PageData} [data] - Page data overrides.
      * @param  {Object}   [options] - Page tracking options
      * @param  {Function} [callback] - Callback to fire after page view call completes
      * @returns {Promise}
@@ -471,7 +897,7 @@ function analytics(config = {}) {
       const opts = isObject(options) ? options : {}
 
       /*
-      // @TODO add custom value reolvers for userId and anonId
+      // @TODO add custom value resolvers for userId and anonId
       if (resolvers.getUserId) {
         const asyncUserId = await resolvers.getUserId()
         console.log('x', x)
@@ -720,13 +1146,13 @@ function analytics(config = {}) {
       }
       store.dispatch(dispatchData)
     },
-    // Do not use. Will be removed. Here for Backwards compatiblity.
+    // Do not use. Will be removed. Here for Backwards compatibility.
     // Moved to analytics.plugins.enable
     enablePlugin: plugins.enable,
-    /// Do not use. Will be removed. Here for Backwards compatiblity.
+    /// Do not use. Will be removed. Here for Backwards compatibility.
     /// Moved to analytics.plugins.disable
     disablePlugin: plugins.disable,
-    // Do not use. Will be removed. Here for Backwards compatiblity.
+    // Do not use. Will be removed. Here for Backwards compatibility.
     // New plugins api
     plugins: plugins,
     /**
@@ -754,7 +1180,6 @@ function analytics(config = {}) {
     storage: {
       /**
        * Get value from storage
-       * @typedef {Function} GetItem
        * @param {String} key - storage key
        * @param {Object} [options] - storage options
        * @return {Any}
@@ -766,7 +1191,6 @@ function analytics(config = {}) {
       getItem: storage.getItem,
       /**
        * Set storage value
-       * @typedef {Function} SetItem
        * @param {String} key - storage key
        * @param {any} value - storage value
        * @param {Object} [options] - storage options
@@ -785,7 +1209,6 @@ function analytics(config = {}) {
       },
       /**
        * Remove storage value
-       * @typedef {Function} RemoveItem
        * @param {String} key - storage key
        * @param {Object} [options] - storage options
        *
@@ -874,7 +1297,7 @@ function analytics(config = {}) {
 
   const initialConfig = makeContext(config)
 
-  const intialPluginState = parsedOptions.pluginsArray.reduce((acc, plugin) => {
+  const initialPluginState = parsedOptions.pluginsArray.reduce((acc, plugin) => {
     const { name, config, loaded } = plugin
     const isEnabled = parsedOptions.pluginEnabled[name]
     acc[name] = {
@@ -890,7 +1313,7 @@ function analytics(config = {}) {
   const initialState = {
     context: initialConfig,
     user: visitorInfo,
-    plugins: intialPluginState,
+    plugins: initialPluginState,
     // Todo allow for more userland defined initial state?
   }
 

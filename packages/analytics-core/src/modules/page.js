@@ -24,7 +24,7 @@ function urlPath(url) {
 }
 
 /**
- * Return the canonical URL and rmove the hash.
+ * Return the canonical URL and remove the hash.
  * @param  {string} search - search param
  * @return {string} return current canonical URL
  */
@@ -35,21 +35,22 @@ function currentUrl(search) {
 }
 
 /**
- * Page data for overides
- * @typedef {object} PageData
+ * Page data structure
+ * @typedef {Object} PageData
  * @property {string} [title] - Page title
- * @property {string} [url] - Page url
+ * @property {string} [url] - Page URL
  * @property {string} [path] - Page path
- * @property {string} [search] - Page search
- * @property {string} [width] - Page width
- * @property {string} [height] - Page height
-*/
+ * @property {string} [referrer] - Page referrer
+ * @property {string} [search] - URL search parameters
+ * @property {string} [hash] - URL hash
+ * @property {number} [width] - Screen width
+ * @property {number} [height] - Screen height
+ */
 
 /**
  * Get information about current page
- * @typedef {Function} getPageData
- * @param  {PageData} [pageData = {}] - Page data overides
- * @return {PageData} resolved page data
+ * @param {PageData} [pageData={}] - Page data overrides
+ * @returns {PageData} resolved page data
  */
 export const getPageData = (pageData = {}) => {
   if (!isBrowser) return pageData
@@ -72,7 +73,7 @@ export const getPageData = (pageData = {}) => {
 
   return {
     ...page,
-    /* .page() user overrrides */
+    /* .page() user overrides */
     ...pageData
   }
 }
