@@ -1,22 +1,25 @@
-import test from 'ava'
+import '../_setup.js'
+import { test } from 'uvu'
+import * as assert from 'uvu/assert'
 import sinon from 'sinon'
-import delay from '../_utils/delay'
-import Analytics from '../../src'
+import delay from '../_utils/delay.js'
+import Analytics from '../../src/index.js'
 
-test.beforeEach((t) => {
-  t.context.sandbox = sinon.createSandbox()
+let sandbox
+
+test.before(() => {
+  sandbox = sinon.createSandbox()
 })
 
-test('should call .on listenering in correct order', async (t) => {
+test('should call .on listenering in correct order', async () => {
   const executionOrder = []
   const pageExecutionOrder = []
-  const { context } = t
-  const pageSpy = context.sandbox.spy()
-  const pageSpyTwo = context.sandbox.spy()
-  const onPageStartSpy = context.sandbox.spy()
-  const onPageSpy = context.sandbox.spy()
-  const onPageEndSpy = context.sandbox.spy()
-  const onPageCallback = context.sandbox.spy()
+  const pageSpy = sandbox.spy()
+  const pageSpyTwo = sandbox.spy()
+  const onPageStartSpy = sandbox.spy()
+  const onPageSpy = sandbox.spy()
+  const onPageEndSpy = sandbox.spy()
+  const onPageCallback = sandbox.spy()
 
   const analytics = Analytics({
     app: 'appname',
@@ -61,28 +64,27 @@ test('should call .on listenering in correct order', async (t) => {
   await delay(100)
 
   // Ensure the page was called
-  t.deepEqual(pageSpy.callCount, 1)
+  assert.equal(pageSpy.callCount, 1)
 
   // Ensure the listeners callbacks are called only once
-  t.deepEqual(onPageStartSpy.callCount, 1)
-  t.deepEqual(onPageSpy.callCount, 1)
-  t.deepEqual(onPageEndSpy.callCount, 1)
+  assert.equal(onPageStartSpy.callCount, 1)
+  assert.equal(onPageSpy.callCount, 1)
+  assert.equal(onPageEndSpy.callCount, 1)
 
   // Ensure callback gets called
-  t.deepEqual(onPageCallback.callCount, 1)
+  assert.equal(onPageCallback.callCount, 1)
 
   // Ensure the callbacks are called in the correct order
-  t.deepEqual(pageExecutionOrder, [1, 2])
+  assert.equal(pageExecutionOrder, [1, 2])
 
   // Ensure the callbacks are called in the correct order
-  t.deepEqual(executionOrder, [1, 2, 3, 4])
+  assert.equal(executionOrder, [1, 2, 3, 4])
 })
 
-test('should call .once listeners only once', async (t) => {
-  const { context } = t
-  const pageSpy = context.sandbox.spy()
-  const onPageSpy = context.sandbox.spy()
-  const oncePageSpy = context.sandbox.spy()
+test('should call .once listeners only once', async () => {
+  const pageSpy = sandbox.spy()
+  const onPageSpy = sandbox.spy()
+  const oncePageSpy = sandbox.spy()
 
   const analytics = Analytics({
     app: 'appname',
@@ -106,9 +108,11 @@ test('should call .once listeners only once', async (t) => {
   // Timeout for async actions to fire
   await delay(100)
 
-  t.is(pageSpy.callCount, 2)
+  assert.is(pageSpy.callCount, 2)
 
-  t.is(onPageSpy.callCount, 2)
+  assert.is(onPageSpy.callCount, 2)
 
-  t.is(oncePageSpy.callCount, 1)
+  assert.is(oncePageSpy.callCount, 1)
 })
+
+test.run()

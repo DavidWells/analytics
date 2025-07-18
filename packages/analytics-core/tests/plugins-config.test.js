@@ -1,12 +1,16 @@
-import test from 'ava'
+import './_setup.js'
+import { test } from 'uvu'
+import * as assert from 'uvu/assert'
 import sinon from 'sinon'
-import Analytics from '../src'
+import Analytics from '../src/index.js'
 
-test.beforeEach((t) => {
-  t.context.sandbox = sinon.createSandbox()
+let sandbox
+
+test.before(() => {
+  sandbox = sinon.createSandbox()
 })
 
-test.cb('Plugins should have correct config in methods', (t) => {
+test('Plugins should have correct config in methods', async () => {
   let valueOne
   let valueTwo
   const analytics = Analytics({
@@ -32,9 +36,10 @@ test.cb('Plugins should have correct config in methods', (t) => {
     ]
   })
 
-  analytics.page(() => {
-    t.is(valueOne, 'A')
-    t.is(valueTwo, 'B')
-    t.end()
-  })
+  await analytics.page()
+  
+  assert.is(valueOne, 'A')
+  assert.is(valueTwo, 'B')
 })
+
+test.run()

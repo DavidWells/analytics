@@ -1,20 +1,24 @@
-import test from 'ava'
+import './_setup.js'
+import { test } from 'uvu'
+import * as assert from 'uvu/assert'
 import sinon from 'sinon'
-import delay from './_utils/delay'
-import Analytics from '../src'
+import delay from './_utils/delay.js'
+import Analytics from '../src/index.js'
 
 /* Tests for single scoped calls
    https://getanalytics.io/tutorials/sending-provider-specific-events/
 */
 
-test.beforeEach((t) => {
-  t.context.sandbox = sinon.createSandbox()
+let sandbox
+
+test.before(() => {
+  sandbox = sinon.createSandbox()
 })
 
-test('No plugins get called if config.plugins.all set to false', async (t) => {
-  const dummyOne = t.context.sandbox.spy()
-  const dummyTwo = t.context.sandbox.spy()
-  const dummyThree = t.context.sandbox.spy()
+test('No plugins get called if config.plugins.all set to false', async () => {
+  const dummyOne = sandbox.spy()
+  const dummyTwo = sandbox.spy()
+  const dummyThree = sandbox.spy()
 
   const analytics = Analytics({
     app: 'appname',
@@ -54,16 +58,16 @@ test('No plugins get called if config.plugins.all set to false', async (t) => {
   await delay(100)
 
   // Verify no plugin methods have been called
-  t.is(dummyOne.callCount, 0)
-  t.is(dummyTwo.callCount, 0)
-  t.is(dummyThree.callCount, 0)
+  assert.is(dummyOne.callCount, 0)
+  assert.is(dummyTwo.callCount, 0)
+  assert.is(dummyThree.callCount, 0)
 })
 
-test('Single destination via config.plugins.all false works', async (t) => {
-  const dummyOne = t.context.sandbox.spy()
-  const dummyTwo = t.context.sandbox.spy()
-  const dummyThree = t.context.sandbox.spy()
-  const activePlugin = t.context.sandbox.spy()
+test('Single destination via config.plugins.all false works', async () => {
+  const dummyOne = sandbox.spy()
+  const dummyTwo = sandbox.spy()
+  const dummyThree = sandbox.spy()
+  const activePlugin = sandbox.spy()
 
   const analytics = Analytics({
     app: 'appname',
@@ -104,17 +108,17 @@ test('Single destination via config.plugins.all false works', async (t) => {
   await delay(100)
 
   // Verify no plugin methods have been called
-  t.is(dummyOne.callCount, 0)
-  t.is(dummyTwo.callCount, 0)
-  t.is(dummyThree.callCount, 0)
-  t.is(activePlugin.callCount, 3)
+  assert.is(dummyOne.callCount, 0)
+  assert.is(dummyTwo.callCount, 0)
+  assert.is(dummyThree.callCount, 0)
+  assert.is(activePlugin.callCount, 3)
 })
 
-test('Disable Single destination via config.plugins[name] false works', async (t) => {
-  const dummyOne = t.context.sandbox.spy()
-  const dummyTwo = t.context.sandbox.spy()
-  const dummyThree = t.context.sandbox.spy()
-  const disabledPlugin = t.context.sandbox.spy()
+test('Disable Single destination via config.plugins[name] false works', async () => {
+  const dummyOne = sandbox.spy()
+  const dummyTwo = sandbox.spy()
+  const dummyThree = sandbox.spy()
+  const disabledPlugin = sandbox.spy()
 
   const analytics = Analytics({
     app: 'appname',
@@ -154,18 +158,18 @@ test('Disable Single destination via config.plugins[name] false works', async (t
   await delay(100)
 
   // Verify no plugin methods have been called
-  t.is(dummyOne.callCount, 2)
-  t.is(dummyTwo.callCount, 2)
-  t.is(dummyThree.callCount, 2)
-  t.is(disabledPlugin.callCount, 0)
+  assert.is(dummyOne.callCount, 2)
+  assert.is(dummyTwo.callCount, 2)
+  assert.is(dummyThree.callCount, 2)
+  assert.is(disabledPlugin.callCount, 0)
 })
 
-test('Multiple destinations works', async (t) => {
-  const dummyOne = t.context.sandbox.spy()
-  const dummyTwo = t.context.sandbox.spy()
-  const dummyThree = t.context.sandbox.spy()
-  const activePlugin = t.context.sandbox.spy()
-  const activePluginTwo = t.context.sandbox.spy()
+test('Multiple destinations works', async () => {
+  const dummyOne = sandbox.spy()
+  const dummyTwo = sandbox.spy()
+  const dummyThree = sandbox.spy()
+  const activePlugin = sandbox.spy()
+  const activePluginTwo = sandbox.spy()
 
 
   const analytics = Analytics({
@@ -215,9 +219,11 @@ test('Multiple destinations works', async (t) => {
   await delay(100)
 
   // Verify no plugin methods have been called
-  t.is(dummyOne.callCount, 0)
-  t.is(dummyTwo.callCount, 0)
-  t.is(dummyThree.callCount, 0)
-  t.is(activePlugin.callCount, 3)
-  t.is(activePluginTwo.callCount, 3)
+  assert.is(dummyOne.callCount, 0)
+  assert.is(dummyTwo.callCount, 0)
+  assert.is(dummyThree.callCount, 0)
+  assert.is(activePlugin.callCount, 3)
+  assert.is(activePluginTwo.callCount, 3)
 })
+
+test.run()

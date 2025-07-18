@@ -1,18 +1,22 @@
-import test from 'ava'
+import '../_setup.js'
+import { test } from 'uvu'
+import * as assert from 'uvu/assert'
 import sinon from 'sinon'
-import delay from '../_utils/delay'
-import Analytics from '../../src'
+import delay from '../_utils/delay.js'
+import Analytics from '../../src/index.js'
 
-test.beforeEach((t) => {
-  t.context.sandbox = sinon.createSandbox()
+let sandbox
+
+test.before(() => {
+  sandbox = sinon.createSandbox()
 })
 
-test('should call .on listeners & callback if no plugins', async (t) => {
+test('should call .on listeners & callback if no plugins', async () => {
   const executionOrder = []
-  const onPageStartSpy = t.context.sandbox.spy()
-  const onPageSpy = t.context.sandbox.spy()
-  const onPageEndSpy = t.context.sandbox.spy()
-  const onPageCallback = t.context.sandbox.spy()
+  const onPageStartSpy = sandbox.spy()
+  const onPageSpy = sandbox.spy()
+  const onPageEndSpy = sandbox.spy()
+  const onPageCallback = sandbox.spy()
 
   const analytics = Analytics({
     app: 'appname',
@@ -41,13 +45,15 @@ test('should call .on listeners & callback if no plugins', async (t) => {
   await delay(100)
 
   // Ensure the listeners callbacks are called only once
-  t.deepEqual(onPageStartSpy.callCount, 1)
-  t.deepEqual(onPageSpy.callCount, 1)
-  t.deepEqual(onPageEndSpy.callCount, 1)
+  assert.equal(onPageStartSpy.callCount, 1)
+  assert.equal(onPageSpy.callCount, 1)
+  assert.equal(onPageEndSpy.callCount, 1)
 
   // Ensure callback gets called
-  t.deepEqual(onPageCallback.callCount, 1)
+  assert.equal(onPageCallback.callCount, 1)
 
   // Ensure the callbacks are called in the correct order
-  t.deepEqual(executionOrder, [1, 2, 3, 4])
+  assert.equal(executionOrder, [1, 2, 3, 4])
 })
+
+test.run()

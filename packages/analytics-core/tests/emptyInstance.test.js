@@ -1,16 +1,23 @@
-import test from 'ava'
+import './_setup.js'
+import { test } from 'uvu'
+import * as assert from 'uvu/assert'
 import sinon from 'sinon'
-import delay from './_utils/delay'
-import Analytics from '../src'
+import delay from './_utils/delay.js'
+import Analytics from '../src/index.js'
 
-test.beforeEach((t) => {
-  t.context.sandbox = sinon.createSandbox()
+let sandbox
+
+test.before(() => {
+  sandbox = sinon.createSandbox()
 })
 
-test.only('On listener and callback should still fire if no plugins', async (t) => {
-  const { context } = t
-  const onPageSpy = context.sandbox.spy()
-  const pageCallbackSpy = context.sandbox.spy()
+test.after(() => {
+  sandbox.restore()
+})
+
+test('On listener and callback should still fire if no plugins', async () => {
+  const onPageSpy = sandbox.spy()
+  const pageCallbackSpy = sandbox.spy()
 
   const analytics = Analytics()
 
@@ -22,6 +29,8 @@ test.only('On listener and callback should still fire if no plugins', async (t) 
   // Timeout for async actions to fire
   await delay(100)
 
-  t.is(pageCallbackSpy.callCount, 1)
-  t.is(onPageSpy.callCount, 3)
+  assert.is(pageCallbackSpy.callCount, 1)
+  assert.is(onPageSpy.callCount, 3)
 })
+
+test.run()

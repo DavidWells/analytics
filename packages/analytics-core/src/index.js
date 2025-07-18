@@ -1,27 +1,28 @@
-import { uuid, paramsParse, dotProp } from 'analytics-utils'
+import analyticsUtils from 'analytics-utils'
+const { uuid, paramsParse, dotProp } = analyticsUtils
 import { get, set, remove } from '@analytics/global-storage-utils'
 import { isBrowser, isFunction, isObject, isString } from '@analytics/type-utils'
-import { createStore, combineReducers, applyMiddleware, compose } from './vendor/redux'
-import * as CONSTANTS from './constants'
-import { ID, ANONID, ERROR_URL } from './utils/internalConstants'
-import EVENTS, { coreEvents, nonEvents, isReservedAction } from './events'
+import { createStore, combineReducers, applyMiddleware, compose } from './vendor/redux/index.js'
+import * as CONSTANTS from './constants.js'
+import { ID, ANONID, ERROR_URL } from './utils/internalConstants.js'
+import EVENTS, { coreEvents, nonEvents, isReservedAction } from './events.js'
 // Middleware
-import * as middleware from './middleware'
-import DynamicMiddleware from './middleware/dynamic'
+import * as middleware from './middleware/index.js'
+import DynamicMiddleware from './middleware/dynamic.js'
 // Modules
-import pluginsMiddleware from './modules/plugins'
-import track from './modules/track'
-import queue from './modules/queue'
-import page, { getPageData } from './modules/page'
-import context, { makeContext } from './modules/context'
-import user, { getUserPropFunc, tempKey, getPersistedUserData } from './modules/user'
+import pluginsMiddleware from './modules/plugins.js'
+import track from './modules/track.js'
+import queue from './modules/queue.js'
+import page, { getPageData } from './modules/page.js'
+import context, { makeContext } from './modules/context.js'
+import user, { getUserPropFunc, tempKey, getPersistedUserData } from './modules/user.js'
 /* Utils */
-import { watch } from './utils/handleNetworkEvents'
-import { Debug, composeWithDebug } from './utils/debug'
-import heartBeat from './utils/heartbeat'
-import ensureArray from './utils/ensureArray'
-import enrichMeta from './utils/enrichMeta'
-import './pluginTypeDef'
+import { watch } from './utils/handleNetworkEvents.js'
+import { Debug, composeWithDebug } from './utils/debug.js'
+import heartBeat from './utils/heartbeat.js'
+import ensureArray from './utils/ensureArray.js'
+import enrichMeta from './utils/enrichMeta.js'
+import './pluginTypeDef.js'
 
 
 /**
@@ -54,7 +55,7 @@ import './pluginTypeDef'
 function analytics(config = {}) {
   const customReducers = config.reducers || {}
   const initialUser = config.initialUser || {}
-  // @TODO add custom value reolvers for userId and anonId
+  // @TODO add custom value resolvers for userId and anonId
   // const resolvers = config.resolvers || {}
   // if (BROWSER) {
   //   console.log('INIT browser')
@@ -84,7 +85,7 @@ function analytics(config = {}) {
 
     const enabledFromMerge = !(plugin.enabled === false)
     const enabledFromPluginConfig = !(plugin.config.enabled === false)
-    // top level { enabled: false } takes presidence over { config: enabled: false }
+    // top level { enabled: false } takes precedence over { config: enabled: false }
     acc.pluginEnabled[plugin.name] = enabledFromMerge && enabledFromPluginConfig
     delete plugin.enabled
 
@@ -134,7 +135,7 @@ function analytics(config = {}) {
 
   const getUserProp = getUserPropFunc(storage)
 
-  // mutable intregrations object for dynamic loading
+  // mutable integrations object for dynamic loading
   let customPlugins = parsedOptions.plugins
 
   /* Grab all registered events from plugins loaded */
@@ -471,7 +472,7 @@ function analytics(config = {}) {
       const opts = isObject(options) ? options : {}
 
       /*
-      // @TODO add custom value reolvers for userId and anonId
+      // @TODO add custom value resolvers for userId and anonId
       if (resolvers.getUserId) {
         const asyncUserId = await resolvers.getUserId()
         console.log('x', x)
@@ -549,7 +550,7 @@ function analytics(config = {}) {
       // If ready already fired. Call callback immediately
       if (readyCalled) callback({ plugins, instance })
       return instance.on(EVENTS.ready, (x) => {
-        callback(x)
+        if (callback) callback(x)
         readyCalled = true
       })
     },
@@ -720,13 +721,13 @@ function analytics(config = {}) {
       }
       store.dispatch(dispatchData)
     },
-    // Do not use. Will be removed. Here for Backwards compatiblity.
+    // Do not use. Will be removed. Here for Backwards compatibility.
     // Moved to analytics.plugins.enable
     enablePlugin: plugins.enable,
-    /// Do not use. Will be removed. Here for Backwards compatiblity.
+    /// Do not use. Will be removed. Here for Backwards compatibility.
     /// Moved to analytics.plugins.disable
     disablePlugin: plugins.disable,
-    // Do not use. Will be removed. Here for Backwards compatiblity.
+    // Do not use. Will be removed. Here for Backwards compatibility.
     // New plugins api
     plugins: plugins,
     /**
@@ -874,7 +875,7 @@ function analytics(config = {}) {
 
   const initialConfig = makeContext(config)
 
-  const intialPluginState = parsedOptions.pluginsArray.reduce((acc, plugin) => {
+  const initialPluginState = parsedOptions.pluginsArray.reduce((acc, plugin) => {
     const { name, config, loaded } = plugin
     const isEnabled = parsedOptions.pluginEnabled[name]
     acc[name] = {
@@ -890,7 +891,7 @@ function analytics(config = {}) {
   const initialState = {
     context: initialConfig,
     user: visitorInfo,
-    plugins: intialPluginState,
+    plugins: initialPluginState,
     // Todo allow for more userland defined initial state?
   }
 

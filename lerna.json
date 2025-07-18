@@ -1,6 +1,8 @@
 {
   "packages": [
-    "packages/*"
+    "packages/*",
+    "!packages/analytics-core/client",
+    "!packages/analytics-core/server"
   ],
   "version": "independent",
   "command": {

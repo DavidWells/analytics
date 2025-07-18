@@ -1,22 +1,25 @@
-const test = require('ava').default
-const analyticsLib = require('../src').default
-const { Analytics, CONSTANTS, EVENTS, init } = require('../src')
+import './_setup.js'
+import { test } from 'uvu'
+import * as assert from 'uvu/assert'
+import analyticsLib, { Analytics, CONSTANTS, EVENTS, init } from '../src/index.js'
 
-test('CJS: const analyticsLib = require(\'../src\').default works', async (t) => {
-  t.is(typeof analyticsLib, 'function')
+test('CJS: const analyticsLib = require(\'../src\').default works', async () => {
+  assert.is(typeof analyticsLib, 'function')
 })
 
-test('CJS: const { Analytics } = require("analytics") works', async (t) => {
-  t.is(typeof Analytics, 'function')
+test('CJS: const { Analytics } = require("analytics") works', async () => {
+  assert.is(typeof Analytics, 'function')
   // Default export and named are the same
-  t.deepEqual(analyticsLib, Analytics)
-  t.deepEqual(analyticsLib, init)
+  assert.equal(analyticsLib, Analytics)
+  assert.equal(analyticsLib, init)
 })
 
-test('CJS: { EVENTS, CONSTANTS, init } export exists ', (t) => {
-  t.is(typeof init, 'function')
-  t.is(typeof EVENTS, 'object')
-  t.is(Array.isArray(EVENTS), false)
-  t.is(typeof CONSTANTS, 'object')
-  t.is(Array.isArray(CONSTANTS), false)
+test('CJS: { EVENTS, CONSTANTS, init } export exists ', () => {
+  assert.is(typeof init, 'function')
+  assert.is(typeof EVENTS, 'object')
+  assert.is(Array.isArray(EVENTS), false)
+  assert.is(typeof CONSTANTS, 'object')
+  assert.is(Array.isArray(CONSTANTS), false)
 })
+
+test.run()

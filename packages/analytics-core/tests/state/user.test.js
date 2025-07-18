@@ -1,51 +1,51 @@
-import test from 'ava'
-import delay from '../_utils/delay'
-import Analytics from '../../src'
+import '../_setup.js'
+import { test } from 'uvu'
+import * as assert from 'uvu/assert'
+import delay from '../_utils/delay.js'
+import Analytics from '../../src/index.js'
 
-test.cb('analytics.user("userId") works', (t) => {
+test('analytics.user("userId") works', async () => {
   const analytics = Analytics({
     app: 'appname',
     version: 100
   })
 
-  analytics.identify('xyz123', () => {
-    const dotProp = analytics.user('userId')
-    t.is(dotProp, 'xyz123')
-    const objectProp = analytics.user().userId
-    t.is(objectProp, 'xyz123')
-    const shorthand = analytics.user('id')
-    t.is(shorthand, 'xyz123')
-    t.end()
-  })
+  await analytics.identify('xyz123')
+  
+  const dotProp = analytics.user('userId')
+  assert.is(dotProp, 'xyz123')
+  const objectProp = analytics.user().userId
+  assert.is(objectProp, 'xyz123')
+  const shorthand = analytics.user('id')
+  assert.is(shorthand, 'xyz123')
 })
 
-test.cb('analytics.user() returns object', (t) => {
+test('analytics.user() returns object', async () => {
   const analytics = Analytics({
     app: 'appname',
     version: 100
   })
 
-  analytics.identify('xyz123', {
+  await analytics.identify('xyz123', {
     level: 'pro',
     color: 'blue'
-  }, () => {
-    const anonId = analytics.user('anonymousId')
-    t.is(analytics.user('userId'), 'xyz123')
-    t.is(analytics.user('traits.color'), 'blue')
-    t.is(analytics.user('traits.level'), 'pro')
-    t.deepEqual(analytics.user(), {
-      userId: 'xyz123',
-      traits: {
-        level: 'pro',
-        color: 'blue'
-      },
-      anonymousId: anonId
-    })
-    t.end()
+  })
+  
+  const anonId = analytics.user('anonymousId')
+  assert.is(analytics.user('userId'), 'xyz123')
+  assert.is(analytics.user('traits.color'), 'blue')
+  assert.is(analytics.user('traits.level'), 'pro')
+  assert.equal(analytics.user(), {
+    userId: 'xyz123',
+    traits: {
+      level: 'pro',
+      color: 'blue'
+    },
+    anonymousId: anonId
   })
 })
 
-test('analytics.reset() clears user details', async (t) => {
+test('analytics.reset() clears user details', async () => {
   const analytics = Analytics({
     app: 'appname',
     version: 100
@@ -57,9 +57,9 @@ test('analytics.reset() clears user details', async (t) => {
   })
 
   // Verify initial values
-  t.is(analytics.user('userId'), 'xyz123')
-  t.is(analytics.user('traits.color'), 'blue')
-  t.is(analytics.user('traits.level'), 'pro')
+  assert.is(analytics.user('userId'), 'xyz123')
+  assert.is(analytics.user('traits.color'), 'blue')
+  assert.is(analytics.user('traits.level'), 'pro')
 
   // const user = analytics.user()
   // console.log('before user', user)
@@ -68,8 +68,8 @@ test('analytics.reset() clears user details', async (t) => {
 
   const userState = analytics.user()
 
-  t.falsy(userState.userId)
-  t.falsy(userState.anonymousId)
+  assert.not.ok(userState.userId)
+  assert.not.ok(userState.anonymousId)
   /*
   console.log('userState userId', userState.userId)
   console.log('userState anonymousId', userState.anonymousId)
@@ -80,8 +80,8 @@ test('analytics.reset() clears user details', async (t) => {
   console.log('state userId', state.user.userId)
   console.log('state anonymousId', state.user.anonymousId)
   /** */
-  t.falsy(state.user.userId)
-  t.falsy(state.user.anonymousId)
+  assert.not.ok(state.user.userId)
+  assert.not.ok(state.user.anonymousId)
   /** */
   // Verify values are removed
   const userId = analytics.user('userId')
@@ -92,11 +92,11 @@ test('analytics.reset() clears user details', async (t) => {
   console.log('anonymousId', anonymousId)
   /** */
  
-  t.falsy(userId)
-  t.falsy(anonymousId)
-  t.deepEqual(analytics.user('traits'), {})
-  t.falsy(analytics.user('traits.color'))
-  t.falsy(analytics.user('traits.level'))
+  assert.not.ok(userId)
+  assert.not.ok(anonymousId)
+  assert.equal(analytics.user('traits'), {})
+  assert.not.ok(analytics.user('traits.color'))
+  assert.not.ok(analytics.user('traits.level'))
 
   
 
@@ -106,8 +106,10 @@ test('analytics.reset() clears user details', async (t) => {
     color: 'red'
   })
 
-  t.truthy(analytics.user(anonymousId))
-  t.is(analytics.user('userId'), 'abc123')
-  t.is(analytics.user('traits.level'), 'basic')
-  t.is(analytics.user('traits.color'), 'red')
+  assert.ok(analytics.user(anonymousId))
+  assert.is(analytics.user('userId'), 'abc123')
+  assert.is(analytics.user('traits.level'), 'basic')
+  assert.is(analytics.user('traits.color'), 'red')
 })
+
+test.run()

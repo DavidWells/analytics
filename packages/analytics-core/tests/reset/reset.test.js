@@ -1,25 +1,29 @@
-import test from 'ava'
+import '../_setup.js'
+import { test } from 'uvu'
+import * as assert from 'uvu/assert'
 import sinon from 'sinon'
-import delay from '../_utils/delay'
-import isPromise from '../_utils/isPromise'
-import Analytics from '../../src'
+import delay from '../_utils/delay.js'
+import isPromise from '../_utils/isPromise.js'
+import Analytics from '../../src/index.js'
 
-test.beforeEach((t) => {
-  t.context.sandbox = sinon.createSandbox()
+let sandbox
+
+test.before(() => {
+  sandbox = sinon.createSandbox()
 })
 
-test('Reset returns promise', async (t) => {
+test('Reset returns promise', async () => {
   const analytics = Analytics({
     app: 'appname',
     version: 100
   })
 
   const promise = analytics.reset()
-  t.is(isPromise(promise), true)
+  assert.is(isPromise(promise), true)
 })
 
-test('Reset callback is called', async (t) => {
-  const callbackFunction = t.context.sandbox.spy()
+test('Reset callback is called', async () => {
+  const callbackFunction = sandbox.spy()
 
   const analytics = Analytics({
     app: 'appname',
@@ -30,10 +34,10 @@ test('Reset callback is called', async (t) => {
     callbackFunction()
   })
 
-  t.is(callbackFunction.callCount, 1)
+  assert.is(callbackFunction.callCount, 1)
 })
 
-test('Reset resets the user data', async (t) => {
+test('Reset resets the user data', async () => {
   const analytics = Analytics({
     app: 'appname',
     version: 100
@@ -41,7 +45,7 @@ test('Reset resets the user data', async (t) => {
 
   const anonId = analytics.user('anonymousId')
 
-  t.truthy(anonId)
+  assert.ok(anonId)
 
   await analytics.identify('xyz-123', {
     name: 'bob'
@@ -49,8 +53,8 @@ test('Reset resets the user data', async (t) => {
 
   const { userId, traits } = analytics.user()
 
-  t.is(userId, 'xyz-123')
-  t.deepEqual(traits, {
+  assert.is(userId, 'xyz-123')
+  assert.equal(traits, {
     name: 'bob'
   })
 
@@ -59,7 +63,9 @@ test('Reset resets the user data', async (t) => {
 
   // Reset clears anon Id
   const userData = analytics.user()
-  t.falsy(userData.anonymousId)
-  t.falsy(userData.userId)
-  t.deepEqual(userData.traits, {})
+  assert.not.ok(userData.anonymousId)
+  assert.not.ok(userData.userId)
+  assert.equal(userData.traits, {})
 })
+
+test.run()

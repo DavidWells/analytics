@@ -1,16 +1,24 @@
-import test from 'ava'
+import '../_setup.js'
+import { test } from 'uvu'
+import * as assert from 'uvu/assert'
 import sinon from 'sinon'
-import delay from '../_utils/delay'
-import Analytics from '../../src'
+import delay from '../_utils/delay.js'
+import Analytics from '../../src/index.js'
 
-test.beforeEach((t) => {
-  t.context.sandbox = sinon.createSandbox()
+let sandbox
+
+test.before(() => {
+  sandbox = sinon.createSandbox()
 })
 
-test.cb('should call page function in plugin', (t) => {
-  const pageSpy = t.context.sandbox.spy()
-  const trackSpy = t.context.sandbox.spy()
-  const identifySpy = t.context.sandbox.spy()
+test.after(() => {
+  sandbox.restore()
+})
+
+test('should call page function in plugin', async () => {
+  const pageSpy = sandbox.spy()
+  const trackSpy = sandbox.spy()
+  const identifySpy = sandbox.spy()
 
   const analytics = Analytics({
     app: 'appname',
@@ -26,16 +34,17 @@ test.cb('should call page function in plugin', (t) => {
   })
 
   analytics.page(() => {
-    t.is(pageSpy.callCount, 1)
-    t.is(trackSpy.callCount, 0)
-    t.is(identifySpy.callCount, 0)
-    t.end()
+    assert.is(pageSpy.callCount, 1)
+    assert.is(trackSpy.callCount, 0)
+    assert.is(identifySpy.callCount, 0)
   })
+  
+  await delay(100)
 })
 
-test('should call .page callback', async (t) => {
-  const pageSpy = t.context.sandbox.spy()
-  const pageCallbackSpy = t.context.sandbox.spy()
+test('should call .page callback', async () => {
+  const pageSpy = sandbox.spy()
+  const pageCallbackSpy = sandbox.spy()
   const analytics = Analytics({
     app: 'appname',
     version: 100,
@@ -51,13 +60,13 @@ test('should call .page callback', async (t) => {
   await delay(100)
   // var args = pageCallbackSpy.getCalls()[0].args
 
-  t.is(pageCallbackSpy.callCount, 1)
-  t.is(pageSpy.callCount, 1)
+  assert.is(pageCallbackSpy.callCount, 1)
+  assert.is(pageSpy.callCount, 1)
 })
 
-test('page state should contain .last && .history', async (t) => {
-  const pageSpy = t.context.sandbox.spy()
-  const pageCallbackSpy = t.context.sandbox.spy()
+test('page state should contain .last && .history', async () => {
+  const pageSpy = sandbox.spy()
+  const pageCallbackSpy = sandbox.spy()
   const analytics = Analytics({
     app: 'appname',
     version: 100,
@@ -75,10 +84,12 @@ test('page state should contain .last && .history', async (t) => {
   const pageState = analytics.getState('page')
   // var args = pageCallbackSpy.getCalls()[0].args
   const last = pageState.last
-  t.truthy(last.properties)
-  t.truthy(last.meta)
+  assert.ok(last.properties)
+  assert.ok(last.meta)
 
   const history = pageState.history
-  t.is(Array.isArray(history), true)
-  t.is(history.length, 1)
+  assert.is(Array.isArray(history), true)
+  assert.is(history.length, 1)
 })
+
+test.run()
