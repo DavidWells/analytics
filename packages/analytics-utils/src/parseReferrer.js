@@ -1,7 +1,7 @@
 import { isBrowser } from '@analytics/type-utils'
-import { paramsParse } from './paramsParse'
-import { isExternalReferrer } from './isExternalReferrer'
-import { trimTld, getDomainBase } from './url'
+import { paramsParse } from './paramsParse.js'
+import { isExternalReferrer } from './isExternalReferrer.js'
+import { trimTld, getDomainBase } from './url.js'
 
 const googleKey = 'google'
 

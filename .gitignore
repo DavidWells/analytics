@@ -4,6 +4,9 @@ node_modules
 package-lock.json
 *.log
 .netlify
+
+# turbo cache
+.turbo
 # IDE stuff
 **/.idea
 

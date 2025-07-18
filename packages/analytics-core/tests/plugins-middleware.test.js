@@ -50,7 +50,7 @@ test('Plugin with [x]Start should enrich [x]Start payloads', async () => {
     ]
   })
 
-  await delay(100)
+  await delay(50) // Reduced from 100ms to 50ms
 
   assert.ok(secondPayload.meta)
 
@@ -135,7 +135,7 @@ test('Plugin (not xStart) returning values should NOT enrich other payloads', as
   analytics.track('foobar')
   const anonId = analytics.user('anonymousId')
 
-  await delay(100)
+  await delay(50) // Reduced from 100ms to 50ms
 
   const originalPayload = {
     type: 'track',
@@ -205,7 +205,7 @@ test('Namespace plugin should enrich specific data', async () => {
   analytics.track('lol')
   const anonId = analytics.user('anonymousId')
 
-  await delay(100)
+  await delay(50) // Reduced from 100ms to 50ms
 
   delete payloadOne.meta
   assert.equal(payloadOne, {
@@ -290,7 +290,7 @@ test('Multiple Namespaced plugins should enrich specific data', async () => {
   analytics.track('lol')
   const anonId = analytics.user('anonymousId')
 
-  await delay(100)
+  await delay(50) // Reduced from 100ms to 50ms
 
   delete payloadOne.meta
   assert.equal(payloadOne, {

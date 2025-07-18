@@ -27,7 +27,7 @@ test('On listener and callback should still fire if no plugins', async () => {
   analytics.page(pageCallbackSpy)
 
   // Timeout for async actions to fire
-  await delay(100)
+  await delay(50) // Reduced from 100ms to 50ms
 
   assert.is(pageCallbackSpy.callCount, 1)
   assert.is(onPageSpy.callCount, 3)

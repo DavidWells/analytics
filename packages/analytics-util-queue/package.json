@@ -12,7 +12,7 @@
   "unpkg": "dist/analytics-util-queue.umd.js",
   "sideEffects": false,
   "scripts": {
-    "test": "uvu tests '.test.([mc]js|[jt]sx?)$' -r esm",
+    "test": "uvu tests '.test.([mc]js|[jt]sx?)$'",
     "test:unit": "npm run test",
     "watch": "concurrently 'npm:watch-*'",
     "watch-src": "microbundle watch --name analyticsUtilQueue",
@@ -37,7 +37,6 @@
   ],
   "devDependencies": {
     "concurrently": "^6.0.2",
-    "esm": "^3.2.25",
     "license-checker": "^25.0.1",
     "microbundle": "^0.13.0",
     "npm-check-updates": "^11.5.1",

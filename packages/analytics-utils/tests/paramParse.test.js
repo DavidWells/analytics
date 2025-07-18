@@ -1,6 +1,6 @@
 import { test } from 'uvu'
 import * as assert from 'uvu/assert'
-import { paramsParse } from '../src/paramsParse'
+import { paramsParse } from '../src/paramsParse.js'
 
 function toPlainObject(obj) {
   return JSON.parse(JSON.stringify(obj))

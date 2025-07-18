@@ -2,6 +2,7 @@
   "name": "@analytics/listener-utils",
   "version": "0.4.0",
   "description": "Backward compatible event listener library for attaching & detaching event handlers",
+  "type": "module",
   "author": "David Wells",
   "license": "MIT",
   "homepage": "https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-listener#readme",
@@ -21,7 +22,7 @@
   "types": "./types/index.d.ts",
   "sideEffects": false,
   "scripts": {
-    "test": "uvu tests '.test.([mc]js|[jt]sx?)$' -r esm -i setup",
+    "test": "uvu tests '.test.([mc]js|[jt]sx?)$'",
     "types": "../../node_modules/.bin/tsc --emitDeclarationOnly",
     "start": "npm run sync && concurrently 'npm:watch:*' 'npm:copy' 'npm:serve'",
     "serve": "servor dist index.html 8081 --reload --browse",
@@ -46,7 +47,6 @@
   ],
   "devDependencies": {
     "concurrently": "^6.1.0",
-    "esm": "^3.2.25",
     "microbundle": "^0.14.2",
     "servor": "^4.0.2",
     "uvu": "^0.5.1",

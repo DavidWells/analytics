@@ -1,6 +1,6 @@
 import { test } from 'uvu'
 import * as assert from 'uvu/assert'
-import analyticsLib, { init, Analytics, EVENTS, CONSTANTS } from './index'
+import analyticsLib, { init, Analytics, EVENTS, CONSTANTS } from './index.js'
 
 test('default export is main function', () => {
   // default export is function
@@ -60,4 +60,3 @@ test.only('Analytics should contain all API methods', () => {
 })
 
 test.run()
-})

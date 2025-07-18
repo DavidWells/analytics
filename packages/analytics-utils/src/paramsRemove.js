@@ -1,5 +1,5 @@
 import { isBrowser } from '@analytics/type-utils'
-import { paramsClean } from './paramsClean'
+import { paramsClean } from './paramsClean.js'
 
 /**
  * Removes params from url in browser

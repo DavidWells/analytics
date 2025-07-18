@@ -125,7 +125,7 @@ test('Lifecycle should execute in correct order', async () => {
     })
   })
 
-  await delay(2000)
+  await delay(200) // Reduced from 2000ms to 200ms
   assert.is(pageMethod.callCount, 1)
   assert.equal(executionOrder, [
     // Bootstrap

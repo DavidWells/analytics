@@ -1,7 +1,7 @@
-import formatEvent from './format-event'
-import mergeEndpointData from './merge-endpoint-data'
+import formatEvent from './format-event.js'
+import mergeEndpointData from './merge-endpoint-data.js'
 import { isBoolean } from '@analytics/type-utils'
-import * as PINPOINT_EVENTS from './events'
+import * as PINPOINT_EVENTS from './events.js'
 
 // TODO use beacon
 // import 'navigator.sendbeacon'

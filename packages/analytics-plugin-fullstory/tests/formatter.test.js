@@ -1,5 +1,6 @@
-import test from 'ava'
-import { formatPayload } from '../src/browser'
+import { test } from 'uvu'
+import * as assert from 'uvu/assert'
+import { formatPayload } from '../src/browser.js'
 
 /*
 Verify Fullstory formatter
@@ -17,36 +18,38 @@ const traits = {
   lol: 1.2,
 }
 
-test('FullStory Traits Formatter', (t) => {
+test('FullStory Traits Formatter', () => {
   const payload = formatPayload(traits, true)
-  t.is(typeof payload, 'object')
-  t.is(payload.displayName, 'jim')
+  assert.is(typeof payload, 'object')
+  assert.is(payload.displayName, 'jim')
   // Convert strings
-  t.is(payload.color, undefined)
-  t.is(payload.color_str, 'blue')
+  assert.is(payload.color, undefined)
+  assert.is(payload.color_str, 'blue')
   // Convert bools
-  t.is(payload.cool, undefined)
-  t.is(payload.cool_bool, false)
+  assert.is(payload.cool, undefined)
+  assert.is(payload.cool_bool, false)
   // Convert integers
-  t.is(payload.count_int_int, undefined)
-  t.is(payload.count_int, 10)
+  assert.is(payload.count_int_int, undefined)
+  assert.is(payload.count_int, 10)
   // Convert real
-  t.is(payload.lol, undefined)
-  t.is(payload.lol_real, 1.2)
+  assert.is(payload.lol, undefined)
+  assert.is(payload.lol_real, 1.2)
   // camelCase
-  t.is(payload.test_snake_case, undefined)
-  t.is(payload.testSnakeCase_str, 'wow')
+  assert.is(payload.test_snake_case, undefined)
+  assert.is(payload.testSnakeCase_str, 'wow')
   // Convert array of strings
-  t.is(payload.weird_array_thing, undefined)
-  t.deepEqual(payload.weirdArrayThing_strs, ['wow', 'rad', 'nice'])
+  assert.is(payload.weird_array_thing, undefined)
+  assert.equal(payload.weirdArrayThing_strs, ['wow', 'rad', 'nice'])
   // Convert array of bools
-  t.is(payload.array_of_booleans, undefined)
-  t.deepEqual(payload.arrayOfBooleans_bools, [true, false, true])
+  assert.is(payload.array_of_booleans, undefined)
+  assert.equal(payload.arrayOfBooleans_bools, [true, false, true])
 })
 
-test('FullStory Event Payload Formatter', (t) => {
+test('FullStory Event Payload Formatter', () => {
   const payload = formatPayload(traits)
-  t.is(typeof payload, 'object')
-  t.is(payload.displayName, undefined)
-  t.is(payload.displayName_str, 'jim')
+  assert.is(typeof payload, 'object')
+  assert.is(payload.displayName, undefined)
+  assert.is(payload.displayName_str, 'jim')
 })
+
+test.run()

@@ -106,7 +106,7 @@ test('Non blocking page promise execution order', async () => {
   })
   executionOrder.push(1)
 
-  await delay(1000)
+  await delay(100) // Reduced from 1000ms to 100ms
 
   // Ensure the listeners callbacks are called only once
   assert.equal(onPageStartSpy.callCount, 1)

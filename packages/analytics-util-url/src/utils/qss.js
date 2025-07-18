@@ -1,7 +1,7 @@
 // Modified qss https://github.com/lukeed/qss
-import { decodeUri } from './decodeUri'
-import { encodeUri } from './encodeUri'
-import { isReserved } from './reserved'
+import { decodeUri } from './decodeUri.js'
+import { encodeUri } from './encodeUri.js'
+import { isReserved } from './reserved.js'
 
 const P = '_'
 const N = 'null'

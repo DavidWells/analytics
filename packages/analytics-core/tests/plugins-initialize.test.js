@@ -37,7 +37,7 @@ test('Instance should not call any initialize if aborted', async () => {
     ]
   })
 
-  await delay(100)
+  await delay(50) // Reduced from 100ms to 50ms
 
   assert.is(initializeOne.callCount, 0)
   assert.is(initializeTwo.callCount, 0)
@@ -71,7 +71,7 @@ test('Instance should not call specific initialize if plugin aborted by name', a
     ]
   })
 
-  await delay(100)
+  await delay(50) // Reduced from 100ms to 50ms
 
   assert.is(initializeOne.callCount, 0)
   assert.is(initializeTwo.callCount, 1)

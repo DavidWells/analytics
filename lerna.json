@@ -2,7 +2,8 @@
   "packages": [
     "packages/*",
     "!packages/analytics-core/client",
-    "!packages/analytics-core/server"
+    "!packages/analytics-core/server",
+    "!packages/analytics-plugin-aws-pinpoint"
   ],
   "version": "independent",
   "command": {

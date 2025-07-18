@@ -58,7 +58,7 @@ test('Plugin enabled: false disables plugin', async () => {
 
   analytics.page()
 
-  await delay(2000)
+  await delay(200)
 
   assert.is(spyInitOne.callCount, 1)
   assert.is(spyInitTwo.callCount, 0)

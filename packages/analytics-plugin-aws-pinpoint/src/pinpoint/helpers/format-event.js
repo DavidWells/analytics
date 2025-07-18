@@ -7,10 +7,10 @@ import {
 } from '@analytics/session-utils'
 import { isBrowser } from '@analytics/type-utils'
 import { uuid } from 'analytics-utils'
-import getClientInfo from '../../utils/client-info'
-import getEventName from './get-event-name'
-import { prepareAttributes, prepareMetrics } from './prepare-data'
-import * as PINPOINT_EVENTS from './events'
+import getClientInfo from '../../utils/client-info/index.js'
+import getEventName from './get-event-name.js'
+import { prepareAttributes, prepareMetrics } from './prepare-data.js'
+import * as PINPOINT_EVENTS from './events.js'
 
 export default async function formatEvent(eventName, data = {}, config = {}) {
   const {

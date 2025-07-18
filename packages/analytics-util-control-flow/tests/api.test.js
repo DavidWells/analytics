@@ -3,7 +3,7 @@ import { test } from 'uvu'
 import * as assert from 'uvu/assert'
 import { 
   delay,
-} from '../src'
+} from '../src/index.js'
 
 test.after(() => console.log('tests done'))
 

@@ -14,7 +14,7 @@ import {
   isLocalHost, 
   isUrlLike,
   trimTld 
-} from '../src'
+} from '../src/index.js'
 
 // test.before.each(ENV.reset);
 test.after(() => console.log('tests done'))

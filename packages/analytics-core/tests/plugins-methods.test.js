@@ -75,7 +75,7 @@ test('Plugin Methods should fire correct order', async () => {
   const valueThree = await analytics.plugins.pluginOne.three('1', '2', '3')
   const valueFour = await analytics.plugins.pluginOne.four()
 
-  await delay(2000)
+  await delay(200) // Reduced from 2000ms to 200ms
   // one was called once
   assert.is(customMethodFunc.callCount, 1)
   const mainApiKeys = Object.keys(analytics)

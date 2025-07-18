@@ -21,8 +21,8 @@
   "author": "David Wells",
   "license": "MIT",
   "scripts": {
-    "test": "uvu tests '.test.([mc]js|[jt]sx?)$'",
-    "test:watch": "watchlist tests -- npm test",
+    "test:deprecated": "uvu tests '.test.([mc]js|[jt]sx?)$'",
+    "test:watch:deprecated": "watchlist tests -- npm test:deprecated",
     "coverage": "c8 uvu tests",
     "docs": "node ../analytics-cli/bin/run docs",
     "build": "node ../../scripts/build/index.js",

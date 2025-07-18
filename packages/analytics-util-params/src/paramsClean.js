@@ -1,4 +1,4 @@
-import { escapeRegexString, isArrayParam } from './utils/regex'
+import { escapeRegexString, isArrayParam } from './utils/regex.js'
 /**
  * Strip a query parameter from a url string
  * @param  {string} url   - url with query parameters

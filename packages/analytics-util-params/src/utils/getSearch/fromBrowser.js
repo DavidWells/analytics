@@ -1,4 +1,4 @@
-import noOp from '../noOp'
+import noOp from '../noOp.js'
 /**
  * Get search string from given url
  * @param  {string} [url] - optional url string. If no url, window.location.search will be used

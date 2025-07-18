@@ -2,6 +2,7 @@
   "name": "analytics-util-params",
   "version": "0.1.2",
   "description": "Url Parameter helper functions",
+  "type": "module",
   "author": "David Wells",
   "license": "MIT",
   "homepage": "https://github.com/DavidWells/analytics#readme",
@@ -20,28 +21,14 @@
     "./lib/analytics-util-params.es.js": "./lib/analytics-util-params.browser.es.js"
   },
   "scripts": {
-    "test": "../../node_modules/.bin/ava -v",
-    "testw": "../../node_modules/.bin/ava -v --watch",
+    "test": "uvu src '.test.js$'",
+    "testw": "uvu src '.test.js$' --watch",
     "build": "node ../../scripts/build/index.js",
     "watch": "node ../../scripts/build/_watch.js",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
     "es": "../../node_modules/.bin/babel-node ./testBabel.js"
-  },
-  "ava": {
-    "files": [
-      "**/**/*.test.js"
-    ],
-    "require": [
-      "esm",
-      "@babel/register"
-    ],
-    "verbose": true,
-    "failFast": true,
-    "sources": [
-      "**/*.{js,jsx}"
-    ]
   },
   "files": [
     "lib",
@@ -58,7 +45,8 @@
     "@babel/core": "7.5.5",
     "@babel/preset-env": "7.5.5",
     "@babel/register": "^7.6.0",
-    "@babel/runtime": "7.5.5"
+    "@babel/runtime": "7.5.5",
+    "uvu": "^0.5.6"
   },
   "dependencies": {
     "deepmerge": "^4.0.0",
