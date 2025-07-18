@@ -268,30 +268,6 @@ importers:
         specifier: ^0.5.6
         version: 0.5.6
 
-  packages/analytics-core/client:
-    dependencies:
-      '@analytics/global-storage-utils':
-        specifier: ^0.1.4
-        version: 0.1.7
-      '@analytics/type-utils':
-        specifier: ^0.5.4
-        version: 0.5.4
-      analytics-utils:
-        specifier: ^1.0.9
-        version: 1.0.14(@types/dlv@1.1.5)
-
-  packages/analytics-core/server:
-    dependencies:
-      '@analytics/global-storage-utils':
-        specifier: ^0.1.4
-        version: 0.1.7
-      '@analytics/type-utils':
-        specifier: ^0.5.4
-        version: 0.5.4
-      analytics-utils:
-        specifier: ^1.0.9
-        version: 1.0.14(@types/dlv@1.1.5)
-
   packages/analytics-plugin-amplitude:
     devDependencies:
       '@babel/core':
@@ -1249,9 +1225,6 @@ packages:
 
   '@analytics/type-utils@0.3.1':
     resolution: {integrity: sha512-9Ej6c9ulj5DNE29eFk3s49/1b89M8mbQ7BoJEQAQg/k86HOVrAEWQUScr359WVSOyGNBsSYE1qILC3XFTTtgtw==}
-
-  '@analytics/type-utils@0.5.4':
-    resolution: {integrity: sha512-2CT5YTsvif3gYPYp5hPIhh66mUo/Cu+k5OiHbX3k5p+YsZ5Bggcp/wLEFnrdKG4tKgGn5SOKkEtL63VYhGXX7g==}
 
   '@analytics/type-utils@0.6.2':
     resolution: {integrity: sha512-TD+xbmsBLyYy/IxFimW/YL/9L2IEnM7/EoV9Aeh56U64Ify8o27HJcKjo38XY9Tcn0uOq1AX3thkKgvtWvwFQg==}
@@ -10118,8 +10091,6 @@ snapshots:
       '@analytics/type-utils': 0.6.2
 
   '@analytics/type-utils@0.3.1': {}
-
-  '@analytics/type-utils@0.5.4': {}
 
   '@analytics/type-utils@0.6.2': {}
 
