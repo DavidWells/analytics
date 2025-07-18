@@ -19,6 +19,11 @@ const prefixEventNames = {
 /* enrich telemetry payload */
 const enrichTelemetryPayload = {
   NAMESPACE: 'enrich',
+  enabled: false,
+  initialize: () => {
+    console.log('enrich INIT!!!!')
+    window.HIIIIII = true
+  },
   trackStart: ({ payload, instance }) => {
     return {
       ...payload,

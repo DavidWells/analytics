@@ -147,7 +147,19 @@ function analytics(config = {}) {
   const allSystemEvents = Array.from(uniqueEvents).sort()
 
   /* plugin methods(functions) must be kept out of state. thus they live here */
-  const getPlugins = () => customPlugins
+  const getPlugins = (selectedPlugins, asArray) => {
+    let pluginObj = customPlugins
+    if (selectedPlugins) {
+      const foundPlugins = ensureArray(selectedPlugins)
+      pluginObj = Object.keys(customPlugins).filter((name) => {
+        return foundPlugins.includes(name)
+      }).reduce((acc, curr) => {
+        acc[curr] = customPlugins[curr]
+        return acc
+      }, {})
+    }
+    return !asArray ? pluginObj : Object.keys(pluginObj).map((name) => customPlugins[name])
+  }
 
   const {
     addMiddleware,
@@ -174,6 +186,8 @@ function analytics(config = {}) {
   if (!visitorInfo.anonymousId) {
     visitorInfo.anonymousId = uuid()
   }
+
+  let readyCalled = false
 
   /**
    * Async Management methods for plugins. 
@@ -248,15 +262,16 @@ function analytics(config = {}) {
      *
      * @example
      * analytics.plugins.load('segment')
-     @TODO implement
+     * analytics.plugins.load(['segment', 'google-analytics'])
+    */
     load: (plugins) => {
+      console.log('plugins', plugins)
       store.dispatch({
         type: EVENTS.loadPlugin,
-        // Todo handle multiple plugins via array
-        plugins: (plugins) ? [plugins] : Object.keys(getPlugins()),
+        plugins: (plugins) ? ensureArray(plugins) : Object.keys(getPlugins()),
+        readyCalled,
       })
     },
-    */
     /* @TODO if it stays, state loaded needs to be set. Re PLUGIN_INIT above
     add: (newPlugin) => {
       if (typeof newPlugin !== 'object') return false
@@ -275,7 +290,6 @@ function analytics(config = {}) {
     ...parsedOptions.methods
   }
   
-  let readyCalled = false
   /**
    * Analytic instance returned from initialization
    * @typedef {Object} AnalyticsInstance
@@ -549,8 +563,8 @@ function analytics(config = {}) {
       // If ready already fired. Call callback immediately
       if (readyCalled) callback({ plugins, instance })
       return instance.on(EVENTS.ready, (x) => {
-        callback(x)
         readyCalled = true
+        callback(x)
       })
     },
     /**
@@ -964,6 +978,8 @@ function analytics(config = {}) {
 
     /* All plugins registered initialize, is last loop */
     if (parsedOptions.pluginsArray.length === (i + 1)) {
+      console.log('enabledPlugins', enabledPlugins)
+      console.log('disabledPlugins', disabledPlugins)
       store.dispatch({
         type: EVENTS.initializeStart,
         plugins: enabledPlugins,
