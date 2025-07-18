@@ -25,6 +25,13 @@
   "module": "dist/analytics-utils.module.js",
   "unpkg": "dist/analytics-utils.umd.js",
   "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": "./dist/analytics-utils.module.js",
+      "require": "./dist/analytics-utils.js",
+      "types": "./types/index.d.ts"
+    }
+  },
   "scripts": {
     "test": "uvu tests -r esm",
     "start": "npm run sync && concurrently 'npm:watch:dev' 'npm:copy' 'npm:serve'",

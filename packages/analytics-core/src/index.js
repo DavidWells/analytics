@@ -1,5 +1,4 @@
-import analyticsUtils from 'analytics-utils'
-const { uuid, paramsParse, dotProp } = analyticsUtils
+import { uuid, paramsParse, dotProp } from 'analytics-utils'
 import { get, set, remove } from '@analytics/global-storage-utils'
 import { isBrowser, isFunction, isObject, isString } from '@analytics/type-utils'
 import { createStore, combineReducers, applyMiddleware, compose } from './vendor/redux/index.js'
