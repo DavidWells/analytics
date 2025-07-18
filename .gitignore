@@ -7,6 +7,8 @@ package-lock.json
 
 # turbo cache
 .turbo
+# nx cache
+.nx
 # IDE stuff
 **/.idea
 
