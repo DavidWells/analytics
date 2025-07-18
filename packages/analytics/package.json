@@ -37,6 +37,7 @@
   },
   "sideEffects": false,
   "scripts": {
+    "test": "uvu src '.test.([mc]js|[jt]sx?)$'",
     "clean": "rimraf lib dist && mkdirp lib dist",
     "prebuild": "npm run clean && npm run types",
     "types": "node scripts/sync-types.js",

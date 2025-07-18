@@ -20,7 +20,7 @@
   "author": "David Wells",
   "license": "MIT",
   "scripts": {
-    "test": "uvu tests",
+    "test": "uvu tests '.test.([mc]js|[jt]sx?)$'",
     "test:watch": "watchlist tests -- npm test",
     "docs": "node ../analytics-cli/bin/run docs",
     "build": "node ../../scripts/build/index.js",

@@ -20,7 +20,7 @@
   "unpkg": "dist/analytics-util-types.umd.js",
   "sideEffects": false,
   "scripts": {
-    "test": "uvu tests -r esm -i setup",
+    "test": "uvu tests '.test.([mc]js|[jt]sx?)$' -r esm -i setup",
     "types": "../../node_modules/.bin/tsc --emitDeclarationOnly",
     "types:broken": "tsc -p --noEmit false --emitDeclarationOnly true",
     "start": "npm run sync && concurrently 'npm:watch:*' 'npm:copy' 'npm:serve'",

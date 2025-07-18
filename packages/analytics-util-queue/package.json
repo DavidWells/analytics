@@ -12,7 +12,7 @@
   "unpkg": "dist/analytics-util-queue.umd.js",
   "sideEffects": false,
   "scripts": {
-    "test": "uvu -r esm tests",
+    "test": "uvu tests '.test.([mc]js|[jt]sx?)$' -r esm",
     "test:unit": "npm run test",
     "watch": "concurrently 'npm:watch-*'",
     "watch-src": "microbundle watch --name analyticsUtilQueue",
