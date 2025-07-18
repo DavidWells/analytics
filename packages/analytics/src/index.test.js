@@ -1,59 +1,63 @@
-import test from 'ava'
+import { test } from 'uvu'
+import * as assert from 'uvu/assert'
 import analyticsLib, { init, Analytics, EVENTS, CONSTANTS } from './index'
 
-test('default export is main function', (t) => {
+test('default export is main function', () => {
   // default export is function
-  t.is(typeof analyticsLib, 'function')
+  assert.is(typeof analyticsLib, 'function')
 })
 
-test('{ Analytics } export exists ', (t) => {
-  t.is(typeof Analytics, 'function')
+test('{ Analytics } export exists ', () => {
+  assert.is(typeof Analytics, 'function')
   // Default export and named are the same
-  t.deepEqual(analyticsLib, Analytics)
+  assert.equal(analyticsLib, Analytics)
 })
 
-test('{ EVENTS } export exists ', (t) => {
-  t.is(typeof EVENTS, 'object')
-  t.is(Array.isArray(EVENTS), false)
+test('{ EVENTS } export exists ', () => {
+  assert.is(typeof EVENTS, 'object')
+  assert.is(Array.isArray(EVENTS), false)
 })
 
-test('{ CONSTANTS } export exists ', (t) => {
-  t.is(typeof CONSTANTS, 'object')
-  t.is(Array.isArray(CONSTANTS), false)
+test('{ CONSTANTS } export exists ', () => {
+  assert.is(typeof CONSTANTS, 'object')
+  assert.is(Array.isArray(CONSTANTS), false)
 })
 
-test('{ init } export exists for stanalone browser', (t) => {
-  t.is(typeof init, 'function')
-  t.deepEqual(analyticsLib, init)
+test('{ init } export exists for stanalone browser', () => {
+  assert.is(typeof init, 'function')
+  assert.equal(analyticsLib, init)
 })
 
 /* See api ref https://getanalytics.io/api/ */
-test.only('Analytics should contain all API methods', (t) => {
+test.only('Analytics should contain all API methods', () => {
   const analytics = analyticsLib({
     app: 'appname',
     version: 100
   })
 
   // Api methods should exist
-  t.is(typeof analytics.identify, 'function')
-  t.is(typeof analytics.track, 'function')
-  t.is(typeof analytics.page, 'function')
-  t.is(typeof analytics.getState, 'function')
-  t.is(typeof analytics.reset, 'function')
-  t.is(typeof analytics.dispatch, 'function')
-  t.is(typeof analytics.storage, 'object')
-  t.is(typeof analytics.storage.getItem, 'function')
-  t.is(typeof analytics.storage.setItem, 'function')
-  t.is(typeof analytics.storage.removeItem, 'function')
-  t.is(typeof analytics.setAnonymousId, 'function')
-  t.is(typeof analytics.user, 'function')
-  t.is(typeof analytics.ready, 'function')
-  t.is(typeof analytics.on, 'function')
-  t.is(typeof analytics.once, 'function')
-  t.is(typeof analytics.enablePlugin, 'function')
-  t.is(typeof analytics.disablePlugin, 'function')
-  t.is(typeof analytics.events, 'object')
+  assert.is(typeof analytics.identify, 'function')
+  assert.is(typeof analytics.track, 'function')
+  assert.is(typeof analytics.page, 'function')
+  assert.is(typeof analytics.getState, 'function')
+  assert.is(typeof analytics.reset, 'function')
+  assert.is(typeof analytics.dispatch, 'function')
+  assert.is(typeof analytics.storage, 'object')
+  assert.is(typeof analytics.storage.getItem, 'function')
+  assert.is(typeof analytics.storage.setItem, 'function')
+  assert.is(typeof analytics.storage.removeItem, 'function')
+  assert.is(typeof analytics.setAnonymousId, 'function')
+  assert.is(typeof analytics.user, 'function')
+  assert.is(typeof analytics.ready, 'function')
+  assert.is(typeof analytics.on, 'function')
+  assert.is(typeof analytics.once, 'function')
+  assert.is(typeof analytics.enablePlugin, 'function')
+  assert.is(typeof analytics.disablePlugin, 'function')
+  assert.is(typeof analytics.events, 'object')
 
   // Plugins should be empty
-  t.deepEqual(analytics.getState('plugins'), {})
+  assert.equal(analytics.getState('plugins'), {})
+})
+
+test.run()
 })
