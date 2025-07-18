@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
-import EVENTS from '../events'
-import { ANON_ID, USER_ID, USER_TRAITS } from '../constants'
+import EVENTS from '../events.js'
+import { ANON_ID, USER_ID, USER_TRAITS } from '../constants.js'
 
 const utmRegex = /^utm_/
 const propRegex = /^an_prop_/

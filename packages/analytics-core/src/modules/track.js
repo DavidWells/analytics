@@ -1,6 +1,6 @@
 // Track Module. Follows ducks pattern http://bit.ly/2DnERMc
-import EVENTS from '../events'
-import serialize from '../utils/serialize'
+import EVENTS from '../events.js'
+import serialize from '../utils/serialize.js'
 
 // Track State
 const initialState = {

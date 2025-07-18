@@ -1,6 +1,6 @@
 import { set, globalContext, KEY } from '@analytics/global-storage-utils'
-import { compose } from '../vendor/redux'
-import { LIB_NAME } from './internalConstants'
+import { compose } from '../vendor/redux/index.js'
+import { LIB_NAME } from './internalConstants.js'
 
 export function Debug() {
   // Global key is window.__global__.analytics

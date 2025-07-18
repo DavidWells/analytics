@@ -1,10 +1,10 @@
 // Context Reducer.  Follows ducks pattern http://bit.ly/2DnERMc
 import { getBrowserLocale, getTimeZone, uuid } from 'analytics-utils'
 import { isBrowser } from '@analytics/type-utils'
-import EVENTS from '../events'
-import { LIB_NAME } from '../utils/internalConstants'
-import getOSNameNode from '../utils/getOSName/node'
-import getOSNameBrowser from '../utils/getOSName/browser'
+import EVENTS from '../events.js'
+import { LIB_NAME } from '../utils/internalConstants.js'
+import getOSNameNode from '../utils/getOSName/node.js'
+import getOSNameBrowser from '../utils/getOSName/browser.js'
 
 let osName
 let referrer

@@ -1,5 +1,5 @@
 // Integrations Reducer. Follows ducks pattern http://bit.ly/2DnERMc
-import EVENTS from '../events'
+import EVENTS from '../events.js'
 
 export default function createReducer(getPlugins) {
   return function plugins(state = {}, action) {

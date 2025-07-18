@@ -1,6 +1,6 @@
-import getCallback from './getCallback'
-import { stack } from './callback-stack'
-import timestamp from './timestamp'
+import getCallback from './getCallback.js'
+import { stack } from './callback-stack.js'
+import timestamp from './timestamp.js'
 import { uuid } from 'analytics-utils'
 
 // Async promise resolver

@@ -1,6 +1,6 @@
 import { isObject } from '@analytics/type-utils'
-import warning from './utils/warning'
-import { FUNC, UNDEF, REDUCER, ACTION_INIT, ACTION_TEST } from './utils/defs'
+import warning from './utils/warning.js'
+import { FUNC, UNDEF, REDUCER, ACTION_INIT, ACTION_TEST } from './utils/defs.js'
 
 function getUndefinedStateErrorMessage(key, action) {
   const actionType = action && action.type
