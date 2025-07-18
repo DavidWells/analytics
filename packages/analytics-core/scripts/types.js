@@ -57,9 +57,9 @@ const typesFromJsDocs = content
   // Make types extensible
 const typeExtensions = `
   export type PageData<T extends string = string> = PageDataBase & Record<T, unknown>;
-  export type AnalyticsPlugin<T extends string = string> = AnalyticsPluginBase & string extends T
+  export type AnalyticsPlugin<T extends string = string> = AnalyticsPluginBase & (string extends T
     ? Record<string, unknown>
-    : Record<T, unknown> & Record<string, unknown>;
+    : Record<T, unknown> & Record<string, unknown>);
 `;
 
 // Expose main API
