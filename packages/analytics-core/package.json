@@ -17,6 +17,7 @@
   ],
   "author": "David Wells <hello@davidwells.io>",
   "license": "MIT",
+  "type": "module",
   "amdName": "_analytics",
   "source": "src/index.js",
   "main": "dist/server/analytics-core.js",
@@ -30,13 +31,13 @@
   },
   "sideEffects": false,
   "scripts": {
-    "test": "ava -v",
-    "test:watch": "ava -v --watch",
-    "prebuild": "rimraf dist _temp-types",
+    "test": "uvu tests '.test.([mc]js|[jt]sx?)$'",
+    "test:watch": "watchlist tests -- npm test",
+    "prebuild": "rimraf _temp-types && cd ../analytics-utils && npm run build",
     "build": "npm run build-client && npm run build-server && npm run types",
     "build-client": "cd client && npm run build",
     "build-server": "cd server && npm run build",
-    "types": "../../node_modules/.bin/jsdoc -t ../../node_modules/tsd-jsdoc/dist -r ./src/ -d _temp-types && node scripts/types.js",
+    "types": "../../node_modules/.bin/jsdoc -t ../../node_modules/tsd-jsdoc/dist -r ./src/ -d _temp-types && node scripts/types.cjs",
     "publish": "git push origin && git push origin --tags",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
@@ -66,7 +67,7 @@
   "dependencies": {
     "@analytics/global-storage-utils": "^0.1.7",
     "@analytics/type-utils": "^0.6.2",
-    "analytics-utils": "^1.0.14"
+    "analytics-utils": "workspace:^"
   },
   "ava": {
     "files": [
@@ -90,7 +91,7 @@
     "@babel/preset-env": "7.16.11",
     "@babel/register": "7.17.0",
     "@babel/runtime": "7.17.0",
-    "ava": "^2.2.0",
+    "uvu": "^0.5.6",
     "gen-esm-wrapper": "^1.1.3",
     "microbundle": "^0.14.2",
     "mkdirp": "^0.5.1",

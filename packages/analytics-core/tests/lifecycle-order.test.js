@@ -1,25 +1,32 @@
-import test from 'ava'
+import './_setup.js'
+import { test } from 'uvu'
+import * as assert from 'uvu/assert'
 import sinon from 'sinon'
-import delay from './_utils/delay'
-import Analytics from '../src'
+import delay from './_utils/delay.js'
+import Analytics from '../src/index.js'
 
-test.beforeEach((t) => {
-  t.context.sandbox = sinon.createSandbox()
+let sandbox
+
+test.before(() => {
+  sandbox = sinon.createSandbox()
 })
 
-test('Lifecycle should execute in correct order', async (t) => {
-  const executionOrder = []
-  const { context } = t
-  const pageStartListener = context.sandbox.spy()
-  const pageListener = context.sandbox.spy()
-  const pageEndListener = context.sandbox.spy()
+test.after(() => {
+  sandbox.restore()
+})
 
-  const pageStartMethod = context.sandbox.spy()
-  const pageMethod = context.sandbox.spy()
-  const pageEndMethod = context.sandbox.spy()
-  const secondPageStartMethod = context.sandbox.spy()
-  const secondPageMethod = context.sandbox.spy()
-  const secondPageEndMethod = context.sandbox.spy()
+test('Lifecycle should execute in correct order', async () => {
+  const executionOrder = []
+  const pageStartListener = sandbox.spy()
+  const pageListener = sandbox.spy()
+  const pageEndListener = sandbox.spy()
+
+  const pageStartMethod = sandbox.spy()
+  const pageMethod = sandbox.spy()
+  const pageEndMethod = sandbox.spy()
+  const secondPageStartMethod = sandbox.spy()
+  const secondPageMethod = sandbox.spy()
+  const secondPageEndMethod = sandbox.spy()
 
   const analytics = Analytics({
     app: 'appname',
@@ -118,9 +125,9 @@ test('Lifecycle should execute in correct order', async (t) => {
     })
   })
 
-  await delay(2000)
-  t.is(pageMethod.callCount, 1)
-  t.deepEqual(executionOrder, [
+  await delay(200) // Reduced from 2000ms to 200ms
+  assert.is(pageMethod.callCount, 1)
+  assert.equal(executionOrder, [
     // Bootstrap
     'From method: bootstrap',
     'From method: bootstrap two',
@@ -152,3 +159,5 @@ test('Lifecycle should execute in correct order', async (t) => {
   ])
   // console.log('executionOrder', executionOrder)
 })
+
+test.run()

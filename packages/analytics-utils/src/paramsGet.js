@@ -1,4 +1,4 @@
-import {decodeUri} from './decodeUri'
+import {decodeUri} from './decodeUri.js'
 
 /**
  * Get a given query parameter value

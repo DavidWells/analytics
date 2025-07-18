@@ -1,5 +1,5 @@
-import noOp from './utils/noOp'
-import paramsClean from './paramsClean'
+import noOp from './utils/noOp.js'
+import paramsClean from './paramsClean.js'
 
 /**
  * Removes params from URL in browser

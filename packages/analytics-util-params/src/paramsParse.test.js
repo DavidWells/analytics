@@ -1,137 +1,138 @@
-import test from 'ava'
-import paramsParse from './paramsParse'
+import { test } from 'uvu'
+import * as assert from 'uvu/assert'
+import paramsParse from './paramsParse.js'
 
 function format(niceStr) {
   return niceStr.split('\n').map((x) => x.replace(/\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/g, '').trim()).join('')
 }
 
-test('lib', t => {
-  t.is(typeof paramsParse, 'function', 'exports a function')
+test('lib', () => {
+  assert.is(typeof paramsParse, 'function', 'exports a function')
 })
 
-test('(decode) simple []', t => {
+test('(decode) simple []', () => {
   let str = '?foo=foo&bar[]=bar1&bar[]=bar2'
   let out = paramsParse(str)
   console.log('out', out)
-  t.deepEqual(out, { foo: 'foo', bar: ['bar1', 'bar2'] }, '~> is expected value')
+  assert.equal(out, { foo: 'foo', bar: ['bar1', 'bar2'] }, '~> is expected value')
 })
 
-test('parses a simple string', (t) => {
-  t.deepEqual(paramsParse('?0=foo'), { 0: 'foo' })
-  t.deepEqual(paramsParse('?foo=c++'), { foo: 'c  ' })
-  t.deepEqual(paramsParse('?foo'), { foo: true })
-  t.deepEqual(paramsParse('?foo='), { foo: null })
-  t.deepEqual(paramsParse('?foo=bar'), { foo: 'bar' })
-  t.deepEqual(paramsParse('?foo&bar=foo'), { foo: true, bar: 'foo' })
-  t.deepEqual(paramsParse('? foo = bar = baz '), { ' foo ': ' bar = baz ' })
+test('parses a simple string', () => {
+  assert.equal(paramsParse('?0=foo'), { 0: 'foo' })
+  assert.equal(paramsParse('?foo=c++'), { foo: 'c  ' })
+  assert.equal(paramsParse('?foo'), { foo: true })
+  assert.equal(paramsParse('?foo='), { foo: null })
+  assert.equal(paramsParse('?foo=bar'), { foo: 'bar' })
+  assert.equal(paramsParse('?foo&bar=foo'), { foo: true, bar: 'foo' })
+  assert.equal(paramsParse('? foo = bar = baz '), { ' foo ': ' bar = baz ' })
 
-  t.deepEqual(paramsParse('?foo=bar&bar=baz'), { foo: 'bar', bar: 'baz' })
-  t.deepEqual(paramsParse('?foo2=bar2&baz2='), { foo2: 'bar2', baz2: null })
-  t.deepEqual(paramsParse('?foo=bar&baz'), { foo: 'bar', baz: true })
-  t.deepEqual(paramsParse('?cht=p3&chd=t:60,40&chs=250x100&chl=Hello|World'), {
+  assert.equal(paramsParse('?foo=bar&bar=baz'), { foo: 'bar', bar: 'baz' })
+  assert.equal(paramsParse('?foo2=bar2&baz2='), { foo2: 'bar2', baz2: null })
+  assert.equal(paramsParse('?foo=bar&baz'), { foo: 'bar', baz: true })
+  assert.equal(paramsParse('?cht=p3&chd=t:60,40&chs=250x100&chl=Hello|World'), {
     cht: 'p3',
     chd: 't:60,40',
     chs: '250x100',
     chl: 'Hello|World'
   })
   // These cases are not handled
-  // t.deepEqual(paramsParse('?a[>=]=23'), { a: { '>=': '23' } })
-  // t.deepEqual(paramsParse('?a[<=>]==23'), { a: { '<=>': '=23' } })
-  // t.deepEqual(paramsParse('?a[==]=23'), { a: { '==': '23' } })
-  // t.deepEqual(paramsParse('?foo=bar=baz'), { foo: 'bar=baz' })
+  // assert.equal(paramsParse('?a[>=]=23'), { a: { '>=': '23' } })
+  // assert.equal(paramsParse('?a[<=>]==23'), { a: { '<=>': '=23' } })
+  // assert.equal(paramsParse('?a[==]=23'), { a: { '==': '23' } })
+  // assert.equal(paramsParse('?foo=bar=baz'), { foo: 'bar=baz' })
 })
 
-test('(decode) simple', t => {
+test('(decode) simple', () => {
   let str = '?foo=foo&bar=bar1&bar=bar2'
   let out = paramsParse(str)
-  t.deepEqual(out, { foo: 'foo', bar: 'bar1' }, '~> is expected value')
+  assert.equal(out, { foo: 'foo', bar: 'bar1' }, '~> is expected value')
 })
 
-test('(decode) numbers', t => {
+test('(decode) numbers', () => {
   let str = '?foo=1'
   let out = paramsParse(str)
-  t.deepEqual(out, { foo: 1 }, '~> is expected value')
+  assert.equal(out, { foo: 1 }, '~> is expected value')
 })
 
-test('(decode) floats', t => {
+test('(decode) floats', () => {
   let str = '?foo=1&bar=1.3&baz=19.111'
   let out = paramsParse(str)
-  t.deepEqual(out, { foo: 1, bar: 1.3, baz: 19.111 })
+  assert.equal(out, { foo: 1, bar: 1.3, baz: 19.111 })
 })
 
-test('(decode) booleans', t => {
+test('(decode) booleans', () => {
   let str = '?foo=true&bar=false'
   let out = paramsParse(str)
-  t.deepEqual(out, { foo: true, bar: false })
+  assert.equal(out, { foo: true, bar: false })
 })
 
-test('(decode) empty', t => {
+test('(decode) empty', () => {
   let str1 = '?foo=&bar='
   let out1 = paramsParse(str1)
-  t.deepEqual(out1, { foo: null, bar: null })
+  assert.equal(out1, { foo: null, bar: null })
 
   let str2 = '?foo&bar'
   let out2 = paramsParse(str2)
-  t.deepEqual(out2, { foo: true, bar: true })
+  assert.equal(out2, { foo: true, bar: true })
 })
 
-test('does not overide prototypes', t => {
+test('does not overide prototypes', () => {
   let obj = paramsParse('?toString&__proto__=lol')
   console.log('obj', obj)
   // let obj = { hi: 'hi'}
-  t.is(typeof obj, 'object')
-  t.is(typeof obj.toString, 'function')
-  t.not(obj.__proto__, 'lol') // eslint-disable-line
+  assert.is(typeof obj, 'object')
+  assert.is(typeof obj.toString, 'function')
+  assert.not.equal(obj.__proto__, 'lol') // eslint-disable-line
 
   let objTwo = paramsParse('?toString=lol&__proto__=lol')
   console.log('obj', obj)
   // let obj = { hi: 'hi'}
-  t.is(typeof objTwo, 'object')
-  t.is(typeof objTwo.toString, 'function')
-  t.not(obj.__proto__, 'lol') // eslint-disable-line
+  assert.is(typeof objTwo, 'object')
+  assert.is(typeof objTwo.toString, 'function')
+  assert.not.equal(objTwo.__proto__, 'lol') // eslint-disable-line
 })
 
 // https://github.com/sindresorhus/query-string/blob/master/test/parse.js#L74
-test('decodes plus signs', t => {
+test('decodes plus signs', () => {
   const obj = paramsParse('?foo+bar=baz+qux')
   // let obj = { hi: 'hi'}
-  t.is(typeof obj, 'object')
-  t.deepEqual(obj, {
+  assert.is(typeof obj, 'object')
+  assert.equal(obj, {
     'foo bar': 'baz qux',
   })
 
   const objTwo = paramsParse('?foo+bar=baz%2Bqux')
 
-  t.is(typeof objTwo, 'object')
-  t.deepEqual(objTwo, {
+  assert.is(typeof objTwo, 'object')
+  assert.equal(objTwo, {
     'foo bar': 'baz+qux',
   })
 })
 
-test('decode keys and values', t => {
-  t.deepEqual(paramsParse('?st%C3%A5le=foo'), { ståle: 'foo' })
+test('decode keys and values', () => {
+  assert.equal(paramsParse('?st%C3%A5le=foo'), { ståle: 'foo' })
   /* Requires https://github.com/SamVerschueren/decode-uri-component/blob/master/index.js */
-  // t.deepEqual(paramsParse('?foo=%7B%ab%%7C%de%%7D+%%7Bst%C3%A5le%7D%'), {foo: '{%ab%|%de%} %{ståle}%'});
+  // assert.equal(paramsParse('?foo=%7B%ab%%7C%de%%7D+%%7Bst%C3%A5le%7D%'), {foo: '{%ab%|%de%} %{ståle}%'});
 })
 
-test('handles strings with query string that contain =', t => {
-  t.deepEqual(paramsParse('https://foo.bar?foo[]=baz=bar&foo[]=baz#top'), {
+test('handles strings with query string that contain =', () => {
+  assert.equal(paramsParse('https://foo.bar?foo[]=baz=bar&foo[]=baz#top'), {
     foo: ['baz=bar', 'baz']
   })
-  t.deepEqual(paramsParse('https://foo.bar?foo[]=bar=&foo[]=baz='), {
+  assert.equal(paramsParse('https://foo.bar?foo[]=bar=&foo[]=baz='), {
     foo: ['bar=', 'baz=']
   })
 })
 
-test('does not throw on invalid input & does not include invalid output', t => {
+test('does not throw on invalid input & does not include invalid output', () => {
   const obj = paramsParse('?%&')
   // let obj = { hi: 'hi'}
-  t.is(typeof obj, 'object')
-  t.deepEqual(obj, {})
-  t.is(Object.keys(obj).length, 0)
+  assert.is(typeof obj, 'object')
+  assert.equal(obj, {})
+  assert.is(Object.keys(obj).length, 0)
 })
 
-test('Parse utm params', (t) => {
+test('Parse utm params', () => {
   const url = `http://site.com/
   ?utm_source=the_source
   &utm_medium=camp med
@@ -140,15 +141,15 @@ test('Parse utm params', (t) => {
   &utm_campaign=400kpromo`
   const encodedUrl = encodeURI(format(url))
   const obj = paramsParse(encodedUrl)
-  t.is(typeof obj, 'object')
-  t.is(obj.utm_source, 'the_source')
-  t.is(obj.utm_medium, 'camp med')
-  t.is(obj.utm_term, 'Bought keyword')
-  t.is(obj.utm_content, 'Funny Text')
-  t.is(obj.utm_campaign, '400kpromo')
+  assert.is(typeof obj, 'object')
+  assert.is(obj.utm_source, 'the_source')
+  assert.is(obj.utm_medium, 'camp med')
+  assert.is(obj.utm_term, 'Bought keyword')
+  assert.is(obj.utm_content, 'Funny Text')
+  assert.is(obj.utm_campaign, '400kpromo')
 })
 
-test('Parse other complex params', (t) => {
+test('Parse other complex params', () => {
   const url = `https://random.url.com
   ?Target=Offer
   &Method=findAll
@@ -163,8 +164,8 @@ test('Parse other complex params', (t) => {
   // ~(Target~'Offer~Method~'findAll~fields~(~'id~'name~'default_goal_name)~filters~(has_setting_off~false~has_goals_enabled~(TRUE~1)~status~'active))
   const encodedUrl = encodeURI(format(url))
   const obj = paramsParse(encodedUrl)
-  t.is(typeof obj, 'object')
-  t.deepEqual(obj, {
+  assert.is(typeof obj, 'object')
+  assert.equal(obj, {
     Target: 'Offer',
     Method: 'findAll',
     fields: ['id', 'name', 'default_goal_name'],
@@ -459,3 +460,5 @@ test('Parse complex params', (t) => {
   })
 })
 */
+
+test.run()

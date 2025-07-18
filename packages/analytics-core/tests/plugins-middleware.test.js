@@ -1,13 +1,17 @@
-import test from 'ava'
+import './_setup.js'
+import { test } from 'uvu'
+import * as assert from 'uvu/assert'
 import sinon from 'sinon'
-import delay from './_utils/delay'
-import Analytics from '../src'
+import delay from './_utils/delay.js'
+import Analytics from '../src/index.js'
 
-test.beforeEach((t) => {
-  t.context.sandbox = sinon.createSandbox()
+let sandbox
+
+test.before(() => {
+  sandbox = sinon.createSandbox()
 })
 
-test('Plugin with [x]Start should enrich [x]Start payloads', async (t) => {
+test('Plugin with [x]Start should enrich [x]Start payloads', async () => {
   let secondPayload
   let finalPayload
   Analytics({
@@ -46,22 +50,22 @@ test('Plugin with [x]Start should enrich [x]Start payloads', async (t) => {
     ]
   })
 
-  await delay(100)
+  await delay(50) // Reduced from 100ms to 50ms
 
-  t.truthy(secondPayload.meta)
+  assert.ok(secondPayload.meta)
 
   delete secondPayload.meta 
-  t.deepEqual(secondPayload, {
+  assert.equal(secondPayload, {
     type: 'initializeStart',
     plugins: [ 'plugin-one', 'plugin-two', 'plugin-three' ],
     disabled: [],
     foo: 'baz'
   })
 
-  t.truthy(finalPayload.meta)
+  assert.ok(finalPayload.meta)
 
   delete finalPayload.meta 
-  t.deepEqual(finalPayload, {
+  assert.equal(finalPayload, {
     type: 'initializeStart',
     plugins: [ 'plugin-one', 'plugin-two', 'plugin-three' ],
     foo: 'baz',
@@ -70,7 +74,7 @@ test('Plugin with [x]Start should enrich [x]Start payloads', async (t) => {
   })
 })
 
-test('Plugin (not xStart) returning values should NOT enrich other payloads', async (t) => {
+test('Plugin (not xStart) returning values should NOT enrich other payloads', async () => {
   let firstPayload
   let secondPayload
   let thirdPayload
@@ -131,7 +135,7 @@ test('Plugin (not xStart) returning values should NOT enrich other payloads', as
   analytics.track('foobar')
   const anonId = analytics.user('anonymousId')
 
-  await delay(100)
+  await delay(50) // Reduced from 100ms to 50ms
 
   const originalPayload = {
     type: 'track',
@@ -144,16 +148,16 @@ test('Plugin (not xStart) returning values should NOT enrich other payloads', as
   }
 
   delete firstPayload.meta
-  t.deepEqual(firstPayload, originalPayload)
+  assert.equal(firstPayload, originalPayload)
 
   delete secondPayload.meta
-  t.deepEqual(secondPayload, originalPayload)
+  assert.equal(secondPayload, originalPayload)
 
   delete thirdPayload.meta
-  t.deepEqual(thirdPayload, originalPayload)
+  assert.equal(thirdPayload, originalPayload)
 
   delete fourthPayload.meta
-  t.deepEqual(fourthPayload, {
+  assert.equal(fourthPayload, {
     type: 'track',
     event: 'foobar',
     properties: {},
@@ -164,7 +168,7 @@ test('Plugin (not xStart) returning values should NOT enrich other payloads', as
   })
 })
 
-test('Namespace plugin should enrich specific data', async (t) => {
+test('Namespace plugin should enrich specific data', async () => {
   let payloadOne
   let payloadOriginal
   const analytics = Analytics({
@@ -201,10 +205,10 @@ test('Namespace plugin should enrich specific data', async (t) => {
   analytics.track('lol')
   const anonId = analytics.user('anonymousId')
 
-  await delay(100)
+  await delay(50) // Reduced from 100ms to 50ms
 
   delete payloadOne.meta
-  t.deepEqual(payloadOne, {
+  assert.equal(payloadOne, {
     type: 'track',
     event: 'lol',
     properties: {},
@@ -215,7 +219,7 @@ test('Namespace plugin should enrich specific data', async (t) => {
   })
 
   delete payloadOriginal.meta
-  t.deepEqual(payloadOriginal, {
+  assert.equal(payloadOriginal, {
     type: 'track',
     event: 'lol',
     properties: {},
@@ -225,7 +229,7 @@ test('Namespace plugin should enrich specific data', async (t) => {
   })
 })
 
-test('Multiple Namespaced plugins should enrich specific data', async (t) => {
+test('Multiple Namespaced plugins should enrich specific data', async () => {
   let payloadOne
   let payloadTwo
   const analytics = Analytics({
@@ -286,10 +290,10 @@ test('Multiple Namespaced plugins should enrich specific data', async (t) => {
   analytics.track('lol')
   const anonId = analytics.user('anonymousId')
 
-  await delay(100)
+  await delay(50) // Reduced from 100ms to 50ms
 
   delete payloadOne.meta
-  t.deepEqual(payloadOne, {
+  assert.equal(payloadOne, {
     type: 'track',
     event: 'lol',
     properties: {},
@@ -301,7 +305,7 @@ test('Multiple Namespaced plugins should enrich specific data', async (t) => {
   })
 
   delete payloadTwo.meta
-  t.deepEqual(payloadTwo, {
+  assert.equal(payloadTwo, {
     type: 'track',
     event: 'lol',
     properties: {},
@@ -311,3 +315,5 @@ test('Multiple Namespaced plugins should enrich specific data', async (t) => {
     awesome: 'sauce'
   })
 })
+
+test.run()

@@ -1,30 +1,34 @@
-import test from 'ava'
+import '../_setup.js'
+import { test } from 'uvu'
+import * as assert from 'uvu/assert'
 import sinon from 'sinon'
-import delay from '../_utils/delay'
-import isPromise from '../_utils/isPromise'
-import Analytics from '../../src'
+import delay from '../_utils/delay.js'
+import isPromise from '../_utils/isPromise.js'
+import Analytics from '../../src/index.js'
 
-test.beforeEach((t) => {
-  t.context.sandbox = sinon.createSandbox()
+let sandbox
+
+test.before(() => {
+  sandbox = sinon.createSandbox()
 })
 
-test('Page returns promise', async (t) => {
+test('Page returns promise', async () => {
   const analytics = Analytics({
     app: 'appname',
     version: 100
   })
 
   const prom = analytics.page()
-  t.is(isPromise(prom), true)
+  assert.is(isPromise(prom), true)
 })
 
-test('Page promise execution order', async (t) => {
+test('Page promise execution order', async () => {
   const executionOrder = []
-  const onPageStartSpy = t.context.sandbox.spy()
-  const onPageSpy = t.context.sandbox.spy()
-  const onPageEndSpy = t.context.sandbox.spy()
-  const onPageCallback = t.context.sandbox.spy()
-  const onPagePromise = t.context.sandbox.spy()
+  const onPageStartSpy = sandbox.spy()
+  const onPageSpy = sandbox.spy()
+  const onPageEndSpy = sandbox.spy()
+  const onPageCallback = sandbox.spy()
+  const onPagePromise = sandbox.spy()
 
   const analytics = Analytics({
     app: 'appname',
@@ -53,27 +57,27 @@ test('Page promise execution order', async (t) => {
   })
 
   // Ensure the listeners callbacks are called only once
-  t.deepEqual(onPageStartSpy.callCount, 1)
-  t.deepEqual(onPageSpy.callCount, 1)
-  t.deepEqual(onPageEndSpy.callCount, 1)
+  assert.equal(onPageStartSpy.callCount, 1)
+  assert.equal(onPageSpy.callCount, 1)
+  assert.equal(onPageEndSpy.callCount, 1)
 
   // Ensure callback gets called
-  t.deepEqual(onPageCallback.callCount, 1)
+  assert.equal(onPageCallback.callCount, 1)
 
   // Ensure promise.then gets called
-  t.deepEqual(onPagePromise.callCount, 1)
+  assert.equal(onPagePromise.callCount, 1)
 
   // Ensure the callbacks are called in the correct order
-  t.deepEqual(executionOrder, [1, 2, 3, 4, 5])
+  assert.equal(executionOrder, [1, 2, 3, 4, 5])
 })
 
-test('Non blocking page promise execution order', async (t) => {
+test('Non blocking page promise execution order', async () => {
   const executionOrder = []
-  const onPageStartSpy = t.context.sandbox.spy()
-  const onPageSpy = t.context.sandbox.spy()
-  const onPageEndSpy = t.context.sandbox.spy()
-  const onPageCallback = t.context.sandbox.spy()
-  const onPagePromise = t.context.sandbox.spy()
+  const onPageStartSpy = sandbox.spy()
+  const onPageSpy = sandbox.spy()
+  const onPageEndSpy = sandbox.spy()
+  const onPageCallback = sandbox.spy()
+  const onPagePromise = sandbox.spy()
 
   const analytics = Analytics({
     app: 'appname',
@@ -102,18 +106,20 @@ test('Non blocking page promise execution order', async (t) => {
   })
   executionOrder.push(1)
 
-  await delay(1000)
+  await delay(100) // Reduced from 1000ms to 100ms
 
   // Ensure the listeners callbacks are called only once
-  t.deepEqual(onPageStartSpy.callCount, 1)
-  t.deepEqual(onPageSpy.callCount, 1)
-  t.deepEqual(onPageEndSpy.callCount, 1)
+  assert.equal(onPageStartSpy.callCount, 1)
+  assert.equal(onPageSpy.callCount, 1)
+  assert.equal(onPageEndSpy.callCount, 1)
 
   // Ensure callback gets called
-  t.deepEqual(onPageCallback.callCount, 1)
+  assert.equal(onPageCallback.callCount, 1)
 
   // Ensure promise.then gets called
-  t.deepEqual(onPagePromise.callCount, 1)
+  assert.equal(onPagePromise.callCount, 1)
   // Ensure the callbacks are called in the correct order
-  t.deepEqual(executionOrder, [0, 1, 2, 3, 4, 5])
+  assert.equal(executionOrder, [0, 1, 2, 3, 4, 5])
 })
+
+test.run()

@@ -2,6 +2,7 @@
   "name": "analytics-utils",
   "version": "1.0.14",
   "description": "Analytics utility functions used by 'analytics' module",
+  "type": "module",
   "author": "David Wells <hello@davidwells.io>",
   "license": "MIT",
   "repository": {
@@ -25,8 +26,15 @@
   "module": "dist/analytics-utils.module.js",
   "unpkg": "dist/analytics-utils.umd.js",
   "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./dist/analytics-utils.module.js",
+      "require": "./dist/analytics-utils.js"
+    }
+  },
   "scripts": {
-    "test": "uvu tests -r esm",
+    "test": "uvu tests '.test.([mc]js|[jt]sx?)$'",
     "start": "npm run sync && concurrently 'npm:watch:dev' 'npm:copy' 'npm:serve'",
     "serve": "servor dist index.html 8081 --reload --browse",
     "copy": "watchlist examples -- npm run sync",

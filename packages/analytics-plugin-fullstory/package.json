@@ -2,6 +2,7 @@
   "name": "@analytics/fullstory",
   "version": "0.2.6",
   "description": "Unofficial FullStory plugin for 'analytics' module",
+  "type": "module",
   "projectMeta": {
     "provider": {
       "name": "FullStory",
@@ -20,8 +21,8 @@
   "author": "David Wells",
   "license": "MIT",
   "scripts": {
-    "test": "ava -v",
-    "test:watch": "ava -v --watch",
+    "test": "uvu tests '.test.([mc]js|[jt]sx?)$'",
+    "test:watch": "watchlist tests -- npm test",
     "docs": "node ../analytics-cli/bin/run docs",
     "build": "node ../../scripts/build/index.js",
     "watch": "node ../../scripts/build/_watch.js",
@@ -66,7 +67,8 @@
     "@babel/core": "7.5.5",
     "@babel/preset-env": "7.5.5",
     "@babel/register": "^7.5.5",
-    "@babel/runtime": "7.5.5"
+    "@babel/runtime": "7.5.5",
+    "uvu": "^0.5.6"
   },
   "dependencies": {
     "camelcase": "^5.3.1"

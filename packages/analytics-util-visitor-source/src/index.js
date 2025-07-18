@@ -1,6 +1,6 @@
 import { isBrowser, isUndefined } from '@analytics/type-utils'
 import { isExternal, getLocation } from '@analytics/url-utils'
-import { parseReferrer } from './utils/parse-referrer'
+import { parseReferrer } from './utils/parse-referrer.js'
 
 /**
  * Get referrer 
@@ -39,4 +39,4 @@ export function getVisitorSource({
 
 export { parseReferrer }
 
-export * from './constants'
+export * from './constants.js'

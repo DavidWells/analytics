@@ -1,4 +1,4 @@
-import EVENTS from '../events'
+import EVENTS from '../events.js'
 /*
 TODO figure out if this should live in state...
 Queue could be in mermory as well.

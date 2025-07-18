@@ -9,7 +9,7 @@ import {
   SOCIAL,
   SEARCH,
   NA,
-} from '../src'
+} from '../src/index.js'
 
 test.after(() => console.log('tests done'))
 

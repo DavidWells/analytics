@@ -1,8 +1,8 @@
 import smartQueue from '@analytics/queue-utils'
-import createEventQueue from './helpers/create-event-queue'
-import mergeEndpointData from './helpers/merge-endpoint-data'
-import createPinpointSender from './helpers/create-pinpoint-sender'
-import * as PINPOINT_EVENTS from './helpers/events'
+import createEventQueue from './helpers/create-event-queue.js'
+import mergeEndpointData from './helpers/merge-endpoint-data.js'
+import createPinpointSender from './helpers/create-pinpoint-sender.js'
+import * as PINPOINT_EVENTS from './helpers/events.js'
 import { isBrowser } from '@analytics/type-utils'
 
 const { SESSION_START, SESSION_STOP } = PINPOINT_EVENTS

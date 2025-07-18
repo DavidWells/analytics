@@ -1,5 +1,5 @@
 import { isBrowser } from '@analytics/type-utils'
-import { decodeUri } from './decodeUri'
+import { decodeUri } from './decodeUri.js'
 
 /**
  * Get search string from given url

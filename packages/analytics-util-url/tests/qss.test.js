@@ -2,7 +2,7 @@
 import q from 'querystring'
 import { test } from 'uvu'
 import * as assert from 'uvu/assert'
-import { encode, decode } from '../src/utils/qss'
+import { encode, decode } from '../src/utils/qss.js'
 
 const { stringify } = q
 const parse = (str) => Object.assign({}, q.parse(str))

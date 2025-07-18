@@ -157,7 +157,7 @@ export const isBoolean = typeOf.bind(null, BOOLEAN)
 
 /** 
  * @param x
- * @return {x is symobl}
+ * @return {x is symbol}
  */
 export const isSymbol = typeOf.bind(null, SYMBOL)
 
@@ -243,9 +243,9 @@ export function isObjectLike(obj) {
 }
 
 /**
-* Tests if a value is a parseable JSON string.
+* Tests if a value is a parsable JSON string.
 * @param {*} x - value to test
-* @returns {boolean} boolean indicating if a value is a parseable JSON string
+* @returns {boolean} boolean indicating if a value is a parsable JSON string
 * @example
 * isJson('{"a":5}') // returns true
 * isJson('[]') // returns true
@@ -262,7 +262,7 @@ export function isJson(x) {
 }
 
 /**
- * Is primative scalar value
+ * Is primitive scalar value
  * @param x
  * @return {boolean}
  * @example
@@ -425,7 +425,7 @@ export function isError(x) {
  * isErrorLike({}) // False
  * isErrorLike({name: "Error", message: null}) // False
  *
- * // Works as a typguard
+ * // Works as a type guard
  * const something = {name: "Error", message: "This is an error"} as unknown
  *
  * if (isErrorLike(something)) {
@@ -547,7 +547,7 @@ export function isEmail(x) {
 }
 
 /**
- * Check if valie is date
+ * Check if value is date
  * @param {*} val 
  * @returns {Boolean}
  */

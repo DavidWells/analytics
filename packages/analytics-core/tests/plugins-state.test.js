@@ -1,23 +1,27 @@
-import test from 'ava'
+import './_setup.js'
+import { test } from 'uvu'
+import * as assert from 'uvu/assert'
 import sinon from 'sinon'
-import delay from './_utils/delay'
-import Analytics from '../src'
+import delay from './_utils/delay.js'
+import Analytics from '../src/index.js'
 
-test.beforeEach((t) => {
-  t.context.sandbox = sinon.createSandbox()
+let sandbox
+
+test.before(() => {
+  sandbox = sinon.createSandbox()
 })
 
-test('Instance should contain no plugins', async (t) => {
+test('Instance should contain no plugins', async () => {
   const analytics = Analytics({
     app: 'appname',
     version: 100
   })
   const { plugins } = analytics.getState()
 
-  t.is(Object.keys(plugins).length, 0)
+  assert.is(Object.keys(plugins).length, 0)
 })
 
-test('Instance should contain 1 plugin', async (t) => {
+test('Instance should contain 1 plugin', async () => {
   const analytics = Analytics({
     app: 'appname',
     version: 100,
@@ -31,10 +35,10 @@ test('Instance should contain 1 plugin', async (t) => {
 
   const { plugins } = analytics.getState()
 
-  t.is(Object.keys(plugins).length, 1)
+  assert.is(Object.keys(plugins).length, 1)
 })
 
-test('Instance should contain 2 plugins', async (t) => {
+test('Instance should contain 2 plugins', async () => {
   const analytics = Analytics({
     app: 'appname',
     version: 100,
@@ -55,18 +59,18 @@ test('Instance should contain 2 plugins', async (t) => {
 
   const { plugins } = analytics.getState()
 
-  t.is(Object.keys(plugins).length, 2)
-  t.is(plugins['plugin-one'].enabled, true)
-  t.is(plugins['plugin-two'].enabled, true)
-  t.deepEqual(plugins['plugin-two'].config, {
+  assert.is(Object.keys(plugins).length, 2)
+  assert.is(plugins['plugin-one'].enabled, true)
+  assert.is(plugins['plugin-two'].enabled, true)
+  assert.equal(plugins['plugin-two'].config, {
     lol: 'nice'
   })
 })
 
-test.cb('Instance should load plugins in correct order', (t) => {
+test('Instance should load plugins in correct order', async () => {
   const pluginOrder = []
-  const initializeOne = t.context.sandbox.spy()
-  const initializeTwo = t.context.sandbox.spy()
+  const initializeOne = sandbox.spy()
+  const initializeTwo = sandbox.spy()
   const analytics = Analytics({
     app: 'appname',
     version: 100,
@@ -74,6 +78,7 @@ test.cb('Instance should load plugins in correct order', (t) => {
       {
         name: 'plugin-one',
         initialize: () => {
+          console.log('initializeOne')
           pluginOrder.push(1)
           initializeOne()
         }
@@ -81,6 +86,7 @@ test.cb('Instance should load plugins in correct order', (t) => {
       {
         name: 'plugin-two',
         initialize: () => {
+          console.log('initializeTwo')
           pluginOrder.push(2)
           initializeTwo()
         }
@@ -88,10 +94,11 @@ test.cb('Instance should load plugins in correct order', (t) => {
     ]
   })
 
-  analytics.ready(() => {
-    t.is(initializeOne.callCount, 1)
-    t.is(initializeTwo.callCount, 1)
-    t.deepEqual(pluginOrder, [1, 2])
-    t.end()
+  analytics.ready((x) => {
+    assert.is(initializeOne.callCount, 1, 'initializeOne should be called')
+    assert.is(initializeTwo.callCount, 1, 'initializeTwo should be called')
+    assert.equal(pluginOrder, [1, 2])
   })
 })
+
+test.run()

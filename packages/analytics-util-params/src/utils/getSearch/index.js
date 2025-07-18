@@ -1,4 +1,4 @@
-import getSearchFromBrowser from './fromBrowser'
+import getSearchFromBrowser from './fromBrowser.js'
 
 /**
  * Get search string from given url

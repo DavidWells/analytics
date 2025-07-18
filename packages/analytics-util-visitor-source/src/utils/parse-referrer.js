@@ -17,7 +17,7 @@ import {
   SOCIAL,
   SEARCH,
   NA,
-} from '../constants'
+} from '../constants.js'
 
 const Q = 'q'
 const QUERY = 'query'

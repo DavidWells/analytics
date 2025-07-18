@@ -1,6 +1,10 @@
 import fs from 'fs'
 import path from 'path'
+import { fileURLToPath } from 'url'
 import { JSDOM } from 'jsdom'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 const pathToHtml = path.join(__dirname, '../../dist/index.html')
 const pathToJs = path.join(__dirname, '../../dist/browser/listener-utils.js')

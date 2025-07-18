@@ -1,7 +1,7 @@
 
 import { test } from 'uvu'
 import * as assert from 'uvu/assert'
-import { compressParams, decompressParams } from '../src'
+import { compressParams, decompressParams } from '../src/index.js'
 
 // test.before.each(ENV.reset);
 test.after(() => console.log('tests done'))

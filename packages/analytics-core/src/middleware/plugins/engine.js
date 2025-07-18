@@ -1,7 +1,7 @@
-import EVENTS from '../../events'
-import fitlerDisabledPlugins from '../../utils/filterDisabled'
+import EVENTS from '../../events.js'
+import fitlerDisabledPlugins from '../../utils/filterDisabled.js'
 import { isFunction, isObject, isString } from '@analytics/type-utils'
-import { runCallback } from '../../utils/callback-stack'
+import { runCallback } from '../../utils/callback-stack.js'
 
 const endsWithStartRegex = /Start$/
 const bootstrapRegex = /^bootstrap/

@@ -1,5 +1,5 @@
 import { isObject } from '@analytics/type-utils'
-import { FUNC, UNDEF, ACTION_INIT, REDUCER } from './utils/defs'
+import { FUNC, UNDEF, ACTION_INIT, REDUCER } from './utils/defs.js'
 
 // eslint-disable-next-line
 const $$observable = /* #__PURE__ */ (() => (typeof Symbol === FUNC && Symbol.observable) || '@@observable')();

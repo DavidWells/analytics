@@ -110,7 +110,7 @@ function safeDecode(str) {
   return str
 }
 
-module.exports = {
+export {
   safeEncode,
   safeDecode,
   encode,

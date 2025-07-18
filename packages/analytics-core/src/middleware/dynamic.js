@@ -1,4 +1,4 @@
-import { compose } from '../vendor/redux'
+import { compose } from '../vendor/redux/index.js'
 
 /* Class to fix dynamic middlewares from conflicting with each other
 if more than one analytic instance is active */

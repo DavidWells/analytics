@@ -1,15 +1,19 @@
-import test from 'ava'
+import '../_setup.js'
+import { test } from 'uvu'
+import * as assert from 'uvu/assert'
 import sinon from 'sinon'
-import delay from '../_utils/delay'
-import Analytics from '../../src'
+import delay from '../_utils/delay.js'
+import Analytics from '../../src/index.js'
 
-test.beforeEach((t) => {
-  t.context.sandbox = sinon.createSandbox()
+let sandbox
+
+test.before(() => {
+  sandbox = sinon.createSandbox()
 })
 
-test('should abort calls', async (t) => {
-  const pageSpy = t.context.sandbox.spy()
-  const pageSpyTwo = t.context.sandbox.spy()
+test('should abort calls', async () => {
+  const pageSpy = sandbox.spy()
+  const pageSpyTwo = sandbox.spy()
 
   const analytics = Analytics({
     plugins: [
@@ -37,16 +41,16 @@ test('should abort calls', async (t) => {
   await delay(100)
 
   // Ensure the page was called
-  t.is(pageSpy.callCount, 1)
+  assert.is(pageSpy.callCount, 1)
 
   // Ensure pageSpyTwo wasnt called because earlier abort
-  t.is(pageSpyTwo.callCount, 0)
+  assert.is(pageSpyTwo.callCount, 0)
 })
 
-test('should abort only specific plugins if abort.plugins array supplied', async (t) => {
-  const pageSpy = t.context.sandbox.spy()
-  const pageSpyTwo = t.context.sandbox.spy()
-  const pageSpyThree = t.context.sandbox.spy()
+test('should abort only specific plugins if abort.plugins array supplied', async () => {
+  const pageSpy = sandbox.spy()
+  const pageSpyTwo = sandbox.spy()
+  const pageSpyThree = sandbox.spy()
 
   const analytics = Analytics({
     plugins: [
@@ -85,10 +89,12 @@ test('should abort only specific plugins if abort.plugins array supplied', async
   await delay(100)
 
   // Ensure the page was called
-  t.deepEqual(pageSpy.callCount, 1)
+  assert.equal(pageSpy.callCount, 1)
 
   // Ensure pageSpyTwo wasnt called because earlier abort
-  t.deepEqual(pageSpyTwo.callCount, 0)
+  assert.equal(pageSpyTwo.callCount, 0)
 
-  t.deepEqual(pageSpyThree.callCount, 1)
+  assert.equal(pageSpyThree.callCount, 1)
 })
+
+test.run()

@@ -6,11 +6,11 @@ import {
   getPageSession,
   setPageSession,
 } from '@analytics/session-utils'
-import { prepareAttributes, prepareMetrics } from './prepare-data'
+import { prepareAttributes, prepareMetrics } from './prepare-data.js'
 import { setItem, getItem, removeItem } from '@analytics/localstorage-utils'
 import { isString, isBrowser } from '@analytics/type-utils'
-import getClientInfo from '../../utils/client-info'
-import { getStorageKey } from './getStorageKey'
+import getClientInfo from '../../utils/client-info/index.js'
+import { getStorageKey } from './getStorageKey.js'
 
 const ENDPOINT_KEY = '__endpoint'
 

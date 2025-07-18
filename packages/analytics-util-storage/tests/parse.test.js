@@ -1,6 +1,6 @@
 import { test }  from 'uvu'
-import assert from 'uvu/assert'
-import parse from '../src/utils/parse'
+import * as assert from 'uvu/assert'
+import parse from '../src/utils/parse.js'
 
 test('Parse is func', () => {
 	assert.type(parse, 'function')

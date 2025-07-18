@@ -1,9 +1,9 @@
 import { uuid } from 'analytics-utils'
 import { remove } from '@analytics/global-storage-utils'
-import { tempKey } from '../modules/user'
-import { USER_ID, USER_TRAITS, ANON_ID } from '../constants'
-import { ID, ANONID } from '../utils/internalConstants'
-import EVENTS from '../events'
+import { tempKey } from '../modules/user.js'
+import { USER_ID, USER_TRAITS, ANON_ID } from '../constants.js'
+import { ID, ANONID } from '../utils/internalConstants.js'
+import EVENTS from '../events.js'
 
 export default function identifyMiddleware(instance) {
   const { setItem, removeItem, getItem } = instance.storage

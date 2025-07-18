@@ -37,8 +37,7 @@
   },
   "sideEffects": false,
   "scripts": {
-    "test": "ava -v",
-    "test:watch": "ava -v --watch",
+    "test": "uvu src '.test.([mc]js|[jt]sx?)$'",
     "clean": "rimraf lib dist && mkdirp lib dist",
     "prebuild": "npm run clean && npm run types",
     "types": "node scripts/sync-types.js",
@@ -86,7 +85,7 @@
     "@babel/preset-env": "7.16.11",
     "@babel/register": "7.17.0",
     "@babel/runtime": "7.17.0",
-    "ava": "^2.2.0",
+    "uvu": "^0.5.6",
     "mkdirp": "^0.5.1",
     "rimraf": "^2.6.3",
     "sinon": "7.2.3"

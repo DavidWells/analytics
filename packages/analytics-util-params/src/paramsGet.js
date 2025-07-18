@@ -1,6 +1,6 @@
-import decode from './utils/decodeURIComponent'
-import format from './utils/formatValue'
-import { queryRegex } from './utils/regex'
+import decode from './utils/decodeURIComponent.js'
+import format from './utils/formatValue.js'
+import { queryRegex } from './utils/regex.js'
 /**
  * Get a given query parameter value
  * @param  {string} param - Key of parameter to find

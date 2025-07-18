@@ -1,7 +1,7 @@
-import getSearch from './utils/getSearch'
-import decode from './utils/decodeURIComponent'
-import formatValue from './utils/formatValue'
-import { queryRegex } from './utils/regex'
+import getSearch from './utils/getSearch/index.js'
+import decode from './utils/decodeURIComponent.js'
+import formatValue from './utils/formatValue.js'
+import { queryRegex } from './utils/regex.js'
 
 export default function parseParams(url) {
   const searchString = getSearch(url)

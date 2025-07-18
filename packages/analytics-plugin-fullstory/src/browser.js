@@ -1,5 +1,5 @@
 /* global FS */
-const camelCase = require('camelcase')
+import camelCase from 'camelcase'
 
 const defaultConfig = {
   org: '',

@@ -1,18 +1,21 @@
-import test from 'ava'
+import './_setup.js'
+import { test } from 'uvu'
+import * as assert from 'uvu/assert'
 import sinon from 'sinon'
-import delay from './_utils/delay'
-import Analytics from '../src'
+import delay from './_utils/delay.js'
+import Analytics from '../src/index.js'
 
-test.beforeEach((t) => {
-  t.context.sandbox = sinon.createSandbox()
+let sandbox
+
+test.before(() => {
+  sandbox = sinon.createSandbox()
 })
 
-test('Plugin Methods should fire correct order', async (t) => {
-  const { context } = t
+test('Plugin Methods should fire correct order', async () => {
   let instanceTestOne, instanceTestTwo, argsToPass, argsToPassTwo
-  const customMethodFunc = context.sandbox.spy()
-  const trackListener = context.sandbox.spy()
-  const pageListener = context.sandbox.spy()
+  const customMethodFunc = sandbox.spy()
+  const trackListener = sandbox.spy()
+  const pageListener = sandbox.spy()
 
   const analytics = Analytics({
     app: 'cool-app',
@@ -72,20 +75,22 @@ test('Plugin Methods should fire correct order', async (t) => {
   const valueThree = await analytics.plugins.pluginOne.three('1', '2', '3')
   const valueFour = await analytics.plugins.pluginOne.four()
 
-  await delay(2000)
+  await delay(200) // Reduced from 2000ms to 200ms
   // one was called once
-  t.is(customMethodFunc.callCount, 1)
+  assert.is(customMethodFunc.callCount, 1)
   const mainApiKeys = Object.keys(analytics)
-  t.deepEqual(Object.keys(instanceTestOne), mainApiKeys)
-  t.deepEqual(Object.keys(instanceTestTwo), mainApiKeys)
-  t.is(valueThree, 'wooo')
-  t.is(valueFour, 'hooray')
+  assert.equal(Object.keys(instanceTestOne), mainApiKeys)
+  assert.equal(Object.keys(instanceTestTwo), mainApiKeys)
+  assert.is(valueThree, 'wooo')
+  assert.is(valueFour, 'hooray')
   // console.log('executionOrder', executionOrder)
 
-  t.is(trackListener.callCount, 1)
-  t.is(pageListener.callCount, 1)
+  assert.is(trackListener.callCount, 1)
+  assert.is(pageListener.callCount, 1)
 
-  t.deepEqual(argsToPass, ['1', '2', '3'])
-  t.deepEqual(argsToPassTwo, ['nice', { groovy: true }])
+  assert.equal(argsToPass, ['1', '2', '3'])
+  assert.equal(argsToPassTwo, ['nice', { groovy: true }])
 
 })
+
+test.run()

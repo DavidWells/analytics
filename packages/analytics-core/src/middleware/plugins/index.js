@@ -1,8 +1,8 @@
-import EVENTS, { nonEvents } from '../../events'
-import { runCallback, stack } from '../../utils/callback-stack'
-import waitForReady from '../../utils/waitForReady'
-import { processQueue } from '../../utils/heartbeat'
-import runPlugins from './engine'
+import EVENTS, { nonEvents } from '../../events.js'
+import { runCallback, stack } from '../../utils/callback-stack.js'
+import waitForReady from '../../utils/waitForReady.js'
+import { processQueue } from '../../utils/heartbeat.js'
+import runPlugins from './engine.js'
 
 export default function pluginMiddleware(instance, getPlugins, systemEvents) {
   const isReady = {}

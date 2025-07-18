@@ -1,7 +1,7 @@
 
 import { test } from 'uvu'
 import * as assert from 'uvu/assert'
-import * as ENV from './setup/env'
+import * as ENV from './setup/env.js'
 
 test.before(ENV.setup);
 // test.before.each(ENV.reset);

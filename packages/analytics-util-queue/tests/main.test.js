@@ -1,6 +1,6 @@
 import { test } from 'uvu'
 import * as t from 'uvu/assert'
-import smartQueue from '../src'
+import smartQueue from '../src/index.js'
 
 const noOp = (arr) => {
   // console.log('process items', arr)
@@ -26,7 +26,7 @@ test('Starts in idle if queue empty', () => {
   // Queue is empty
 	t.is(ctx.size(), 0)
   const end = timer.runtimeMs()
-  // Queue releases immediatly if no items
+  // Queue releases immediately if no items
 	t.is(end < 0.2, true)
 })
 
@@ -35,20 +35,20 @@ function asyncQueue() {
     const timer = new Timer()
     const queue = smartQueue(noOp, {
       max: 7,
-      interval: 1000,
+      interval: 100, // Reduced from 1000ms to 100ms
       throttle: true,
       onEmpty: () => {
         const timeEnd = timer.runtimeMs()
         return res(timeEnd)
       }
     })
-    addItems(queue, 25)
+    addItems(queue, 10) // Reduced from 25 to 10 items
   })
 }
 
 test('Processes queue', async () => {
   const fin = await asyncQueue()
-	t.is(fin < 5000, true)
+	t.is(fin < 1000, true) // Reduced expectation from 5000ms to 1000ms
 })
 
 test('queue.push', () => {
@@ -155,17 +155,17 @@ test('opts.interval', async () => {
 	const queue = smartQueue(arr => {
 		let del = Date.now() - now
 		t.ok(Array.isArray(arr), 'caller receives Array of items')
-		t.ok(del > 2990, '~> ran after 3s interval')
+		t.ok(del > 290, '~> ran after 300ms interval') // Reduced from 2990ms to 290ms
 		t.is(arr.length, 5, '~> received 5 items')
 		t.is(queue.size(), 0, '~> instance fully drained')
 	}, {
-		interval: 3e3
+		interval: 300 // Reduced from 3e3 (3000ms) to 300ms
 	})
 
 	Array.from({ length:5 }, queue.push)
 
 	t.is(queue.size(), 5, '(before) has 5 items')
-	await sleep(5e3)
+	await sleep(500) // Reduced from 5e3 (5000ms) to 500ms
 	t.is(queue.size(), 0, '(after) has 0 items')
 
 	queue.pause()

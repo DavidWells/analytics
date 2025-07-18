@@ -1,15 +1,19 @@
-import test from 'ava'
+import './_setup.js'
+import { test } from 'uvu'
+import * as assert from 'uvu/assert'
 import sinon from 'sinon'
-import delay from './_utils/delay'
-import Analytics from '../src'
+import delay from './_utils/delay.js'
+import Analytics from '../src/index.js'
 
-test.beforeEach((t) => {
-  t.context.sandbox = sinon.createSandbox()
+let sandbox
+
+test.before(() => {
+  sandbox = sinon.createSandbox()
 })
 
-test('Instance should not call any initialize if aborted', async (t) => {
-  const initializeOne = t.context.sandbox.spy()
-  const initializeTwo = t.context.sandbox.spy()
+test('Instance should not call any initialize if aborted', async () => {
+  const initializeOne = sandbox.spy()
+  const initializeTwo = sandbox.spy()
   const analytics = Analytics({
     app: 'appname',
     version: 100,
@@ -33,15 +37,15 @@ test('Instance should not call any initialize if aborted', async (t) => {
     ]
   })
 
-  await delay(100)
+  await delay(50) // Reduced from 100ms to 50ms
 
-  t.is(initializeOne.callCount, 0)
-  t.is(initializeTwo.callCount, 0)
+  assert.is(initializeOne.callCount, 0)
+  assert.is(initializeTwo.callCount, 0)
 })
 
-test('Instance should not call specific initialize if plugin aborted by name', async (t) => {
-  const initializeOne = t.context.sandbox.spy()
-  const initializeTwo = t.context.sandbox.spy()
+test('Instance should not call specific initialize if plugin aborted by name', async () => {
+  const initializeOne = sandbox.spy()
+  const initializeTwo = sandbox.spy()
   const analytics = Analytics({
     app: 'appname',
     version: 100,
@@ -67,8 +71,10 @@ test('Instance should not call specific initialize if plugin aborted by name', a
     ]
   })
 
-  await delay(100)
+  await delay(50) // Reduced from 100ms to 50ms
 
-  t.is(initializeOne.callCount, 0)
-  t.is(initializeTwo.callCount, 1)
+  assert.is(initializeOne.callCount, 0)
+  assert.is(initializeTwo.callCount, 1)
 })
+
+test.run()

@@ -1,7 +1,7 @@
 
 import { test } from 'uvu'
 import * as assert from 'uvu/assert'
-import * as lib from '../src'
+import * as lib from '../src/index.js'
 const {
   NULL,
   ARRAY,

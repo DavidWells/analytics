@@ -1,11 +1,11 @@
 import { uuid } from 'analytics-utils'
-import callAws from './call-aws'
-import { CHANNEL_TYPES } from './constants'
-import getClientInfo from '../../utils/client-info'
-import { getStorageKey } from './getStorageKey'
+import callAws from './call-aws.js'
+import { CHANNEL_TYPES } from './constants.js'
+import getClientInfo from '../../utils/client-info/index.js'
+import { getStorageKey } from './getStorageKey.js'
 import { getItem } from '@analytics/localstorage-utils'
-import * as PINPOINT_EVENTS from './events'
-import mergeEndpointData from './merge-endpoint-data'
+import * as PINPOINT_EVENTS from './events.js'
+import mergeEndpointData from './merge-endpoint-data.js'
 
 const clientInfo = getClientInfo()
 const { SESSION_START, SESSION_STOP } = PINPOINT_EVENTS

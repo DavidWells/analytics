@@ -1,9 +1,10 @@
-import test from 'ava'
+import { test } from 'uvu'
+import * as assert from 'uvu/assert'
 import sinon from 'sinon'
-import * as createPinpointSender from '../../src/pinpoint/helpers/create-pinpoint-sender'
-import * as createEventQueue from '../../src/pinpoint/helpers/create-event-queue'
-import * as mergeEndpointData from '../../src/pinpoint/helpers/merge-endpoint-data'
-import { initialize } from '../../src/pinpoint'
+import * as createPinpointSender from '../../src/pinpoint/helpers/create-pinpoint-sender.js'
+import * as createEventQueue from '../../src/pinpoint/helpers/create-event-queue.js'
+import * as mergeEndpointData from '../../src/pinpoint/helpers/merge-endpoint-data.js'
+import { initialize } from '../../src/pinpoint/index.js'
 import types from '@analytics/type-utils'
 
 

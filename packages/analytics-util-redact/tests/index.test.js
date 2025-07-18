@@ -1,6 +1,7 @@
-const test = require('ava')
-const { inspect } = require('util')
-const { redactObject, restoreObject, cleanObject } = require('../src')
+import { test } from 'uvu'
+import * as assert from 'uvu/assert'
+import { inspect } from 'util'
+import { redactObject, restoreObject, cleanObject } from '../src/index.js'
 
 function log(...msgs) {
   msgs.forEach((msg) => {
@@ -28,7 +29,7 @@ let testObj = {
   },
 }
 
-test('Encodes all prefixed values', t => {
+test('Encodes all prefixed values', () => {
   log('orignal', testObj)
   const encoded = redactObject(testObj)
   log('encoded', encoded)
@@ -36,7 +37,7 @@ test('Encodes all prefixed values', t => {
   log('decoded', decoded)
   console.log('clean', cleanObject(decoded))
 
-  t.deepEqual(encoded, {
+  assert.equal(encoded, {
     _: [
       'JGxvbA==',
       'JGJvYg==',
@@ -69,14 +70,14 @@ test('Encodes all prefixed values', t => {
   })
 })
 
-test('Decodes all prefixed values', t => {
+test('Decodes all prefixed values', () => {
   const encoded = redactObject(testObj)
   const decoded = restoreObject(encoded)
   log('decoded', decoded)
 
   const cleanedObj = cleanObject(decoded)
   // log('cleanedObj', cleanedObj)
-  t.deepEqual(cleanedObj, {
+  assert.equal(cleanedObj, {
     lol: 'cool',
     hi: 'awesome',
     bob: {
@@ -93,7 +94,7 @@ test('Decodes all prefixed values', t => {
   })
 })
 
-test('re-encodes all prefixed values', t => {
+test('re-encodes all prefixed values', () => {
   const original = {
     hi: 'awesome',
     cool: ['what', 'owowow'],
@@ -106,7 +107,7 @@ test('re-encodes all prefixed values', t => {
   log('original', original)
   const encoded = redactObject(original)
   log('encoded', encoded)
-  t.deepEqual(encoded, {
+  assert.equal(encoded, {
     hi: 'awesome',
     cool: [ 'what', 'owowow' ],
     encode: {
@@ -116,7 +117,7 @@ test('re-encodes all prefixed values', t => {
   })
   const decoded = restoreObject(encoded)
   log('decoded', decoded)
-  t.deepEqual(decoded, original)
+  assert.equal(decoded, original)
   const reencoded = redactObject(decoded)
   log('reencoded', reencoded)
   const cleanedObj = cleanObject(decoded)
@@ -126,7 +127,7 @@ test('re-encodes all prefixed values', t => {
 })
 
 
-test('It throws on duplicate "key" and "$key" values', t => {
+test('It throws on duplicate "key" and "$key" values', () => {
   const testObj = {
     $lol: 'cool',
     bob: 'xys',
@@ -135,15 +136,17 @@ test('It throws on duplicate "key" and "$key" values', t => {
       okay: 'hi'
     },
   }
-	const error = t.throws(() => {
-	  const encoded = redactObject(testObj)
+  
+  try {
+    const encoded = redactObject(testObj)
     console.log('encoded', encoded)
-	}, {instanceOf: Error});
-
-	t.is(error.message, 'Redact error: Dupe keys \'bob\' & \'$bob\'');
+    assert.unreachable('Expected error to be thrown')
+  } catch (error) {
+    assert.is(error.message, 'Redact error: Dupe keys \'bob\' & \'$bob\'')
+  }
 })
 
-test('xyz', t => {
+test('xyz', () => {
   const original = {
     hi: 'awesome',
     $email: 'foo@bar.com',
@@ -162,5 +165,7 @@ test('xyz', t => {
   log('decoded', decoded)
   const decodedClean = restoreObject(encoded, true)  
   log('decodedClean', decodedClean)
-  t.deepEqual(original, decoded)
+  assert.equal(original, decoded)
 })
+
+test.run()

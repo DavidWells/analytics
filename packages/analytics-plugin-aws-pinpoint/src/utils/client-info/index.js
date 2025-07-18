@@ -1,4 +1,4 @@
-import getOs from './get-os'
+import getOs from './get-os.js'
 
 const BRAVE = 'Brave'
 

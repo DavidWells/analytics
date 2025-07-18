@@ -1,5 +1,5 @@
 import { isFunction, isObject } from '@analytics/type-utils'
-import { ID, ANONID } from './internalConstants'
+import { ID, ANONID } from './internalConstants.js'
 
 function abort(reason) {
   return { abort: reason }

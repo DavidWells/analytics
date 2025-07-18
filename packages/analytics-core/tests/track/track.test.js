@@ -1,34 +1,47 @@
-import test from 'ava'
+import '../_setup.js'
+import { test } from 'uvu'
+import * as assert from 'uvu/assert'
 import sinon from 'sinon'
-import delay from '../_utils/delay'
-import isPromise from '../_utils/isPromise'
-import Analytics from '../../src'
+import delay from '../_utils/delay.js'
+import isPromise from '../_utils/isPromise.js'
+import Analytics from '../../src/index.js'
 
-test.beforeEach((t) => {
-  t.context.sandbox = sinon.createSandbox()
+let sandbox
+
+test.before(() => {
+  sandbox = sinon.createSandbox()
 })
 
-test('Track throws on malformed event', async (t) => {
+test.after(() => {
+  sandbox.restore()
+})
+
+test('Track throws on malformed event', async () => {
   const analytics = Analytics({
     app: 'appname',
     version: 100
   })
-  const error = await t.throwsAsync(analytics.track())
-  t.is(error.message, 'EventMissing')
+  
+  try {
+    await analytics.track()
+    assert.unreachable('Expected error to be thrown')
+  } catch (error) {
+    assert.is(error.message, 'EventMissing')
+  }
 })
 
-test('Track returns promise', async (t) => {
+test('Track returns promise', async () => {
   const analytics = Analytics({
     app: 'appname',
     version: 100
   })
 
   const promise = analytics.track('testing')
-  t.is(isPromise(promise), true)
+  assert.is(isPromise(promise), true)
 })
 
-test('Track callback is called', async (t) => {
-  const callbackFunction = t.context.sandbox.spy()
+test('Track callback is called', async () => {
+  const callbackFunction = sandbox.spy()
 
   const analytics = Analytics({
     app: 'appname',
@@ -37,20 +50,20 @@ test('Track callback is called', async (t) => {
 
   await analytics.track('testing', callbackFunction)
 
-  t.deepEqual(callbackFunction.callCount, 1)
+  assert.equal(callbackFunction.callCount, 1)
 })
 
-test.cb('Track plugins & lifecycle fire in correct order', (t) => {
+test('Track plugins & lifecycle fire in correct order', async () => {
   const eventName = 'track'
   const executionOrder = []
   const pluginExecutionOrder = []
-  const pluginSpy = t.context.sandbox.spy()
-  const pluginSpyTwo = t.context.sandbox.spy()
-  const onStartSpy = t.context.sandbox.spy()
-  const onSpy = t.context.sandbox.spy()
-  const onEndSpy = t.context.sandbox.spy()
-  const callbackSpy = t.context.sandbox.spy()
-  const promiseSpy = t.context.sandbox.spy()
+  const pluginSpy = sandbox.spy()
+  const pluginSpyTwo = sandbox.spy()
+  const onStartSpy = sandbox.spy()
+  const onSpy = sandbox.spy()
+  const onEndSpy = sandbox.spy()
+  const callbackSpy = sandbox.spy()
+  const promiseSpy = sandbox.spy()
 
   const analytics = Analytics({
     app: 'appname',
@@ -86,37 +99,36 @@ test.cb('Track plugins & lifecycle fire in correct order', (t) => {
     executionOrder.push(1)
   })
 
-  analytics.track('eventName', () => {
+  await analytics.track('eventName', () => {
     callbackSpy()
     executionOrder.push(4)
 
     // Ensure the page was called
-    t.is(pluginSpy.callCount, 1)
-    t.is(pluginSpyTwo.callCount, 1)
+    assert.is(pluginSpy.callCount, 1)
+    assert.is(pluginSpyTwo.callCount, 1)
 
     // Ensure the listeners callbacks are called only once
-    t.is(onStartSpy.callCount, 1)
-    t.is(onSpy.callCount, 1)
-    t.is(onEndSpy.callCount, 1)
+    assert.is(onStartSpy.callCount, 1)
+    assert.is(onSpy.callCount, 1)
+    assert.is(onEndSpy.callCount, 1)
 
     // Ensure callback gets called
-    t.deepEqual(callbackSpy.callCount, 1)
+    assert.equal(callbackSpy.callCount, 1)
 
     // Ensure the callbacks are called in the correct order
-    t.deepEqual(pluginExecutionOrder, [1, 2])
+    assert.equal(pluginExecutionOrder, [1, 2])
 
     // Ensure the callbacks are called in the correct order
-    t.deepEqual(executionOrder, [1, 2, 3, 4])
+    assert.equal(executionOrder, [1, 2, 3, 4])
   }).then(() => {
     promiseSpy()
-    t.is(promiseSpy.callCount, 1)
-    t.end()
+    assert.is(promiseSpy.callCount, 1)
   })
 })
 
-test('track state should contain .last && .history', async (t) => {
-  const trackSpy = t.context.sandbox.spy()
-  const callbackSpy = t.context.sandbox.spy()
+test('track state should contain .last && .history', async () => {
+  const trackSpy = sandbox.spy()
+  const callbackSpy = sandbox.spy()
   const analytics = Analytics({
     app: 'appname',
     version: 100,
@@ -133,11 +145,13 @@ test('track state should contain .last && .history', async (t) => {
   const trackState = analytics.getState('track')
   // var args = pageCallbackSpy.getCalls()[0].args
   const last = trackState.last
-  t.is(last.event, 'testing')
-  t.deepEqual(last.properties, { foo: 'bar' })
-  t.truthy(last.meta)
+  assert.is(last.event, 'testing')
+  assert.equal(last.properties, { foo: 'bar' })
+  assert.ok(last.meta)
 
   const history = trackState.history
-  t.is(Array.isArray(history), true)
-  t.is(history.length, 1)
+  assert.is(Array.isArray(history), true)
+  assert.is(history.length, 1)
 })
+
+test.run()

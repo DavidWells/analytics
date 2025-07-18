@@ -1,8 +1,8 @@
 // Page View Reducer. Follows ducks pattern http://bit.ly/2DnERMc
 import { isBrowser } from '@analytics/type-utils'
-import serialize from '../utils/serialize'
+import serialize from '../utils/serialize.js'
 
-import EVENTS from '../events'
+import EVENTS from '../events.js'
 
 const hashRegex = /#.*$/
 

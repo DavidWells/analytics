@@ -2,7 +2,7 @@
 import { test } from 'uvu'
 import * as assert from 'uvu/assert'
 import { spy } from 'nanospy'
-import { eventEmitter, getWildCards } from '../src'
+import { eventEmitter, getWildCards } from '../src/index.js'
 
 test.after(() => console.log('tests done'))
 
