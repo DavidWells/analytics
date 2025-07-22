@@ -1,0 +1,14 @@
+node_modules
+
+dist
+lib
+.size-snapshot.json
+
+*.log
+
+# IDE stuff
+**/.idea
+
+# OS stuff
+.DS_Store
+.tmp
