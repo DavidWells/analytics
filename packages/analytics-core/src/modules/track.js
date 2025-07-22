@@ -2,6 +2,7 @@
 import EVENTS from '../events.js'
 import serialize from '../utils/serialize.js'
 
+
 // Track State
 const initialState = {
   last: {},
