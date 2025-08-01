@@ -118,6 +118,7 @@ const analytics = Analytics({
 | `disableAnonymousTraffic` <br/>_optional_ - boolean| Disable loading segment for anonymous visitors |
 | `customScriptSrc` <br/>_optional_ - boolean| Override the Segment snippet url, for loading via custom CDN proxy |
 | `integrations` <br/>_optional_ - object| Enable/disable segment destinations https://bit.ly/38nRBj3 |
+| `loadIntegrations` <br/>_optional_ - object| Enable/disable loading of code for segment destinations http://bit.ly/4lWjAee |
 
 ## Server-side usage
 
