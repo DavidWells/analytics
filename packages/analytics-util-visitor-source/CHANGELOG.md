@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.8](https://github.com/DavidWells/analytics/compare/@analytics/visitor-source@0.0.7...@analytics/visitor-source@0.0.8) (2025-08-06)
+
+
+### Bug Fixes
+
+* update uvu test scripts to match .test.js files consistently ([f11c814](https://github.com/DavidWells/analytics/commit/f11c8142862a9ff4a7c102411f3b40cf2689aa51))
+
+
+
+
+
 ## [0.0.7](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-visitor-source/compare/@analytics/visitor-source@0.0.6...@analytics/visitor-source@0.0.7) (2023-05-27)
 
 **Note:** Version bump only for package @analytics/visitor-source

@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/DavidWells/analytics/compare/analytics-utils@1.0.14...analytics-utils@1.1.0) (2025-08-06)
+
+
+### Bug Fixes
+
+* update uvu test scripts to match .test.js files consistently ([f11c814](https://github.com/DavidWells/analytics/commit/f11c8142862a9ff4a7c102411f3b40cf2689aa51))
+
+
+### Features
+
+* enable treeshakeable exports for analytics-utils ([b89fb3a](https://github.com/DavidWells/analytics/commit/b89fb3afc18b283c3353c0fada0fea915df552be))
+
+
+
+
+
 ## [1.0.14](https://github.com/DavidWells/analytics/compare/analytics-utils@1.0.13...analytics-utils@1.0.14) (2024-12-12)
 
 

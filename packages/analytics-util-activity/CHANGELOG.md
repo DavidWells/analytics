@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/DavidWells/analytics/compare/@analytics/activity-utils@0.1.16...@analytics/activity-utils@0.2.0) (2025-08-06)
+
+
+### Features
+
+* enhance analytics-util-activity with TypeScript support and improved documentation ([704ae93](https://github.com/DavidWells/analytics/commit/704ae937fcf0c203b01338f5118f3616acf3352f))
+
+
+
+
+
 ## [0.1.16](https://github.com/DavidWells/analytics/tree/master/packages/analytics-util-activity/compare/@analytics/activity-utils@0.1.15...@analytics/activity-utils@0.1.16) (2023-12-31)
 
 **Note:** Version bump only for package @analytics/activity-utils

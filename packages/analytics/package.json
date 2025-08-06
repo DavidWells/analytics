@@ -1,6 +1,6 @@
 {
   "name": "analytics",
-  "version": "0.8.16",
+  "version": "0.8.17",
   "description": "Lightweight analytics library for tracking events, page views, & identifying users. Works with any third party analytics provider via an extendable plugin system.",
   "keywords": [
     "analytics",
@@ -61,8 +61,8 @@
   ],
   "typings": "lib/types.d.ts",
   "dependencies": {
-    "@analytics/core": "^0.12.17",
-    "@analytics/storage-utils": "^0.4.2"
+    "@analytics/core": "^0.13.0",
+    "@analytics/storage-utils": "^0.4.3"
   },
   "ava": {
     "files": [
@@ -85,9 +85,9 @@
     "@babel/preset-env": "7.16.11",
     "@babel/register": "7.17.0",
     "@babel/runtime": "7.17.0",
-    "uvu": "^0.5.6",
     "mkdirp": "^0.5.1",
     "rimraf": "^2.6.3",
-    "sinon": "7.2.3"
+    "sinon": "7.2.3",
+    "uvu": "^0.5.6"
   }
 }

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.7](https://github.com/DavidWells/analytics/compare/@analytics/fullstory@0.2.6...@analytics/fullstory@0.2.7) (2025-08-06)
+
+
+### Bug Fixes
+
+* update uvu test scripts to match .test.js files consistently ([f11c814](https://github.com/DavidWells/analytics/commit/f11c8142862a9ff4a7c102411f3b40cf2689aa51))
+
+
+
+
+
 ## [0.2.6](https://github.com/DavidWells/analytics/compare/@analytics/fullstory@0.2.4...@analytics/fullstory@0.2.6) (2022-11-09)
 
 **Note:** Version bump only for package @analytics/fullstory
