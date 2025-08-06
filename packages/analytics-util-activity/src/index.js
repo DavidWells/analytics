@@ -8,10 +8,11 @@ const DOCUMENT_EVENTS = [
 ]
 
 /**
- * 
- * @param {Function} callback 
- * @param {Object} opts 
- * @returns 
+ * Attaches DOM event listeners to track user activity and calls a callback when activity is detected
+ * @param {Function} callback - Function to call when DOM activity is detected
+ * @param {Object} opts - Configuration options
+ * @param {number} [opts.throttle=10000] - Throttle time in milliseconds to limit callback frequency
+ * @returns {Function} Function that when called removes all listeners and returns a function to reattach them
  */
 export function onDomActivity(callback, opts = {}) {
   const handler = throttle(callback, opts.throttle || 10000)
@@ -42,14 +43,40 @@ export function onDomActivity(callback, opts = {}) {
   }
 }
 
+/**
+ * Creates an idle detector that calls a callback when the user becomes idle
+ * @param {Function} onIdle - Function to call when user becomes idle
+ * @param {Object} opts - Configuration options
+ * @param {number} [opts.timeout=10000] - Time in milliseconds before user is considered idle
+ * @param {number} [opts.throttle=2000] - Throttle time in milliseconds for activity detection
+ * @returns {Object} Object with disable and getStatus methods
+ */
 export function onIdle(onIdle, opts = {}) {
   return onUserActivity({ onIdle, ...opts })
 }
 
+/**
+ * Creates a wake-up detector that calls a callback when the user becomes active after being idle
+ * @param {Function} onWakeUp - Function to call when user becomes active after being idle
+ * @param {Object} opts - Configuration options
+ * @param {number} [opts.timeout=10000] - Time in milliseconds before user is considered idle
+ * @param {number} [opts.throttle=2000] - Throttle time in milliseconds for activity detection
+ * @returns {Object} Object with disable and getStatus methods
+ */
 export function onWakeUp(onWakeUp, opts = {}) {
   return onUserActivity({ onWakeUp, ...opts })
 }
 
+/**
+ * Creates a comprehensive user activity tracker that can detect idle, wake-up, and heartbeat events
+ * @param {Object} config - Configuration object
+ * @param {Function} [config.onIdle] - Function to call when user becomes idle
+ * @param {Function} [config.onWakeUp] - Function to call when user becomes active after being idle
+ * @param {Function} [config.onHeartbeat] - Function to call periodically while user is active
+ * @param {number}   [config.timeout=10000] - Time in milliseconds before user is considered idle
+ * @param {number}   [config.throttle=2000] - Throttle time in milliseconds for activity detection
+ * @returns {Object} Object with disable and getStatus methods
+ */
 export function onUserActivity({ 
   onIdle, 
   onWakeUp,
@@ -70,12 +97,12 @@ export function onUserActivity({
     cancelTimer()
 
     if (onHeartbeat && !isIdle) {
-      onHeartbeat(getElapsed(startTime), event)
+      onHeartbeat(getElapsed(startTime, isDisabled), event)
     }
 
     if (onWakeUp && isIdle) {
       isIdle = false
-      onWakeUp(getElapsed(idleStart), event)
+      onWakeUp(getElapsed(idleStart, isDisabled), event)
       startTime = new Date()
     }
     /* set timeout to wait for idle mode */
@@ -83,12 +110,15 @@ export function onUserActivity({
       isIdle = true
       if (onIdle) {
         idleStart =  new Date()
-        onIdle(getElapsed(startTime), event)
+        onIdle(getElapsed(startTime, isDisabled), event)
       }
     }, timeout)
   }
 
   const disableListener = onDomActivity(pingSession, { throttle })
+
+  // Start idle tracking immediately
+  pingSession({ type: 'init' })
 
   return {
     disable: () => {
@@ -117,15 +147,21 @@ export function onUserActivity({
   }
 }
 
+/**
+ * Calculates the elapsed time in seconds since a given time
+ * @param {Date} time - The start time to calculate elapsed time from
+ * @param {boolean} isDisabled - Whether the timer is disabled
+ * @returns {number} Elapsed time in seconds, or 0 if disabled
+ */
 function getElapsed(time, isDisabled) {
-  return (isDisabled) ? 0 : Math.round((new Date() - time) / 1e3)
+  return (isDisabled) ? 0 : Math.round((new Date().getTime() - time.getTime()) / 1e3)
 }
 
 /**
  * A throttled function is called once per N amount of time
- * @param {Function} callback 
- * @param {Number} limit 
- * @returns 
+ * @param {Function} callback - The function to throttle
+ * @param {number} limit - The throttle limit in milliseconds
+ * @returns {Function} Throttled version of the callback function
  */
 function throttle(callback, limit) {
   var wait = false
@@ -138,7 +174,10 @@ function throttle(callback, limit) {
   }
 }
 
-
+/**
+ * Adds unload event listeners to handle page visibility changes and page unload
+ * @param {Function} unloadEvent - Function to call when page is unloading or becoming hidden
+ */
 function addUnloadEvent(unloadEvent) {
   let executed = false
   let fn = () => {
