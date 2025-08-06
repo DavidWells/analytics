@@ -8,11 +8,35 @@ const DOCUMENT_EVENTS = [
 ]
 
 /**
+ * @typedef {Object} ActivityEvent
+ * @property {('load'|'init'|'mousemove'|'mousedown'|'touchmove'|'touchstart'|'touchend'|'keydown'|'scroll'|'tabVisible')} type - The type of activity event
+ */
+
+/**
+ * @typedef {Function} ActivityCallback
+ * @param {ActivityEvent} event - The activity event that triggered the callback
+ */
+
+/**
+ * @typedef {Object} ActivityOptions
+ * @property {number} [throttle=10000] - Throttle time in milliseconds to limit callback frequency
+ */
+
+/**
+ * @typedef {Function} DisableFunction
+ * @returns {EnableFunction} Function to re-enable the activity tracker
+ */
+
+/**
+ * @typedef {Function} EnableFunction
+ * @returns {DisableFunction} Function to disable the activity tracker
+ */
+
+/**
  * Attaches DOM event listeners to track user activity and calls a callback when activity is detected
- * @param {Function} callback - Function to call when DOM activity is detected
- * @param {Object} opts - Configuration options
- * @param {number} [opts.throttle=10000] - Throttle time in milliseconds to limit callback frequency
- * @returns {Function} Function that when called removes all listeners and returns a function to reattach them
+ * @param {ActivityCallback} callback - Function to call when DOM activity is detected
+ * @param {ActivityOptions} opts - Configuration options
+ * @returns {DisableFunction} Function that when called removes all listeners and returns a function to reattach them
  */
 export function onDomActivity(callback, opts = {}) {
   const handler = throttle(callback, opts.throttle || 10000)
@@ -44,38 +68,77 @@ export function onDomActivity(callback, opts = {}) {
 }
 
 /**
+ * @typedef {Function} OnIdleCallback
+ * @param {number} activeTime - Time in seconds the user was active before becoming idle
+ * @param {ActivityEvent} event - The activity event that triggered the idle state
+ */
+
+/**
+ * @typedef {Object} OnIdleOptions
+ * @property {number} [timeout=10000] - Time in milliseconds before user is considered idle
+ * @property {number} [throttle=2000] - Throttle time in milliseconds for activity detection
+ */
+
+/**
+ * @typedef {Object} UserActivityStatus
+ * @property {boolean} isIdle - Whether the user is currently idle
+ * @property {boolean} isDisabled - Whether the activity tracker is disabled
+ * @property {number} active - Time in seconds the user has been active
+ * @property {number} idle - Time in seconds the user has been idle
+ */
+
+/**
+ * @typedef {Object} UserActivityReturn
+ * @property {DisableFunction} disable - Function to disable the activity tracker
+ * @property {Function} getStatus - Function that returns the current status
+ * @returns {UserActivityStatus} Current status of the activity tracker
+ */
+
+/**
  * Creates an idle detector that calls a callback when the user becomes idle
- * @param {Function} onIdle - Function to call when user becomes idle
- * @param {Object} opts - Configuration options
- * @param {number} [opts.timeout=10000] - Time in milliseconds before user is considered idle
- * @param {number} [opts.throttle=2000] - Throttle time in milliseconds for activity detection
- * @returns {Object} Object with disable and getStatus methods
+ * @param {OnIdleCallback} onIdle - Function to call when user becomes idle
+ * @param {OnIdleOptions} opts - Configuration options
+ * @returns {UserActivityReturn} Object with disable and getStatus methods
  */
 export function onIdle(onIdle, opts = {}) {
   return onUserActivity({ onIdle, ...opts })
 }
 
 /**
+ * @typedef {Function} WakeUpCallback
+ * @param {number} idleTime - Time in seconds the user was idle before becoming active
+ * @param {ActivityEvent} event - The activity event that triggered the wake up
+ */
+
+/**
  * Creates a wake-up detector that calls a callback when the user becomes active after being idle
- * @param {Function} onWakeUp - Function to call when user becomes active after being idle
- * @param {Object} opts - Configuration options
- * @param {number} [opts.timeout=10000] - Time in milliseconds before user is considered idle
- * @param {number} [opts.throttle=2000] - Throttle time in milliseconds for activity detection
- * @returns {Object} Object with disable and getStatus methods
+ * @param {WakeUpCallback} onWakeUp - Function to call when user becomes active after being idle
+ * @param {OnIdleOptions} opts - Configuration options
+ * @returns {UserActivityReturn} Object with disable and getStatus methods
  */
 export function onWakeUp(onWakeUp, opts = {}) {
   return onUserActivity({ onWakeUp, ...opts })
 }
 
 /**
+ * @typedef {Function} HeartbeatCallback
+ * @param {number} activeTime - Time in seconds the user has been active
+ * @param {ActivityEvent} event - The activity event that triggered the heartbeat
+ */
+
+/**
+ * @typedef {Object} UserActivityOptions
+ * @property {OnIdleCallback} [onIdle] - Function to call when user becomes idle
+ * @property {WakeUpCallback} [onWakeUp] - Function to call when user becomes active after being idle
+ * @property {HeartbeatCallback} [onHeartbeat] - Function to call periodically while user is active
+ * @property {number} [timeout=10000] - Time in milliseconds before user is considered idle
+ * @property {number} [throttle=2000] - Throttle time in milliseconds for activity detection
+ */
+
+/**
  * Creates a comprehensive user activity tracker that can detect idle, wake-up, and heartbeat events
- * @param {Object} config - Configuration object
- * @param {Function} [config.onIdle] - Function to call when user becomes idle
- * @param {Function} [config.onWakeUp] - Function to call when user becomes active after being idle
- * @param {Function} [config.onHeartbeat] - Function to call periodically while user is active
- * @param {number}   [config.timeout=10000] - Time in milliseconds before user is considered idle
- * @param {number}   [config.throttle=2000] - Throttle time in milliseconds for activity detection
- * @returns {Object} Object with disable and getStatus methods
+ * @param {UserActivityOptions} config - Configuration object
+ * @returns {UserActivityReturn} Object with disable and getStatus methods
  */
 export function onUserActivity({ 
   onIdle, 
@@ -117,7 +180,7 @@ export function onUserActivity({
 
   const disableListener = onDomActivity(pingSession, { throttle })
 
-  // Start idle tracking immediately
+  // Start idle tracking immediately on load
   pingSession({ type: 'init' })
 
   return {
@@ -159,9 +222,9 @@ function getElapsed(time, isDisabled) {
 
 /**
  * A throttled function is called once per N amount of time
- * @param {Function} callback - The function to throttle
+ * @param {ActivityCallback} callback - The function to throttle
  * @param {number} limit - The throttle limit in milliseconds
- * @returns {Function} Throttled version of the callback function
+ * @returns {ActivityCallback} Throttled version of the callback function
  */
 function throttle(callback, limit) {
   var wait = false
@@ -175,8 +238,13 @@ function throttle(callback, limit) {
 }
 
 /**
+ * @typedef {Function} UnloadCallback
+ * Function to call when page is unloading or becoming hidden
+ */
+
+/**
  * Adds unload event listeners to handle page visibility changes and page unload
- * @param {Function} unloadEvent - Function to call when page is unloading or becoming hidden
+ * @param {UnloadCallback} unloadEvent - Function to call when page is unloading or becoming hidden
  */
 function addUnloadEvent(unloadEvent) {
   let executed = false
