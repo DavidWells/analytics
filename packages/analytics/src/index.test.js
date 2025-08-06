@@ -29,7 +29,7 @@ test('{ init } export exists for stanalone browser', () => {
 })
 
 /* See api ref https://getanalytics.io/api/ */
-test.only('Analytics should contain all API methods', () => {
+test('Analytics should contain all API methods', () => {
   const analytics = analyticsLib({
     app: 'appname',
     version: 100
