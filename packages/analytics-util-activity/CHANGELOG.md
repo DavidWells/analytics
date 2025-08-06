@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.1](https://github.com/DavidWells/analytics/compare/@analytics/activity-utils@0.2.0...@analytics/activity-utils@0.2.1) (2025-08-06)
+
+
+### Bug Fixes
+
+* update TypeScript types and enhance JSDoc comments in analytics-util-activity ([219df7b](https://github.com/DavidWells/analytics/commit/219df7b5fa59ed052f50c63a4b5ef3e84d2ea5ac))
+
+
+
+
+
 # [0.2.0](https://github.com/DavidWells/analytics/compare/@analytics/activity-utils@0.1.16...@analytics/activity-utils@0.2.0) (2025-08-06)
 
 
