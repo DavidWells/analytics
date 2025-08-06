@@ -5,6 +5,8 @@ package-lock.json
 *.log
 .netlify
 
+_misc
+
 # turbo cache
 .turbo
 # nx cache
