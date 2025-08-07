@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.4](https://github.com/DavidWells/analytics/compare/@analytics/storage-utils@0.4.3...@analytics/storage-utils@0.4.4) (2025-08-07)
+
+
+### Bug Fixes
+
+* update package.json main fields to use .cjs extension and add build verification script ([6e721e2](https://github.com/DavidWells/analytics/commit/6e721e2d06bc7b551d5fcbb97d83280815fd6bed))
+
+
+
+
+
 ## [0.4.3](https://github.com/DavidWells/analytics/compare/@analytics/storage-utils@0.4.2...@analytics/storage-utils@0.4.3) (2025-08-06)
 
 

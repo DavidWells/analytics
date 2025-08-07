@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.26](https://github.com/DavidWells/analytics/compare/@analytics/scroll-utils@0.1.25...@analytics/scroll-utils@0.1.26) (2025-08-07)
+
+**Note:** Version bump only for package @analytics/scroll-utils
+
+
+
+
+
 ## [0.1.25](https://github.com/DavidWells/analytics/compare/@analytics/scroll-utils@0.1.24...@analytics/scroll-utils@0.1.25) (2025-08-06)
 
 **Note:** Version bump only for package @analytics/scroll-utils

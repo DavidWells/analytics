@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.14](https://github.com/DavidWells/analytics/compare/@analytics/cookie-utils@0.2.13...@analytics/cookie-utils@0.2.14) (2025-08-07)
+
+**Note:** Version bump only for package @analytics/cookie-utils
+
+
+
+
+
 ## [0.2.13](https://github.com/DavidWells/analytics/compare/@analytics/cookie-utils@0.2.12...@analytics/cookie-utils@0.2.13) (2025-08-06)
 
 **Note:** Version bump only for package @analytics/cookie-utils

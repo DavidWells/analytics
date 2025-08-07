@@ -1,6 +1,6 @@
 {
   "name": "@analytics/form-utils",
-  "version": "0.3.14",
+  "version": "0.3.15",
   "description": "Form utility library for managing HTML form submissions & values",
   "author": "David Wells",
   "license": "MIT",
@@ -48,6 +48,6 @@
     "watchlist": "^0.2.3"
   },
   "dependencies": {
-    "@analytics/type-utils": "^0.6.3"
+    "@analytics/type-utils": "^0.6.4"
   }
 }

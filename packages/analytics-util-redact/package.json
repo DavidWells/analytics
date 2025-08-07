@@ -1,6 +1,6 @@
 {
   "name": "@analytics/redact-utils",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Utility library for redacting event data",
   "type": "module",
   "author": "David Wells",
@@ -56,6 +56,6 @@
     "failFast": true
   },
   "dependencies": {
-    "@analytics/type-utils": "^0.6.3"
+    "@analytics/type-utils": "^0.6.4"
   }
 }

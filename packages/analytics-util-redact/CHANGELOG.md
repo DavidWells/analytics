@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.5](https://github.com/DavidWells/analytics/compare/@analytics/redact-utils@0.1.4...@analytics/redact-utils@0.1.5) (2025-08-07)
+
+
+### Bug Fixes
+
+* update package.json main fields to use .cjs extension and add build verification script ([6e721e2](https://github.com/DavidWells/analytics/commit/6e721e2d06bc7b551d5fcbb97d83280815fd6bed))
+
+
+
+
+
 ## [0.1.4](https://github.com/DavidWells/analytics/compare/@analytics/redact-utils@0.1.3...@analytics/redact-utils@0.1.4) (2025-08-06)
 
 **Note:** Version bump only for package @analytics/redact-utils

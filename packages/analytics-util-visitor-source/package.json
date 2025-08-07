@@ -1,6 +1,6 @@
 {
   "name": "@analytics/visitor-source",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Get visitor source",
   "type": "module",
   "author": "David Wells",
@@ -53,7 +53,7 @@
     "watchlist": "^0.2.3"
   },
   "dependencies": {
-    "@analytics/type-utils": "^0.6.3",
-    "@analytics/url-utils": "^0.2.4"
+    "@analytics/type-utils": "^0.6.4",
+    "@analytics/url-utils": "^0.2.5"
   }
 }
