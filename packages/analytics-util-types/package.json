@@ -16,7 +16,7 @@
   ],
   "amdName": "utilTypes",
   "source": "src/index.js",
-  "main": "dist/analytics-util-types.js",
+  "main": "dist/analytics-util-types.cjs",
   "module": "dist/analytics-util-types.module.js",
   "unpkg": "dist/analytics-util-types.umd.js",
   "sideEffects": false,

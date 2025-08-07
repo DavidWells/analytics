@@ -22,7 +22,7 @@
   ],
   "amdName": "analyticUtil",
   "source": "src/index.js",
-  "main": "dist/analytics-utils.js",
+  "main": "dist/analytics-utils.cjs",
   "module": "dist/analytics-utils.module.js",
   "unpkg": "dist/analytics-utils.umd.js",
   "sideEffects": false,
@@ -30,7 +30,7 @@
     ".": {
       "types": "./types/index.d.ts",
       "import": "./dist/analytics-utils.module.js",
-      "require": "./dist/analytics-utils.js"
+      "require": "./dist/analytics-utils.cjs"
     }
   },
   "scripts": {

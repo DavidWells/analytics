@@ -15,7 +15,7 @@
   ],
   "amdName": "utilVisitorSrc",
   "source": "src/index.js",
-  "main": "dist/analytics-util-visitor-source.js",
+  "main": "dist/analytics-util-visitor-source.cjs",
   "module": "dist/analytics-util-visitor-source.module.js",
   "unpkg": "dist/analytics-util-visitor-source.umd.js",
   "types": "./types/index.d.ts",

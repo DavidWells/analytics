@@ -15,12 +15,12 @@
     "cookies",
     "localStorage",
     "sessionStorage",
-    "persistance"
+    "persistence"
   ],
   "netlifySiteId": "961970d3-4d7b-4cc0-a54b-f304b73f0935",
   "amdName": "utilStorage",
   "source": "src/index.js",
-  "main": "dist/analytics-util-storage.js",
+  "main": "dist/analytics-util-storage.cjs",
   "module": "dist/analytics-util-storage.module.js",
   "unpkg": "dist/analytics-util-storage.umd.js",
   "sideEffects": false,

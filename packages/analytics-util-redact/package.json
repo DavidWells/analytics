@@ -16,7 +16,7 @@
     "redaction"
   ],
   "source": "src/index.js",
-  "main": "dist/analytics-util-redact.js",
+  "main": "dist/analytics-util-redact.cjs",
   "exports": "./dist/analytics-util-redact.modern.js",
   "module": "dist/analytics-util-redact.module.js",
   "unpkg": "dist/analytics-util-redact.umd.js",

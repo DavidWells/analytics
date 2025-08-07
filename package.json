@@ -16,7 +16,7 @@
     "build:core": "pnpm run -r --filter analytics-utils build && pnpm run -r --filter @analytics/core build",
     "build": "npm run clean && turbo run build --filter='!packages/analytics-core/client' --filter='!packages/analytics-core/server'",
     "build:no-cache": "npm run clean && turbo run build --no-cache",
-    "postbuild": "pnpm run -r types",
+    "postbuild": "pnpm run -r types && node ./scripts/verify-builds.js",
     "build:dev": "npm run clean && lerna run build:dev",
     "docs": "node ./scripts/docs.js && lerna run docs && cd site && npm run sync",
     "verifyOrigin": "git remote get-url origin",

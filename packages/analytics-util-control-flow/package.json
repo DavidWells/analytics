@@ -16,7 +16,7 @@
   ],
   "amdName": "utilControlFlow",
   "source": "src/index.js",
-  "main": "dist/analytics-util-control-flow-utils.js",
+  "main": "dist/analytics-util-control-flow-utils.cjs",
   "module": "dist/analytics-util-control-flow-utils.module.js",
   "unpkg": "dist/analytics-util-control-flow-utils.umd.js",
   "types": "./types/index.d.ts",

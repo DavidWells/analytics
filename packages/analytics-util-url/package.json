@@ -15,7 +15,7 @@
   "netlifySiteId": "418b86ce-6faa-41cd-997f-5d5616f34e2c",
   "amdName": "utilUrl",
   "source": "src/index.js",
-  "main": "dist/analytics-util-url.js",
+  "main": "dist/analytics-util-url.cjs",
   "module": "dist/analytics-util-url.module.js",
   "unpkg": "dist/analytics-util-url.umd.js",
   "types": "./types/index.d.ts",
