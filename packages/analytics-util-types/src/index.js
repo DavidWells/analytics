@@ -238,6 +238,11 @@ export function isObject(obj) {
   return Object.getPrototypeOf(obj) === proto
 }
 
+/**
+ * Check if value is object like
+ * @param {*} obj 
+ * @returns {boolean}
+ */
 export function isObjectLike(obj) {
   return obj && (typeof obj === OBJECT || obj !== null)
 }
