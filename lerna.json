@@ -21,7 +21,6 @@
   },
   "ignoreChanges": [
     "**/CHANGELOG.md",
-    "**/package-lock.json",
     "**/.gitignore",
     "**/test/**",
     "packages/**/**.html",

@@ -1,7 +1,6 @@
 # node / npm
 node_modules
 .size-snapshot.json
-package-lock.json
 *.log
 .netlify
 
