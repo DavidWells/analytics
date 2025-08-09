@@ -27,7 +27,7 @@
     "start": "npm run sync && concurrently 'npm:watch:*' 'npm:copy' 'npm:serve'",
     "serve": "servor dist index.html 8081 --reload --browse",
     "copy": "watchlist examples -- npm run sync",
-    "sync": "mkdir dist && cp examples/index.html dist",
+    "sync": "mkdir -p dist && cp examples/index.html dist",
     "watch:dev": "microbundle watch --external none -f iife,umd -o dist/browser --no-compress",
     "watch:test": "watchlist src tests examples -- npm t",
     "build": "rm -rf dist && npm run sync && microbundle && npm run build:dev",
