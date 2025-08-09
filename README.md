@@ -82,12 +82,30 @@ This library aims to solves that with a simple pluggable abstraction layer.
 
 To add or remove an analytics provider, adjust the `plugins` you load into `analytics` during initialization.
 
-## Install
+## Install 📦
 
 This module is distributed via [npm](https://npmjs.com/package/analytics), which is bundled with [node](https://nodejs.org/) and should be installed as one of your project's dependencies.
 
 ```bash
 npm install analytics --save
+```
+
+Or using [yarn](https://yarnpkg.com/):
+
+```bash
+yarn add analytics
+```
+
+Or using [pnpm](https://pnpm.io/):
+
+```bash
+pnpm add analytics
+```
+
+Or using [bun](https://bun.sh/):
+
+```bash
+bun add analytics
 ```
 
 Or as a script tag:
