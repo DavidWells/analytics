@@ -200,6 +200,7 @@ function getFormats(pkg) {
       output: {
         format: 'esm',
         file: esmBrowser,
+        exports: 'named'
       },
       browser: true
     },
@@ -217,6 +218,7 @@ function getFormats(pkg) {
       output: {
         format: 'esm',
         file: esmName,
+        exports: 'named'
       },
       browser: false
     },

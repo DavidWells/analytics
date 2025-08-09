@@ -4,7 +4,7 @@
   "license": "MIT",
   "amdName": "_analytics",
   "source": "../src/index.js",
-  "main": "./dist/server/analytics-core.js",
+  "main": "./dist/server/analytics-core.cjs",
   "module": "./dist/server/analytics-core.module.js",
   "unpkg": "./dist/server/analytics-core.umd.js",
   "types": "../dist/types.d.ts",
@@ -15,7 +15,8 @@
     "build": "microbundle --define NODE_ENV=production,BROWSER=false,SERVER=true,VERSION=$(cat ../package.json | jq '.version') --generateTypes false",
     "gen-esm": "gen-esm-wrapper ./dist/server/analytics-core.js ./dist/server/index.mjs",
     "copy": "mkdirp ../dist && cp -rf dist/. ../dist",
-    "postbuild": "npm run gen-esm && npm run copy"
+    "postbuild": "npm run gen-esm && npm run rename-cjs && npm run copy",
+    "rename-cjs": "mv ./dist/server/analytics-core.js ./dist/server/analytics-core.cjs && mv ./dist/server/analytics-core.js.map ./dist/server/analytics-core.cjs.map"
   },
   "dependencies": {
     "@analytics/global-storage-utils": "^0.1.4",

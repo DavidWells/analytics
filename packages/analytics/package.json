@@ -61,7 +61,7 @@
   ],
   "typings": "lib/types.d.ts",
   "dependencies": {
-    "@analytics/core": "^0.13.1",
+    "@analytics/core": "workspace:^",
     "@analytics/storage-utils": "^0.4.4"
   },
   "ava": {

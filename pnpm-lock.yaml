@@ -148,11 +148,11 @@ importers:
   packages/analytics:
     dependencies:
       '@analytics/core':
-        specifier: ^0.12.17
-        version: 0.12.17(@types/dlv@1.1.5)
+        specifier: workspace:^
+        version: link:../analytics-core
       '@analytics/storage-utils':
-        specifier: ^0.4.2
-        version: 0.4.2
+        specifier: ^0.4.4
+        version: 0.4.4
     devDependencies:
       '@babel/core':
         specifier: 7.17.0
@@ -219,11 +219,11 @@ importers:
   packages/analytics-core:
     dependencies:
       '@analytics/global-storage-utils':
-        specifier: ^0.1.7
-        version: 0.1.7
+        specifier: ^0.1.9
+        version: 0.1.9
       '@analytics/type-utils':
-        specifier: ^0.6.2
-        version: 0.6.2
+        specifier: ^0.6.4
+        version: 0.6.4
       analytics-utils:
         specifier: workspace:^
         version: link:../analytics-utils
@@ -515,14 +515,14 @@ importers:
   packages/analytics-plugin-original-source:
     dependencies:
       '@analytics/storage-utils':
-        specifier: ^0.4.2
-        version: 0.4.2
+        specifier: ^0.4.4
+        version: 0.4.4
       '@analytics/type-utils':
-        specifier: ^0.6.2
-        version: 0.6.2
+        specifier: ^0.6.4
+        version: 0.6.4
       analytics-utils:
-        specifier: ^1.0.14
-        version: 1.0.14(@types/dlv@1.1.5)
+        specifier: ^1.1.1
+        version: 1.1.1(@types/dlv@1.1.5)
     devDependencies:
       concurrently:
         specifier: ^6.1.0
@@ -659,8 +659,8 @@ importers:
   packages/analytics-util-activity:
     dependencies:
       '@analytics/listener-utils':
-        specifier: ^0.4.0
-        version: 0.4.0
+        specifier: ^0.4.2
+        version: 0.4.2
       analytics-plugin-tab-events:
         specifier: ^0.2.1
         version: 0.2.1
@@ -684,11 +684,11 @@ importers:
   packages/analytics-util-control-flow:
     dependencies:
       '@analytics/type-utils':
-        specifier: ^0.6.2
-        version: 0.6.2
+        specifier: ^0.6.4
+        version: 0.6.4
       '@analytics/url-utils':
-        specifier: ^0.2.3
-        version: 0.2.3
+        specifier: ^0.2.5
+        version: 0.2.5
     devDependencies:
       concurrently:
         specifier: ^6.1.0
@@ -715,8 +715,8 @@ importers:
   packages/analytics-util-forms:
     dependencies:
       '@analytics/type-utils':
-        specifier: ^0.6.2
-        version: 0.6.2
+        specifier: ^0.6.4
+        version: 0.6.4
     devDependencies:
       concurrently:
         specifier: ^6.1.0
@@ -734,8 +734,8 @@ importers:
   packages/analytics-util-listener:
     dependencies:
       '@analytics/type-utils':
-        specifier: ^0.6.2
-        version: 0.6.2
+        specifier: ^0.6.4
+        version: 0.6.4
     devDependencies:
       concurrently:
         specifier: ^6.1.0
@@ -829,8 +829,8 @@ importers:
   packages/analytics-util-redact:
     dependencies:
       '@analytics/type-utils':
-        specifier: ^0.6.2
-        version: 0.6.2
+        specifier: ^0.6.4
+        version: 0.6.4
     devDependencies:
       '@babel/register':
         specifier: 7.5.5
@@ -863,11 +863,11 @@ importers:
   packages/analytics-util-scroll:
     dependencies:
       '@analytics/type-utils':
-        specifier: ^0.6.2
-        version: 0.6.2
+        specifier: ^0.6.4
+        version: 0.6.4
       analytics-utils:
-        specifier: ^1.0.14
-        version: 1.0.14(@types/dlv@1.1.5)
+        specifier: ^1.1.1
+        version: 1.1.1(@types/dlv@1.1.5)
     devDependencies:
       concurrently:
         specifier: ^6.1.0
@@ -885,17 +885,17 @@ importers:
   packages/analytics-util-session:
     dependencies:
       '@analytics/cookie-utils':
-        specifier: ^0.2.12
-        version: 0.2.12
+        specifier: ^0.2.14
+        version: 0.2.14
       '@analytics/global-storage-utils':
-        specifier: ^0.1.7
-        version: 0.1.7
+        specifier: ^0.1.9
+        version: 0.1.9
       '@analytics/session-storage-utils':
-        specifier: ^0.0.7
-        version: 0.0.7
+        specifier: ^0.0.9
+        version: 0.0.9
       analytics-utils:
-        specifier: ^1.0.14
-        version: 1.0.14(@types/dlv@1.1.5)
+        specifier: ^1.1.1
+        version: 1.1.1(@types/dlv@1.1.5)
     devDependencies:
       concurrently:
         specifier: ^6.1.0
@@ -913,20 +913,20 @@ importers:
   packages/analytics-util-storage:
     dependencies:
       '@analytics/cookie-utils':
-        specifier: ^0.2.12
-        version: 0.2.12
+        specifier: ^0.2.14
+        version: 0.2.14
       '@analytics/global-storage-utils':
-        specifier: ^0.1.7
-        version: 0.1.7
+        specifier: ^0.1.9
+        version: 0.1.9
       '@analytics/localstorage-utils':
-        specifier: ^0.1.10
-        version: 0.1.10
+        specifier: ^0.1.12
+        version: 0.1.12
       '@analytics/session-storage-utils':
-        specifier: ^0.0.7
-        version: 0.0.7
+        specifier: ^0.0.9
+        version: 0.0.9
       '@analytics/type-utils':
-        specifier: ^0.6.2
-        version: 0.6.2
+        specifier: ^0.6.4
+        version: 0.6.4
     devDependencies:
       concurrently:
         specifier: ^6.1.0
@@ -950,8 +950,8 @@ importers:
   packages/analytics-util-storage-cookie:
     dependencies:
       '@analytics/global-storage-utils':
-        specifier: ^0.1.7
-        version: 0.1.7
+        specifier: ^0.1.9
+        version: 0.1.9
     devDependencies:
       concurrently:
         specifier: ^6.1.0
@@ -969,8 +969,8 @@ importers:
   packages/analytics-util-storage-global:
     dependencies:
       '@analytics/type-utils':
-        specifier: ^0.6.2
-        version: 0.6.2
+        specifier: ^0.6.4
+        version: 0.6.4
     devDependencies:
       concurrently:
         specifier: ^6.1.0
@@ -988,8 +988,8 @@ importers:
   packages/analytics-util-storage-local:
     dependencies:
       '@analytics/global-storage-utils':
-        specifier: ^0.1.7
-        version: 0.1.7
+        specifier: ^0.1.9
+        version: 0.1.9
     devDependencies:
       concurrently:
         specifier: ^6.1.0
@@ -1007,11 +1007,11 @@ importers:
   packages/analytics-util-storage-remote:
     dependencies:
       '@analytics/type-utils':
-        specifier: ^0.6.2
-        version: 0.6.2
+        specifier: ^0.6.4
+        version: 0.6.4
       analytics-utils:
-        specifier: ^1.0.14
-        version: 1.0.14(@types/dlv@1.1.5)
+        specifier: ^1.1.1
+        version: 1.1.1(@types/dlv@1.1.5)
       cross-storage:
         specifier: ^1.0.0
         version: 1.0.0
@@ -1026,8 +1026,8 @@ importers:
   packages/analytics-util-storage-session:
     dependencies:
       '@analytics/global-storage-utils':
-        specifier: ^0.1.7
-        version: 0.1.7
+        specifier: ^0.1.9
+        version: 0.1.9
     devDependencies:
       concurrently:
         specifier: ^6.1.0
@@ -1066,8 +1066,8 @@ importers:
   packages/analytics-util-url:
     dependencies:
       '@analytics/type-utils':
-        specifier: ^0.6.2
-        version: 0.6.2
+        specifier: ^0.6.4
+        version: 0.6.4
     devDependencies:
       concurrently:
         specifier: ^6.1.0
@@ -1091,11 +1091,11 @@ importers:
   packages/analytics-util-visitor-source:
     dependencies:
       '@analytics/type-utils':
-        specifier: ^0.6.2
-        version: 0.6.2
+        specifier: ^0.6.4
+        version: 0.6.4
       '@analytics/url-utils':
-        specifier: ^0.2.3
-        version: 0.2.3
+        specifier: ^0.2.5
+        version: 0.2.5
     devDependencies:
       concurrently:
         specifier: ^6.1.0
@@ -1119,8 +1119,8 @@ importers:
   packages/analytics-utils:
     dependencies:
       '@analytics/type-utils':
-        specifier: ^0.6.2
-        version: 0.6.2
+        specifier: ^0.6.4
+        version: 0.6.4
       '@types/dlv':
         specifier: ^1.0.0
         version: 1.1.5
@@ -1202,17 +1202,23 @@ packages:
   '@analytics/cookie-utils@0.2.12':
     resolution: {integrity: sha512-2h/yuIu3kmu+ZJlKmlT6GoRvUEY2k1BbQBezEv5kGhnn9KpmzPz715Y3GmM2i+m7Y0QmBdVUoA260dQZkofs2A==}
 
-  '@analytics/core@0.12.17':
-    resolution: {integrity: sha512-GMxRm5Dp3Wam/w5NNvqNKMO6zWecozbVv21Kn4WhftCx6OjJI7zMlVtiLpjGjxa0RRZfVG80YhupF0Qh9XL2gw==}
+  '@analytics/cookie-utils@0.2.14':
+    resolution: {integrity: sha512-x51x2cLqvP5Fb1ydgNvTCX+SVv0ALK/yTNwp/53++yk4kLhxb850krWtQ4aASN0612oXrIGotwfmdJIttnLiPQ==}
 
-  '@analytics/global-storage-utils@0.1.7':
-    resolution: {integrity: sha512-V+spzGLZYm4biZT4uefaylm80SrLXf8WOTv9hCgA46cLcyxx3LD4GCpssp1lj+RcWLl/uXJQBRO4Mnn/o1x6Gw==}
+  '@analytics/global-storage-utils@0.1.9':
+    resolution: {integrity: sha512-+xm6CDnWsVOQIKkqbPRPRdYDXKk3PNgr/bCZWSI+7tEDT5PCDgI0QSBZe+FqCVkCRtTkgOrjFOY7wOM8Gq+ndA==}
 
   '@analytics/listener-utils@0.4.0':
     resolution: {integrity: sha512-sBgtBqXtdAwidyE+g/bddVdabaHdW2PIauzyIvG2Gy2qb4poWfHXm3GscDZSqQqe2o9uIUcS8x5MGpJPXveARA==}
 
+  '@analytics/listener-utils@0.4.2':
+    resolution: {integrity: sha512-9rR52F7hAjqJGt+QdRuCf5mHTEhnahiplvbMA/iw61Zb0ZJsj0SY4hLOakqZbk728jx6HF4YFxUhJpLyRzbz0A==}
+
   '@analytics/localstorage-utils@0.1.10':
     resolution: {integrity: sha512-uJS+Jp1yLG5VFCgA5T82ZODYBS0xuDQx0NtAZrgbqt9j51BX3TcgmOez5LVkrUNu/lpbxjCLq35I4TKj78VmOQ==}
+
+  '@analytics/localstorage-utils@0.1.12':
+    resolution: {integrity: sha512-BL3vuZUwWgMqdkQsE0GKsED5SPLC6daI4K4LE0a/BkKv+4Cae5JLLqpO5gju2HUGOjJxIvw8U/G5EcglNY5+1w==}
 
   '@analytics/queue-utils@0.1.2':
     resolution: {integrity: sha512-s+wLEv+fKla3heaJ9EHdrWTmc1FIaCXSbL+B59nCOurj+wnmRs3rdtg5v34WuzrkJvEY1eNC0YghSsVtXLw8kw==}
@@ -1220,20 +1226,23 @@ packages:
   '@analytics/session-storage-utils@0.0.7':
     resolution: {integrity: sha512-PSv40UxG96HVcjY15e3zOqU2n8IqXnH8XvTkg1X43uXNTKVSebiI2kUjA3Q7ESFbw5DPwcLbJhV7GforpuBLDw==}
 
+  '@analytics/session-storage-utils@0.0.9':
+    resolution: {integrity: sha512-fhP9QCpyq45rZKsXaAxyz+VTmOUWljIW08CWSkFzpwOHkDM4Xy5tymc1YcWqSBBaLjHldo3HlY4qfqEIS4Aj1A==}
+
   '@analytics/session-utils@0.2.2':
     resolution: {integrity: sha512-yXjWVwVpWxkBLuKo8la8+AlHAlYgC+BDVTuK9e39fgMbWTxzUq8NicbShU2U31BCZyJlDMe1VDkVf8uyekoHQA==}
 
-  '@analytics/storage-utils@0.4.2':
-    resolution: {integrity: sha512-AXObwyVQw9h2uJh1t2hUgabtVxzYpW+7uKVbdHQK80vr3Td5rrmCxrCxarh7HUuAgSDZ0bZWqmYxVgmwKceaLg==}
+  '@analytics/storage-utils@0.4.4':
+    resolution: {integrity: sha512-873P4wDIunbOnBqADc2AhTVsLbluUv1dP6k9UrK8FIeV8WXv5+fG12HdwwaniUIxq6QLgZJfKEaCwtWSKrrV0g==}
 
   '@analytics/type-utils@0.3.1':
     resolution: {integrity: sha512-9Ej6c9ulj5DNE29eFk3s49/1b89M8mbQ7BoJEQAQg/k86HOVrAEWQUScr359WVSOyGNBsSYE1qILC3XFTTtgtw==}
 
-  '@analytics/type-utils@0.6.2':
-    resolution: {integrity: sha512-TD+xbmsBLyYy/IxFimW/YL/9L2IEnM7/EoV9Aeh56U64Ify8o27HJcKjo38XY9Tcn0uOq1AX3thkKgvtWvwFQg==}
+  '@analytics/type-utils@0.6.4':
+    resolution: {integrity: sha512-Ou1gQxFakOWLcPnbFVsrPb8g1wLLUZYYJXDPjHkG07+5mustGs5yqACx42UAu4A6NszNN6Z5gGxhyH45zPWRxw==}
 
-  '@analytics/url-utils@0.2.3':
-    resolution: {integrity: sha512-hq6aE6QyYH9Q9EQgXVDwqVC/pxeIwdoEZH1g1enngfVVIJSkaTpoogzJUpbwoOB16WjavZifZRdpNm2nFAPw+w==}
+  '@analytics/url-utils@0.2.5':
+    resolution: {integrity: sha512-L8VuY/5RTdKzJ+8UhbRrCOp3prCl0V0hs77aXjqxlcOlRQtBNbDUT2QE+Cex30xVot1agwCK/ct475wVcLDlFA==}
 
   '@ava/babel-plugin-throws-helper@4.0.0':
     resolution: {integrity: sha512-3diBLIVBPPh3j4+hb5lo0I1D+S/O/VDJPI4Y502apBxmwEqjyXG4gTSPFUlm41sSZeZzMarT/Gzovw9kV7An0w==}
@@ -3351,6 +3360,11 @@ packages:
 
   analytics-utils@1.0.14:
     resolution: {integrity: sha512-9v0kPd8v0GuBvfQcg5BO48AElaEAr9IXMAfJWXYMAhrD3QprgozEIUgMp/de0vS136PUOBB+10XQH9eBgBmfMw==}
+    peerDependencies:
+      '@types/dlv': ^1.0.0
+
+  analytics-utils@1.1.1:
+    resolution: {integrity: sha512-nRybjTpRAcHVhWb1cvYaOLJaI3R79r8XjMbu5c0wd2jKmANNqSrYwybiU0X3mp+CQQdm4YiAggTXb2cIA8XhUg==}
     peerDependencies:
       '@types/dlv': ^1.0.0
 
@@ -10053,58 +10067,66 @@ snapshots:
 
   '@analytics/cookie-utils@0.2.12':
     dependencies:
-      '@analytics/global-storage-utils': 0.1.7
+      '@analytics/global-storage-utils': 0.1.9
 
-  '@analytics/core@0.12.17(@types/dlv@1.1.5)':
+  '@analytics/cookie-utils@0.2.14':
     dependencies:
-      '@analytics/global-storage-utils': 0.1.7
-      '@analytics/type-utils': 0.6.2
-      analytics-utils: 1.0.14(@types/dlv@1.1.5)
-    transitivePeerDependencies:
-      - '@types/dlv'
+      '@analytics/global-storage-utils': 0.1.9
 
-  '@analytics/global-storage-utils@0.1.7':
+  '@analytics/global-storage-utils@0.1.9':
     dependencies:
-      '@analytics/type-utils': 0.6.2
+      '@analytics/type-utils': 0.6.4
 
   '@analytics/listener-utils@0.4.0':
     dependencies:
-      '@analytics/type-utils': 0.6.2
+      '@analytics/type-utils': 0.6.4
+
+  '@analytics/listener-utils@0.4.2':
+    dependencies:
+      '@analytics/type-utils': 0.6.4
 
   '@analytics/localstorage-utils@0.1.10':
     dependencies:
-      '@analytics/global-storage-utils': 0.1.7
+      '@analytics/global-storage-utils': 0.1.9
+
+  '@analytics/localstorage-utils@0.1.12':
+    dependencies:
+      '@analytics/global-storage-utils': 0.1.9
 
   '@analytics/queue-utils@0.1.2': {}
 
   '@analytics/session-storage-utils@0.0.7':
     dependencies:
-      '@analytics/global-storage-utils': 0.1.7
+      '@analytics/global-storage-utils': 0.1.9
+
+  '@analytics/session-storage-utils@0.0.9':
+    dependencies:
+      '@analytics/global-storage-utils': 0.1.9
 
   '@analytics/session-utils@0.2.2(@types/dlv@1.1.5)':
     dependencies:
       '@analytics/cookie-utils': 0.2.12
-      '@analytics/global-storage-utils': 0.1.7
+      '@analytics/global-storage-utils': 0.1.9
       '@analytics/session-storage-utils': 0.0.7
       analytics-utils: 1.0.14(@types/dlv@1.1.5)
     transitivePeerDependencies:
       - '@types/dlv'
 
-  '@analytics/storage-utils@0.4.2':
+  '@analytics/storage-utils@0.4.4':
     dependencies:
-      '@analytics/cookie-utils': 0.2.12
-      '@analytics/global-storage-utils': 0.1.7
-      '@analytics/localstorage-utils': 0.1.10
-      '@analytics/session-storage-utils': 0.0.7
-      '@analytics/type-utils': 0.6.2
+      '@analytics/cookie-utils': 0.2.14
+      '@analytics/global-storage-utils': 0.1.9
+      '@analytics/localstorage-utils': 0.1.12
+      '@analytics/session-storage-utils': 0.0.9
+      '@analytics/type-utils': 0.6.4
 
   '@analytics/type-utils@0.3.1': {}
 
-  '@analytics/type-utils@0.6.2': {}
+  '@analytics/type-utils@0.6.4': {}
 
-  '@analytics/url-utils@0.2.3':
+  '@analytics/url-utils@0.2.5':
     dependencies:
-      '@analytics/type-utils': 0.6.2
+      '@analytics/type-utils': 0.6.4
 
   '@ava/babel-plugin-throws-helper@4.0.0': {}
 
@@ -13947,7 +13969,13 @@ snapshots:
 
   analytics-utils@1.0.14(@types/dlv@1.1.5):
     dependencies:
-      '@analytics/type-utils': 0.6.2
+      '@analytics/type-utils': 0.6.4
+      '@types/dlv': 1.1.5
+      dlv: 1.1.3
+
+  analytics-utils@1.1.1(@types/dlv@1.1.5):
+    dependencies:
+      '@analytics/type-utils': 0.6.4
       '@types/dlv': 1.1.5
       dlv: 1.1.3
 

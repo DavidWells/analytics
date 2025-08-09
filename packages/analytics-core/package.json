@@ -1,7 +1,11 @@
 {
   "name": "@analytics/core",
   "version": "0.13.1",
+  "type": "module",
   "description": "Lightweight analytics library for tracking events, page views, & identifying users. Works with any third party analytics provider via an extendable plugin system.",
+  "author": "David Wells <hello@davidwells.io>",
+  "license": "MIT",
+  "homepage": "https://github.com/DavidWells/analytics/tree/master/packages/analytics-core#readme",
   "keywords": [
     "analytics",
     "analytics-project",
@@ -15,19 +19,28 @@
       "url": "https://github.com/sponsors/davidwells"
     }
   ],
-  "author": "David Wells <hello@davidwells.io>",
-  "license": "MIT",
-  "type": "module",
   "amdName": "_analytics",
   "source": "src/index.js",
-  "main": "dist/server/analytics-core.js",
+  "main": "dist/server/analytics-core.cjs",
   "module": "dist/server/analytics-core.module.js",
   "unpkg": "dist/server/analytics-core.umd.js",
   "types": "dist/types.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types.d.ts",
+      "import": "./dist/server/analytics-core.module.js",
+      "require": "./dist/server/analytics-core.cjs"
+    },
+    "./client": {
+      "types": "./dist/types.d.ts",
+      "import": "./dist/client/core.module.js",
+      "require": "./dist/client/core.js"
+    }
+  },
   "browser": {
-    "./dist/server/analytics-core.js": "./dist/client/analytics-core.js",
-    "./dist/server/analytics-core.umd.js": "./dist/client/analytics-core.umd.js",
-    "./dist/server/analytics-core.module.js": "./dist/client/analytics-core.module.js"
+    "./dist/server/analytics-core.cjs": "./dist/client/core.js",
+    "./dist/server/analytics-core.umd.js": "./dist/client/core.umd.js",
+    "./dist/server/analytics-core.module.js": "./dist/client/core.module.js"
   },
   "sideEffects": false,
   "scripts": {
@@ -68,21 +81,6 @@
     "@analytics/global-storage-utils": "^0.1.9",
     "@analytics/type-utils": "^0.6.4",
     "analytics-utils": "workspace:^"
-  },
-  "ava": {
-    "files": [
-      "**/**/*.test.js"
-    ],
-    "require": [
-      "esm",
-      "@babel/register",
-      "./tests/_setup.js"
-    ],
-    "verbose": true,
-    "failFast": true,
-    "sources": [
-      "**/*.{js,jsx}"
-    ]
   },
   "devDependencies": {
     "@babel/core": "7.17.0",
