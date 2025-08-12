@@ -21,6 +21,7 @@ const config = {
  * @param {boolean} [pluginConfig.disableAnonymousTraffic] - Disable loading segment for anonymous visitors
  * @param {boolean} [pluginConfig.customScriptSrc] - Override the Segment snippet url, for loading via custom CDN proxy
  * @param {object}  [pluginConfig.integrations] - Enable/disable segment destinations https://bit.ly/38nRBj3
+ * @param {object}  [pluginConfig.loadIntegrations] - Enable/disable loading of code for segment destinations http://bit.ly/4lWjAee
  * @return {object} Analytics plugin
  * @example
  *
@@ -177,7 +178,8 @@ function initialize({ config, instance }) {
           analytics._loadOptions = e
         };
         analytics.SNIPPET_VERSION = "4.1.0";
-        analytics.load(writeKey);
+        const loadIntegrations = config.loadIntegrations && { integrations: config.loadIntegrations } || undefined;
+        analytics.load(writeKey, loadIntegrations);
       }
     }
   }();
