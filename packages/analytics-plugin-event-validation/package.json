@@ -1,6 +1,6 @@
 {
   "name": "analytics-plugin-event-validation",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Event validation plugin for analytics",
   "keywords": [
     "analytics",
