@@ -7,6 +7,7 @@
   * @property {function} [page] - Page visit tracking method
   * @property {function} [track] - Custom event tracking method
   * @property {function} [identify] - User identify method
+  * @property {function} [reset] - Clear all information about the user & reset analytics state
   * @property {function} [loaded] - Function to determine if analytics script loaded
   * @property {function} [ready] - Fire function when plugin ready
   */
