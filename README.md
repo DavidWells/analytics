@@ -794,6 +794,7 @@ Below are plugins created outside of this repo:
 - [LinkedIn Pixel](https://www.npmjs.com/package/analytics-plugin-linkedin) Adds Analytics support for Linkedin tracking pixel
 - [Logrocket](https://www.npmjs.com/package/analytics-plugin-logrocket) Adds Analytics support for LogRocket
 - [mailmodo](https://www.npmjs.com/package/analytics-plugin-mailmodo) Adds Analytics support for mailmodo
+- [Pirsch](https://www.npmjs.com/package/analytics-plugin-pirsch) Adds Analytics support for Pirsch
 - [Planhat](https://www.npmjs.com/package/analytics-plugin-planhat) Adds Analytics support for Planhat
 - [Plausible](https://www.npmjs.com/package/analytics-plugin-plausible) Adds Analytics support for Plausible
 - [PostHog](https://www.npmjs.com/package/@metro-fs/analytics-plugin-posthog) Adds Analytics support for PostHog by @metro-fs
