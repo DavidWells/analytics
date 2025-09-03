@@ -98,5 +98,11 @@
     "url": "https://www.npmjs.com/package/@hexlet/analytics-plugin-yandex-metrika",
     "repo": "https://github.com/Hexlet/analytics-plugin-yandex-metrika",
     "description": "Adds Analytics support for Yandex Metrika"
+  },
+  {
+    "name": "Pirsch Analytics",
+    "url": "https://www.npmjs.com/package/analytics-plugin-pirsch",
+    "repo": "https://github.com/pirsch-analytics/analytics-plugin-pirsch",
+    "description": "Adds Analytics support for Pirsch Analytics"
   }
 ]
