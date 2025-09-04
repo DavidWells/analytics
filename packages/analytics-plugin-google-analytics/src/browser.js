@@ -179,8 +179,6 @@ function googleAnalytics(pluginConfig = {}) {
         ...pageView,
         /* Attach campaign data, if exists */
         ...campaignData,
-        /* Attach userId, if exists */
-        ...(userId) ? { user_id: userId } : {},
       }
       /* If send_page_view true, ignore first analytics.page call */
       if (gtagConfig && gtagConfig.send_page_view && pageCallCount === 0) {
@@ -208,8 +206,6 @@ function googleAnalytics(pluginConfig = {}) {
         ...properties,
         /* Attach campaign data, if exists */
         ...campaignData,
-        /* Attach userId, if exists */
-        ...(userId) ? { user_id: userId } : {},
       }
       /*
         console.log('finalPayload', finalPayload)
