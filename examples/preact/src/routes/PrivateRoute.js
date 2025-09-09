@@ -1,4 +1,4 @@
-import { h, Component } from 'preact'
+import { h } from 'preact'
 import AsyncRoute from 'preact-async-route'
 import { route } from 'preact-router'
 
@@ -11,24 +11,22 @@ function authenticate() {
   })
 }
 
-class PrivateRoute extends Component {
-  render() {
-    return (
-      <AsyncRoute
-        path={this.props.path}
-        getComponent={() => {
-          return authenticate()
-            .then(() => () => {
-              return this.props.component(this.props)
-            })
-            .catch(reason => {
-              route(`/login#rurl=${this.props.url}`, true)
-              return null
-            })
-        }}
-      />
-    )
-  }
+const PrivateRoute = (props) => {
+  return (
+    <AsyncRoute
+      path={props.path}
+      getComponent={() => {
+        return authenticate()
+          .then(() => () => {
+            return props.component(props)
+          })
+          .catch(reason => {
+            route(`/login#rurl=${props.url}`, true)
+            return null
+          })
+      }}
+    />
+  )
 }
 
 export default PrivateRoute
