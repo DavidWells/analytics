@@ -87,7 +87,7 @@ To add or remove an analytics provider, adjust the `plugins` you load into `anal
 This module is distributed via [npm](https://npmjs.com/package/analytics), which is bundled with [node](https://nodejs.org/) and should be installed as one of your project's dependencies.
 
 ```bash
-npm install analytics --save
+npm install analytics
 ```
 
 Or using [yarn](https://yarnpkg.com/):
