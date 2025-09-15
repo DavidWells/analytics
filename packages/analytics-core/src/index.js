@@ -123,7 +123,7 @@ function analytics(config = {}) {
     middlewares: [],
     events: []
   })
-  
+
   /* Storage by default is set to global & is not persisted */
   const storage = (config.storage) ? config.storage : {
     getItem: get,
@@ -158,7 +158,7 @@ function analytics(config = {}) {
     // throw new Error(`${ERROR_URL}3`)
     throw new Error('Abort disabled inListener')
   }
-  
+
   // Parse URL parameters
   const params = paramsParse()
   // Initialize visitor information
@@ -175,8 +175,8 @@ function analytics(config = {}) {
   }
 
   /**
-   * Async Management methods for plugins. 
-   * 
+   * Async Management methods for plugins.
+   *
    * This is also where [custom methods](https://bit.ly/329vFXy) are loaded into the instance.
    * @typedef {Object} Plugins
    * @property {EnablePlugin} enable - Set storage value
@@ -273,7 +273,7 @@ function analytics(config = {}) {
     // Merge in custom plugin methods
     ...parsedOptions.methods
   }
-  
+
   let readyCalled = false
   /**
    * Analytic instance returned from initialization
@@ -287,7 +287,7 @@ function analytics(config = {}) {
    * @property {On} on - Fire callback on analytics lifecycle events.
    * @property {Once} once - Fire callback on analytics lifecycle events once.
    * @property {GetState} getState - Get data about user, activity, or context.
-   * @property {Storage} storage - storage methods
+   * @property {AnalyticsStorage} storage - storage methods
    * @property {Plugins} plugins - plugin methods
    */
   const instance = {
@@ -731,7 +731,7 @@ function analytics(config = {}) {
     /**
      * Storage utilities for persisting data.
      * These methods will allow you to save data in localStorage, cookies, or to the window.
-     * @typedef {Object} Storage
+     * @typedef {Object} AnalyticsStorage
      * @property {GetItem} getItem - Get value from storage
      * @property {SetItem} setItem - Set storage value
      * @property {RemoveItem} removeItem - Remove storage value
@@ -885,7 +885,7 @@ function analytics(config = {}) {
     }
     return acc
   }, {})
-  
+
   const initialState = {
     context: initialConfig,
     user: visitorInfo,
@@ -939,7 +939,7 @@ function analytics(config = {}) {
 
   const enabledPlugins = pluginKeys.filter((name) => parsedOptions.pluginEnabled[name])
   const disabledPlugins = pluginKeys.filter((name) => !parsedOptions.pluginEnabled[name])
- 
+
   /* Register analytic plugins */
   store.dispatch({
     type: EVENTS.registerPlugins,

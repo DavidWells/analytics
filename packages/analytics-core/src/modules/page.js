@@ -35,7 +35,7 @@ function currentUrl(search) {
 }
 
 /**
- * Page data for overides
+ * Page data for overrides
  * @typedef {object} PageData
  * @property {string} [title] - Page title
  * @property {string} [url] - Page url
