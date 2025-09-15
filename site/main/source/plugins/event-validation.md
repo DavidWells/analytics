@@ -72,6 +72,12 @@ const analytics = Analytics({
         'sites', // example app:sites_cdConfigured
         'user',  // example app:user_signup
         'widget' // example app:widget_created
+      ],
+      // Allowed actions (optional)
+      actions: [
+        'cdConfigured', // example app:sites_cdConfigured
+        'signup', // example app:user_signup
+        'created', // example app:widget_created
       ]
     }),
     customerIOPlugin({
