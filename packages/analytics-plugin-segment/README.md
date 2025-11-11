@@ -104,6 +104,7 @@ const analytics = Analytics({
   plugins: [
     segmentPlugin({
       writeKey: '123-xyz'
+      loadOptions: { disableClientPersistence: true }
     })
   ]
 })
@@ -118,6 +119,7 @@ const analytics = Analytics({
 | `disableAnonymousTraffic` <br/>_optional_ - boolean| Disable loading segment for anonymous visitors |
 | `customScriptSrc` <br/>_optional_ - boolean| Override the Segment snippet url, for loading via custom CDN proxy |
 | `integrations` <br/>_optional_ - object| Enable/disable segment destinations https://bit.ly/38nRBj3 |
+| `loadOptions` <br/>_optional_ - object| Options object passed as the second argument to `analytics.load(writeKey, loadOptions)`. Allows customisation of Segment loading. |
 
 ## Server-side usage
 
