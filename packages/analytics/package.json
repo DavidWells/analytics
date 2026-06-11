@@ -54,6 +54,9 @@
     "type": "git",
     "url": "https://github.com/DavidWells/analytics"
   },
+  "bugs": {
+    "url": "https://github.com/DavidWells/analytics/issues"
+  },
   "files": [
     "dist",
     "lib",
