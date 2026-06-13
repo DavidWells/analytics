@@ -101,5 +101,8 @@
     "gzip-size": "^5.0.0",
     "prettier": "^1.18.2",
     "pretty-bytes": "^5.1.0"
+  },
+  "bugs": {
+    "url": "https://github.com/DavidWells/analytics/issues"
   }
 }
