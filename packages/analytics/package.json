@@ -25,6 +25,9 @@
   ],
   "author": "David Wells <hello@davidwells.io>",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DavidWells/analytics/issues"
+  },
   "main": "lib/analytics.cjs.js",
   "globalName": {
     "name": "_analytics"
