@@ -1,0 +1,59 @@
+{
+  "name": "@analytics/posthog",
+  "version": "0.1.0",
+  "description": "PostHog plugin for 'analytics' module for browser & node",
+  "projectMeta": {
+    "provider": {
+      "name": "PostHog",
+      "url": "https://posthog.com/"
+    },
+    "platforms": {
+      "browser": "./src/browser.js",
+      "node": "./src/node.js"
+    }
+  },
+  "keywords": [
+    "analytics",
+    "analytics-project",
+    "analytics-plugin",
+    "posthog",
+    "product-analytics",
+    "open-source-analytics"
+  ],
+  "author": "Fernando Gomes",
+  "license": "MIT",
+  "scripts": {
+    "docs": "node ../analytics-cli/bin/run docs",
+    "build": "node ../../scripts/build/index.js",
+    "watch": "node ../../scripts/build/_watch.js",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish",
+    "es": "../../node_modules/.bin/babel-node ./testBabel.js"
+  },
+  "main": "lib/analytics-plugin-posthog.cjs.js",
+  "globalName": "analyticsPosthog",
+  "jsnext:main": "lib/analytics-plugin-posthog.es.js",
+  "module": "lib/analytics-plugin-posthog.es.js",
+  "browser": {
+    "./lib/analytics-plugin-posthog.cjs.js": "./lib/analytics-plugin-posthog.browser.cjs.js",
+    "./lib/analytics-plugin-posthog.es.js": "./lib/analytics-plugin-posthog.browser.es.js"
+  },
+  "files": [
+    "dist",
+    "lib",
+    "README.md"
+  ],
+  "homepage": "https://github.com/DavidWells/analytics#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidWells/analytics.git"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1"
+  },
+  "dependencies": {
+    "posthog-node": "^4.0.0"
+  }
+}
