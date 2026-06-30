@@ -775,7 +775,7 @@ function analytics(config = {}) {
        * analytics.storage.setItem('storage_key', 'value')
        */
       setItem: (key, value, options) => {
-        store.dispatch({
+        return store.dispatch({
           type: EVENTS.setItemStart,
           key: key,
           value: value,
@@ -793,7 +793,7 @@ function analytics(config = {}) {
        * analytics.storage.removeItem('storage_key')
        */
       removeItem: (key, options) => {
-        store.dispatch({
+        return store.dispatch({
           type: EVENTS.removeItemStart,
           key: key,
           options: options
