@@ -769,13 +769,14 @@ function analytics(config = {}) {
        * @param {String} key - storage key
        * @param {any} value - storage value
        * @param {Object} [options] - storage options
+       * @return {Promise<Object>} Dispatch promise for storage pipeline
        *
        * @example
        *
        * analytics.storage.setItem('storage_key', 'value')
        */
       setItem: (key, value, options) => {
-        store.dispatch({
+        return store.dispatch({
           type: EVENTS.setItemStart,
           key: key,
           value: value,
@@ -787,13 +788,14 @@ function analytics(config = {}) {
        * @typedef {Function} RemoveItem
        * @param {String} key - storage key
        * @param {Object} [options] - storage options
+       * @return {Promise<Object>} Dispatch promise for storage pipeline
        *
        * @example
        *
        * analytics.storage.removeItem('storage_key')
        */
       removeItem: (key, options) => {
-        store.dispatch({
+        return store.dispatch({
           type: EVENTS.removeItemStart,
           key: key,
           options: options

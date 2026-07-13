@@ -63,6 +63,45 @@ test('No plugins get called if config.plugins.all set to false', async () => {
   assert.is(dummyThree.callCount, 0)
 })
 
+test('alwaysEnabled plugin still runs when config.plugins.all false', async () => {
+  const destinationSpy = sandbox.spy()
+  const enricherSpy = sandbox.spy()
+
+  const analytics = Analytics({
+    app: 'appname',
+    plugins: [
+      {
+        name: 'destination-plugin',
+        page: destinationSpy,
+        track: destinationSpy,
+        identify: destinationSpy
+      },
+      {
+        name: 'enricher-plugin',
+        alwaysEnabled: true,
+        page: enricherSpy,
+        track: enricherSpy,
+        identify: enricherSpy
+      },
+    ]
+  })
+
+  const opts = {
+    plugins: {
+      all: false,
+    }
+  }
+
+  analytics.page({}, opts)
+  analytics.track('eventName', {}, opts)
+  analytics.identify('userId-123', {}, opts)
+
+  await delay(100)
+
+  assert.is(destinationSpy.callCount, 0)
+  assert.is(enricherSpy.callCount, 3)
+})
+
 test('Single destination via config.plugins.all false works', async () => {
   const dummyOne = sandbox.spy()
   const dummyTwo = sandbox.spy()
