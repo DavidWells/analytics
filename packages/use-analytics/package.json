@@ -10,6 +10,7 @@
     "url": "git+https://github.com/DavidWells/analytics.git"
   },
   "main": "dist/index.js",
+  "types": "index.d.ts",
   "module": "dist/index.modern.js",
   "source": "src/index.js",
   "engines": {
@@ -27,14 +28,16 @@
     "tiny-invariant": "^1.1.0"
   },
   "peerDependencies": {
-    "react": ">=16"
+    "react": ">=16",
+    "analytics": "^0.5.2"
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.8.3",
     "babel-eslint": "^10.0.3"
   },
   "files": [
-    "dist"
+    "dist",
+    "index.d.ts"
   ],
   "keywords": [
     "analytics",
