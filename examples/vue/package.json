@@ -2,47 +2,26 @@
   "name": "vue",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "start": "npm run serve",
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
+    "start": "npm run dev",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext vue,js,jsx,cjs,mjs --fix --ignore-path .gitignore",
     "deploy": "netlify deploy -p"
   },
   "dependencies": {
-    "@analytics/google-analytics": "^0.2.2",
-    "analytics": "^0.3.0",
-    "core-js": "^2.6.5",
-    "vue": "^2.6.10",
-    "vue-router": "^3.0.7"
+    "@analytics/google-analytics": "^0.8.9",
+    "analytics": "^0.8.14",
+    "vue": "^3.4.0",
+    "vue-router": "^4.2.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.10.0",
-    "@vue/cli-plugin-eslint": "^3.10.0",
-    "@vue/cli-service": "^3.10.0",
-    "babel-eslint": "^10.0.1",
-    "eslint": "^5.16.0",
-    "eslint-plugin-vue": "^5.0.0",
-    "vue-template-compiler": "^2.6.10"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "rules": {},
-    "parserOptions": {
-      "parser": "babel-eslint"
-    }
-  },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
+    "@vitejs/plugin-vue": "^5.0.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-vue": "^9.19.0",
+    "vite": "^5.0.0"
   },
   "browserslist": [
     "> 1%",
