@@ -7,7 +7,7 @@ export function localTime() {
   const d = new Date()
   const tzo = -d.getTimezoneOffset()
   const dif = tzo >= 0 ? '+' : '-'
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}.${pad(d.getMilliseconds())}${dif}${pad(tzo / 60)}:${pad(tzo % 60)}`
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}.${pad(d.getMilliseconds())}${dif}${pad(Math.abs(tzo) / 60)}:${pad(tzo % 60)}`
 }
 
 function pad(num) {
