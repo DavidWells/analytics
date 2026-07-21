@@ -3,6 +3,8 @@
 const config = {
   /* Your segment writeKey */
   writeKey: null,
+  /* Options to pass in the load function call */
+  loadOptions: {},
   /* Disable anonymous MTU */
   disableAnonymousTraffic: false,
   /* Sync segment Anonymous id with `analytics` Anon id */
@@ -18,6 +20,7 @@ const config = {
  * @link https://segment.com/docs/sources/website/analytics.js/
  * @param {object}  pluginConfig - Plugin settings
  * @param {string}  pluginConfig.writeKey - Your segment writeKey
+ * @param {object}  [pluginConfig.loadOptions] - Options to pass in the segment load call
  * @param {boolean} [pluginConfig.disableAnonymousTraffic] - Disable loading segment for anonymous visitors
  * @param {boolean} [pluginConfig.customScriptSrc] - Override the Segment snippet url, for loading via custom CDN proxy
  * @param {object}  [pluginConfig.integrations] - Enable/disable segment destinations https://bit.ly/38nRBj3
@@ -25,7 +28,8 @@ const config = {
  * @example
  *
  * segmentPlugin({
- *   writeKey: '123-xyz'
+ *   writeKey: '123-xyz',
+ *   loadOptions: { disableClientPersistence: true }
  * })
  */
 function segmentPlugin(pluginConfig = {}) {
@@ -127,7 +131,7 @@ function segmentPlugin(pluginConfig = {}) {
 }
 
 function initialize({ config, instance }) {
-  const { disableAnonymousTraffic, writeKey, customScriptSrc } = config
+  const { disableAnonymousTraffic, writeKey, loadOptions, customScriptSrc } = config
   if (!writeKey) {
     throw new Error('No segment writeKey')
   }
@@ -177,7 +181,7 @@ function initialize({ config, instance }) {
           analytics._loadOptions = e
         };
         analytics.SNIPPET_VERSION = "4.1.0";
-        analytics.load(writeKey);
+        analytics.load(writeKey, loadOptions);
       }
     }
   }();
