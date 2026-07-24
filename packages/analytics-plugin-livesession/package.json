@@ -1,0 +1,73 @@
+{
+  "name": "@analytics/livesession",
+  "version": "0.0.0",
+  "description": "LiveSession plugin for 'analytics' module",
+  "projectMeta": {
+    "provider": {
+      "name": "LiveSession",
+      "url": "https://www.livesession.io/"
+    },
+    "platforms": {
+      "browser": "./src/browser.js"
+    }
+  },
+  "keywords": [
+    "analytics",
+    "analytics-project",
+    "analytics-plugin",
+    "livesession"
+  ],
+  "author": "Patryk Zdunowski",
+  "license": "MIT",
+  "scripts": {
+    "test": "ava -v",
+    "test:watch": "ava -v --watch",
+    "docs": "node ../analytics-cli/bin/run docs",
+    "build": "node ../../scripts/build/index.js",
+    "watch": "node ../../scripts/build/_watch.js",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish",
+    "es": "../../node_modules/.bin/babel-node ./testBabel.js"
+  },
+  "main": "lib/analytics-plugin-livesession.cjs.js",
+  "globalName": "analyticsLiveSession",
+  "jsnext:main": "lib/analytics-plugin-livesession.es.js",
+  "module": "lib/analytics-plugin-livesession.es.js",
+  "browser": {
+    "./lib/analytics-plugin-livesession.cjs.js": "./lib/analytics-plugin-livesession.browser.cjs.js",
+    "./lib/analytics-plugin-livesession.es.js": "./lib/analytics-plugin-livesession.browser.es.js"
+  },
+  "ava": {
+    "files": [
+      "**/**/*.test.js"
+    ],
+    "require": [
+      "esm",
+      "@babel/register"
+    ],
+    "verbose": true,
+    "failFast": true,
+    "sources": [
+      "**/*.{js,jsx}"
+    ]
+  },
+  "files": [
+    "dist",
+    "lib",
+    "README.md"
+  ],
+  "homepage": "https://github.com/DavidWells/analytics#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidWells/analytics.git"
+  },
+  "devDependencies": {
+    "@babel/core": "7.5.5",
+    "@babel/preset-env": "7.5.5",
+    "@babel/register": "^7.5.5",
+    "@babel/runtime": "7.5.5"
+  },
+  "dependencies": {
+  }
+}
