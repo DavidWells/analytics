@@ -1,0 +1,41 @@
+{
+    "compilerOptions": {
+      "target": "es5",
+      "module": "esnext",
+      "lib": ["dom", "dom.iterable", "esnext"],
+      "declaration": true,
+      "sourceMap": true,
+      "outDir": "lib",
+      "rootDir": "src",
+      "strict": true,
+      "noImplicitAny": true,
+      "strictNullChecks": true,
+      "strictFunctionTypes": true,
+      "strictBindCallApply": true,
+      "noImplicitThis": true,
+      "noUnusedLocals": true,
+      "noUnusedParameters": true,
+      "noImplicitReturns": true,
+      "noFallthroughCasesInSwitch": true,
+      "moduleResolution": "node",
+      "baseUrl": "src",
+      "paths": {
+        "./api": ["./api.js"],
+        ".": ["./index.js"]
+      },
+      "esModuleInterop": true,
+      "resolveJsonModule": true,
+      "allowSyntheticDefaultImports": true,
+      "forceConsistentCasingInFileNames": true,
+      "skipLibCheck": true
+    },
+    "include": [
+      "src/**/*.js",
+      "src/**/*.ts"
+    ],
+    "exclude": [
+      "node_modules",
+      "lib",
+      "**/*.test.ts"
+    ]
+  }
