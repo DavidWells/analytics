@@ -8,8 +8,9 @@ const defaultConfig = {
  * @link https://getanalytics.io/plugins/event-validation/
  * @param {object}  pluginConfig - Plugin settings
  * @param {string}  pluginConfig.context - Name of app event is in. Example 'api', 'app', 'site', 'cli'
- * @param {boolean} pluginConfig.objects - Objects events can effect
- * @param {boolean} [pluginConfig.throwOnInvalid] - Objects events can effect
+ * @param {string[]} pluginConfig.objects - Objects events can affect
+ * @param {string[]} [pluginConfig.actions] - Name of event action (clicked, viewed, created, etc)
+ * @param {boolean} [pluginConfig.throwOnInvalid] - Throw error if validation fails
  * @return {object} Analytics plugin
  * @example
  *
@@ -40,6 +41,7 @@ export default function eventValidationPlugin(pluginConfig = {}) {
 function isValidEventName(event, config) {
   const validProject = [config.context] || []
   const validObjects = config.objects || []
+  const validActions = config.actions || []
   const invalid = formatError(event)
   const underscoreCount = contains(event, '_')
   if (underscoreCount !== 1) {
@@ -66,6 +68,12 @@ function isValidEventName(event, config) {
   /* Validate object */
   if (validObjects.indexOf(object) === -1) {
     return invalid(`Invalid object "${object}". Must be 1 of ${JSON.stringify(validObjects)}`)
+  }
+  /* Validate action */
+  if (validActions.length) {
+    if (validActions.indexOf(action) === -1) {
+      return invalid(`Invalid action "${action}". Must be 1 of ${JSON.stringify(validActions)}`)
+    }
   }
   return true
 }
