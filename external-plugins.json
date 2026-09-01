@@ -104,5 +104,11 @@
     "url": "https://www.npmjs.com/package/analytics-plugin-pirsch",
     "repo": "https://github.com/pirsch-analytics/analytics-plugin-pirsch",
     "description": "Adds Analytics support for Pirsch Analytics"
+  },
+  {
+    "name": "Rewardful",
+    "url": "https://www.npmjs.com/package/analytics-plugin-rewardful",
+    "repo": "https://github.com/iloveitaly/analytics-plugin-rewardful",
+    "description": "Adds Analytics support for Rewardful affiliate tracking"
   }
 ]
