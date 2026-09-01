@@ -803,6 +803,7 @@ Below are plugins created outside of this repo:
 - [PostHog](https://www.npmjs.com/package/analytics-plugin-posthog) Adds Analytics support for PostHog by deevus
 - [ProfitWell](https://github.com/deevus/analytics-plugin-profitwell) Adds Analytics support for ProfitWell
 - [Reddit Pixel](https://www.npmjs.com/package/analytics-plugin-reddit-pixel) Adds Analytics support for Reddit Pixel
+- [Rewardful](https://www.npmjs.com/package/analytics-plugin-rewardful) Adds Analytics support for Rewardful affiliate tracking
 - [RudderStack](https://www.npmjs.com/package/begrowth-analytics-rudderstack) Adds Analytics support for RudderStack
 - [Splitbee](https://www.npmjs.com/package/analytics-plugin-splitbee) Adds Analytics support for Splitbee
 - [Tapfiliate](https://github.com/deevus/analytics-plugin-tapfiliate) Adds Analytics support for Tapfiliate
