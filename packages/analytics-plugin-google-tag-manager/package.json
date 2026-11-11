@@ -22,6 +22,7 @@
   "author": "David Wells",
   "license": "MIT",
   "scripts": {
+    "test": "tsc --strict --noEmit tests/types.ts",
     "docs": "node ../analytics-cli/bin/run docs",
     "build": "node ../../scripts/build/index.js",
     "watch": "node ../../scripts/build/_watch.js",
@@ -31,6 +32,7 @@
     "es": "../../node_modules/.bin/babel-node ./testBabel.js"
   },
   "main": "lib/analytics-plugin-google-tag-manager.cjs.js",
+  "types": "index.d.ts",
   "globalName": "analyticsGtagManager",
   "jsnext:main": "lib/analytics-plugin-google-tag-manager.es.js",
   "module": "lib/analytics-plugin-google-tag-manager.es.js",
@@ -41,6 +43,7 @@
   "files": [
     "dist",
     "lib",
+    "index.d.ts",
     "README.md"
   ],
   "homepage": "https://github.com/DavidWells/analytics#readme",
