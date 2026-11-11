@@ -17,6 +17,7 @@ For more information [see the docs](https://getanalytics.io/plugins/google-tag-m
 - [Google Tag Manager plugin for analytics](#google-tag-manager-plugin-for-analytics)
   - [Installation](#installation)
   - [How to use](#how-to-use)
+  - [TypeScript](#typescript)
   - [Platforms Supported](#platforms-supported)
   - [Browser usage](#browser-usage)
     - [Browser API](#browser-api)
@@ -74,6 +75,21 @@ analytics.track('cartCheckout', {
 After initializing `analytics` with the `googleTagManager` plugin, data will be sent into Google Tag Manager whenever [analytics.page](https://getanalytics.io/api/#analyticspage), or [analytics.track](https://getanalytics.io/api/#analyticstrack) are called.
 
 See [additional implementation examples](#additional-examples) for more details on using in your project.
+
+## TypeScript
+
+TypeScript declarations are included in the package. No additional `@types` package or local module declaration is needed.
+
+```ts
+import googleTagManager, { GoogleTagManagerConfig } from '@analytics/google-tag-manager'
+
+const config: GoogleTagManagerConfig = {
+  containerId: 'GTM-123xyz',
+  enabled: false
+}
+
+const plugin = googleTagManager(config)
+```
 
 ## Platforms Supported
 
